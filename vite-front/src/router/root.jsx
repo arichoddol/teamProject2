@@ -1,0 +1,74 @@
+import React, { lazy, Suspense } from 'react'
+import { createBrowserRouter } from 'react-router-dom'
+
+
+
+import { toLoginOutRouter } from './toLoginOutRouter'
+import toCrewRouter from './toCrewRouter'
+import toAdminRouter from './toAdminRouter'
+import toBoardRouter from './toBoardRouter'
+import toShopRouter from './toShopRouter'
+import toEventRouter from './toEventRouter'
+
+const Loading = <div className='loading'>Loading..</div>
+
+
+// Layout
+const ShopLayout = lazy(()=> import(`../layout/ShopLayout`))
+const LoginLayout = lazy(()=> import(`../layout/LoginLayout`))
+const AdminLayout = lazy(()=> import(`../layout/AdminLayout`))
+const BoardLayout = lazy(()=> import(`../layout/BoardLayout`))
+const EventLayout = lazy(()=> import(`../layout/EventLayout`))
+const CrewLayout = lazy(()=> import('../layout/CrewLayout'))
+
+// Page
+const IndexPage = lazy(()=>import(`../pages/IndexPage`))
+
+
+
+const root = createBrowserRouter([
+
+    {
+        //index
+        path:'',
+        element: <Suspense fallback={Loading}><IndexPage/></Suspense>
+    },
+    {
+        // Admin
+        path:'admin',
+        element: <Suspense fallback={Loading}><AdminLayout/></Suspense>,
+        children: toAdminRouter()
+    },
+    {
+        // Auth 
+        path: 'auth',
+        element: <Suspense fallback={Loading}><LoginLayout/></Suspense>,
+        children: toLoginOutRouter()
+    },
+    {
+        // shop
+        path: 'shop',
+        element: <Suspense fallback={Loading}><ShopLayout/></Suspense>,
+        children: toShopRouter()
+    },
+    {
+        // crew
+        path:'crew',
+        element: <Suspense fallback={Loading}><CrewLayout/></Suspense>,
+        children: toCrewRouter()
+    },
+    {
+        // board ( Community )
+        path:'board',
+        element: <Suspense fallback={Loading}><BoardLayout/></Suspense>,
+        children: toBoardRouter()
+    },
+    {
+        // event ( 대회일정 )
+        path:'event',
+        element: <Suspense fallback={Loading}><EventLayout/></Suspense>,
+        children: toEventRouter()
+    }
+    
+ ])
+export default root

@@ -1,0 +1,78 @@
+package org.spring.backendspring.item.dto;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.spring.backendspring.cart.entity.CartItemEntity;
+import org.spring.backendspring.item.entity.ItemEntity;
+import org.spring.backendspring.item.entity.ItemImgEntity;
+import org.spring.backendspring.item.entity.ItemReplyEntity;
+import org.spring.backendspring.member.entity.MemberEntity;
+import org.springframework.web.multipart.MultipartFile;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ItemDto {
+
+
+    private Long id;
+    
+    private String itemDetail;
+    private String itemTitle;
+    private int itemPrice;
+
+
+    private int itemSize;
+    private int attachFile;
+
+    private MultipartFile itemFile;
+    private String newFileName;
+    private String oldFileName;
+
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
+
+    private Long memberId;
+
+    private MemberEntity memberEntity;
+    private List<CartItemEntity> itemListEntities;
+    private List<ItemImgEntity> itemImgEntities;
+    private List<ItemReplyEntity> itemReplyEntities;
+
+    // toDTO
+    public static ItemDto toItemDto ( ItemEntity itemEntity){
+
+        String newFileName = null;
+        String oldFileName = null;
+
+        if(itemEntity.getAttachFile() != 0 &&
+            itemEntity.getItemImgEntities() != null &&
+            !itemEntity.getItemImgEntities().isEmpty()){
+                newFileName = itemEntity.getItemImgEntities().get(0).getNewName();
+                oldFileName = itemEntity.getItemImgEntities().get(0).getOldName();
+            }
+            return ItemDto.builder()
+                        .id(itemEntity.getId())
+                        .itemTitle(itemEntity.getItemTitle())
+                        .itemDetail(itemEntity.getItemDetail())
+                        .itemPrice(itemEntity.getItemPrice())
+                        .itemSize(itemEntity.getItemSize())
+                        .attachFile(itemEntity.getAttachFile())
+                        .newFileName(newFileName)
+                        .oldFileName(oldFileName)
+                        .build();
+
+    }
+
+}

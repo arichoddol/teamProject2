@@ -1,0 +1,87 @@
+import axios from 'axios';
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { loginFn } from '../../../apis/auth/login';
+import { useDispatch } from 'react-redux';
+import { login } from '../../../slices/loginSlice';
+import { setCookie } from '../../../apis/util/cookieUtil';
+import { setAccessToken } from '../../../slices/jwtSlice';
+
+const AuthLoginContainer = () => {
+  
+  // 로그인 상태 & 사용자 정보
+  const [member, setMember] = useState(null);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  
+  const navigate =  useNavigate();
+  const dispatch = useDispatch();
+
+  // 입력한 값 감지 후 변경
+  const onUsernameChange = (e) => {
+    setUsername(e.target.value);
+  }
+
+  const onPasswordChange = (e) => {
+    setPassword(e.target.value);
+  }
+
+  const onLoginFn = async () => {
+      const rs = await loginFn(username, password);
+      // 응답코드
+      console.log(rs);
+
+      if (rs.status === 200) {
+        const userEmail = rs.data.userEmail;
+        const id = rs.data.id;
+        const access = rs.data.accessToken;
+
+        const memberData = {
+          status: true,
+          userEmail: userEmail,
+          id: id
+        }
+        
+        const memberValue = JSON.stringify(memberData);
+        
+        setCookie("member", memberValue, 1);
+        dispatch(login({ userEmail, id, isLogin: true }));
+        dispatch(setAccessToken(access));   
+    };
+  }
+
+  return (
+    <>
+    <div className="login">
+      <div className="login-con">
+        <h1>로그인</h1>
+        <ul>
+          <li>
+            <input type="text" 
+            name='username' 
+            placeholder='email'
+            value={username}
+            onChange={onUsernameChange}/>
+          </li>
+          <li>
+            <input type="password" 
+            name='password' 
+            placeholder='password'
+            value={password}
+            onChange={onPasswordChange}/>
+          </li>
+          <li>
+            <button onClick={onLoginFn}>로그인</button>
+          </li>
+          <li>
+            <Link to="/auth/join">회원가입</Link>
+            <Link to="/">HOME</Link>
+          </li>
+        </ul>
+      </div>
+    </div>
+    </>
+  )
+}
+
+export default AuthLoginContainer

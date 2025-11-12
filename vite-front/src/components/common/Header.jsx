@@ -1,0 +1,56 @@
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutFn } from '../../apis/auth/logout';
+import { removeCookie } from '../../apis/util/cookieUtil';
+import { logout } from '../../slices/loginSlice';
+import { deleteAccessToken } from '../../slices/jwtSlice';
+import { Link } from 'react-router-dom';
+
+// slice 테스트 확인용으로 작성했습니다.
+const Header = () => {
+
+  const dispatch = useDispatch();
+  const isLogin = useSelector(state => state.loginSlice.isLogin);
+
+  const onLogoutFn = async () => {
+    const rs = await logoutFn();
+
+    if (rs == 200) {
+      removeCookie("member");
+      removeCookie("refreshToken");
+      dispatch(logout());
+      dispatch(deleteAccessToken());
+
+      alert("로그아웃 성공!");
+    }
+  }
+
+  return (
+    <>
+      <div className="header">
+        <div className="nav">
+          <h1>HOME</h1>
+          <div className="gnb">
+            <ul>
+            { isLogin ? 
+            <>
+              <li>
+                <button onClick={onLogoutFn}>LOGOUT</button>
+              </li>
+              <li>
+                <Link to= "/auth/myPage">myPage</Link>
+              </li> 
+            </>
+            : 
+            <li>
+              <Link to="/auth/login">LOGIN</Link>
+            </li> }
+            </ul> 
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+export default Header
