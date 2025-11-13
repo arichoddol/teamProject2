@@ -42,6 +42,18 @@ public class BoardImgDto {
     private LocalDateTime upDateTime;
 
     // N:1 
+    @JsonIgnore // -> 순환참조문제 
     private BoardEntity boardEntity;
+
+
+    public static BoardImgDto toBoardImgDto(BoardImgEntity boardImgEntity){
+        return BoardImgDto.builder()
+                        .id(boardImgEntity.getId())
+                        .newName(boardImgEntity.getNewName())
+                        .oldName(boardImgEntity.getOldName()) 
+                        .createTime(boardImgEntity.getCreateTime())
+                        .upDateTime(boardImgEntity.getUpdateTime())
+                        .build();
+    }
 
 }

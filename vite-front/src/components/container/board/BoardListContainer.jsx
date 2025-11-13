@@ -62,7 +62,10 @@ const BoardListContainer = () => {
              { boards.map(list =>(
               <tr key={list.id}>
                 <td>{list.id}</td>
-                <td>{list.title}</td>
+                <td> <Link to={`/board/detail/${list.id}`} className='board-link'>
+                  {list.title}
+                    </Link>
+                  </td>
                 <td>{list.memberNickName}</td>
                 <td>{list.hit}</td>
                 <td>{list.attachFile}</td>
