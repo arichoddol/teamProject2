@@ -2,10 +2,8 @@ package org.spring.backendspring.cart.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDateTime;
-
 import org.spring.backendspring.cart.dto.CartItemDto;
+import org.spring.backendspring.item.entity.ItemEntity;
 
 @Entity
 @Getter
@@ -20,39 +18,43 @@ public class CartItemEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartItemId;
 
-    private Long itemId;
-
     private int itemSize;
-
-    private LocalDateTime createTime;
-
-    private LocalDateTime updateTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id")
     private CartEntity cartEntity;
 
-     // --- DTO 변환 메서드 추가 ---
-    
+    // itemId 컬럼은 제거
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id") // DB 컬럼 이름과 정확히 매핑
+    private ItemEntity itemEntity;
+
+    // DTO 변환
     public CartItemDto toDto() {
+        String image = null;
+        if (itemEntity != null && itemEntity.getItemImgEntities() != null
+                && !itemEntity.getItemImgEntities().isEmpty()) {
+            image = itemEntity.getItemImgEntities().get(0).getNewName();
+        }
+
         return CartItemDto.builder()
                 .cartItemId(this.cartItemId)
-                .itemId(this.itemId)
+                .itemId(itemEntity != null ? itemEntity.getId() : null)
                 .itemSize(this.itemSize)
-                .createTime(this.createTime)
-                .updateTime(this.updateTime)
+                .itemTitle(itemEntity != null ? itemEntity.getItemTitle() : null)
+                .itemPrice(itemEntity != null ? itemEntity.getItemPrice() : 0)
+                .itemImage(image)
                 .build();
     }
 
-    public static CartItemEntity fromDto(CartItemDto dto) {
+    public static CartItemEntity fromDto(CartItemDto dto, CartEntity cart, ItemEntity itemEntity) {
         if (dto == null) return null;
 
         return CartItemEntity.builder()
                 .cartItemId(dto.getCartItemId())
-                .itemId(dto.getItemId())
                 .itemSize(dto.getItemSize())
-                .createTime(dto.getCreateTime())
-                .updateTime(dto.getUpdateTime())
+                .cartEntity(cart)
+                .itemEntity(itemEntity)
                 .build();
     }
 }

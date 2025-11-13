@@ -144,7 +144,7 @@ const IndexPage = () => {
                     <h1> 러닝크루 project</h1>
                 </div>
                 <div className="index-con">
-                    <Link to={'/store'} className="text-draw"
+                    <Link to={'/shop'} className="text-draw"
                         data-text="S H O P">:: ENTER ::</Link>
                 </div>
             </div>
