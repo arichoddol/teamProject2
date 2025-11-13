@@ -1,0 +1,52 @@
+.mycrew {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #fff;
+  }
+  
+  /* 전체 레이아웃 컨테이너 */
+  .mycrew-con {
+    display: flex;
+    align-items: flex-start;
+  }
+  
+  /* 왼쪽 사이드바 */
+  .left {
+    width: 200px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background-color: #f8f8f8;
+    border-right: 1px solid #e5e5e5;
+  }
+  
+  /* 오른쪽 컨텐츠 영역 */
+  .right {
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* 헤더를 상단에 고정 */
+  .right > .Header,
+  .right > header,
+  .right > div > header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: white;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  /* Outlet과 Footer가 아래로 배치되도록 */
+  .right > *:not(:first-child) {
+    flex-shrink: 0;
+  }
+  
+  footer {
+    margin-top: auto;
+  }
+  

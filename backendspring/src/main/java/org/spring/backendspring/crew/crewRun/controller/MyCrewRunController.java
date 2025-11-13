@@ -13,7 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/crew/{crewId}/run")
+@RequestMapping("/api/mycrew/{crewId}/run")
 public class MyCrewRunController {
 
     private final CrewRunService crewRunService;

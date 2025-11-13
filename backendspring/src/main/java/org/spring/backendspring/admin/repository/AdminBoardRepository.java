@@ -1,8 +1,13 @@
-// package org.spring.backendspring.admin.repository;
+package org.spring.backendspring.admin.repository;
 
-// import org.springframework.data.jpa.repository.JpaRepository;
+import org.spring.backendspring.board.entity.BoardEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-// public interface AdminBoardRepository extends JpaRepository<BoardEntity, Long> {
-
-    
-// }
+public interface AdminBoardRepository extends JpaRepository<BoardEntity, Long> {
+    Page<BoardEntity> findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(
+            String titleKeyword,
+            String contentKeyword,
+            Pageable pageable);
+}

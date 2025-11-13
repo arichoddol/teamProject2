@@ -1,6 +1,8 @@
 package org.spring.backendspring.payment.dto;
 
 import lombok.*;
+
+import org.spring.backendspring.payment.PaymentStatus;
 import org.spring.backendspring.payment.entity.PaymentEntity;
 import org.spring.backendspring.payment.entity.PaymentItemEntity;
 
@@ -22,6 +24,7 @@ public class PaymentDto {
     private String paymentPost;
     private String paymentResult;
     private String paymentType;
+    private PaymentStatus paymentStatus;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 
@@ -30,7 +33,8 @@ public class PaymentDto {
 
     // Entity → DTO 변환
     public static PaymentDto fromEntity(PaymentEntity entity) {
-        if (entity == null) return null;
+        if (entity == null)
+            return null;
 
         return PaymentDto.builder()
                 .paymentId(entity.getPaymentId())
@@ -42,11 +46,11 @@ public class PaymentDto {
                 .paymentType(entity.getPaymentType())
                 .createTime(entity.getCreateTime())
                 .updateTime(entity.getUpdateTime())
-                .paymentItems(entity.getPaymentItemEntities() != null ?
-                        entity.getPaymentItemEntities().stream()
-                                .map(PaymentItemDto::fromEntity)
-                                .collect(Collectors.toList())
+                .paymentItems(entity.getPaymentItemEntities() != null ? entity.getPaymentItemEntities().stream()
+                        .map(PaymentItemDto::fromEntity)
+                        .collect(Collectors.toList())
                         : null)
+                .paymentStatus(entity.getPaymentStatus())
                 .build();
     }
 
@@ -60,8 +64,7 @@ public class PaymentDto {
                 .paymentPost(this.paymentPost)
                 .paymentResult(this.paymentResult)
                 .paymentType(this.paymentType)
-                .createTime(this.createTime)
-                .updateTime(this.updateTime)
+                .paymentStatus(this.paymentStatus)
                 .build();
 
         if (this.paymentItems != null) {
@@ -72,8 +75,7 @@ public class PaymentDto {
                                 itemEntity.setPayment(entity); // 양방향 관계 설정
                                 return itemEntity;
                             })
-                            .collect(Collectors.toList())
-            );
+                            .collect(Collectors.toList()));
         }
 
         return entity;
