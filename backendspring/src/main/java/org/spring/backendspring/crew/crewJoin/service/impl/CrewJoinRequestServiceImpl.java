@@ -89,8 +89,8 @@ public class CrewJoinRequestServiceImpl implements CrewJoinRequestService {
     //가입 거절
     @Override
     public void crewJoinRequestRejected(CrewJoinRequestDto joinDto) {
-        Long crewId = joinDto.getCrewEntity().getId();
-        Long memberId = joinDto.getMemberEntity().getId();
+        Long crewId = joinDto.getCrewRequestId();
+        Long memberId = joinDto.getMemberRequestId();
 
         CrewJoinRequestEntity request = crewJoinRequestRepository.findByCrewEntityIdAndMemberEntityId(crewId, memberId)
                 .orElseThrow(()->new NullPointerException("가입신청 없음"));

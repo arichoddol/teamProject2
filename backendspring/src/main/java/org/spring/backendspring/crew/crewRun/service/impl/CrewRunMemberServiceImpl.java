@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 public class CrewRunMemberServiceImpl implements CrewRunMemberService {
     private final CrewRunMemberRepository crewRunMemberRepository;
     private final CrewRunRepository crewRunRepository;
-    private final CrewRepository crewRepository;
     private final MemberRepository memberRepository;
 
     @Override
