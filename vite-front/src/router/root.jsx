@@ -20,10 +20,15 @@ const AdminLayout = lazy(()=> import(`../layout/AdminLayout`))
 const BoardLayout = lazy(()=> import(`../layout/BoardLayout`))
 const EventLayout = lazy(()=> import(`../layout/EventLayout`))
 const CrewLayout = lazy(()=> import('../layout/CrewLayout'))
+const CartLayout = lazy(()=> import(`../layout/CartLayout`))
+const PaymentLayout = lazy(()=> import(`../layout/PaymentLayout`))
+
 
 // Page
 const IndexPage = lazy(()=>import(`../pages/IndexPage`))
-
+const CartPage = lazy(() => import(`../components/container/cart/CartPage`))
+const PaymentPage = lazy(() => import(`../components/container/payment/PaymentPage`))
+const PaymentListPage = lazy(() => import(`../components/container/payment/PaymentListPage`))
 
 
 const root = createBrowserRouter([
@@ -68,7 +73,35 @@ const root = createBrowserRouter([
         path:'event',
         element: <Suspense fallback={Loading}><EventLayout/></Suspense>,
         children: toEventRouter()
-    }
+    },
+    {
+        path: 'cart',
+        element: <Suspense fallback={Loading}><CartLayout /></Suspense>,
+        children: [
+                {
+        index: true,
+        element: <Suspense fallback={Loading}><CartPage /></Suspense>
+      }
+    ]
+  },
+  {
+        path: 'payment',
+        element: <Suspense fallback={Loading}><PaymentLayout /></Suspense>,
+        children: [
+      {
+        path: ':memberId',
+        element: <Suspense fallback={Loading}><PaymentPage /></Suspense>
+      },
+      {
+        path: 'success',
+        element: <Suspense fallback={Loading}><PaymentListPage /></Suspense>
+      },
+      {
+        path: 'cancel',
+        element: <Suspense fallback={Loading}><CartPage /></Suspense>
+      }
+    ]
+  }
+]);
     
- ])
 export default root

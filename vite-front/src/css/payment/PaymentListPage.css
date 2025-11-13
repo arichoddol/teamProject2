@@ -1,0 +1,90 @@
+/* paymentList.css */
+
+.paymentList {
+  padding: 20px;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.paymentList-con {
+  max-width: 1000px;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.paymentList-con h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 28px;
+  color: #333;
+}
+
+.order {
+  margin-bottom: 30px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.order .top {
+  background-color: #f1f1f1;
+  padding: 15px;
+}
+
+.order .top ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.order .top ul li {
+  width: 50%;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #555;
+}
+
+.order .bottom {
+  padding: 15px;
+}
+
+.order .bottom ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.order .bottom ul li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  color: #444;
+}
+
+.order .bottom ul li span {
+  width: 33%;
+  text-align: center;
+}
+
+.order .bottom ul li:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 768px) {
+  .order .top ul li {
+    width: 100%;
+  }
+  .order .bottom ul li span {
+    width: 100%;
+    display: block;
+    margin-bottom: 5px;
+  }
+}
