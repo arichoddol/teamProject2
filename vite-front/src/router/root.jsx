@@ -9,7 +9,8 @@ import toAdminRouter from './toAdminRouter'
 import toBoardRouter from './toBoardRouter'
 import toShopRouter from './toShopRouter'
 import toEventRouter from './toEventRouter'
-
+import toCartRouter from './toCartRouter'
+import toPaymentRouter from './toPaymentRouter'  
 const Loading = <div className='loading'>Loading..</div>
 
 
@@ -26,10 +27,6 @@ const PaymentLayout = lazy(()=> import(`../layout/PaymentLayout`))
 
 // Page
 const IndexPage = lazy(()=>import(`../pages/IndexPage`))
-const CartPage = lazy(() => import(`../components/container/cart/CartPage`))
-const PaymentPage = lazy(() => import(`../components/container/payment/PaymentPage`))
-const PaymentListPage = lazy(() => import(`../components/container/payment/PaymentListPage`))
-
 
 const root = createBrowserRouter([
 
@@ -75,33 +72,17 @@ const root = createBrowserRouter([
         children: toEventRouter()
     },
     {
-        path: 'cart',
-        element: <Suspense fallback={Loading}><CartLayout /></Suspense>,
-        children: [
-                {
-        index: true,
-        element: <Suspense fallback={Loading}><CartPage /></Suspense>
-      }
-    ]
-  },
-  {
-        path: 'payment',
-        element: <Suspense fallback={Loading}><PaymentLayout /></Suspense>,
-        children: [
-      {
-        path: ':memberId',
-        element: <Suspense fallback={Loading}><PaymentPage /></Suspense>
-      },
-      {
-        path: 'success',
-        element: <Suspense fallback={Loading}><PaymentListPage /></Suspense>
-      },
-      {
-        path: 'cancel',
-        element: <Suspense fallback={Loading}><CartPage /></Suspense>
-      }
-    ]
-  }
-]);
-    
-export default root
+        // cart
+        path:'cart',
+        element: <Suspense fallback={Loading}><CartLayout/></Suspense>,
+        children: toCartRouter()
+    },
+    {
+        // payment
+        path:'payment',
+        element: <Suspense fallback={Loading}><PaymentLayout/></Suspense>,
+        children: toPaymentRouter()
+    }
+    ]);
+   
+export default root;
