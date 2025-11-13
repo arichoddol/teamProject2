@@ -9,6 +9,7 @@ import toAdminRouter from './toAdminRouter'
 import toBoardRouter from './toBoardRouter'
 import toShopRouter from './toShopRouter'
 import toEventRouter from './toEventRouter'
+import toMyCrewRouter from './toMyCrewRouter'
 
 const Loading = <div className='loading'>Loading..</div>
 
@@ -20,8 +21,11 @@ const AdminLayout = lazy(()=> import(`../layout/AdminLayout`))
 const BoardLayout = lazy(()=> import(`../layout/BoardLayout`))
 const EventLayout = lazy(()=> import(`../layout/EventLayout`))
 const CrewLayout = lazy(()=> import('../layout/CrewLayout'))
+
 const CartLayout = lazy(()=> import(`../layout/CartLayout`))
 const PaymentLayout = lazy(()=> import(`../layout/PaymentLayout`))
+
+const MyCrewLayout = lazy(()=> import('../layout/MyCrewLayout'))
 
 
 // Page
@@ -74,34 +78,12 @@ const root = createBrowserRouter([
         element: <Suspense fallback={Loading}><EventLayout/></Suspense>,
         children: toEventRouter()
     },
+    
     {
-        path: 'cart',
-        element: <Suspense fallback={Loading}><CartLayout /></Suspense>,
-        children: [
-                {
-        index: true,
-        element: <Suspense fallback={Loading}><CartPage /></Suspense>
-      }
-    ]
-  },
-  {
-        path: 'payment',
-        element: <Suspense fallback={Loading}><PaymentLayout /></Suspense>,
-        children: [
-      {
-        path: ':memberId',
-        element: <Suspense fallback={Loading}><PaymentPage /></Suspense>
-      },
-      {
-        path: 'success',
-        element: <Suspense fallback={Loading}><PaymentListPage /></Suspense>
-      },
-      {
-        path: 'cancel',
-        element: <Suspense fallback={Loading}><CartPage /></Suspense>
-      }
-    ]
-  }
-]);
+        // mycrew
+        path:'mycrew/:crewId',
+        element: <Suspense fallback={Loading}><MyCrewLayout/></Suspense>,
+        children: toMyCrewRouter()
+    }
     
 export default root

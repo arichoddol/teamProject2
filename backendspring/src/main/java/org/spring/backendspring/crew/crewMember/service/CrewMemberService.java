@@ -6,7 +6,8 @@ import java.util.List;
 
 public interface CrewMemberService {
     List<CrewMemberDto> findCrewMemberList(Long crewId);
-    void deleteCrewMember(Long id);
+    
+    void deleteCrewMember(Long crewMemberTbId);
 
     CrewMemberDto detailCrewMember(Long crewId, Long crewMemberId);
 }

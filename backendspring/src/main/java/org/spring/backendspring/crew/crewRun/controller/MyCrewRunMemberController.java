@@ -3,7 +3,6 @@ package org.spring.backendspring.crew.crewRun.controller;
 import lombok.RequiredArgsConstructor;
 import org.spring.backendspring.crew.crewRun.dto.CrewRunMemberDto;
 import org.spring.backendspring.crew.crewRun.service.CrewRunMemberService;
-import org.spring.backendspring.crew.crewRun.service.CrewRunService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/crew/{crewId}/run/{runId}/member")
+@RequestMapping("/api/mycrew/{crewId}/run/{runId}/member")
 public class MyCrewRunMemberController {
 
     private final CrewRunMemberService crewRunMemberService;
