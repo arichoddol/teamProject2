@@ -35,8 +35,7 @@ const BoardWriteContainer = () => {
       // setData(response.data.content);
       setBoards(response.data.content);
     }
-    // 배열이 아닌 객체가 할당되어 에러가 난것
-    // setBoards(response.data);
+  
 
 
   };
@@ -58,7 +57,7 @@ const BoardWriteContainer = () => {
           <ul>
             <li className="first_li">
                 <label htmlFor='memberId'>MEMBER_ID::</label> 
-                 <input type="text" name="memberId" id="memberId" value="1" readOnly />   
+                 <input type="text" name="memberId" id="memberId" readOnly />   
                 </li> 
      
      {/* plz fix later this blow code for :: Show Currently Login Member Number Or NickName */}
@@ -87,7 +86,7 @@ const BoardWriteContainer = () => {
                 <li>
                     <input type="submit" value="글작성" className="last" />
 
-                    <a href="/board/indx" className="last">게시글목록</a>
+                    <a href="/board/index" className="last">게시글목록</a>
                 </li>
             </ul>
         </form>

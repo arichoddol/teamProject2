@@ -2,6 +2,7 @@ package org.spring.backendspring.board.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -67,6 +68,7 @@ public class BoardDto {
 
     private MultipartFile boardFile;
     private List<MultipartFile> boardFileList;
+    private List<BoardImgDto> boardImgDtos;
 
     private String newFileName;
     private String oldFileName;
@@ -75,7 +77,9 @@ public class BoardDto {
     private MemberEntity memberentity;
 
     // 1:N
+    @JsonIgnore
     private List<BoardReplyEntity> boardReplyEntities;
+    @JsonIgnore
     private List<BoardImgEntity> boardImgEntities;
 
 
@@ -84,11 +88,17 @@ public class BoardDto {
         String newFileName = null;
         String oldFileName = null;
 
+        List<BoardImgDto> boardImgDtos = null;
+
         if(boardEntity.getAttachFile() != 0 && 
             boardEntity.getBoardImgEntities() != null &&
             !boardEntity.getBoardImgEntities().isEmpty()){
                 newFileName = boardEntity.getBoardImgEntities().get(0).getNewName();
                 oldFileName = boardEntity.getBoardImgEntities().get(0).getOldName();
+
+                boardImgDtos = boardEntity.getBoardImgEntities().stream()
+                            .map(BoardImgDto::toBoardImgDto)
+                            .collect(Collectors.toList());
             }
 
             return BoardDto.builder()
@@ -96,6 +106,7 @@ public class BoardDto {
                     .title(boardEntity.getTitle())
                     .content(boardEntity.getContent())
                     .hit(boardEntity.getHit())
+                    .boardImgDtos(boardImgDtos)
                     .memberNickName(boardEntity.getMemberEntity().getNickName())
                     .createTime(boardEntity.getCreateTime())
                     .updateTime(boardEntity.getUpdateTime())
