@@ -73,7 +73,8 @@ const root = createBrowserRouter([
     },
     {
         // mycrew
-        path:'mycrew/:crewId',
+        // path:'mycrew/:crewId',
+        path:'mycrew/',
         element: <Suspense fallback={Loading}><MyCrewLayout/></Suspense>,
         children: toMyCrewRouter()
     }

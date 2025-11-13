@@ -28,14 +28,29 @@ public class CrewBoardServiceImpl implements CrewBoardService {
     private final CrewBoardImageRepository crewBoardImageRepository;
     private final MemberRepository memberRepository;
     private final AwsS3Service awsS3Service;
+    
+    @Override
+    public List<CrewBoardDto> boardListByCrew(Long crewId) {
+    
+        List<CrewBoardEntity> crewBoardEntityList = crewBoardRepository.findByCrewEntity_Id(crewId);
+    
+        if (crewBoardEntityList.isEmpty()) {
+            throw new NullPointerException("조회할 게시글 없음");
+        }
+    
+        return crewBoardEntityList.stream()
+                    .map(CrewBoardDto::toDto2)
+                    .collect(Collectors.toList());
+    }
 
     @Override
-    public CrewBoardDto createBoard(CrewBoardDto crewBoardDto) throws IOException {
+    public CrewBoardDto createBoard(Long crewId, CrewBoardDto crewBoardDto) throws IOException {
         
-        MemberEntity memberEntity = memberRepository.findById(crewBoardDto.getMemberEntity().getId())
+        MemberEntity memberEntity = memberRepository.findById(crewBoardDto.getMemberId())
                 .orElseThrow(IllegalArgumentException::new);
 
         crewBoardDto.setMemberEntity(memberEntity);
+        crewBoardDto.setCrewId(crewId);
 
         List<MultipartFile> crewBoardFile = crewBoardDto.getCrewBoardFile();
 
@@ -69,37 +84,24 @@ public class CrewBoardServiceImpl implements CrewBoardService {
     }
 
     @Override
-    public List<CrewBoardDto> crewBoardList() {        
-
-        List<CrewBoardEntity> crewBoardEntityList = crewBoardRepository.findAll();
-
-        if (crewBoardEntityList.isEmpty()) {
-            throw new NullPointerException("조회할 게시글 없음");
-        }
-
-        return crewBoardEntityList.stream()
-                    .map(CrewBoardDto::toDto2)
-                    .collect(Collectors.toList());
-    }
-
-    @Override
-    public CrewBoardDto boardDetail(Long id) {
+    public CrewBoardDto boardDetail(Long crewId, Long id) {
         
-        CrewBoardEntity crewBoardEntity = crewBoardRepository.findById(id)
+        CrewBoardEntity crewBoardEntity = crewBoardRepository.findByCrewEntity_IdAndId(crewId, id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글"));
 
         return CrewBoardDto.toDto2(crewBoardEntity);
     }
 
     @Override
-    public CrewBoardDto updateBoard(Long id, CrewBoardDto crewBoardDto) throws IOException {
+    public CrewBoardDto updateBoard(Long id, Long crewId, CrewBoardDto crewBoardDto) throws IOException {
         
         MemberEntity memberEntity = memberRepository.findById(crewBoardDto.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원"));
 
         crewBoardDto.setMemberEntity(memberEntity);
+        crewBoardDto.setCrewId(crewId);
 
-        CrewBoardEntity crewBoardEntity = crewBoardRepository.findById(id)
+        CrewBoardEntity crewBoardEntity = crewBoardRepository.findByCrewEntity_IdAndId(crewId, id)
                 .orElseThrow(() -> new NullPointerException("존재하지 않는 게시글"));
         
         List<CrewBoardImageEntity> crewBoardImageEntities = crewBoardImageRepository.findByCrewBoardEntity(crewBoardEntity);
@@ -145,6 +147,7 @@ public class CrewBoardServiceImpl implements CrewBoardService {
         crewBoardImageRepository.deleteAll(crewBoardImages);
         crewBoardRepository.delete(crewBoardEntity);
     }
+
 
     
 }

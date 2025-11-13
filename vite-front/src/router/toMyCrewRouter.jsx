@@ -9,9 +9,9 @@ const MyCrewMain = lazy(()=> import('../components/container/myCrwe/MyCrewMainCo
 const MyCrewjoinRequest = lazy(()=> import('../components/container/myCrwe/MyCrewJoinRequestContainer'))
 const MyCrewMember = lazy(()=> import('../components/container/myCrwe/MyCrewMemberContainer'))
 const MyCrewRun = lazy(()=> import('../components/container/myCrwe/MyCrewRunContainer'))
-const MyCrewBoard = lazy(()=> import('../components/container/myCrwe/MyCrewBoardContainer'))
+const MyCrewBoard = lazy(()=> import('../components/container/myCrwe/board/MyCrewBoardContainer'))
 const MyCrewChat = lazy(()=> import('../components/container/myCrwe/MyCrewChatContainer'))
-
+const MyCrewBoardCreate = lazy(()=> import('../components/container/myCrwe/board/MyCrewBoardCreate'))
 
 const toMyCrewRouter = () => {
   return (
@@ -40,6 +40,10 @@ const toMyCrewRouter = () => {
         {
             path: 'board',
             element: <Suspense fallback={Loading}><MyCrewBoard/></Suspense>
+        },
+        {
+            path: 'board/create',
+            element: <Suspense fallback={Loading}><MyCrewBoardCreate/></Suspense>
         },
         {
             path: 'chat',

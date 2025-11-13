@@ -7,14 +7,14 @@ import org.spring.backendspring.crew.crewBoard.dto.CrewBoardDto;
 
 public interface CrewBoardService {
 
-    CrewBoardDto createBoard(CrewBoardDto crewBoardDto) throws IOException;
+    CrewBoardDto createBoard(Long crewId, CrewBoardDto crewBoardDto) throws IOException;
+        
+    CrewBoardDto boardDetail(Long crewId, Long id);
     
-    List<CrewBoardDto> crewBoardList();
-    
-    CrewBoardDto boardDetail(Long id);
-    
-    CrewBoardDto updateBoard(Long id, CrewBoardDto crewBoardDto) throws IOException;
+    CrewBoardDto updateBoard(Long id, Long crewId, CrewBoardDto crewBoardDto) throws IOException;
     
     void deleteBoard(Long id);
+
+    List<CrewBoardDto> boardListByCrew(Long crewId);
     
 }

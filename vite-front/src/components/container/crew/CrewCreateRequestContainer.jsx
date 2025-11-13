@@ -51,7 +51,7 @@ const CrewCreateRequestContainer = () => {
   const submit = async (el) => {
     el.preventDefault();
       
-    // if (!isLogin) return;
+    if (!isLogin) return;
 
     try {
       const response = await fetch("/api/crew/create/request", {
@@ -63,6 +63,7 @@ const CrewCreateRequestContainer = () => {
         body: JSON.stringify({
             crewName,
             message,
+            district,
         }),
       });
       const data = await response.json();
@@ -73,13 +74,13 @@ const CrewCreateRequestContainer = () => {
     } 
   }
 
-//   if (!isLogin) return null;
+  if (!isLogin) return null;
 
   return (
     <div className="createRequest">
         <div className="createRequest-con">
             <h2>크루 만들기</h2>
-            {/* {isLogin ? ( */}
+            {isLogin ? (
                 <form onSubmit={submit}>
                     <div className="crewInfo">
                         <label className="crewName">크루 이름</label>
@@ -116,9 +117,9 @@ const CrewCreateRequestContainer = () => {
                     </div>
                     <button className="createRequest" type="submit">신청하기</button>
                 </form>
-            {/* ) : (
+            ) : (
                 <p className="loginRequired">로그인이 필요합니다.</p>
-            )} */}
+            )}
             <p className="responseMsg">{responseMsg}</p>
         </div>
     </div>

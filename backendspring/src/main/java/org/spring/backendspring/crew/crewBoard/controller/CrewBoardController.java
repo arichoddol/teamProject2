@@ -22,16 +22,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
-@RequestMapping("/api/crewBoard")
+@RequestMapping("/api/mycrew/{crewId}/board")
 @RequiredArgsConstructor
 public class CrewBoardController {
     
     private final CrewBoardService crewBoardService;
 
     @GetMapping({"", "/", "/list"})
-    public ResponseEntity<?> boardList() {
+    public ResponseEntity<?> boardListByCrew(@PathVariable("crewId") Long crewId) {
 
-        List<CrewBoardDto> crewBoardDtoList = crewBoardService.crewBoardList();
+        List<CrewBoardDto> crewBoardDtoList = crewBoardService.boardListByCrew(crewId);
 
         Map<String, Object> crewBoardList = new HashMap<>();
         
@@ -41,17 +41,19 @@ public class CrewBoardController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createBoard(@RequestBody CrewBoardDto crewBoardDto) throws IOException {
+    public ResponseEntity<?> createBoard(@PathVariable("crewId") Long crewId,
+                                         @RequestBody CrewBoardDto crewBoardDto) throws IOException {
 
-        CrewBoardDto createBoard = crewBoardService.createBoard(crewBoardDto);
+        CrewBoardDto createBoard = crewBoardService.createBoard(crewId, crewBoardDto);
 
         return ResponseEntity.ok(createBoard);
     }
 
     @GetMapping("/detail/{crewBoardId}")
-    public ResponseEntity<?> boardDetail(@PathVariable("crewBoardId") Long id) {
+    public ResponseEntity<?> boardDetail(@PathVariable("crewBoardId") Long id,
+                                         @PathVariable("crewId") Long crewId) {
 
-        CrewBoardDto crewBoardDto = crewBoardService.boardDetail(id);
+        CrewBoardDto crewBoardDto = crewBoardService.boardDetail(crewId, id);
         
         Map<String, CrewBoardDto> response = new HashMap<>();
 
@@ -60,11 +62,12 @@ public class CrewBoardController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateBoard(@PathVariable("id") Long id,
+    @PutMapping("/update/{crewBoardId}")
+    public ResponseEntity<?> updateBoard(@PathVariable("crewBoardId") Long id,
+                                         @PathVariable("crewId") Long crewId,
                                          @ModelAttribute CrewBoardDto crewBoardDto) throws IOException {
 
-        CrewBoardDto updateBoardDto = crewBoardService.updateBoard(id, crewBoardDto);
+        CrewBoardDto updateBoardDto = crewBoardService.updateBoard(id, crewId, crewBoardDto);
 
         Map<String, CrewBoardDto> response = new HashMap<>();
 
@@ -73,8 +76,9 @@ public class CrewBoardController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteBoard(@PathVariable("id") Long id) {
+    @DeleteMapping("/delete/{crewBoardId}")
+    public ResponseEntity<?> deleteBoard(@PathVariable("crewBoardId") Long id,
+                                         @PathVariable("crewId") Long crewId) {
         
         crewBoardService.deleteBoard(id);
 

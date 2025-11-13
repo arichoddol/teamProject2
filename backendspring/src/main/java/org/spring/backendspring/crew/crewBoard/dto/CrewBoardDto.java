@@ -46,6 +46,7 @@ public class CrewBoardDto {
 
     private Long crewId;
     private Long memberId;
+    private String memberNickName;
 
     public static CrewBoardDto toDto(CrewBoardEntity entity, MemberEntity memberEntity) {
 
@@ -56,6 +57,7 @@ public class CrewBoardDto {
                 .crewId(entity.getCrewEntity().getId())
                 .memberId(entity.getMemberEntity().getId())
                 .memberEntity(memberEntity)
+                .memberNickName(entity.getMemberEntity().getNickName())
                 .crewBoardCommentEntities(entity.getCrewBoardCommentEntities())
                 .crewBoardImageEntities(entity.getCrewBoardImageEntities())
                 .createTime(entity.getCreateTime())
@@ -70,6 +72,7 @@ public class CrewBoardDto {
                 .content(entity.getContent())
                 .crewId(entity.getCrewEntity().getId())
                 .memberId(entity.getMemberEntity().getId())
+                .memberNickName(entity.getMemberEntity().getNickName())
                 .crewBoardCommentEntities(entity.getCrewBoardCommentEntities())
                 .crewBoardImageEntities(entity.getCrewBoardImageEntities())
                 .createTime(entity.getCreateTime())
