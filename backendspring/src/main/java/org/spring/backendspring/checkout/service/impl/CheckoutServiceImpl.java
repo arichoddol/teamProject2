@@ -37,8 +37,6 @@ public class CheckoutServiceImpl implements CheckoutService {
                 .paymentMethod(paymentMethod)
                 .paymentResult("READY")
                 .paymentType("CARD")
-                .createTime(LocalDateTime.now())
-                .updateTime(LocalDateTime.now())
                 .build();
 
         PaymentEntity savedPayment = paymentRepository.save(payment);
