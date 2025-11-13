@@ -14,6 +14,9 @@ import org.spring.backendspring.member.entity.MemberEntity;
 @Builder
 public class CrewMemberDto extends BasicTime {
     private Long id;
+    private Long crewId;
+    private Long memberId;
+
 
     private CrewEntity crewEntity;
 
@@ -22,11 +25,13 @@ public class CrewMemberDto extends BasicTime {
     private CrewRole roleInCrew; // LEADER/MEMBER
 
     public static CrewMemberDto toCrewMember (CrewMemberEntity crewMemberEntity){
-
+        //보이고 싶은 정보 추가
         return CrewMemberDto.builder()
                 .id(crewMemberEntity.getId())
-                .crewEntity(crewMemberEntity.getCrewEntity())
-                .memberEntity(crewMemberEntity.getMemberEntity())
+                .crewId(crewMemberEntity.getCrewEntity().getId())
+                .memberId(crewMemberEntity.getMemberEntity().getId())
+                // .crewEntity(crewMemberEntity.getCrewEntity())
+                // .memberEntity(crewMemberEntity.getMemberEntity())
                 .roleInCrew(crewMemberEntity.getRoleInCrew())
                 .build();
     }

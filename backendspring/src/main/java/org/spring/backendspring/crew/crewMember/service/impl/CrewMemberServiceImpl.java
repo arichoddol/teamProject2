@@ -25,8 +25,8 @@ public class CrewMemberServiceImpl implements CrewMemberService {
     }
 
     @Override
-    public void deleteCrewMember(Long id) {
-        CrewMemberEntity crewMemberEntity = crewMemberRepository.findById(id)
+    public void deleteCrewMember(Long crewMemberTbId) {
+        CrewMemberEntity crewMemberEntity = crewMemberRepository.findById(crewMemberTbId)
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 크루원"));
         crewMemberRepository.delete(crewMemberEntity);
     }

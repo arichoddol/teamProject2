@@ -9,6 +9,7 @@ import toAdminRouter from './toAdminRouter'
 import toBoardRouter from './toBoardRouter'
 import toShopRouter from './toShopRouter'
 import toEventRouter from './toEventRouter'
+import toMyCrewRouter from './toMyCrewRouter'
 
 const Loading = <div className='loading'>Loading..</div>
 
@@ -20,6 +21,7 @@ const AdminLayout = lazy(()=> import(`../layout/AdminLayout`))
 const BoardLayout = lazy(()=> import(`../layout/BoardLayout`))
 const EventLayout = lazy(()=> import(`../layout/EventLayout`))
 const CrewLayout = lazy(()=> import('../layout/CrewLayout'))
+const MyCrewLayout = lazy(()=> import('../layout/MyCrewLayout'))
 
 // Page
 const IndexPage = lazy(()=>import(`../pages/IndexPage`))
@@ -68,6 +70,12 @@ const root = createBrowserRouter([
         path:'event',
         element: <Suspense fallback={Loading}><EventLayout/></Suspense>,
         children: toEventRouter()
+    },
+    {
+        // mycrew
+        path:'mycrew/:crewId',
+        element: <Suspense fallback={Loading}><MyCrewLayout/></Suspense>,
+        children: toMyCrewRouter()
     }
     
  ])
