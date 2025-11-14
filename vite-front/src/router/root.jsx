@@ -80,10 +80,11 @@ const root = createBrowserRouter([
     },
     
     {
-        // mycrew
+         // mycrew
         path:'mycrew/:crewId',
         element: <Suspense fallback={Loading}><MyCrewLayout/></Suspense>,
         children: toMyCrewRouter()
     }
     
+])
 export default root

@@ -28,8 +28,7 @@ public class MemberMapper {
     }
 
     // 회원 불러오기
-    public static MemberDto toDto(MemberEntity entity,
-                                PasswordEncoder passwordEncoder) {
+    public static MemberDto toDto(MemberEntity entity) {
         return MemberDto.builder()
                 .id(entity.getId())
                 .userEmail(entity.getUserEmail())

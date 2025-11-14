@@ -98,6 +98,7 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         log.info("---------------------------------------");
         log.info("토큰 발급 완료: {}", accessToken);
+        log.info("refresh 토큰 발급 완료: {}", refreshToken);
         log.info("---------------------------------------");
     }
 
