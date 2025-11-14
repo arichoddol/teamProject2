@@ -4,7 +4,6 @@ import lombok.*;
 import org.spring.backendspring.cart.entity.CartEntity;
 import org.spring.backendspring.cart.entity.CartItemEntity;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,8 +16,6 @@ public class CartDto {
 
     private Long cartId;
     private Long memberId;
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
     private List<CartItemDto> items;  // CartItemDto 리스트로 변경
 
     //  Entity → DTO 변환
@@ -28,8 +25,6 @@ public class CartDto {
         return CartDto.builder()
                 .cartId(entity.getId())
                 .memberId(entity.getMemberId())
-                .createTime(entity.getCreateTime())
-                .updateTime(entity.getUpdateTime())
                 .items(entity.getCartItemEntities() != null
                         ? entity.getCartItemEntities().stream()
                                 .map(CartItemDto::fromEntity)
@@ -43,8 +38,6 @@ public class CartDto {
         CartEntity cart = CartEntity.builder()
                 .id(this.cartId)
                 .memberId(this.memberId)
-                .createTime(this.createTime)
-                .updateTime(this.updateTime)
                 .build();
 
         if (this.items != null) {
