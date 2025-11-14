@@ -4,16 +4,17 @@ import java.io.IOException;
 import java.util.List;
 
 import org.spring.backendspring.crew.crewBoard.dto.CrewBoardDto;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface CrewBoardService {
 
-    CrewBoardDto createBoard(Long crewId, CrewBoardDto crewBoardDto) throws IOException;
+    CrewBoardDto createBoard(Long crewId, CrewBoardDto crewBoardDto, Long loginUserId) throws IOException;
         
     CrewBoardDto boardDetail(Long crewId, Long id);
     
-    CrewBoardDto updateBoard(Long id, Long crewId, CrewBoardDto crewBoardDto) throws IOException;
+    CrewBoardDto updateBoard(Long id, Long crewId, CrewBoardDto crewBoardDto, Long loginUserId, List<MultipartFile> newImages, List<Long> deleteImageId) throws IOException;
     
-    void deleteBoard(Long id);
+    void deleteBoard(Long id, Long loginUserId);
 
     List<CrewBoardDto> boardListByCrew(Long crewId);
     

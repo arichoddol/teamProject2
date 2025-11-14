@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -5,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 const CrewCreateRequestContainer = () => {
   const navigate = useNavigate();
   const { isLogin } = useSelector((state) => state.loginSlice);
-  const accessToken = useSelector((state) => state.jwtSlice);
+  const { accessToken } = useSelector((state) => state.jwtSlice);
 
   const [crewName, setCrewName] = useState("");
   const [message, setMessage] = useState("");
@@ -54,20 +55,20 @@ const CrewCreateRequestContainer = () => {
     if (!isLogin) return;
 
     try {
-      const response = await fetch("/api/crew/create/request", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
+      const response = await axios.post("/api/crew/create/request", 
+        {
             crewName,
             message,
             district,
-        }),
-      });
-      const data = await response.json();
-      setResponseMsg(data.message)
+        },
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${accessToken}`,
+            },
+        }        
+      );
+      setResponseMsg(response.data.message)
     } catch (err) {
         console.error(err);
         setResponseMsg("오류 발생")
@@ -105,7 +106,7 @@ const CrewCreateRequestContainer = () => {
                     </div>
                     <div className="district">
                         <label className="crewDistrict">지역 선택</label>
-                        <select name="distict" id="district" value={district} onChange={selectChange}>
+                        <select name="district" id="district" value={district} onChange={selectChange}>
                             <option value="">지역선택</option>
                             {districtsInSeoul.map((d, index) => (
                                 <option key={index} value={d}>

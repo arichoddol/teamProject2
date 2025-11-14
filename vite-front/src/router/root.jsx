@@ -77,8 +77,7 @@ const root = createBrowserRouter([
         path:'event',
         element: <Suspense fallback={Loading}><EventLayout/></Suspense>,
         children: toEventRouter()
-    },
-    
+    },    
     {
         // mycrew
         // path:'mycrew/:crewId',
@@ -86,5 +85,5 @@ const root = createBrowserRouter([
         element: <Suspense fallback={Loading}><MyCrewLayout/></Suspense>,
         children: toMyCrewRouter()
     }
-    
+])  
 export default root

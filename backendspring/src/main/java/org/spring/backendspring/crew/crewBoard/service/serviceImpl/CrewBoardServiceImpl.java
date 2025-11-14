@@ -44,9 +44,9 @@ public class CrewBoardServiceImpl implements CrewBoardService {
     }
 
     @Override
-    public CrewBoardDto createBoard(Long crewId, CrewBoardDto crewBoardDto) throws IOException {
+    public CrewBoardDto createBoard(Long crewId, CrewBoardDto crewBoardDto, Long loginUserId) throws IOException {
         
-        MemberEntity memberEntity = memberRepository.findById(crewBoardDto.getMemberId())
+        MemberEntity memberEntity = memberRepository.findById(loginUserId)
                 .orElseThrow(IllegalArgumentException::new);
 
         crewBoardDto.setMemberEntity(memberEntity);
@@ -93,47 +93,50 @@ public class CrewBoardServiceImpl implements CrewBoardService {
     }
 
     @Override
-    public CrewBoardDto updateBoard(Long id, Long crewId, CrewBoardDto crewBoardDto) throws IOException {
+    public CrewBoardDto updateBoard(Long id, Long crewId, CrewBoardDto crewBoardDto, Long loginUserId, 
+                                    List<MultipartFile> newImages, 
+                                    List<Long> deleteImageId) throws IOException {
         
         MemberEntity memberEntity = memberRepository.findById(crewBoardDto.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원"));
-
         crewBoardDto.setMemberEntity(memberEntity);
         crewBoardDto.setCrewId(crewId);
-
         CrewBoardEntity crewBoardEntity = crewBoardRepository.findByCrewEntity_IdAndId(crewId, id)
                 .orElseThrow(() -> new NullPointerException("존재하지 않는 게시글"));
         
-        List<CrewBoardImageEntity> crewBoardImageEntities = crewBoardImageRepository.findByCrewBoardEntity(crewBoardEntity);
+        crewBoardEntity.setTitle(crewBoardDto.getTitle());
+        crewBoardEntity.setContent(crewBoardDto.getContent());
 
-        CrewBoardEntity updatedBoardEntity;
-        if (crewBoardDto.getCrewBoardFile() == null || crewBoardDto.getCrewBoardFile().isEmpty()) {
-            updatedBoardEntity = crewBoardRepository.save(CrewBoardEntity.toCrewBoardEntity(crewBoardDto));
-        } else {
-            for (CrewBoardImageEntity images : crewBoardImageEntities) {
-                awsS3Service.deleteFile(images.getNewName());
-                crewBoardImageRepository.delete(images);
+        // 삭제할 이미지
+        if (deleteImageId != null && !deleteImageId.isEmpty()) {
+            for (Long imageId : deleteImageId) {
+                CrewBoardImageEntity imageEntity = crewBoardImageRepository.findById(imageId)
+                            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이미지"));
+                awsS3Service.deleteFile(imageEntity.getNewName());
+                crewBoardImageRepository.delete(imageEntity);
             }
+        }
+        
+        // 새로운 이미지
+        if (newImages != null && !newImages.isEmpty()) {
+            for (MultipartFile image : newImages) {
+                if (!image.isEmpty()) {
+                    String originalImageName = image.getOriginalFilename();
+                    String newImageNaem = awsS3Service.uploadFile(image);
 
-            List<MultipartFile> crewBoardFiles = crewBoardDto.getCrewBoardFile();
-
-            updatedBoardEntity = crewBoardRepository.save(CrewBoardEntity.toCrewBoardEntity(crewBoardDto));
-
-            if (crewBoardFiles != null) {
-                for (MultipartFile images : crewBoardFiles) {
-                    String originalImageName = images.getOriginalFilename();
-                    String newImageName = awsS3Service.uploadFile(images);
-                    
-                    CrewBoardImageEntity boardImageEntity = CrewBoardImageEntity.toCrewBoardImageEntity(updatedBoardEntity, originalImageName, newImageName);
-                    crewBoardImageRepository.save(boardImageEntity);
+                    CrewBoardImageEntity imageEntity = CrewBoardImageEntity.toCrewBoardImageEntity(crewBoardEntity, originalImageName, newImageNaem);
+                    crewBoardImageRepository.save(imageEntity);
                 }
             }
         }
+        
+        CrewBoardEntity updatedBoardEntity = crewBoardRepository.save(crewBoardEntity);
+
         return CrewBoardDto.toDto(updatedBoardEntity, memberEntity);
     }
 
     @Override
-    public void deleteBoard(Long id) {
+    public void deleteBoard(Long id, Long loginUserId) {
         CrewBoardEntity crewBoardEntity = crewBoardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 삭제 불가"));
         
