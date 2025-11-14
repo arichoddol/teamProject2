@@ -5,11 +5,11 @@ import { useParams } from 'react-router-dom'
 const MyCrewJoinRequestContainer = () => {
   const {crewId} = useParams()
   const [myCrewJoinRequestList , setMyCrewJoinRequestList] = useState([])
-  const [joinRequestApproved , setJoinRequestApproved] = useState([])
 
+  // 크루가입요청 리스트
   const MyCrewjoinRequest = async () => {
     try {
-      const res = await axios.get(`http://localhost:8088/api/mycrew/${crewId}/joinRequest`)
+      const res = await axios.get(`/api/mycrew/${crewId}/joinRequest`)
       console.log(res.data)
       setMyCrewJoinRequestList(res.data.myCrewJoinList)
       
@@ -22,9 +22,10 @@ const MyCrewJoinRequestContainer = () => {
     MyCrewjoinRequest();
   }, [])
 
+    //크루가입승인
     const onJoinApproved = async (joinReq) =>{
         try {
-          const res = await axios.post(`http://localhost:8088/api/mycrew/${crewId}/joinRequest/approved`,
+          const res = await axios.post(`/api/mycrew/${crewId}/joinRequest/approved`,
             { crewRequestId: crewId,
               memberRequestId: joinReq.memberRequestId,
               message: joinReq.message },
@@ -38,11 +39,11 @@ const MyCrewJoinRequestContainer = () => {
         }
         MyCrewjoinRequest();
     }
-      
+    //크루가입거절
     const onJoinRejected =async (joinReq) =>{
-     
+ 
         try {
-          const res = await axios.post(`http://localhost:8088/api/mycrew/${crewId}/joinRequest/rejected`,
+          const res = await axios.post(`/api/mycrew/${crewId}/joinRequest/rejected`,
             { crewRequestId: crewId,
               memberRequestId: joinReq.memberRequestId,
               message: joinReq.message},
@@ -54,8 +55,7 @@ const MyCrewJoinRequestContainer = () => {
         } catch (error) {
           console.log("내 크루 가입거절 실패")
         }
-        MyCrewjoinRequest()
-     
+        MyCrewjoinRequest()     
     }
   
   return (
@@ -65,6 +65,7 @@ const MyCrewJoinRequestContainer = () => {
             <ul>
           {myCrewJoinRequestList.map((joinReq)=>(
               <li key={joinReq.id}>
+
               {/* 넣고 싶은 정보 더 넣으면 됨 dto에 안한거임 */}
               <span>ID : {joinReq.id}</span>
               <span>회원 ID : {joinReq.memberRequestId}</span>
