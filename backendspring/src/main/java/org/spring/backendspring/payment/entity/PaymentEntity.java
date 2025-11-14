@@ -7,6 +7,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.spring.backendspring.common.BasicTime;
+import org.spring.backendspring.payment.PaymentStatus;
+
 @Entity
 @Getter
 @Setter
@@ -15,7 +18,7 @@ import java.util.List;
 @Builder
 @Table(name = "payment_tb")
 
-public class PaymentEntity {
+public class PaymentEntity extends BasicTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +32,9 @@ public class PaymentEntity {
     private String paymentResult;
     private String paymentType;
 
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private PaymentStatus paymentStatus = PaymentStatus.PENDING;
 
     @OneToMany(mappedBy = "payment", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<PaymentItemEntity> paymentItemEntities = new ArrayList<>();

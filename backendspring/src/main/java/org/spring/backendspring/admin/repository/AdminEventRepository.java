@@ -1,8 +1,11 @@
-// package org.spring.backendspring.admin.repository;
+package org.spring.backendspring.admin.repository;
 
-// import org.springframework.data.jpa.repository.JpaRepository;
+import org.spring.backendspring.event.entity.EventEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-// public interface AdminEventRepository extends JpaRepository<EventEntity, Long>{
+public interface AdminEventRepository extends JpaRepository<EventEntity, Long> {
 
-    
-// }
+    Page<EventEntity> findByEventTitleContainingIgnoreCase(String keyword, Pageable pageable);
+}

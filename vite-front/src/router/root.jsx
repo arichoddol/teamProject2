@@ -21,11 +21,18 @@ const AdminLayout = lazy(()=> import(`../layout/AdminLayout`))
 const BoardLayout = lazy(()=> import(`../layout/BoardLayout`))
 const EventLayout = lazy(()=> import(`../layout/EventLayout`))
 const CrewLayout = lazy(()=> import('../layout/CrewLayout'))
+
+const CartLayout = lazy(()=> import(`../layout/CartLayout`))
+const PaymentLayout = lazy(()=> import(`../layout/PaymentLayout`))
+
 const MyCrewLayout = lazy(()=> import('../layout/MyCrewLayout'))
+
 
 // Page
 const IndexPage = lazy(()=>import(`../pages/IndexPage`))
-
+const CartPage = lazy(() => import(`../components/container/cart/CartPage`))
+const PaymentPage = lazy(() => import(`../components/container/payment/PaymentPage`))
+const PaymentListPage = lazy(() => import(`../components/container/payment/PaymentListPage`))
 
 
 const root = createBrowserRouter([
@@ -71,6 +78,7 @@ const root = createBrowserRouter([
         element: <Suspense fallback={Loading}><EventLayout/></Suspense>,
         children: toEventRouter()
     },
+    
     {
         // mycrew
         // path:'mycrew/:crewId',
@@ -79,5 +87,4 @@ const root = createBrowserRouter([
         children: toMyCrewRouter()
     }
     
- ])
 export default root

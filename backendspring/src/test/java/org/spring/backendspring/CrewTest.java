@@ -37,6 +37,27 @@ public class CrewTest {
     @Autowired
     CrewMemberService crewMemberService;
 
+    @Test
+    public void insertDummyCrews() {
+        // 크루 개설자 (예: member_id = 1)
+        MemberEntity creator = memberRepository.findById(1L)
+                .orElseThrow(() -> new IllegalArgumentException("⚠️ member_id=1 회원이 존재하지 않습니다."));
+
+        for (int i = 1; i <= 5; i++) {
+            CrewEntity crew = CrewEntity.builder()
+                    .name("테스트 크루 " + i)
+                    .isCrewImg(i % 2) // 0과 1 번갈아가며 설정
+                    .district("강남구")
+                    .description("이것은 테스트 크루 " + i + "의 설명입니다.")  
+                    .memberEntity(creator)
+                    .build();
+
+            crewRepository.save(crew);
+        }
+
+        System.out.println("✅ 5개의 더미 크루가 member_id=1과 함께 저장되었습니다!");
+    }
+
 
     @Test
     void crewList(){
