@@ -3,6 +3,7 @@ package org.spring.backendspring.admin.controller;
 import org.spring.backendspring.admin.service.AdminPaymentService;
 import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.payment.dto.PaymentDto;
+import org.spring.backendspring.payment.dto.PaymentItemDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class AdminPaymentController {
 
     private final AdminPaymentService adminPaymentService;
-    
+
     @GetMapping
     public ResponseEntity<PagedResponse<PaymentDto>> getPayment(
             @RequestParam(name = "keyword", required = false) String keyword,
@@ -31,7 +32,8 @@ public class AdminPaymentController {
     }
 
     @GetMapping("/{paymentId}")
-    public String getPaymentDetail() {
-        return "Admin Payment Items";
+    public ResponseEntity<PaymentItemDto> getPaymentItem(@RequestParam Long paymentId) {
+       PaymentItemDto paymentItems = adminPaymentService.getPaymentItemsByPaymentId(paymentId);
+       return ResponseEntity.ok(paymentItems);
     }
 }

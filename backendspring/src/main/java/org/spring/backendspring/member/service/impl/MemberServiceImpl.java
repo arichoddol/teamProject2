@@ -21,7 +21,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDto findByUserEmail(String userEmail) {
         return memberRepository.findByUserEmail(userEmail)
-                .map(entity -> MemberMapper.toDto(entity, passwordEncoder))
+                .map(entity -> MemberMapper.toDto(entity))
                 .orElse(null);
     }
 
@@ -37,7 +37,7 @@ public class MemberServiceImpl implements MemberService {
     public MemberDto findById(Long id) {
         // TODO: Security 인증 연동 시, 로그인 유저 id 비교 필요
         return memberRepository.findById(id)
-                .map(entity -> MemberMapper.toDto(entity, passwordEncoder))
+                .map(entity -> MemberMapper.toDto(entity))
                 .orElseThrow(() -> new EntityNotFoundException("해당 회원이 존재하지 않습니다"));
     }
 
@@ -69,7 +69,7 @@ public class MemberServiceImpl implements MemberService {
                 .build();
 
         MemberEntity saved = memberRepository.save(updatedEntity);
-        return MemberMapper.toDto(saved, passwordEncoder);
+        return MemberMapper.toDto(saved);
     }
 
     @Override
