@@ -59,7 +59,4 @@ public class CrewCreateRequestController {
         return ResponseEntity.ok().body(Map.of
                         ("message", "크루 신청 거절 완료", "requestId", requestId));
     }
-    
-
-    
 }

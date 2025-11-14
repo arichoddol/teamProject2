@@ -153,4 +153,12 @@ public class CrewTest {
 
         System.out.println(crewMemberDtos);
     }
+
+    @Test
+    @Transactional
+    void myCrewDetail() {
+        Optional<CrewEntity> byId = crewRepository.findById(4L);
+        List<CrewMemberEntity> list = byId.get().getCrewMemberEntities().stream().toList();
+        list.forEach(System.out::println);
+    }
 }

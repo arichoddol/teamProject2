@@ -68,6 +68,7 @@ const MyCrewMemberContainer = () => {
             <span>권한 :  {crewMember.roleInCrew}</span>
             
             {/* 크루 리더면, 탈퇴는 로그인 아이디랑 맞으면 보이게 */}
+            {/* 팀장님이 리더아니면 못하게 백엔드 바꾸심 */}
             {/* 더 보이고 싶은 정보 dto에 추가 ㄱㄱ */}
             <button type="button" onClick={()=>onCrewMemberDetail(crewMember)}>자세히 보기</button>
             <button type="button" onClick={()=>onCrewMemberDelete(crewMember)}>탈퇴</button>

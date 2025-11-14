@@ -1,5 +1,6 @@
 package org.spring.backendspring.config.security;
 
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.spring.backendspring.config.security.filter.CustomLoginFilter;
@@ -47,11 +48,20 @@ public class SecurityConfigClass {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         http.authorizeHttpRequests(authorize -> {
-            authorize.requestMatchers("/login", "/logout", "/api/**", "/index").permitAll()
-                    .requestMatchers("/member/**").permitAll()
-                    .requestMatchers("/**").permitAll() // css, js 파일 허용
-                    .anyRequest().authenticated();
+            authorize
+                    .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "MANAGER")
+                    .requestMatchers(
+                            "/api/crew/create/approved",
+                            "/api/crew/create/rejected").hasRole("ADMIN")
+                    .requestMatchers("/api/member/**").permitAll()
+                    .requestMatchers("/login", "/logout", "/api/**", "/index").permitAll()
+                    .requestMatchers("/**").permitAll(); // css, js 파일 허용
         });
+
+        http.exceptionHandling(ex -> ex
+                .authenticationEntryPoint((req, res, excep) -> {
+                    res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "로그인이 필요합니다.");
+                }));
 
         // jwt는 세션 사용 X
         http.sessionManagement(session ->

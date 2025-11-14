@@ -10,9 +10,8 @@ public interface CrewJoinRequestService {
 
     List<CrewJoinRequestDto> myCrewJoinList(Long crewId);
 
-    void crewJoinRequestApproved(CrewJoinRequestDto joinDto);
+    void crewJoinRequestApproved(CrewJoinRequestDto joinDto, Long leaderId);
 
-    void crewJoinRequestRejected(CrewJoinRequestDto joinDto);
+    void crewJoinRequestRejected(CrewJoinRequestDto joinDto, Long leaderId);
 
-    // PagedResponse<CrewJoinRequestDto> pagingJoinReqList(Long crewId, String keyword, int page, int size);
 }

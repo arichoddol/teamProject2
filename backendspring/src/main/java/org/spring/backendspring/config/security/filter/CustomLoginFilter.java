@@ -82,7 +82,12 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
         response.addCookie(refreshCookie);
 
         // 응답 DTO에 저장
-        AuthResponse authResponse = new AuthResponse(accessToken, id, userEmail);
+        AuthResponse authResponse = AuthResponse.builder()
+                .id(id)
+                .accessToken(accessToken)
+                .userEmail(userEmail)
+                .role(normalized)
+                .build();
 
         // AccessToken은 헤더에 담아서 프론트로 전송
         response.setHeader("Authorization", "Bearer " + accessToken);
@@ -93,6 +98,7 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
 
         log.info("---------------------------------------");
         log.info("토큰 발급 완료: {}", accessToken);
+        log.info("refresh 토큰 발급 완료: {}", refreshToken);
         log.info("---------------------------------------");
     }
 

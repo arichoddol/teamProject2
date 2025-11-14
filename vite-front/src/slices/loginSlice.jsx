@@ -4,6 +4,7 @@ import React from 'react'
 const initState = {
   id: "",
   userEmail: "",
+  role: "",
   isLogin: false
 }
 
@@ -20,6 +21,7 @@ const loginSlice = createSlice({
         ...state,
         id: data.id,
         userEmail: data.userEmail,
+        role: data.role,
         isLogin: data.isLogin
       };
     },
@@ -27,6 +29,7 @@ const loginSlice = createSlice({
       console.log("logout...");
       state.isLogin = false;
       state.userEmail = "";
+      state.role= "",
       state.id = "";
     }
   }
