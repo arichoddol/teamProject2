@@ -26,8 +26,8 @@ public class PaymentTest {
                     .paymentPost(String.format("%05d", 10000 + i))
                     .paymentResult(i % 3 == 0 ? "FAIL" : "SUCCESS")
                     .paymentType(i % 2 == 0 ? "ORDER" : "SUBSCRIBE")
-                    .createTime(LocalDateTime.now())
-                    .updateTime(LocalDateTime.now())
+                    // .createTime(LocalDateTime.now())
+                    // .updateTime(LocalDateTime.now())
                     .paymentItemEntities(null) // 혹은 new ArrayList<>()
                     .build();
 
