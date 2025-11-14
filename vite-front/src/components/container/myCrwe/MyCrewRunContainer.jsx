@@ -12,8 +12,9 @@ const MyCrewRunContainer = () => {
 
   const {crewId} = useParams()
 
-  //isLogin으로 불러와야하는데 임시
+  //useSelector으로 불러와야하는데 임시
   const loginMemberId = 1
+  // const loginMemberId = useSelector((state) => state.login.id)
 
   //크루런닝일정 생성 데이터
   const crewRunCreateData = {
@@ -81,6 +82,7 @@ const MyCrewRunContainer = () => {
       
     } catch (error) {
       console.log("내 크루런닝 스케줄 get 실패")
+      alert("내 크루런닝 스케줄 get 실패")
     }
   }
   
@@ -119,6 +121,7 @@ const MyCrewRunContainer = () => {
         
       } catch (error) {
         console.log("내 크루런닝 스케줄 만들기 post 실패")
+        alert("내 크루런닝 스케줄 만들기 post 실패")
         console.log("data:", error.response?.data);
       }
       myCrewRun();
@@ -136,6 +139,7 @@ const MyCrewRunContainer = () => {
       
     } catch (error) {
       console.log("내 크루런닝 스케줄 수정 post 실패")
+      alert("내 크루런닝 스케줄 수정 post 실패")
       console.log("status:", error.response?.status);
     console.log("data:", error.response?.data);
     }
@@ -163,6 +167,7 @@ const MyCrewRunContainer = () => {
       
     } catch (error) {
       console.log("내 크루런닝 스케줄 get 실패")
+      alert("내 크루런닝 스케줄 get 실패")
     }
     setMyCrewRunDetailModal(true)
   }
@@ -176,6 +181,8 @@ const MyCrewRunContainer = () => {
       
     } catch (error) {
       console.log("런닝스케줄 삭제 실패")
+      alert("런닝스케줄 삭제 실패")
+      
     }
     setMyCrewRunDetailModal(false)
     myCrewRun();  
@@ -190,6 +197,7 @@ const MyCrewRunContainer = () => {
       setMyCrewRunMember(res.data.crewRunMember)
     } catch (error) {
       console.log("내 크루런닝 스케줄 참가자 get 실패")
+      alert("크루 런닝 스케줄 참가자 get 실패")
     }
     setMyCrewRunMemberModal(true)
   }
@@ -201,7 +209,8 @@ const MyCrewRunContainer = () => {
       console.log(res.data)
       
     } catch (error) {
-      console.log("내 크루런닝 스케줄 참가자 get 실패")
+      console.log("크루런닝 스케줄 참가 실패")
+      alert("크루런닝 스케줄 참가 실패")
     }
     onMyCrewRunMember(runId);
     
@@ -214,7 +223,8 @@ const MyCrewRunContainer = () => {
       console.log(res.data)
       
     } catch (error) {
-      console.log("내 크루런닝 스케줄 참가자 get 실패")
+      console.log("크루런닝 스케줄 참가 취소 실패")
+      alert("크루런닝 스케줄 참가 취소 실패")
     }
     onMyCrewRunMember(runId);
     
@@ -228,7 +238,7 @@ const MyCrewRunContainer = () => {
             <h2>크루런닝스케줄</h2>
             <FullCalendar
               locale={"kr"}
-              plugins={[dayGridPlugin, interactionPlugin]}
+              plugins={[dayGridPlugin, interactionPlugin]} //npm 으로 다운받은거
               initialView="dayGridMonth"  // 첫 화면: 월간 달력
               customButtons={{
                 addCrewRunButton: {
@@ -249,6 +259,7 @@ const MyCrewRunContainer = () => {
             </div>
         </div>
         {/* 추가버튼클릭 런닝스케줄 추가 모달 */}
+        {/* 모르겠는거는 ??={안에이거} <= 컨트롤 클릭으로 뭐하는 애인지 보삼 */}
         {addRunBtnModal && (
           <MyCrewRunAddBtnModal
           input={createRunData}
@@ -261,12 +272,14 @@ const MyCrewRunContainer = () => {
             )}
 
         {/* 크루런닝 일정 상세보기, 수정, 일정 참가, 일정 참가 취소 */}
+        {/* 모르겠는거는 ??={안에 이거} <= 컨트롤 클릭으로 뭐하는 애인지 보삼 */}
         {myCrewRunDetailModal && (
           <MyCrewRunDetailModal
           input={updateRunData}
           onClose={()=> {
             setMyCrewRunDetailModal(false)
               myCrewRun()}}
+          loginId={loginMemberId}
           onChange={onInputUpdateChange}
           onSubmit={onMyCrewRunUpdate}
           onDelete={onMyCrewRunDelete}
@@ -279,14 +292,16 @@ const MyCrewRunContainer = () => {
             )}
 
         {/* 일정 참가 크루원보기 */}
+        {/* 모르겠는거는 ??={안에이거} <= 컨트롤 클릭으로 뭐하는 애인지 보삼 */}
         {myCrewRunMemberModal && (
           <MyCrewRunMemberModal
           input={myCrewRunMember}
           onClose={()=>setMyCrewRunMemberModal(false)}
           />
         )}
-
+        {/* 얘는 일단 안함... 할지말지 고민 */}
         {/* 날짜클릭 런닝스케줄 추가 모달 */}
+        {/* 모르겠는거는 ??={안에이거} 컨트롤 클릭으로 뭐하는 애인지 보삼 */}
         {/* {addRunDateModal && (
           <MyCrewRunAddBtnModal
           detail={detailData}

@@ -1,6 +1,8 @@
 package org.spring.backendspring.crew.crewJoin.repository;
 
 import org.spring.backendspring.crew.crewJoin.entity.CrewJoinRequestEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -12,6 +14,7 @@ public interface CrewJoinRequestRepository extends JpaRepository<CrewJoinRequest
     Optional<CrewJoinRequestEntity> findByCrewEntityIdAndMemberEntityId(Long crewId, Long memberId);
 
     List<CrewJoinRequestEntity> findAllByCrewEntityId(Long crewId);
+    // Page<CrewJoinRequestEntity> findAllByCrewEntityId(Long crewId, Pageable pageable);
 
     void deleteByCrewEntityIdAndMemberEntityId(Long crewId, Long memberId);
 

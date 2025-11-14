@@ -127,13 +127,13 @@ public class CrewTest {
 
     }
 
-    @Test
-    @Transactional
-    void crewJoinList(){
-        Long crewId = 1L;
-       List<CrewJoinRequestDto> crewJoinRequestDtos = crewJoinRequestService.myCrewJoinList(crewId);
-       crewJoinRequestDtos.forEach(System.out::println);
-    }
+    // @Test
+    // @Transactional
+    // void crewJoinList(){
+    //     Long crewId = 1L;
+    //    List<CrewJoinRequestDto> crewJoinRequestDtos = crewJoinRequestService.myCrewJoinList(crewId);
+    //    crewJoinRequestDtos.forEach(System.out::println);
+    // }
 
     @Test
     @Transactional

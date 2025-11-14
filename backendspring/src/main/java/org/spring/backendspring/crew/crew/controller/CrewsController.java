@@ -15,8 +15,9 @@ import java.util.Map;
 @RequestMapping("/api/crews")
 public class CrewsController {
 
+    //=============================================================================================
+    //CrewsController 없애면서 CrewController 로 옮겨주세요 axios 프론트 주소도,,ㅎㅎ
     private final CrewJoinRequestService crewJoinRequestService;
-
     @PostMapping("/joinRequest")
     public ResponseEntity<?> crewJoinRequests(
             @RequestBody CrewJoinRequestDto joinDto){
@@ -25,6 +26,7 @@ public class CrewsController {
         joinMap.put("joinRequest", crewJoinRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(joinMap);
     }
+    //===============================================================================================
 
 
 }
