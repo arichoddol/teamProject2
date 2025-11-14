@@ -14,19 +14,20 @@ public class CrewRunMemberDto extends BasicTime {
 
 
     private CrewRunEntity crewRunEntity; // 어떤 일정에 참석?
-
-
+    private Long crewRunId;
+    
     private MemberEntity memberEntity; // 누가 참석?
-
-    private String memberNickName;
     private Long memberId;
+    private String memberNickName;
 
-    private AttendeeStatus status; // YES / NO
+
+    private AttendeeStatus status; // YES / NO 안쓸듯 걍 삭제 ㄱㄱ 일단 안함
 
     public static CrewRunMemberDto toCrewRunMemberDto(CrewRunMemberEntity crewRunMemberEntity){
         return CrewRunMemberDto.builder()
                 .id(crewRunMemberEntity.getId())
-                .crewRunEntity(crewRunMemberEntity.getCrewRunEntity())
+                .crewRunId(crewRunMemberEntity.getCrewRunEntity().getId())
+                .memberId(crewRunMemberEntity.getMemberEntity().getId())
                 .memberNickName(crewRunMemberEntity.getMemberEntity().getNickName())
                 .build();
     }

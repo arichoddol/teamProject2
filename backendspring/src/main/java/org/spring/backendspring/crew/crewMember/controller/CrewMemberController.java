@@ -42,7 +42,7 @@ public class CrewMemberController {
     //크루원 삭제
     @GetMapping("delete/{crewMemberTbId}")
     public ResponseEntity<?> crewMemberDelete(@PathVariable("crewId") Long crewId,
-                                               @PathVariable("crewMemberId") Long crewMemberTbId){
+                                               @PathVariable("crewMemberTbId") Long crewMemberTbId){
         crewMemberService.deleteCrewMember(crewMemberTbId);
         return ResponseEntity.ok("크루원삭제완료");
     }
