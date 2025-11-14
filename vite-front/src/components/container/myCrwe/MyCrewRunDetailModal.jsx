@@ -1,12 +1,12 @@
 import React from 'react'
 
-const MyCrewRunDetailModal = ({input, onClose, onChange, onSubmit, onDelete, onMember, onRunYes, onRunNo}) => {
+const MyCrewRunDetailModal = ({input, onClose, loginId, onChange, onSubmit, onDelete, onMember, onRunYes, onRunNo}) => {
     
   return (
     <div className='myCrewRunDetailModal'>
         <div className='myCrewRunDetailModal-con'>
             <div className="modal-header">
-                <h2>크루런닝 일정수정</h2>
+                <h2>크루런닝 일정 상세보기</h2>
                 <button type='button' onClick={onClose}>X</button>
             </div>
             <div className="modal-body">
@@ -46,12 +46,16 @@ const MyCrewRunDetailModal = ({input, onClose, onChange, onSubmit, onDelete, onM
                 <li>
                     <button type='button' onClick={onSubmit}>일정수정</button>
                     <button type='button' onClick={()=> onMember(input.id)}>일정 참가원</button>
-                    <button type='button' onClick={()=> onDelete(input.id)}>일정 삭제</button>
+                        
+                    {input.memberId === loginId && (  // 일정 생성자와, 로그인 아이디가 같다면 
+                        <button type='button' onClick={()=> onDelete(input.id)}>일정 삭제</button>
+                    )}
                 </li>
-                {/* 로그인 유저 아이디 받아서 해야하는데 일단 임시로 그냥 함 */}
+
+                {/* 로그인 유저 아이디 받아서 해야하는데 일단 임시로 그냥 함 MyCrewRunContainer 맨위에 있음*/}
                 <li>
-                    <button type='button' onClick={()=> onRunYes(input.id,input.memberId)}>일정 참가</button>
-                    <button type='button' onClick={()=> onRunNo(input.id,input.memberId)}>일정 참가취소</button>
+                    <button type='button' onClick={()=> onRunYes(input.id,loginId)}>일정 참가</button>
+                    <button type='button' onClick={()=> onRunNo(input.id,loginId)}>일정 참가취소</button>
                 </li>
             </ul>
             </div>

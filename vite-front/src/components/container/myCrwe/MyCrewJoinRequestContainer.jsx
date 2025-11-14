@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom'
 const MyCrewJoinRequestContainer = () => {
   const {crewId} = useParams()
   const [myCrewJoinRequestList , setMyCrewJoinRequestList] = useState([])
+  
 
   // 크루가입요청 리스트
   const MyCrewjoinRequest = async () => {
@@ -14,54 +15,66 @@ const MyCrewJoinRequestContainer = () => {
       setMyCrewJoinRequestList(res.data.myCrewJoinList)
       
     } catch (error) {
-      console.log("내 크루 get 실패")
+      console.log("내 크루 가입요청 get 실패")
+      alert("내 크루 가입요청 get 실패")
     }
   }
+
   
   useEffect(()=> {
-    MyCrewjoinRequest();
+    MyCrewjoinRequest(1);
   }, [])
 
-    //크루가입승인
-    const onJoinApproved = async (joinReq) =>{
-        try {
-          const res = await axios.post(`/api/mycrew/${crewId}/joinRequest/approved`,
-            { crewRequestId: crewId,
-              memberRequestId: joinReq.memberRequestId,
-              message: joinReq.message },
-            { headers: { "Content-Type": "application/json" } }
 
-          )
-          console.log(res.data)
-          
-        } catch (error) {
-          console.log("내 크루 가입승인 실패")
-        }
-        MyCrewjoinRequest();
-    }
-    //크루가입거절
-    const onJoinRejected =async (joinReq) =>{
- 
-        try {
-          const res = await axios.post(`/api/mycrew/${crewId}/joinRequest/rejected`,
-            { crewRequestId: crewId,
-              memberRequestId: joinReq.memberRequestId,
-              message: joinReq.message},
-            { headers: { "Content-Type": "application/json" } }
+  //검색 값 Change
+  const onKeywordChange = (e) => {
+    setKeyword(e.target.value)
+  }
 
-          )
-          console.log(res.data)
-          
-        } catch (error) {
-          console.log("내 크루 가입거절 실패")
-        }
-        MyCrewjoinRequest()     
-    }
+
+  //크루가입승인
+  const onJoinApproved = async (joinReq) =>{
+      try {
+        const res = await axios.post(`/api/mycrew/${crewId}/joinRequest/approved`,
+          { crewRequestId: crewId,
+            memberRequestId: joinReq.memberRequestId,
+            message: joinReq.message },
+          { headers: { "Content-Type": "application/json" } }
+
+        )
+        console.log(res.data)
+        
+      } catch (error) {
+        console.log("내 크루 가입승인 실패")
+        alert("내 크루 가입승인 실패")
+      }
+      MyCrewjoinRequest();
+  }
+  //크루가입거절
+  const onJoinRejected =async (joinReq) =>{
+
+      try {
+        const res = await axios.post(`/api/mycrew/${crewId}/joinRequest/rejected`,
+          { crewRequestId: crewId,
+            memberRequestId: joinReq.memberRequestId,
+            message: joinReq.message},
+          { headers: { "Content-Type": "application/json" } }
+
+        )
+        console.log(res.data)
+        
+      } catch (error) {
+        console.log("내 크루 가입거절 실패")
+        alert("내 크루 가입거절 실패")
+      }
+      MyCrewjoinRequest()     
+  }
   
   return (
     <div className="myCrewJoin">
       <div className="myCrewJoin-con">
         <div>MyCrewJoinRequestContainer {crewId}</div>
+
             <ul>
           {myCrewJoinRequestList.map((joinReq)=>(
               <li key={joinReq.id}>

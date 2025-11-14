@@ -10,7 +10,7 @@ const MyCrewMemberContainer = () => {
   const [ detailData, setDetailData] = useState(null);
 
  
-  // 보이고 싶은 정보 상의 후 추가
+  // 보이고 싶은 정보 상의 후 dto 추가
   const onMyCrewMemberList = async() =>{
     try {
       const res = await axios.get(`/api/mycrew/${crewId}/member`)
@@ -19,6 +19,7 @@ const MyCrewMemberContainer = () => {
       
     } catch (error) {
       console.log("내크루원 리스트 get실패")
+      alert("내크루원 리스트 get실패")
     }
   }
   useEffect(()=>{
@@ -35,6 +36,7 @@ const MyCrewMemberContainer = () => {
       setDetailOpen(true)
     } catch (error) {
       console.log("내크루원 디테일 get실패")
+      alert("내크루원 디테일 get실패")
     }
     onMyCrewMemberList();
   }
@@ -48,7 +50,8 @@ const MyCrewMemberContainer = () => {
       alert(res.data)
       
     } catch (error) {
-      console.log("내크루원 삭제 get실패")
+      console.log("내크루원 삭제 실패")
+      alert("내크루원 삭제 실패")
     }
     onMyCrewMemberList();
   }

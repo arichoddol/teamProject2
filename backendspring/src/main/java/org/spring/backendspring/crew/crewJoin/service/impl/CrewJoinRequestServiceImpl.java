@@ -1,7 +1,10 @@
 package org.spring.backendspring.crew.crewJoin.service.impl;
 
 import lombok.RequiredArgsConstructor;
+
+import org.spring.backendspring.board.dto.BoardDto;
 import org.spring.backendspring.common.RequestStatus;
+import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.crew.crew.entity.CrewEntity;
 import org.spring.backendspring.crew.crew.repository.CrewRepository;
 import org.spring.backendspring.crew.crewJoin.dto.CrewJoinRequestDto;
@@ -12,6 +15,10 @@ import org.spring.backendspring.crew.crewMember.entity.CrewMemberEntity;
 import org.spring.backendspring.crew.crewMember.repository.CrewMemberRepository;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,6 +74,22 @@ public class CrewJoinRequestServiceImpl implements CrewJoinRequestService {
 
     }
 
+    // @Override
+    // public PagedResponse<CrewJoinRequestDto> pagingJoinReqList(Long crewId, String keyword, int page, int size) {
+    //     Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+    //     Page<CrewJoinRequestDto> crewReqPage;
+
+    //     if (keyword == null || keyword.trim().isEmpty()) {
+    //         crewReqPage = crewJoinRequestRepository.findAllByCrewEntityId(crewId, pageable)
+    //                 .map(CrewJoinRequestDto::crewJoinRequestDto);
+    //     } else {
+    //         // crewReqPage = crewJoinRequestRepository
+    //         // .findByMemberEntityIdContainingAndStatus()
+    //         return null;
+    //     }
+    //     return PagedResponse.of(crewReqPage);
+    // }
+
     //가입 승인
     @Override
     public void crewJoinRequestApproved(CrewJoinRequestDto joinDto) {
@@ -103,6 +126,5 @@ public class CrewJoinRequestServiceImpl implements CrewJoinRequestService {
 
 
     }
-
 
 }
