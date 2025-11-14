@@ -20,9 +20,7 @@ public class CartItemDto {
     private int itemPrice;
     private String itemImage; // S3 URL 또는 newFileName
 
-    // -------------------------------
     // Entity → DTO 변환
-    // -------------------------------
     public static CartItemDto fromEntity(CartItemEntity entity) {
         if (entity == null) return null;
 
@@ -42,9 +40,7 @@ public class CartItemDto {
                 .build();
     }
 
-    // -------------------------------
     // DTO → Entity 변환
-    // -------------------------------
     public CartItemEntity toEntity() {
         CartItemEntity entity = CartItemEntity.builder()
                 .cartItemId(this.cartItemId)

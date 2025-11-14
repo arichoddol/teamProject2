@@ -54,7 +54,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public List<CartItemEntity> getCartItems(Long cartId) {
-        // itemEntity 정보까지 lazy-loading 되도록
         return cartItemRepository.findByCartEntity_Id(cartId);
     }
 

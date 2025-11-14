@@ -36,8 +36,7 @@ public class CartEntity extends BasicTime{
     @JsonIgnore
     private List<CartItemEntity> cartItemEntities = new ArrayList<>();
 
-     // --- DTO 변환 메서드 추가 ---
-    
+     //DTO 변환 메서드 추가 
     public CartDto toDto() {
         return CartDto.builder()
                 .cartId(this.id)

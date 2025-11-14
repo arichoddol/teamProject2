@@ -24,9 +24,8 @@ public class CartItemEntity {
     @JoinColumn(name = "cart_id")
     private CartEntity cartEntity;
 
-    // itemId 컬럼은 제거
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id") // DB 컬럼 이름과 정확히 매핑
+    @JoinColumn(name = "item_id") 
     private ItemEntity itemEntity;
 
     // DTO 변환

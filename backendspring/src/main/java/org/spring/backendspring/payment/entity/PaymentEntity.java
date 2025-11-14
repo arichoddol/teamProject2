@@ -8,10 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.spring.backendspring.common.BasicTime;
-<<<<<<< HEAD
 import org.spring.backendspring.payment.PaymentStatus;
-=======
->>>>>>> 016e24b (작업중인 변경사항)
 
 @Entity
 @Getter
@@ -21,15 +18,7 @@ import org.spring.backendspring.payment.PaymentStatus;
 @Builder
 @Table(name = "payment_tb")
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 public class PaymentEntity extends BasicTime {
-=======
-public class PaymentEntity extends BasicTime{
->>>>>>> 016e24b (작업중인 변경사항)
-=======
-public class PaymentEntity extends BasicTime{
->>>>>>> origin/1-4
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
