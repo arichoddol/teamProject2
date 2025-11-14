@@ -23,15 +23,14 @@ public class RefreshServiceImpl implements RefreshService {
 
     @Override
     public void addRefreshEntity(String userEmail, String refresh, long expiredMs) {
-        // refresh 토큰이 있는지 확인 -> 있으면 삭제
+        // refresh 토큰이 있는지 확인 -> 있으면 업데이트
         refreshRepository.findByUserEmail(userEmail)
-                .ifPresent(entity -> refreshRepository.deleteById(entity.getId()));
-        // 새로 저장
-        refreshRepository.save(RefreshEntity.builder()
-                .userEmail(userEmail)
-                .refresh(refresh)
-                .expiration(expiredMs)
-                .build());
+                .ifPresent(entity -> {
+                    entity.setUserEmail(userEmail);
+                    entity.setRefresh(refresh);
+                    entity.setExpiration(expiredMs);
+                    refreshRepository.saveAndFlush(entity);
+                });
     }
 
     @Override

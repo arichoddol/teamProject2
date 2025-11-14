@@ -26,7 +26,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
     public List<MemberDto> findAllMembers() {
         List<MemberEntity> memberList = memberRepository.findAll();
         return memberList.stream()
-                .map(entity -> MemberMapper.toDto(entity, passwordEncoder))
+                .map(MemberMapper::toDto)
                 .toList();
     }
 }

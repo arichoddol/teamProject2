@@ -9,7 +9,7 @@ public interface CrewJoinRequestService {
 
     List<CrewJoinRequestDto> myCrewJoinList(Long crewId);
 
-    void crewJoinRequestApproved(CrewJoinRequestDto joinDto);
+    void crewJoinRequestApproved(CrewJoinRequestDto joinDto, Long memberId);
 
-    void crewJoinRequestRejected(CrewJoinRequestDto joinDto);
+    void crewJoinRequestRejected(CrewJoinRequestDto joinDto, Long leaderId);
 }

@@ -58,7 +58,6 @@ const responseFail = async (err) => {
       const memberData = {
           id: id,
           status: isLogin,
-          userEmail: userEmail
           }
 
       const memberValue = JSON.stringify(memberData);
