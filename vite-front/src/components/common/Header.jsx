@@ -11,6 +11,7 @@ const Header = () => {
 
   const dispatch = useDispatch();
   const isLogin = useSelector(state => state.loginSlice.isLogin);
+  const role = useSelector(state => state.loginSlice.role);
 
   const onLogoutFn = async () => {
     const rs = await logoutFn();
@@ -40,6 +41,7 @@ const Header = () => {
               <li>
                 <Link to= "/auth/myPage">myPage</Link>
               </li> 
+              { role === 'ADMIN' ? <li><Link to= "/admin/index">admin</Link></li> : null }
             </>
             : 
             <li>

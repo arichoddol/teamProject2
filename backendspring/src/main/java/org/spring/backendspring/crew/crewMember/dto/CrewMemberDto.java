@@ -14,6 +14,7 @@ import org.spring.backendspring.member.entity.MemberEntity;
 @Builder
 public class CrewMemberDto extends BasicTime {
     private Long id;
+    
     private Long crewId;
     private Long memberId;
 

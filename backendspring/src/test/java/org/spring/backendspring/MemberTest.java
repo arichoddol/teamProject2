@@ -1,6 +1,7 @@
 package org.spring.backendspring;
 
 import org.junit.jupiter.api.Test;
+
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
 import org.spring.backendspring.common.role.MemberRole;

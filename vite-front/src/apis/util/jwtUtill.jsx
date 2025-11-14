@@ -52,13 +52,11 @@ const responseFail = async (err) => {
     try {
       rs = await refreshTokenFn();
       const id = store.getState().loginSlice.id;
-      const userEmail = store.getState().loginSlice.userEmail;
       const isLogin = store.getState().loginSlice.isLogin;
   
       const memberData = {
           id: id,
           status: isLogin,
-          userEmail: userEmail
           }
 
       const memberValue = JSON.stringify(memberData);

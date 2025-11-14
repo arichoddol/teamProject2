@@ -20,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class CrewDto extends BasicTime {
+
     private Long id;
 
     private String name; // 크루명
@@ -50,8 +51,8 @@ public class CrewDto extends BasicTime {
     private List<String> newFileName;
 
     private Long memberId;
-    
-    public static CrewDto toCrewDto(CrewEntity crewEntity){
+
+    public static CrewDto toCrewDto(CrewEntity crewEntity) {
         return CrewDto.builder()
                 .id(crewEntity.getId())
                 .name(crewEntity.getName())
@@ -60,12 +61,12 @@ public class CrewDto extends BasicTime {
                 .isCrewImg(crewEntity.getIsCrewImg())
                 .memberId(crewEntity.getMemberEntity().getId())
                 .crewImageEntities(crewEntity.getCrewImageEntities())
-                // .crewMemberEntities(crewEntity.getCrewMemberEntities())
-                .crewJoinRequestEntities(crewEntity.getCrewJoinRequestEntities())
+                .crewMemberEntities(crewEntity.getCrewMemberEntities())
+//                .crewJoinRequestEntities(crewEntity.getCrewJoinRequestEntities())
                 .createTime(crewEntity.getCreateTime())
                 .upDateTime(crewEntity.getUpdateTime())
                 .build();
-    }       
+    }
 
     public static CrewDto toCrewDtoImg(CrewEntity crewEntity) {
         return CrewDto.builder()
@@ -77,7 +78,7 @@ public class CrewDto extends BasicTime {
                 .memberId(crewEntity.getMemberEntity().getId())
                 .crewImageEntities(crewEntity.getCrewImageEntities())
                 // .crewMemberEntities(crewEntity.getCrewMemberEntities())
-                .crewJoinRequestEntities(crewEntity.getCrewJoinRequestEntities())
+//                .crewJoinRequestEntities(crewEntity.getCrewJoinRequestEntities())
                 .createTime(crewEntity.getCreateTime())
                 .upDateTime(crewEntity.getUpdateTime())
                 .build();

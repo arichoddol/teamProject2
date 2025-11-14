@@ -1,5 +1,6 @@
 package org.spring.backendspring.crew.crewMember.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.spring.backendspring.common.BasicTime;
@@ -21,16 +22,23 @@ public class CrewMemberEntity extends BasicTime {
     @Column(name = "crew_member_id")
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "crew_id", nullable = false)
     private CrewEntity crewEntity;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private MemberEntity memberEntity;
 
     @Enumerated(EnumType.STRING)
     private CrewRole roleInCrew; // LEADER/MEMBER
+
+    @Transient
+    public Long getMemberId() {
+        return memberEntity != null ? memberEntity.getId() : null;
+    }
 
     public static CrewMemberEntity insertCrewMember (CrewJoinRequestEntity crewJoinRequestEntity){
 

@@ -2,6 +2,7 @@ package org.spring.backendspring.member.service.impl;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.spring.backendspring.common.exception.CustomException;
 import org.spring.backendspring.common.exception.ErrorCode;
@@ -23,15 +24,24 @@ public class RefreshServiceImpl implements RefreshService {
 
     @Override
     public void addRefreshEntity(String userEmail, String refresh, long expiredMs) {
-        // refresh 토큰이 있는지 확인 -> 있으면 삭제
-        refreshRepository.findByUserEmail(userEmail)
-                .ifPresent(entity -> refreshRepository.deleteById(entity.getId()));
-        // 새로 저장
-        refreshRepository.save(RefreshEntity.builder()
-                .userEmail(userEmail)
-                .refresh(refresh)
-                .expiration(expiredMs)
-                .build());
+        Optional<RefreshEntity> refreshEntity = refreshRepository.findByUserEmail(userEmail);
+        // refresh 토큰이 있는지 확인 -> 있으면 업데이트
+        refreshEntity.ifPresent(entity -> {
+                    entity.setUserEmail(userEmail);
+                    entity.setRefresh(refresh);
+                    entity.setExpiration(expiredMs);
+                    refreshRepository.saveAndFlush(entity);
+                });
+
+        if (refreshEntity.isEmpty()) {
+            refreshRepository.save(
+                    RefreshEntity.builder()
+                            .userEmail(userEmail)
+                            .refresh(refresh)
+                            .expiration(expiredMs)
+                            .build()
+            );
+        }
     }
 
     @Override

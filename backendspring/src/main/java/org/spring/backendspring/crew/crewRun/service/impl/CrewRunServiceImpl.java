@@ -78,7 +78,7 @@ public class CrewRunServiceImpl implements CrewRunService {
         Long memberId = runDto.getMemberId();
         Long runId = runDto.getId();
 
-        CrewRunEntity crewRunEntity = crewRunRepository.findById(runId)
+        crewRunRepository.findById(runId)
                 .orElseThrow(() -> new IllegalArgumentException("스케줄이 없는데 어떻게 함?"));
 
         //회원 맞냐?
@@ -86,16 +86,15 @@ public class CrewRunServiceImpl implements CrewRunService {
                 .orElseThrow(() -> new IllegalArgumentException("회원이 아닌데 어떻게 함?"));
 
         //크루 있냐?
-        CrewEntity crewEntity =crewRepository.findById(crewId)
+        CrewEntity crewEntity = crewRepository.findById(crewId)
                 .orElseThrow(() -> new IllegalArgumentException("크루가 없는데 어떻게 함?"));
 
         crewMemberRepository.findByCrewEntityIdAndMemberEntityId(crewId, memberId)
                 .orElseThrow(() -> new IllegalArgumentException("크루원이 아닌데 어떻게 함?"));
 
-        crewRunRepository.findByCrewEntityIdAndMemberEntityId(crewId,memberId)
-                .orElseThrow(() -> new IllegalArgumentException("런닝 스케줄이 없는데 어떻게 함?"));
+
         CrewRunEntity crewRunUpdateEntity = crewRunRepository.save(CrewRunEntity.updateCrewRun(CrewRunDto.builder()
-                .id(crewRunEntity.getId())
+                .id(runId)
                 .title(runDto.getTitle())
                 .startAt(runDto.getStartAt())
                 .endAt(runDto.getEndAt())

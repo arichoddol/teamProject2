@@ -1,7 +1,6 @@
 package org.spring.backendspring.crew.crewRun.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.spring.backendspring.crew.crew.repository.CrewRepository;
 import org.spring.backendspring.crew.crewRun.dto.CrewRunMemberDto;
 import org.spring.backendspring.crew.crewRun.entity.CrewRunEntity;
 import org.spring.backendspring.crew.crewRun.entity.CrewRunMemberEntity;
@@ -13,7 +12,9 @@ import org.spring.backendspring.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.StackWalker.Option;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,6 +37,11 @@ public class CrewRunMemberServiceImpl implements CrewRunMemberService {
     public void insertCrewMemberRun(Long runId, Long memberId) {
         MemberEntity memberEntity = memberRepository.findById(memberId).orElseThrow(()-> new NullPointerException("회원아닌데 어케함"));
         CrewRunEntity crewRunEntity = crewRunRepository.findById(runId).orElseThrow(()-> new NullPointerException("런닝스케줄없는데 어케함"));
+        Optional<CrewRunMemberEntity> opCrewRunMember = crewRunMemberRepository.findByMemberEntityId(memberId);
+        if (opCrewRunMember.isPresent()) {
+            throw new IllegalArgumentException("이미 런닝에 참가함");
+        }
+        
         crewRunMemberRepository.save(CrewRunMemberEntity.insertCrewRun(CrewRunMemberEntity.builder()
                         .crewRunEntity(crewRunEntity)
                         .memberEntity(memberEntity)
