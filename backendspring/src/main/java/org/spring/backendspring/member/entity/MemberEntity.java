@@ -1,5 +1,6 @@
 package org.spring.backendspring.member.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,8 @@ import org.spring.backendspring.board.entity.BoardReplyEntity;
 import org.spring.backendspring.common.BasicTime;
 import org.spring.backendspring.common.Gender;
 import org.spring.backendspring.common.role.MemberRole;
+import org.spring.backendspring.crew.crew.entity.CrewEntity;
+import org.spring.backendspring.crew.crewMember.entity.CrewMemberEntity;
 import org.spring.backendspring.member.dto.MemberDto;
 // import org.spring.backendspring.crew.crewJoin.entity.CrewJoinRequestEntity;
 // import org.spring.backendspring.crew.crewMember.entity.CrewMemberEntity;
@@ -69,10 +72,8 @@ public class MemberEntity extends BasicTime {
     @Column(name = "is_profile_img")
     private int isProfileImg; // 0/1
 
+    private int socialLogin; // 0/1
 
-    private int socialLogin;
-
-    
     // Member ↔ Cart (1:1)
 //    @OneToOne(mappedBy = "memberEntity", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 //    private CartEntity cartEntity;
@@ -86,18 +87,20 @@ public class MemberEntity extends BasicTime {
 //    private List<PaymentsEntity> ordersEntityList;
 
     // Member ↔ Board / BoardComment (1:N)
-   @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
-   private List<BoardEntity> boardEntityList;
-   @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
-   private List<BoardReplyEntity> boardCommentEntityList;
+    @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
+    private List<BoardEntity> boardEntityList;
+
+    @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
+    private List<BoardReplyEntity> boardCommentEntityList;
 
     // Member ↔ Crew(개설자) (1:N)
-    // @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
-    // private List<CrewEntity> crewEntityList;
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
+    private List<CrewEntity> crewEntityList;
 
-    // // Member ↔ CrewMember (1:N)
-    // @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
-    // private List<CrewMemberEntity> crewMemberEntityList;
+     // Member ↔ CrewMember (1:N)
+     @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
+     private List<CrewMemberEntity> crewMemberEntityList;
 
     // // Member ↔ CrewCreateRequest / CrewJoinRequest (1:N)
     // @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)

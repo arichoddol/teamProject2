@@ -99,7 +99,6 @@ const root = createBrowserRouter([
     ),
     children: toEventRouter(),
   },
-
   {
     // cart
     path: "cart",

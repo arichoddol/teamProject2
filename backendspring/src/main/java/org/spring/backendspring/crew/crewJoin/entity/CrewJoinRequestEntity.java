@@ -1,5 +1,6 @@
 package org.spring.backendspring.crew.crewJoin.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.spring.backendspring.common.BasicTime;
@@ -21,10 +22,12 @@ public class CrewJoinRequestEntity extends BasicTime {
     @Column(name = "crew_join_request_id")
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "crew_id", nullable = false)
     private CrewEntity crewEntity; // 어떤 크루에 신청?
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private MemberEntity memberEntity; // 신청자

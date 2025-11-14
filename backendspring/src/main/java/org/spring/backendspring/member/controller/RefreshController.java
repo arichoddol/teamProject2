@@ -54,7 +54,13 @@ public class RefreshController {
 
         response.setHeader("Authorization", "Bearer " + newAccessToken);
         response.addCookie(CookieUtil.createCookie("refreshToken", newRefreshToken));
-        AuthResponse authResponse = new AuthResponse(newAccessToken, memberDto.getId(), memberDto.getUserEmail());
+
+        AuthResponse authResponse = AuthResponse.builder()
+                .id(memberDto.getId())
+                .accessToken(newAccessToken)
+                .userEmail(memberDto.getUserEmail())
+                .role(memberDto.getRole().toString())
+                .build();
 
         log.info("---------------------------------");
         log.info("새로운 토큰 발급 완료: {}", newAccessToken);
