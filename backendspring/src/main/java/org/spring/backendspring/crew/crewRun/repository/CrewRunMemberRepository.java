@@ -12,4 +12,6 @@ public interface CrewRunMemberRepository extends JpaRepository<CrewRunMemberEnti
     void deleteByCrewRunEntityIdAndMemberEntityId(Long runId, Long memberId);
 
     Optional<CrewRunMemberEntity>findByCrewRunEntityIdAndMemberEntityId(Long runId, Long memberId);
+
+    Optional<CrewRunMemberEntity>findByMemberEntityId(Long memberId);
 }

@@ -10,8 +10,8 @@ const MyCrewMainContainer = () => {
   useEffect(()=> {
     const myCrewMain = async () => {
       try {
-        const res = await axios.get(`http://localhost:8088/api/mycrew/${crewId}`)
-        console.log(res.data.crew)
+        const res = await axios.get(`/api/mycrew/${crewId}`)
+        console.log(res.data)
 
 
       } catch (error) {
