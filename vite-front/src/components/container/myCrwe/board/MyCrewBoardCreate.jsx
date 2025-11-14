@@ -15,7 +15,7 @@ const MyCrewBoardCreate = () => {
     el.preventDefault();
 
     try {
-        const response = await fetch("/api/mycrew/${crewId}/board/create", {
+        const response = await fetch(`/api/mycrew/${crewId}/board/create`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
