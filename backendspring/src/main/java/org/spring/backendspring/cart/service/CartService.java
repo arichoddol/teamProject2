@@ -10,6 +10,6 @@ public interface CartService {
     CartEntity getCartByMemberId(Long memberId);
     CartEntity createCart(Long memberId);
     CartItemEntity addItemToCart(Long cartId, Long itemId, int itemSize);
-//    List<CartItemEntity> getCartItems(Long cartId);
+    List<CartItemEntity> getCartItems(Long cartId);
     void removeItem(Long cartItemId);
 }

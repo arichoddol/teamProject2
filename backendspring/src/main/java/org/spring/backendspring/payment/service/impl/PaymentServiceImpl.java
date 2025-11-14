@@ -19,18 +19,16 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentEntity createPayment(PaymentEntity payment) {
-        PaymentEntity newPayment = PaymentEntity.builder()
-                .memberId(payment.getMemberId())
-                .paymentAddr(payment.getPaymentAddr())
-                .paymentMethod(payment.getPaymentMethod())
-                .paymentPost(payment.getPaymentPost())
-                .paymentResult(payment.getPaymentResult())
-                .paymentType(payment.getPaymentType())
-                .createTime(LocalDateTime.now())
-                .updateTime(LocalDateTime.now())
-                .build();
-
-        return paymentRepository.save(newPayment);
+        return paymentRepository.save(
+                PaymentEntity.builder()
+                        .memberId(payment.getMemberId())
+                        .paymentAddr(payment.getPaymentAddr())
+                        .paymentMethod(payment.getPaymentMethod())
+                        .paymentPost(payment.getPaymentPost())
+                        .paymentResult(payment.getPaymentResult())
+                        .paymentType(payment.getPaymentType())
+                        .paymentStatus(payment.getPaymentStatus())
+                        .build());
     }
 
     @Override
@@ -46,9 +44,16 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentEntity updatePayment(Long paymentId, PaymentEntity payment) {
-        payment.setPaymentId(paymentId);
-        payment.setUpdateTime(LocalDateTime.now());
-        return paymentRepository.save(payment);
+        PaymentEntity existing = getPayment(paymentId);
+
+        existing.setPaymentAddr(payment.getPaymentAddr());
+        existing.setPaymentMethod(payment.getPaymentMethod());
+        existing.setPaymentPost(payment.getPaymentPost());
+        existing.setPaymentResult(payment.getPaymentResult());
+        existing.setPaymentType(payment.getPaymentType());
+        existing.setPaymentStatus(payment.getPaymentStatus());
+
+        return paymentRepository.save(existing);
     }
 
     @Override

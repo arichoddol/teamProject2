@@ -4,6 +4,12 @@
 /* 회원가입, 로그인 css */
 @import url(css/auth/auth_login.css);
 
+/* 장바구니 css */
+@import url(css/cart/CartPage.css);
+
+/* 결제 css */
+@import url(css/payment/PaymentPage.css);
+@import url(css/payment/PaymentListPage.css);
 
 /* 내 크루  */
 @import url(css/mycrew/mycrwe.css);

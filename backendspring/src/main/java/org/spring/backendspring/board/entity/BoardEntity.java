@@ -75,8 +75,8 @@ public class BoardEntity extends BasicTime {
     // toEntity
     public static BoardEntity toBoardEntity(BoardDto boardDto) {
         // builder()
-        int attachFileValue = (boardDto.getNewFileName() != null && 
-                !boardDto.getNewFileName().isEmpty()) ? 1 : 0;
+        int attachFileValue = boardDto.getBoardFile() != null && 
+                                !boardDto.getBoardFile().isEmpty() ? 1:0;
         
         return BoardEntity.builder()
                         .id(boardDto.getId())

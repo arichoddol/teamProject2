@@ -1,12 +1,16 @@
 package org.spring.backendspring.admin.controller;
 
 import org.spring.backendspring.admin.service.AdminCrewService;
+import org.spring.backendspring.common.dto.PagedResponse;
+import org.spring.backendspring.crew.crew.dto.CrewDto;
 import org.spring.backendspring.crew.crew.service.CrewService;
+import org.spring.backendspring.member.dto.MemberDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -18,8 +22,20 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/admin/crew")
 public class AdminCrewController {
 
+
+
     private final CrewService crewService;
     private final AdminCrewService adminCrewService;
+
+    @GetMapping("/crewList")
+    public ResponseEntity<PagedResponse<CrewDto>> getAllCrews(
+            @RequestParam(name = "keyword", required = false) String keyword,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
+
+        PagedResponse<CrewDto> crewList = adminCrewService.findAllCrews(keyword, page, size);
+        return ResponseEntity.ok(crewList);
+    }
 
     @DeleteMapping("/delete/{crewId}")
     public ResponseEntity<String> deleteCrew(@PathVariable("crewId") Long id) {
