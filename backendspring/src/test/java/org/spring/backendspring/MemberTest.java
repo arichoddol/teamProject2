@@ -1,42 +1,42 @@
 package org.spring.backendspring;
 
 import org.junit.jupiter.api.Test;
-import org.spring.backendspring.common.Gender;
-import org.spring.backendspring.common.role.MemberRole;
+
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
+import org.spring.backendspring.common.role.MemberRole;
+import org.spring.backendspring.common.Gender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 
 @SpringBootTest
 public class MemberTest {
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Test
-    void insert() {
-        for (int i = 0; i < 5; i++) {
-            memberRepository.save(
-                MemberEntity.builder()
-                        .userEmail("a" + i  + "@email.com")
-                        .userPassword(passwordEncoder.encode("11"))
-                        .nickName("a" + i)
-                        .userName("a" + i)
-                        .gender(Gender.MAN)
-                        .age(11)
-                        .phone("01000000000")
-                        .address("서울")
-                        .role(MemberRole.MEMBER)
-                        .isProfileImg(0)
-                        .socialLogin(0)
-                        .build()
-            );
-        }
-    }
+    public void insertDummyMembers() {
+        for (int i = 1; i <= 30; i++) {
+            MemberEntity member = MemberEntity.builder()
+                    .userEmail("user" + i + "@test.com")
+                    .userPassword(passwordEncoder.encode("pass" + i))
+                    .userName("테스트회원" + i)
+                    .nickName("nick" + i)
+                    .gender(i % 2 == 0 ? Gender.MAN : Gender.WOMAN)
+                    .age(20 + i)
+                    .phone("010-0000-000" + i)
+                    .address("서울시 테스트구 " + i + "번지")
+                    .role(MemberRole.MEMBER)
+                    .build();
 
+            memberRepository.save(member);
+        }
+
+        System.out.println("✅ 30명의 더미 회원이 성공적으로 저장되었습니다!");
+    }
 }

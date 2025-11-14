@@ -45,42 +45,19 @@ public class BoardServiceImpl implements BoardService {
     // i guess AWS S3 Bucket Link?
     private static final String FILE_PATH = "C:/full/upload/";
 
-    // @Transactional
-    // @Override
-    // public void insertBoard(BoardDto boardDto) throws IOException {
-    //     // MemberCheck 
-    //     MemberEntity memberEntity = memberRepository.findById(boardDto.getMemberId())
-    //                             .orElseThrow(IllegalArgumentException::new);
-    //     boardDto.setMemberEntity(memberEntity);
-    //     // if file is Empty
-    //     if (boardDto.getBoardFile().isEmpty()){
-    //         boardDto.setAttachFile(0);
-    //         boardDto.setMemberEntity(memberEntity);
-    //         // DTO -> Entity 
-    //         BoardEntity boardEntity = BoardEntity.toBoardEntity(boardDto);
-    //         boardRepository.save(boardEntity);
-    //     } else {
-    //         // imple later AWS S3 bucket Link
-    //         // there has file 
-    //         MultipartFile boardFile =boardDto.getBoardFile();
-    //         String originalFileName = boardFile.getOriginalFilename();
-    //         UUID uuid = UUID.randomUUID();
-    //         newFileName = uuid+"_"+originalFileName;
-    //         // String filePath = " AWS S3?"
-    //     }
-    // }
 
     @Override
     @Transactional
     public void insertBoard(BoardDto boardDto) throws IOException {
         
+        BoardImgDto boardImgDto = new BoardImgDto();
         // Membmer Check 
         MemberEntity memberEntity = memberRepository.findById(boardDto.getMemberId())
                     .orElseThrow(IllegalArgumentException::new);
         boardDto.setMemberentity(memberEntity);
 
 
-        // List<MultipartFile> boMultipartFiles = boardDto.getBoardFileList();
+        // if file is Empty..
         if(boardDto.getBoardFile().isEmpty()){
            
             boardDto.setAttachFile(0);
@@ -93,30 +70,41 @@ public class BoardServiceImpl implements BoardService {
         } else {
             // there has some File..
             // Bring FILE DTO
-
-            // DTO -> Entity
-            BoardEntity boardEntity = BoardEntity.toBoardEntity(boardDto);
-            // Entity -> DB -> Bring PrimaryKey ID
-            Long boardId = boardRepository.save(boardEntity).getId();
-            // Use ID for Bring Currently Board(entity)
-            BoardEntity boardEntity1 = boardRepository.findById(boardId).orElseThrow(()->{
-                throw new IllegalArgumentException("X");
-            });
-            // DTO에 담겨온 첨부 파일 목록을 하나씩 반복 처리
-            for(MultipartFile multipartFile: boardDto.getBoardFileList()){
-
-                if (!multipartFile.isEmpty()) {
-                    String originalFileName = multipartFile.getOriginalFilename();
-                    // S3 File 
-                    String oldFileName2 = awsS3Service.uploadFile(multipartFile);
-
-                    // 파일 정보 Entity 생성 (게시글 Entity1, 원본 이름, S3 저장 이름 사용)
-                    BoardImgEntity boardImgEntity = BoardImgEntity.toBoardImgEntity(boardEntity1, originalFileName, oldFileName2);
-                    // 생성된 파일 정보를 DB의 'board_img' 테이블에 저장
-                    boardImgRepository.save(boardImgEntity);
+            File directory = new File(FILE_PATH);
+            if(!directory.exists()){
+                if(!directory.mkdirs()){
+                    throw new IOException("파일 저장 경로를 생성할 수 없습니다: " + FILE_PATH);
                 }
-
             }
+
+           MultipartFile boardFile = boardDto.getBoardFile();
+           String originalFileName = boardFile.getOriginalFilename();
+
+           if (originalFileName == null || originalFileName.isEmpty()) {
+                // 파일은 있으나 파일명이 없는 예외적인 경우 처리 (혹은 오류 던지기)
+                throw new IllegalArgumentException("업로드된 파일의 원본 파일명이 유효하지 않습니다.");
+            }
+
+           UUID uuid = UUID.randomUUID();
+           String newFileName = uuid + "_" + originalFileName;
+           String filePath = FILE_PATH + newFileName;
+
+           // Acutally FileSave..
+           boardFile.transferTo(new File(filePath)); // saveFile to Path ...
+           boardDto.setAttachFile(1);
+
+           // Board Save After -> FileSave 
+           BoardEntity boardEntity = BoardEntity.toBoardEntity(boardDto);
+           // SAVE 
+           boardEntity = boardRepository.save(boardEntity);
+           // FileSave
+           BoardImgEntity boardImgEntity = BoardImgEntity.toInsertFile(BoardImgDto.builder()
+                                        .oldName(originalFileName)
+                                        .newName(newFileName)
+                                        .boardEntity(boardEntity)                                 
+                                        .build());
+            boardImgRepository.save(boardImgEntity); // SAVE FILE 
+       
         }
     }
     
@@ -148,61 +136,63 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     @Override
     public void update(BoardDto boardDto) throws IOException {
-
+        // 기존게시물이 있니?
         BoardEntity boardEntity = boardRepository.findById(boardDto.getId())
-                .orElseThrow(()-> new IllegalArgumentException("수정할 게시글이 없습니다."));
+            .orElseThrow(()-> new IllegalArgumentException("수정할 게시물이 없습니다"));
         
-        // DTO -> entity
+        // DTO Value -> Entity Update 
         boardEntity.setTitle(boardDto.getTitle());
         boardEntity.setContent(boardDto.getContent());
-        // newFile Check 
-        if(boardDto.getBoardFile() != null && !boardDto.getBoardFile().isEmpty()){
-            // has newFile
-            List<MultipartFile> newFilelist = boardDto.getBoardFileList();
+
+        // there is NewFile?
+        // File fix Logic 
+        if(boardDto.getBoardFile() != null && !boardDto.getBoardFile().isEmpty()) {
+             File directory = new File(FILE_PATH);
+            if (!directory.exists()) {
+                if (!directory.mkdirs()) {
+                    throw new IOException("파일 저장 경로를 생성할 수 없습니다: " + FILE_PATH);
+                }
+            }
+            // there has NewFile 
             MultipartFile newFile = boardDto.getBoardFile();
 
-            // if there is OldFile... >> REMOVE
-            Optional<BoardImgEntity> existingFileOptional = boardImgRepository.findByBoardEntity(boardEntity);
-            // File :: 1
-            if(existingFileOptional.isPresent()){
-                BoardImgEntity existingImg = existingFileOptional.get();
-
-                String oldFileKey = existingImg.getNewName();
-                // awsS3Service.deleteObject("buketec2", oldFileKey);
-
-                // DB data Delete 
-                boardImgRepository.delete(existingImg);
-
+            // Original File Check First.... then Delete 
+            Optional<BoardImgEntity> existImgOptional = boardImgRepository.findByBoardEntity(boardEntity);
+            // there has OldFile..
+            if(existImgOptional.isPresent()){
+                BoardImgEntity existFileEntity = existImgOptional.get();
+                // Psycially Image Delete ->
+                File oldFile = new File(FILE_PATH + existFileEntity.getNewName());
+                if(oldFile.exists()){
+                    oldFile.delete();
+                }
+                // Also you Delete DB Data info(img)
+                boardImgRepository.delete(existFileEntity);
             }
-            // Add New File Save 
+            // and Replace NewFile 
             String originalFileName = newFile.getOriginalFilename();
-            String newFileName = UUID.randomUUID() + "_" + originalFileName; // this is S3 Key 
-            
-            // prepare S3 fileUpload
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentType(newFile.getContentType());
-            metadata.setContentLength(newFile.getSize());
-
-            // S3 FileUpload 
-            // awsS3Service.putObject("bucketec2", newFileName, newFile.getInputStream(), metadata);
-
-            // entitiy AttachFile statue
+            UUID uuid = UUID.randomUUID();
+            String newFileName = uuid + "_" + originalFileName;
+            String filePath = FILE_PATH + newFileName;
+            newFile.transferTo(new File(filePath));
+            // And Change AttachFile Statue...
             boardEntity.setAttachFile(1);
-
-            // new Fileinfo Save DB 
-            BoardImgEntity newBoardImgEntity = BoardImgEntity.toInsertFile(BoardImgDto.builder()
-                                        .oldName(originalFileName)
-                                        .newName(newFileName)
-                                        .boardEntity(boardEntity)
-                                        .build());
-            boardImgRepository.save(newBoardImgEntity);
+            // Also SAVE New IMG Data into DB...-> 
+            BoardImgEntity newFileEntity = BoardImgEntity.toInsertFile(BoardImgDto.builder()
+                                                        .oldName(originalFileName)
+                                                        .newName(newFileName)
+                                                        .boardEntity(boardEntity)                                                    
+                                                        .build());
+            boardImgRepository.save(newFileEntity);    
         } else {
-            //
-
+            // if there has No NEWFILE... -> 
         }
+        // Save Entity 
+        // Alredy Have id, JPA run UPDATE Query.
         boardRepository.save(boardEntity);
-    
+
     }
+
 
     @Override
     public void deleteBoard(Long boardId) {
