@@ -1,7 +1,10 @@
 package org.spring.backendspring.crew.crewJoin.service.impl;
 
 import lombok.RequiredArgsConstructor;
+
+import org.spring.backendspring.board.dto.BoardDto;
 import org.spring.backendspring.common.RequestStatus;
+import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.common.role.CrewRole;
 import org.spring.backendspring.crew.CrewRoleCheck;
 import org.spring.backendspring.crew.crew.entity.CrewEntity;
@@ -14,6 +17,10 @@ import org.spring.backendspring.crew.crewMember.entity.CrewMemberEntity;
 import org.spring.backendspring.crew.crewMember.repository.CrewMemberRepository;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,6 +82,49 @@ public class CrewJoinRequestServiceImpl implements CrewJoinRequestService {
 
     }
 
+    // @Override
+    // public PagedResponse<CrewJoinRequestDto> pagingJoinReqList(Long crewId, String keyword, int page, int size) {
+    //     Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+    //     Page<CrewJoinRequestDto> crewReqPage;
+
+    //     if (keyword == null || keyword.trim().isEmpty()) {
+    //         crewReqPage = crewJoinRequestRepository.findAllByCrewEntityId(crewId, pageable)
+    //                 .map(CrewJoinRequestDto::crewJoinRequestDto);
+    //     } else {
+    //         // crewReqPage = crewJoinRequestRepository
+    //         // .findByMemberEntityIdContainingAndStatus()
+    //         return null;
+    //     }
+    //     return PagedResponse.of(crewReqPage);
+    // }
+
+    //가입 승인
+//     @Override
+//     public void crewJoinRequestApproved(CrewJoinRequestDto joinDto, Long leaderId) {
+//         Long crewId = joinDto.getCrewRequestId();
+//         Long memberId = joinDto.getMemberRequestId();
+
+//         // 로그인 사용자의 crewRole을 가져옵니다.
+//         String crewRole = CrewRoleCheck.crewRoleCheckFn(leaderId, crewId, crewRepository);
+
+//         if (!crewRole.equals("LEADER")) {
+//             throw new IllegalArgumentException("크루 권한이 없습니다.");
+//         }
+
+//         CrewJoinRequestEntity request = crewJoinRequestRepository.findByCrewEntityIdAndMemberEntityId(crewId, memberId)
+//                 .orElseThrow(() -> new NullPointerException("가입신청 없음"));
+
+//         if (request.getStatus() != RequestStatus.PENDING) {
+//             throw new IllegalArgumentException("이미 처리함");
+//         }
+
+// //                    승인으로 변경
+//         crewJoinRequestRepository.save(CrewJoinRequestEntity.updateCrewJoinApproved(request));
+
+// //                    //크루 멤버 저장
+//         crewMemberRepository.save(CrewMemberEntity.insertCrewMember(request));
+//     }
+
     //가입 승인
     @Override
     public void crewJoinRequestApproved(CrewJoinRequestDto joinDto, Long leaderId) {
@@ -126,4 +176,5 @@ public class CrewJoinRequestServiceImpl implements CrewJoinRequestService {
 
 
     }
+
 }

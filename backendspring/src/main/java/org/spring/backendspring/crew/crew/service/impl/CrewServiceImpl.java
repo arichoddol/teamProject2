@@ -1,6 +1,5 @@
 package org.spring.backendspring.crew.crew.service.impl;
 
-import java.nio.file.AccessDeniedException;
 import lombok.RequiredArgsConstructor;
 import org.spring.backendspring.crew.crew.dto.CrewDto;
 import org.spring.backendspring.crew.crew.entity.CrewEntity;
@@ -8,7 +7,6 @@ import org.spring.backendspring.crew.crew.entity.CrewImageEntity;
 import org.spring.backendspring.crew.crew.repository.CrewImageRepository;
 import org.spring.backendspring.crew.crew.repository.CrewRepository;
 import org.spring.backendspring.crew.crew.service.CrewService;
-import org.spring.backendspring.crew.crewMember.entity.CrewMemberEntity;
 import org.spring.backendspring.s3.AwsS3Service;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,11 +24,11 @@ public class CrewServiceImpl implements CrewService {
     private final AwsS3Service awsS3Service;
 
     @Override
-    public CrewDto updateCrew(Long id, CrewDto crewDto,
+    public CrewDto updateCrew(Long crewId, CrewDto crewDto,
                               List<MultipartFile> newImages,
                               List<Long> deleteImageId) throws IOException {
 
-        CrewEntity crew = crewRepository.findById(id)
+        CrewEntity crew = crewRepository.findById(crewId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 크루"));
 
         // 크루 기본 정보 수정
@@ -64,11 +62,11 @@ public class CrewServiceImpl implements CrewService {
     }
 
     @Override
-    public void deleteCrew(Long id) {
-        CrewEntity crewEntity = crewRepository.findById(id)
+    public void deleteCrew(Long crewId) {
+        CrewEntity crewEntity = crewRepository.findById(crewId)
                 .orElseThrow(IllegalArgumentException::new);
 
-        List<CrewImageEntity> crewImages = crewImageRepository.findByCrewEntity_Id(id);
+        List<CrewImageEntity> crewImages = crewImageRepository.findByCrewEntity_Id(crewId);
         if (crewImages != null) {
             for (CrewImageEntity img : crewImages) {
                 awsS3Service.deleteFile(img.getNewName());
@@ -93,8 +91,8 @@ public class CrewServiceImpl implements CrewService {
     }
 
     @Override
-    public CrewDto crewDetail(Long id) {
-        CrewEntity crewEntity = crewRepository.findById(id)
+    public CrewDto crewDetail(Long crewId) {
+        CrewEntity crewEntity = crewRepository.findById(crewId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 크루"));
 
         return CrewDto.toCrewDto(crewEntity);
