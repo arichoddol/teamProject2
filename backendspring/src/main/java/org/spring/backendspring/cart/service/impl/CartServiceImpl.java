@@ -23,8 +23,13 @@ public class CartServiceImpl implements CartService {
     private final ItemRepository itemRepository; // Item 조회용
 
     @Override
+    @Transactional
     public CartEntity getCartByMemberId(Long memberId) {
-        return cartRepository.findByMemberId(memberId).orElse(null);
+        CartEntity cart = cartRepository.findByMemberId(memberId).orElse(null);
+        if (cart != null) {
+            cart.getCartItemEntities().size(); // 강제로 로딩
+        }
+        return cart;
     }
 
     @Override
@@ -46,10 +51,15 @@ public class CartServiceImpl implements CartService {
         CartItemEntity cartItem = CartItemEntity.builder()
                 .cartEntity(cart)
                 .itemSize(itemSize)
-                .itemEntity(itemEntity) // 연관 관계 설정
+                .itemEntity(itemEntity)
                 .build();
 
-        return cartItemRepository.save(cartItem);
+        CartItemEntity savedItem = cartItemRepository.save(cartItem);
+
+        // CartEntity 내부 리스트에도 추가
+        cart.getCartItemEntities().add(savedItem);
+
+        return savedItem;
     }
 
     @Override
