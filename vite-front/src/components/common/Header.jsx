@@ -27,7 +27,7 @@ const Header = () => {
   }
 
   return (
-    <>
+    
       <div className="header">
         <div className="nav">
           <h1>HOME</h1>
@@ -41,6 +41,9 @@ const Header = () => {
               <li>
                 <Link to= "/auth/myPage">myPage</Link>
               </li> 
+              <li>
+                 <Link to= "/board">board</Link>
+              </li>
               { role === 'ADMIN' ? <li><Link to= "/admin/index">admin</Link></li> : null }
             </>
             : 
@@ -51,7 +54,7 @@ const Header = () => {
           </div>
         </div>
       </div>
-    </>
+    
   )
 }
 
