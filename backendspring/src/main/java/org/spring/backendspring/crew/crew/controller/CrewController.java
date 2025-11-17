@@ -10,7 +10,6 @@ import org.spring.backendspring.crew.crew.dto.CrewDto;
 import org.spring.backendspring.crew.crew.service.CrewService;
 import org.spring.backendspring.crew.crewJoin.dto.CrewJoinRequestDto;
 import org.spring.backendspring.crew.crewJoin.service.CrewJoinRequestService;
-import org.spring.backendspring.member.dto.MemberDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -55,9 +54,11 @@ public class CrewController {
     }
 
     @DeleteMapping("/delete/{crewId}")
-    public ResponseEntity<?> delete(@PathVariable("crewId") Long crewId) {
+    public ResponseEntity<?> delete(@PathVariable("crewId") Long crewId,
+                                    @AuthenticationPrincipal MyUserDetails userDetails) {
 
-        crewService.deleteCrew(crewId);
+        Long loginUserId = userDetails.getMemberId();
+        crewService.deleteCrew(crewId, loginUserId);
 
         return ResponseEntity.ok(Map.of("message", "크루 삭제 완료"));
     }
@@ -96,20 +97,19 @@ public class CrewController {
         return ResponseEntity.status(HttpStatus.OK).body(joinMap);
     }
 
-    @GetMapping("mycrewList/{memberId}")
-    public ResponseEntity<?> mycrewList(@PathVariable("memberId") Long memberId,
-                                        @AuthenticationPrincipal MyUserDetails userDetails) {
+    // @GetMapping("mycrewList/{memberId}")
+    // public ResponseEntity<?> mycrewList(@PathVariable("memberId") Long memberId,
+    //                                     @AuthenticationPrincipal MyUserDetails userDetails) {
         
-        // Long loginUserId = userDetails.getMemberId();
-        // if (!loginUserId.equals(memberId)) {
-        //     throw new IllegalArgumentException("본인 크루 리스트는 본인만 조회 가능");
-        // }
+    //     // Long loginUserId = userDetails.getMemberId();
+    //     // if (!loginUserId.equals(memberId)) {
+    //     //     throw new IllegalArgumentException("본인 크루 리스트는 본인만 조회 가능");
+    //     // }
 
-        List<CrewDto> mycrewList = crewService.mycrewList(memberId);
+    //     List<CrewDto> mycrewList = crewService.mycrewList(memberId);
         
-        return ResponseEntity.ok(mycrewList);
-    }
-    
+    //     return ResponseEntity.ok(mycrewList);
+    // }    
     
     
 }

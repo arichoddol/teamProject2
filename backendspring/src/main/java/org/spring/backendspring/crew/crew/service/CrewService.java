@@ -10,7 +10,7 @@ public interface CrewService {
 
     CrewDto updateCrew(Long loginUserId, Long crewId, CrewDto crewDto, List<MultipartFile> newImages, List<Long> deleteImageId) throws IOException;
 
-    void deleteCrew(Long crewId);
+    void deleteCrew(Long crewId, Long loginUserId);
 
     List<CrewDto> crewList();
 

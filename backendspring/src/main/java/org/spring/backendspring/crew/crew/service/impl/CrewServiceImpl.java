@@ -3,6 +3,7 @@ package org.spring.backendspring.crew.crew.service.impl;
 import lombok.RequiredArgsConstructor;
 
 import org.spring.backendspring.common.role.MemberRole;
+import org.spring.backendspring.crew.CrewRoleCheck;
 import org.spring.backendspring.crew.crew.dto.CrewDto;
 import org.spring.backendspring.crew.crew.entity.CrewEntity;
 import org.spring.backendspring.crew.crew.entity.CrewImageEntity;
@@ -41,7 +42,9 @@ public class CrewServiceImpl implements CrewService {
         MemberEntity member = memberRepository.findById(loginUserId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원"));
 
-        if (!loginUserId.equals(crew.getMemberEntity().getId()) || !member.getRole().equals(MemberRole.ADMIN)) {
+        String crewRole = CrewRoleCheck.crewRoleCheckFn(loginUserId, crewId, crewRepository);
+
+        if (!crewRole.equals("LEADER") || !member.getRole().equals(MemberRole.ADMIN)) {
             throw new IllegalArgumentException("크루 수정 권한 없음");    
         }
 
@@ -76,9 +79,16 @@ public class CrewServiceImpl implements CrewService {
     }
 
     @Override
-    public void deleteCrew(Long crewId) {
+    public void deleteCrew(Long crewId, Long loginUserId) {
         CrewEntity crewEntity = crewRepository.findById(crewId)
                 .orElseThrow(IllegalArgumentException::new);
+        MemberEntity member = memberRepository.findById(loginUserId)
+                .orElseThrow(() -> new NullPointerException("존재하지 않는 회원"));
+        
+        String crewRole = CrewRoleCheck.crewRoleCheckFn(loginUserId, crewId, crewRepository);
+        if (!crewRole.equals("LEADER") || !member.getRole().equals(MemberRole.ADMIN)) {
+            throw new IllegalArgumentException("크루 삭제 권한 없음");    
+        }
 
         List<CrewImageEntity> crewImages = crewImageRepository.findByCrewEntity_Id(crewId);
         if (crewImages != null) {

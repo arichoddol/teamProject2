@@ -51,7 +51,7 @@ public class CrewBoardServiceImpl implements CrewBoardService {
         CrewEntity crewEntity = crewRepository.findById(crewId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 크루"));
         MemberEntity memberEntity = memberRepository.findById(loginUserId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원"));
 
         crewBoardDto.setCrewEntity(crewEntity);
         crewBoardDto.setMemberEntity(memberEntity);
@@ -104,11 +104,15 @@ public class CrewBoardServiceImpl implements CrewBoardService {
         
         MemberEntity memberEntity = memberRepository.findById(crewBoardDto.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원"));
-        crewBoardDto.setMemberEntity(memberEntity);
-        crewBoardDto.setCrewId(crewId);
         CrewBoardEntity crewBoardEntity = crewBoardRepository.findByCrewEntity_IdAndId(crewId, id)
                 .orElseThrow(() -> new NullPointerException("존재하지 않는 게시글"));
-        
+                
+        if (!loginUserId.equals(memberEntity.getId())) {
+            throw new IllegalArgumentException("게시글 수정 권한 없음");
+        }
+                
+        crewBoardDto.setMemberEntity(memberEntity);
+        crewBoardDto.setCrewId(crewId);
         crewBoardEntity.setTitle(crewBoardDto.getTitle());
         crewBoardEntity.setContent(crewBoardDto.getContent());
 
@@ -143,7 +147,9 @@ public class CrewBoardServiceImpl implements CrewBoardService {
     @Override
     public void deleteBoard(Long id, Long loginUserId) {
         CrewBoardEntity crewBoardEntity = crewBoardRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 삭제 불가"));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 삭제 불가"));        
+        MemberEntity memberEntity = memberRepository.findById(loginUserId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원"));
         
         List<CrewBoardImageEntity> crewBoardImages = crewBoardImageRepository.findByCrewBoardEntity_Id(id);
         if (crewBoardImages != null) {
