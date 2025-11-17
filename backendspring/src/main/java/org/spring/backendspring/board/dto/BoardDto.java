@@ -33,15 +33,6 @@ import lombok.ToString;
 public class BoardDto {
 
 
-    // public BoardDto(String title, String content, Long memberId, String nickName) {
-    //     this.title = title;
-    //     this.content = content;
-    //     this.memberId = memberId;
-    //     this.memberNickName = nickName;
-
-    //     // tmp function
-    // }
-
 
     
 

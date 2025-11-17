@@ -61,7 +61,7 @@ const root = createBrowserRouter([
   },
   {
     // shop
-    path: "shop",
+    path: "store",
     element: (
       <Suspense fallback={Loading}>
         <ShopLayout />

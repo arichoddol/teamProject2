@@ -5,6 +5,8 @@ import { removeCookie } from '../../apis/util/cookieUtil';
 import { logout } from '../../slices/loginSlice';
 import { deleteAccessToken } from '../../slices/jwtSlice';
 import { Link } from 'react-router-dom';
+// CSS 
+import "../../css/common/header.css"
 
 // slice 테스트 확인용으로 작성했습니다.
 const Header = () => {
@@ -41,18 +43,25 @@ const Header = () => {
               <li>
                 <Link to= "/auth/myPage">myPage</Link>
               </li> 
-              <li>
-                 <Link to= "/board">board</Link>
-              </li>
-              { role === 'ADMIN' ? <li><Link to= "/admin/index">admin</Link></li> : null }
+           
+              { role === 'ADMIN' ? <li><Link to= "/admin/index">ADMIN</Link></li> : null }
             </>
             : 
             <li>
               <Link to="/auth/login">LOGIN</Link>
             </li> }
-            <li>
-              <Link to="/board/index">글목록</Link>
-            </li>
+               <li>
+                 <Link to= "/board">board</Link>
+              </li>
+               <li>
+                 <Link to= "/store">STORE</Link>
+              </li>
+              <li>
+                <Link to="/crew">CREW</Link>
+              </li>
+              <li>
+                <Link to={"/event"}>EVENT</Link>
+              </li>
             </ul> 
           </div>
         </div>
