@@ -34,11 +34,9 @@ public class BoardReplyEntity extends BasicTime {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "board_comment_id" ,unique = true)
+    @Column(name = "board_comment_id")
     private Long id;
  
-    @Column(nullable = false)
-    private String title;
     @Column(nullable = false)
     private String content;
 
@@ -58,6 +56,17 @@ public class BoardReplyEntity extends BasicTime {
     @JoinColumn(name = "member_id")
     @JsonIgnore
     private MemberEntity memberEntity;
+
+
+    public static BoardReplyEntity toReplyEntity (BoardReplyDto boardReplyDto){
+
+        return BoardReplyEntity.builder()
+                            .id(boardReplyDto.getId())
+                            .content(boardReplyDto.getContent())
+                            .boardEntity(boardReplyDto.getBoardEntity())
+                            .memberEntity(boardReplyDto.getMemberEntity())
+                            .build();
+    }
 
 
 }
