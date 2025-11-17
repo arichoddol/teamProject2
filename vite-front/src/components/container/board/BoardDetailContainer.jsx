@@ -26,6 +26,7 @@ const BoardDetailContainer = () => {
     const API_BASE_URL = 'http://localhost:8088/api/board';
     const IMAGE_BASE_URL = 'http://localhost:8088/upload/';
     // private static final String FILE_PATH = "C:/full/upload/";
+    //
 
 
     // 날짜 포맷 함수 (컴포넌트 내부에 정의)
@@ -34,6 +35,7 @@ const BoardDetailContainer = () => {
         return new Date(dateString).toLocaleString('ko-KR', {
             year: 'numeric', month: '2-digit', day: '2-digit',
             hour: '2-digit', minute: '2-digit'
+        
         });
     }
 
