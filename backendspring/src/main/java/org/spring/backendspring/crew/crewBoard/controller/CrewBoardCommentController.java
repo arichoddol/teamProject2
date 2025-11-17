@@ -59,7 +59,7 @@ public class CrewBoardCommentController {
                                            @PathVariable("crewId") Long crewId,
                                            @PathVariable("boardId") Long boardId) {
         
-        CrewBoardCommentDto commentDto = crewBoardCommentService.commentDetail(id, crewId, boardId);
+        CrewBoardCommentDto commentDto = crewBoardCommentService.commentDetail(boardId, id);
 
         Map<String, CrewBoardCommentDto> response = new HashMap<>();
 
@@ -71,11 +71,12 @@ public class CrewBoardCommentController {
     @PutMapping("/update/{commentId}")
     public ResponseEntity<?> updateComment(@RequestBody CrewBoardCommentDto crewBoardCommentDto,
                                            @PathVariable("crewId") Long crewId,
+                                           @PathVariable("commentId") Long id,
                                            @PathVariable("boardId") Long boardId,
                                            @AuthenticationPrincipal MyUserDetails userDetails) {
         Long loginUserId = userDetails.getMemberId();
         
-        CrewBoardCommentDto updateCommentDto = crewBoardCommentService.updateComment(crewBoardCommentDto, loginUserId);
+        CrewBoardCommentDto updateCommentDto = crewBoardCommentService.updateComment(id, crewBoardCommentDto, loginUserId);
 
         Map<String, CrewBoardCommentDto> response = new HashMap<>();
 

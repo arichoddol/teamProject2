@@ -36,7 +36,7 @@ import React, { useState } from 'react'
 //     try {
 //         //CrewsController 없애면서 CrewController 로 옮겨주세요 
 //         // post 주소도 바꿔주세요
-//         const res = await axios.post(`/api/crews/joinRequest`,
+//         const res = await axios.post(`/api/crew/joinRequest`,
 //             joinRequestData,
 //             { headers: { "Content-Type": "application/json" }}
 //         ) 
