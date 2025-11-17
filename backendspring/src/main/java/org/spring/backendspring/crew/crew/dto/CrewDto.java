@@ -51,6 +51,7 @@ public class CrewDto extends BasicTime {
     private List<String> newFileName;
 
     private Long memberId;
+    private String memberNickName;
 
     public static CrewDto toCrewDto(CrewEntity crewEntity) {
         return CrewDto.builder()
@@ -65,6 +66,7 @@ public class CrewDto extends BasicTime {
 //                .crewJoinRequestEntities(crewEntity.getCrewJoinRequestEntities())
                 .createTime(crewEntity.getCreateTime())
                 .upDateTime(crewEntity.getUpdateTime())
+                .memberNickName(crewEntity.getMemberEntity().getNickName())
                 .build();
     }
 

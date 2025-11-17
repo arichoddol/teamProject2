@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.spring.backendspring.config.security.MyUserDetails;
 import org.spring.backendspring.crew.crew.dto.CrewDto;
 import org.spring.backendspring.crew.crew.service.CrewService;
 import org.spring.backendspring.crew.crewJoin.dto.CrewJoinRequestDto;
 import org.spring.backendspring.crew.crewJoin.service.CrewJoinRequestService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,14 +34,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 public class CrewController {
 
     private final CrewService crewService;
+    private final CrewJoinRequestService crewJoinRequestService;
 
     @PutMapping("/update/{crewId}")
     public ResponseEntity<?> update(@PathVariable("crewId") Long crewId,
                                     @ModelAttribute CrewDto crewDto,
                                     @RequestParam(value = "newImages", required = false) List<MultipartFile> newImages,
-                                    @RequestParam(value = "deleteImageId", required = false) List<Long> deleteImageId) throws IOException {
+                                    @RequestParam(value = "deleteImageId", required = false) List<Long> deleteImageId,
+                                    @AuthenticationPrincipal MyUserDetails userDetails) throws IOException {
     
-        CrewDto updated = crewService.updateCrew(crewId, crewDto, newImages, deleteImageId);
+        Long loginUserId = userDetails.getMemberId();
+        CrewDto updated = crewService.updateCrew(loginUserId, crewId, crewDto, newImages, deleteImageId);
 
         Map<String, CrewDto> response = new HashMap<>();
 
@@ -49,9 +54,11 @@ public class CrewController {
     }
 
     @DeleteMapping("/delete/{crewId}")
-    public ResponseEntity<?> delete(@PathVariable("crewId") Long crewId) {
+    public ResponseEntity<?> delete(@PathVariable("crewId") Long crewId,
+                                    @AuthenticationPrincipal MyUserDetails userDetails) {
 
-        crewService.deleteCrew(crewId);
+        Long loginUserId = userDetails.getMemberId();
+        crewService.deleteCrew(crewId, loginUserId);
 
         return ResponseEntity.ok(Map.of("message", "크루 삭제 완료"));
     }
@@ -81,7 +88,6 @@ public class CrewController {
     }
 
     //CrewsController 없애면서 CrewController 로 옮겨주세요 axios 프론트 주소도,,ㅎㅎ
-    private final CrewJoinRequestService crewJoinRequestService;
     @PostMapping("/joinRequest")
     public ResponseEntity<?> crewJoinRequests(
             @RequestBody CrewJoinRequestDto joinDto){
@@ -90,6 +96,20 @@ public class CrewController {
         joinMap.put("joinRequest", crewJoinRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(joinMap);
     }
+
+    // @GetMapping("mycrewList/{memberId}")
+    // public ResponseEntity<?> mycrewList(@PathVariable("memberId") Long memberId,
+    //                                     @AuthenticationPrincipal MyUserDetails userDetails) {
+        
+    //     // Long loginUserId = userDetails.getMemberId();
+    //     // if (!loginUserId.equals(memberId)) {
+    //     //     throw new IllegalArgumentException("본인 크루 리스트는 본인만 조회 가능");
+    //     // }
+
+    //     List<CrewDto> mycrewList = crewService.mycrewList(memberId);
+        
+    //     return ResponseEntity.ok(mycrewList);
+    // }    
     
     
 }
