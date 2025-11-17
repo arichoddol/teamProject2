@@ -136,11 +136,11 @@ public class BoardController {
     // DELETE
     @DeleteMapping("/detail/{boardId}")
     public ResponseEntity<String> deleteBoard(@PathVariable("boardId") Long boardId,
-                                              @RequestParam("memberId") Long memberId,
                                               @AuthenticationPrincipal MyUserDetails myUserDetails) {
         Long authMemberId = myUserDetails.getMemberId();
+        Long memberId = boardService.boardDetail(boardId).getMemberId();
 
-        if (authMemberId.equals(memberId)) {
+        if (!authMemberId.equals(memberId)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("삭제 권한이 없습니다.");
         }
 
