@@ -1,10 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom'
 
 
 
 const BoardDetailContainer = () => {
+
+    const memberId = useSelector(state => state.loginSlice.id);
 
     const [boards, setBoards] = useState([]);
     const {id} = useParams();
@@ -46,7 +49,7 @@ const BoardDetailContainer = () => {
         }
 
         try {
-            const response = await fetch(`${API_BASE_URL}/detail/${boards.id}`, {
+            const response = await fetch(`${API_BASE_URL}/detail/${boards.id}?memberId=${memberId}`, {
                 method: 'DELETE', // DELETE 요청 전송
             });
 

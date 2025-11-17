@@ -32,10 +32,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 // RestController is Data Only
+//@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/board")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
 public class BoardController {
 
     private final BoardService boardService;
@@ -51,49 +51,60 @@ public class BoardController {
     // search function
     @GetMapping("/search")
     public ResponseEntity<Page<BoardDto>> boardSearchList(
-        @PageableDefault(size = 10) Pageable pageable,
-        @RequestParam(required = false) String subject,
-        @RequestParam(required = false) String search) {
+            @PageableDefault(size = 10) Pageable pageable,
+            @RequestParam(required = false) String subject,
+            @RequestParam(required = false) String search) {
 
-            Page<BoardDto> boardList = boardService.boardListPage(pageable, subject, search);
-            return ResponseEntity.ok(boardList);
-        }
-    
-        // POST can  after Login 
-        @GetMapping("/newPost")
-        public String newPost(BoardDto boardDto,
-                            @AuthenticationPrincipal MyUserDetails myUserDetails,
-                            Model model ){
+        Page<BoardDto> boardList = boardService.boardListPage(pageable, subject, search);
+        return ResponseEntity.ok(boardList);
+    }
 
-            model.addAttribute("myUserDetails", myUserDetails);
-            return "board/write";
-        }
-        // this Fragments -> form action="/board/write" Data request.
+    // POST can  after Login
+    @GetMapping("/newPost")
+    public String newPost(BoardDto boardDto,
+                          @AuthenticationPrincipal MyUserDetails myUserDetails,
+                          Model model) {
+
+        model.addAttribute("myUserDetails", myUserDetails);
+        return "board/write";
+    }
+
+    // this Fragments -> form action="/board/write" Data request.
     @PostMapping("/write")
     public ResponseEntity<?> writeBoard(@RequestParam("memberId") Long memberId,
-                                        @ModelAttribute BoardDto boardDto) throws IOException{
+                                        @ModelAttribute BoardDto boardDto,
+                                        @AuthenticationPrincipal MyUserDetails myUserDetails) throws IOException {
+        if (!myUserDetails.getMemberId().equals(memberId)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원의 정보가 일치하지 않습니다.");
+        }
         boardService.insertBoard(boardDto);
-      
         return ResponseEntity.ok("DONE");
     }
 
     // URL: http://localhost:8088/api/board/detail/{id}
     @GetMapping("/detail/{id}")
-    public ResponseEntity<BoardDto> getBoardDetail(@PathVariable("id") Long id){
-       
+    public ResponseEntity<BoardDto> getBoardDetail(@PathVariable("id") Long id) {
+
         // Bring Id(Long id )
         BoardDto boardDto = boardService.boardDetail(id);
-       
+
         return ResponseEntity.ok(boardDto);
     }
 
-    // UPDATE 
+    // UPDATE
     @GetMapping("/update/{boardId}")
-    public ResponseEntity<BoardDto> updateBoard(@PathVariable("boardId") Long boardId){
-        try{
+    public ResponseEntity<?> updateBoard(@PathVariable("boardId") Long boardId,
+                                         @AuthenticationPrincipal MyUserDetails myUserDetails) {
+        Long memberId = myUserDetails.getMemberId();
+
+        try {
             BoardDto boardDto = boardService.boardDetail(boardId);
 
-            if(boardDto != null ) {
+            if (!memberId.equals(boardDto.getMemberId())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 권한이 없습니다.");
+            }
+
+            if (boardDto != null) {
                 return ResponseEntity.ok(boardDto);
             } else {
                 return ResponseEntity.notFound().build();
@@ -102,22 +113,37 @@ public class BoardController {
             return ResponseEntity.internalServerError().body(null);
         }
     }
+
     @PostMapping("/updatePost")
-    public ResponseEntity<?> updateBoard(@ModelAttribute BoardDto boardDto) throws IOException {
+    public ResponseEntity<?> updateBoard(@ModelAttribute BoardDto boardDto,
+                                         @AuthenticationPrincipal MyUserDetails myUserDetails) throws IOException {
+        Long memberId = myUserDetails.getMemberId();
+
+        if (!memberId.equals(boardDto.getMemberId())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 권한이 없습니다.");
+        }
+
         boardService.update(boardDto);
         return ResponseEntity.ok("UPDATE DONE");
 
     }
-    // UPDATE 
+    // UPDATE
 
-   
-    
-     //* DELETE 요청: /board/{boardId}
-     //* @param boardId 삭제할 게시글 ID
-     //* @return 성공 응답
+
+    //* DELETE 요청: /board/{boardId}
+    //* @param boardId 삭제할 게시글 ID
+    //* @return 성공 응답
     // DELETE
     @DeleteMapping("/detail/{boardId}")
-    public ResponseEntity<String> deleteBoard(@PathVariable("boardId")Long boardId){
+    public ResponseEntity<String> deleteBoard(@PathVariable("boardId") Long boardId,
+                                              @RequestParam("memberId") Long memberId,
+                                              @AuthenticationPrincipal MyUserDetails myUserDetails) {
+        Long authMemberId = myUserDetails.getMemberId();
+
+        if (authMemberId.equals(memberId)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("삭제 권한이 없습니다.");
+        }
+
         try {
             boardService.deleteBoard(boardId);
             return ResponseEntity.ok("게시글 삭제 성공");
@@ -125,10 +151,8 @@ public class BoardController {
             // TODO: handle exception
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            // etc 500 error 
+            // etc 500 error
             return ResponseEntity.internalServerError().body("게시글 삭제중 서버 오류 발생");
         }
     }
 }
-
-
