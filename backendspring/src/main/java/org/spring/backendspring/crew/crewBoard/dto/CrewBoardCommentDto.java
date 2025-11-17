@@ -29,14 +29,19 @@ public class CrewBoardCommentDto {
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 
+    private Long crewId;
     private Long boardId;
+    private Long memberId;
+    private String memberNickName;
 
     public static CrewBoardCommentDto toDto(CrewBoardCommentEntity entity) {
 
         return CrewBoardCommentDto.builder()
                 .id(entity.getId())
-                .crewBoardEntity(entity.getCrewBoardEntity())
-                .memberEntity(entity.getMemberEntity())
+                .crewId(entity.getCrewBoardEntity().getCrewEntity().getId())
+                .memberId(entity.getMemberEntity().getId())
+                .boardId(entity.getId())
+                .memberNickName(entity.getMemberEntity().getNickName())
                 .content(entity.getContent())
                 .createTime(entity.getCreateTime())
                 .build();

@@ -1,23 +1,23 @@
-package org.spring.backendspring;
+// package org.spring.backendspring;
 
-import org.junit.jupiter.api.Test;
-import org.spring.backendspring.payment.entity.PaymentEntity;
-import org.spring.backendspring.payment.repository.PaymentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+// import org.junit.jupiter.api.Test;
+// import org.spring.backendspring.payment.entity.PaymentEntity;
+// import org.spring.backendspring.payment.repository.PaymentRepository;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDateTime;
+// import java.time.LocalDateTime;
 
-@SpringBootTest
-public class PaymentTest {
+// @SpringBootTest
+// public class PaymentTest {
 
-    @Autowired
-    private PaymentRepository paymentRepository;
+//     @Autowired
+//     private PaymentRepository paymentRepository;
 
-    @Test
-    public void insertDummyPayments() {
+//     @Test
+//     public void insertDummyPayments() {
 
-        for (int i = 1; i <= 25; i++) {
+//         for (int i = 1; i <= 25; i++) {
 
             PaymentEntity payment = PaymentEntity.builder()
                     .memberId((long) i)
@@ -31,9 +31,9 @@ public class PaymentTest {
                     .paymentItemEntities(null) // 혹은 new ArrayList<>()
                     .build();
 
-            paymentRepository.save(payment);
-        }
+//             paymentRepository.save(payment);
+//         }
 
-        System.out.println("✅ 25개의 더미 결제 데이터가 성공적으로 저장되었습니다!");
-    }
-}
+//         System.out.println("✅ 25개의 더미 결제 데이터가 성공적으로 저장되었습니다!");
+//     }
+// }

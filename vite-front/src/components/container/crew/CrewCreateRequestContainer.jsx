@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -5,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 const CrewCreateRequestContainer = () => {
   const navigate = useNavigate();
   const { isLogin } = useSelector((state) => state.loginSlice);
-  const accessToken = useSelector((state) => state.jwtSlice);
+  const { accessToken } = useSelector((state) => state.jwtSlice);
 
   const [crewName, setCrewName] = useState("");
   const [message, setMessage] = useState("");
@@ -51,35 +52,36 @@ const CrewCreateRequestContainer = () => {
   const submit = async (el) => {
     el.preventDefault();
       
-    // if (!isLogin) return;
+    if (!isLogin) return;
 
     try {
-      const response = await fetch("/api/crew/create/request", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
+      const response = await axios.post("/api/crew/create/request", 
+        {
             crewName,
             message,
-        }),
-      });
-      const data = await response.json();
-      setResponseMsg(data.message)
+            district,
+        },
+        {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${accessToken}`,
+            },
+        }        
+      );
+      setResponseMsg(response.data.message)
     } catch (err) {
         console.error(err);
         setResponseMsg("오류 발생")
     } 
   }
 
-//   if (!isLogin) return null;
+  if (!isLogin) return null;
 
   return (
     <div className="createRequest">
         <div className="createRequest-con">
             <h2>크루 만들기</h2>
-            {/* {isLogin ? ( */}
+            {isLogin ? (
                 <form onSubmit={submit}>
                     <div className="crewInfo">
                         <label className="crewName">크루 이름</label>
@@ -104,7 +106,7 @@ const CrewCreateRequestContainer = () => {
                     </div>
                     <div className="district">
                         <label className="crewDistrict">지역 선택</label>
-                        <select name="distict" id="district" value={district} onChange={selectChange}>
+                        <select name="district" id="district" value={district} onChange={selectChange}>
                             <option value="">지역선택</option>
                             {districtsInSeoul.map((d, index) => (
                                 <option key={index} value={d}>
@@ -116,9 +118,9 @@ const CrewCreateRequestContainer = () => {
                     </div>
                     <button className="createRequest" type="submit">신청하기</button>
                 </form>
-            {/* ) : (
+            ) : (
                 <p className="loginRequired">로그인이 필요합니다.</p>
-            )} */}
+            )}
             <p className="responseMsg">{responseMsg}</p>
         </div>
     </div>

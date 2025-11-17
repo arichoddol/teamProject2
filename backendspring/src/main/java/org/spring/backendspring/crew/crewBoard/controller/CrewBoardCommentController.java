@@ -10,9 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.spring.backendspring.config.security.MyUserDetails;
 import org.spring.backendspring.crew.crewBoard.dto.CrewBoardCommentDto;
 import org.spring.backendspring.crew.crewBoard.service.CrewBoardCommentService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,40 +22,44 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
-
-
 @RestController
-@RequestMapping("/api/crewBoardComment")
+@RequestMapping("/api/mycrew/{crewId}/board/{boardId}/comment")
 @RequiredArgsConstructor
 public class CrewBoardCommentController {
     
     private final CrewBoardCommentService crewBoardCommentService;
 
     @PostMapping("/write")
-    public ResponseEntity<?> writeComment(@RequestBody CrewBoardCommentDto commentDto) {
+    public ResponseEntity<?> createComment(@RequestBody CrewBoardCommentDto commentDto,
+                                           @PathVariable("crewId") Long crewId,
+                                           @PathVariable("boardId") Long boardId,
+                                           @AuthenticationPrincipal MyUserDetails userDetails) {
         
-        CrewBoardCommentDto writeComment = crewBoardCommentService.writeComment(commentDto);
+        Long loginUserId = userDetails.getMemberId();
+        CrewBoardCommentDto createComment = crewBoardCommentService.createComment(commentDto, boardId, loginUserId);
 
-        return ResponseEntity.ok(writeComment);
+        return ResponseEntity.ok(createComment);
     }
 
-    @GetMapping("/list/{boardId}")
-    public ResponseEntity<?> commentList(@PathVariable("boardId")Long boardId) {
+    @GetMapping("/list")
+    public ResponseEntity<?> commentList(@PathVariable("crewId") Long crewId,
+                                         @PathVariable("boardId") Long boardId) {
         
-        List<CrewBoardCommentDto> crewBoardCommentList = crewBoardCommentService.commentList(boardId);
+        List<CrewBoardCommentDto> crewBoardCommentList = crewBoardCommentService.commentList(crewId, boardId);
 
         Map<String, Object> commentList = new HashMap<>();
 
-        commentList.put("commentList", commentList);
+        commentList.put("commentList", crewBoardCommentList);
 
         return ResponseEntity.ok(commentList);
     }
     
-    @GetMapping("/detail/{id}")
-    public ResponseEntity<?> commentDetail(@PathVariable("id") Long id) {
+    @GetMapping("/detail/{commentId}")
+    public ResponseEntity<?> commentDetail(@PathVariable("commentId") Long id,
+                                           @PathVariable("crewId") Long crewId,
+                                           @PathVariable("boardId") Long boardId) {
         
-        CrewBoardCommentDto commentDto = crewBoardCommentService.commentDetail(id);
+        CrewBoardCommentDto commentDto = crewBoardCommentService.commentDetail(id, crewId, boardId);
 
         Map<String, CrewBoardCommentDto> response = new HashMap<>();
 
@@ -62,9 +68,14 @@ public class CrewBoardCommentController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<?> updateComment(@RequestBody CrewBoardCommentDto crewBoardCommentDto) {
-        CrewBoardCommentDto updateCommentDto = crewBoardCommentService.updateComment(crewBoardCommentDto);
+    @PutMapping("/update/{commentId}")
+    public ResponseEntity<?> updateComment(@RequestBody CrewBoardCommentDto crewBoardCommentDto,
+                                           @PathVariable("crewId") Long crewId,
+                                           @PathVariable("boardId") Long boardId,
+                                           @AuthenticationPrincipal MyUserDetails userDetails) {
+        Long loginUserId = userDetails.getMemberId();
+        
+        CrewBoardCommentDto updateCommentDto = crewBoardCommentService.updateComment(crewBoardCommentDto, loginUserId);
 
         Map<String, CrewBoardCommentDto> response = new HashMap<>();
 
@@ -73,10 +84,14 @@ public class CrewBoardCommentController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteComment(@PathVariable("id") Long id) {
+    @DeleteMapping("/delete/{commentId}")
+    public ResponseEntity<?> deleteComment(@PathVariable("commentId") Long id,
+                                           @PathVariable("crewId") Long crewId,
+                                           @PathVariable("boardId") Long boardId,
+                                           @AuthenticationPrincipal MyUserDetails userDetails) {
+        Long loginUserId = userDetails.getMemberId();
 
-        crewBoardCommentService.deleteComment(id);
+        crewBoardCommentService.deleteComment(id, loginUserId);
 
         return ResponseEntity.ok("댓글 삭제 완료");
     }
