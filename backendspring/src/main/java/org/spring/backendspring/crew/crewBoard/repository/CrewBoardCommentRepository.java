@@ -11,6 +11,6 @@ public interface CrewBoardCommentRepository extends JpaRepository<CrewBoardComme
 
     List<CrewBoardCommentEntity> findAllByCrewBoardEntityOrderByIdDesc(CrewBoardEntity boardEntity);
 
-    Optional<CrewBoardCommentEntity> findByCrew_IdAndBoard_IdAndId(Long crewId, Long boardId, Long id);
+    Optional<CrewBoardCommentEntity> findByCrewBoardEntity_IdAndId(Long boardId, Long id);
     
 }

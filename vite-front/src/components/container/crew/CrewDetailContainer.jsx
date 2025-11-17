@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import CrewDetailLayout from '../../../layout/CrewDetailLayout';
 
 const CrewDetailContainer = () => {
-  const { id } = useParams();
+  const { crewId } = useParams();
   const [crew, setCrew] = useState({}); // 초기값 null
   const navigate = useNavigate();
 
@@ -18,8 +18,8 @@ const CrewDetailContainer = () => {
         console.error("크루 상세 실패", err);
       }
     };
-    fetchCrewDetail(id);
-  }, [id]);
+    fetchCrewDetail(crewId);
+  }, [crewId]);
 
   return (
     // <CrewDetailLayout>

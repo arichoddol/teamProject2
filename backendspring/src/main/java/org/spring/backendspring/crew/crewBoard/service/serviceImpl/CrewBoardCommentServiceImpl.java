@@ -56,15 +56,15 @@ public class CrewBoardCommentServiceImpl implements CrewBoardCommentService {
     }
 
     @Override
-    public CrewBoardCommentDto commentDetail(Long id, Long crewId, Long boardId) {
-        return CrewBoardCommentDto.toDto(crewBoardCommentRepository.findByCrew_IdAndBoard_IdAndId(crewId, boardId, id)
+    public CrewBoardCommentDto commentDetail(Long id, Long boardId) {
+        return CrewBoardCommentDto.toDto(crewBoardCommentRepository.findByCrewBoardEntity_IdAndId(boardId, id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글")));
     }
 
     @Override
-    public CrewBoardCommentDto updateComment(CrewBoardCommentDto crewBoardCommentDto, Long loginUserId) {
+    public CrewBoardCommentDto updateComment(Long id, CrewBoardCommentDto crewBoardCommentDto, Long loginUserId) {
         
-        CrewBoardCommentEntity comment = crewBoardCommentRepository.findById(crewBoardCommentDto.getId())
+        CrewBoardCommentEntity comment = crewBoardCommentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 댓글"));
 
         if (!comment.getMemberEntity().getId().equals(loginUserId)) {
