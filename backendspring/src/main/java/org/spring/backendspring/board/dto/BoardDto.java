@@ -108,6 +108,7 @@ public class BoardDto {
                     .hit(boardEntity.getHit())
                     .boardImgDtos(boardImgDtos)
                     .memberNickName(boardEntity.getMemberEntity().getNickName())
+                    .memberId(boardEntity.getMemberEntity().getId())
                     .createTime(boardEntity.getCreateTime())
                     .updateTime(boardEntity.getUpdateTime())
                     .attachFile(boardEntity.getAttachFile()) // 0 또는 1
