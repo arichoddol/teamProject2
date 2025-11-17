@@ -1,23 +1,14 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom'
 
 
 const BoardDetailContainer = () => {
 
+    const memberId = useSelector(state => state.loginSlice.id);
 
-    // boards 상태를 빈 객체로 초기화합니다.
-    const [boards, setBoards] = useState({});
-    const [content, setContent] = useState('');
-    const [replies, setReplies] = useState([]); // 댓글 목록 상태
-    const [pageInfo, setPageInfo] = useState({ // 페이지네이션 정보 상태 (first: true 추가)
-        page: 0,
-        size: 10,
-        totalPages: 0,
-        totalElements: 0,
-        last: true,
-        first: true, // 누락된 'first' 속성 복원
-    });
+    const [boards, setBoards] = useState([]);
     const {id} = useParams();
     const navigate = useNavigate();
 
