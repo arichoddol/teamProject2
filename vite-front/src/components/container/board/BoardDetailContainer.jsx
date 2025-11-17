@@ -1,14 +1,23 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom'
 
 
 const BoardDetailContainer = () => {
 
-    const memberId = useSelector(state => state.loginSlice.id);
 
-    const [boards, setBoards] = useState([]);
+    // boards 상태를 빈 객체로 초기화합니다.
+    const [boards, setBoards] = useState({});
+    const [content, setContent] = useState('');
+    const [replies, setReplies] = useState([]); // 댓글 목록 상태
+    const [pageInfo, setPageInfo] = useState({ // 페이지네이션 정보 상태 (first: true 추가)
+        page: 0,
+        size: 10,
+        totalPages: 0,
+        totalElements: 0,
+        last: true,
+        first: true, // 누락된 'first' 속성 복원
+    });
     const {id} = useParams();
     const navigate = useNavigate();
 
@@ -17,6 +26,7 @@ const BoardDetailContainer = () => {
     const API_BASE_URL = 'http://localhost:8088/api/board';
     const IMAGE_BASE_URL = 'http://localhost:8088/upload/';
     // private static final String FILE_PATH = "C:/full/upload/";
+    //
 
 
     // 날짜 포맷 함수 (컴포넌트 내부에 정의)
@@ -25,6 +35,7 @@ const BoardDetailContainer = () => {
         return new Date(dateString).toLocaleString('ko-KR', {
             year: 'numeric', month: '2-digit', day: '2-digit',
             hour: '2-digit', minute: '2-digit'
+        
         });
     }
 
