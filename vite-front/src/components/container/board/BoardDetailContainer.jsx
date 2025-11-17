@@ -49,7 +49,7 @@ const BoardDetailContainer = () => {
         }
 
         try {
-            const response = await fetch(`${API_BASE_URL}/detail/${boards.id}?memberId=${memberId}`, {
+            const response = await fetch(`${API_BASE_URL}/detail/${boards.id}`, {
                 method: 'DELETE', // DELETE 요청 전송
             });
 
