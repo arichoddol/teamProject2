@@ -27,18 +27,17 @@ public class ItemController {
 
 
     @GetMapping("")
-    public ResponseEntity<Page<ItemDto>> itemList(@PageableDefault(size = 10) Pageable pageable){
+    public ResponseEntity<Page<ItemDto>> itemList(@PageableDefault(size = 8) Pageable pageable){
 
+        // ItemServiceImpl에서 구현된 페이징 및 검색 기능을 사용합니다.
         Page<ItemDto> itemList = itemService.pagingSearchItemList(pageable, null, null);
 
         return ResponseEntity.ok(itemList);
-        // temp
-
     }
 
     @GetMapping("/search")
     public ResponseEntity<Page<ItemDto>> itemSearchList(
-        @PageableDefault(size = 10) Pageable pageable,
+        @PageableDefault(size = 8) Pageable pageable,
         @RequestParam(required = false) String subject, 
         @RequestParam(required =  false) String search) {
 

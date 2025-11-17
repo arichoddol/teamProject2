@@ -36,7 +36,7 @@ import lombok.RequiredArgsConstructor;
 public class BoardServiceImpl implements BoardService {
 
     // S3 bucket
-    private final AwsS3Service awsS3Service;
+    // private final AwsS3Service awsS3Service;
 
     private final BoardRepository boardRepository;
     private final BoardImgRepository boardImgRepository;

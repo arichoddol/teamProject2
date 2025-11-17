@@ -29,44 +29,44 @@ const Header = () => {
   }
 
   return (
-    
-      <div className="header">
-        <div className="nav">
-          <h1>HOME</h1>
-          <div className="gnb">
-            <ul>
-            { isLogin ? 
-            <>
+
+    <div className="header">
+      <div className="nav">
+        <h1>HOME</h1>
+        <div className="gnb">
+          <ul>
+            {isLogin ?
+              <>
+                <li>
+                  <button onClick={onLogoutFn}>LOGOUT</button>
+                </li>
+                <li>
+                  <Link to="/auth/myPage">myPage</Link>
+                </li>
+
+                {role === 'ADMIN' ? <li><Link to="/admin/index">ADMIN</Link></li> : null}
+              </>
+              :
               <li>
-                <button onClick={onLogoutFn}>LOGOUT</button>
-              </li>
-              <li>
-                <Link to= "/auth/myPage">myPage</Link>
-              </li> 
-           
-              { role === 'ADMIN' ? <li><Link to= "/admin/index">ADMIN</Link></li> : null }
-            </>
-            : 
+                <Link to="/auth/login">LOGIN</Link>
+              </li>}
             <li>
-              <Link to="/auth/login">LOGIN</Link>
-            </li> }
-               <li>
-                 <Link to= "/board">board</Link>
-              </li>
-               <li>
-                 <Link to= "/store">STORE</Link>
-              </li>
-              <li>
-                <Link to="/crew">CREW</Link>
-              </li>
-              <li>
-                <Link to={"/event"}>EVENT</Link>
-              </li>
-            </ul> 
-          </div>
+              <Link to="/board">BOARD</Link>
+            </li>
+            <li>
+              <Link to="/store">STORE</Link>
+            </li>
+            <li>
+              <Link to="/crew">CREW</Link>
+            </li>
+            <li>
+              <Link to={"/event"}>EVENT</Link>
+            </li>
+          </ul>
         </div>
       </div>
-    
+    </div>
+
   )
 }
 
