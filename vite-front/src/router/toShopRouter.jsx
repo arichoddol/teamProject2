@@ -11,6 +11,7 @@ const ShopMain = lazy(()=> import('../components/container/shop/ShopMainContaine
 const ShopNut = lazy(()=> import('../components/container/shop/ShopNutritionContainer'))
 const ShopSale = lazy(()=> import('../components/container/shop/ShopSaleContainer'))
 const ShopShoes = lazy(()=> import('../components/container/shop/ShopShoesContainer'))
+const ShopDetail = lazy(()=> import('../components/container/shop/ShopDetailContainer'))
 
 const toShopRouter = () => {
   return (
@@ -25,6 +26,12 @@ const toShopRouter = () => {
           // StoreFront
             path: 'index',
             element: <Suspense fallback={Loading}><ShopMain/></Suspense>
+        },
+        {
+                // board/detail
+            path:'detail/:id',
+            element: <Suspense fallback={Loading}><ShopDetail/></Suspense>
+        
         },
         {
             path: 'salezone',

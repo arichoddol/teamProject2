@@ -61,16 +61,7 @@ public class BoardReplyDto {
                             .build();
     }
 
-    //     public static BoardReplyEntity toReplyEntity (BoardReplyDto boardReplyDto){
-
-    //     return BoardReplyEntity.builder()
-    //                         .id(boardReplyDto.getId())
-    //                         .content(boardReplyDto.getContent())
-    //                         .boardEntity(boardReplyDto.getBoardEntity())
-    //                         .memberEntity(boardReplyDto.getMemberEntity())
-    //                         .build();
-    // }
-
+   
 
     
 }

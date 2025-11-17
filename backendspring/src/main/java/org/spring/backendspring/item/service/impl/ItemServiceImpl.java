@@ -1,5 +1,7 @@
 package org.spring.backendspring.item.service.impl;
 
+import org.spring.backendspring.board.dto.BoardDto;
+import org.spring.backendspring.board.entity.BoardEntity;
 import org.spring.backendspring.item.dto.ItemDto;
 import org.spring.backendspring.item.entity.ItemEntity;
 import org.spring.backendspring.item.repository.ItemImgRepository;
@@ -40,13 +42,11 @@ public class ItemServiceImpl implements ItemService {
         return itemEntities.map(el->{
             int itemSize = 0; 
     
-
             return ItemDto.builder()    
                         .id(el.getId())
                         .itemTitle(el.getItemTitle())
                         .itemDetail(el.getItemDetail())
                         .itemPrice(el.getItemPrice())
-                        
                         .itemSize(el.getItemSize())
                         .attachFile(el.getAttachFile())
                         .memberId(el.getMemberEntity().getId())
@@ -54,8 +54,17 @@ public class ItemServiceImpl implements ItemService {
                         .updateTime(el.getUpdateTime())
                      .build();
         });   
+    }
 
+    @Override
+    public ItemDto itemDetail(Long itemId) {
+        //  BoardEntity boardEntity = boardRepository.findById(boardId)
+        //         .orElseThrow(()-> new IllegalArgumentException("게시글 아이디가 존재하지 않음" + boardId));
+        // return BoardDto.toBoardDto(boardEntity);        
 
+        ItemEntity itemEntity = itemRepository.findById(itemId)
+                .orElseThrow(()-> new IllegalArgumentException("상품에 해당하는 아이디가 존재하지 않음"));
+        return ItemDto.toItemDto(itemEntity);
     }
 
     // description ServiceImpl funtion 
