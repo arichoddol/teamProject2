@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { login } from '../../../slices/loginSlice';
 import { setCookie } from '../../../apis/util/cookieUtil';
 import { setAccessToken } from '../../../slices/jwtSlice';
+import { BACK_BASIC_URL } from '../../../apis/commonApis';
 
 const AuthLoginContainer = () => {
   
@@ -74,6 +75,23 @@ const AuthLoginContainer = () => {
           <li>
             <button onClick={onLoginFn}>로그인</button>
           </li>
+          <div className="login-bottom">
+            <li>
+              <Link to="http://localhost:8088/oauth2/authorization/google">
+                <img src="/public/images/OAuth2/google.png" alt="google" />
+              </Link>
+            </li>
+            <li>
+              <Link to="http://localhost:8088/oauth2/authorization/naver">
+                <img src="/public/images/OAuth2/naver.png" alt="naver" />
+              </Link>
+            </li>
+            <li>
+              <Link to="http://localhost:8088/oauth2/authorization/kakao">
+                <img src="/public/images/OAuth2/kakao.png" alt="kakao" />
+              </Link>
+            </li>
+          </div>
           <li>
             <Link to="/auth/join">회원가입</Link>
             <Link to="/">HOME</Link>

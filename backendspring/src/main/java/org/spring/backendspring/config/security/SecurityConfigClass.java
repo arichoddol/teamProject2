@@ -58,6 +58,10 @@ public class SecurityConfigClass {
                             "/api/board/write",
                             "/api/board/update/**",
                             "/api/board/updatePost").authenticated()
+                    .requestMatchers("/api/mycrew/*/board/create",
+                            "/api/mycrew/*/board/update",
+                            "/api/mycrew/*/board/delete",
+                            "/api/mycrew/*/board/*/comment/write").authenticated()
                     .requestMatchers("/api/member/**").permitAll()
                     .requestMatchers("/login", "/logout", "/api/**", "/index").permitAll()
                     .requestMatchers("/**").permitAll(); // css, js 파일 허용

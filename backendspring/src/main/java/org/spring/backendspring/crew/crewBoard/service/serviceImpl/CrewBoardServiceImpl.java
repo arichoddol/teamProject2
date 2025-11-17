@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.spring.backendspring.crew.crew.repository.CrewRepository;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
 import org.spring.backendspring.crew.crewBoard.dto.CrewBoardDto;
@@ -23,21 +24,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class CrewBoardServiceImpl implements CrewBoardService {
-    
+
+    private final CrewRepository crewRepository;
     private final CrewBoardRepository crewBoardRepository;
     private final CrewBoardImageRepository crewBoardImageRepository;
     private final MemberRepository memberRepository;
     private final AwsS3Service awsS3Service;
-    
+
     @Override
     public List<CrewBoardDto> boardListByCrew(Long crewId) {
-    
+
         List<CrewBoardEntity> crewBoardEntityList = crewBoardRepository.findByCrewEntity_Id(crewId);
-    
+
         if (crewBoardEntityList.isEmpty()) {
             throw new NullPointerException("조회할 게시글 없음");
         }
-    
+
         return crewBoardEntityList.stream()
                     .map(CrewBoardDto::toDto2)
                     .collect(Collectors.toList());
@@ -45,11 +47,14 @@ public class CrewBoardServiceImpl implements CrewBoardService {
 
     @Override
     public CrewBoardDto createBoard(Long crewId, CrewBoardDto crewBoardDto, Long loginUserId) throws IOException {
-        
+
         MemberEntity memberEntity = memberRepository.findById(loginUserId)
                 .orElseThrow(IllegalArgumentException::new);
 
-        crewBoardDto.setMemberEntity(memberEntity);
+        crewRepository.findByIdAndCrewMemberEntities_MemberEntity_Id(crewId, loginUserId)
+                .orElseThrow(() -> new IllegalArgumentException("크루 회원이 아닙니다."));
+
+        crewBoardDto.setMemberId(memberEntity.getId());
         crewBoardDto.setCrewId(crewId);
 
         List<MultipartFile> crewBoardFile = crewBoardDto.getCrewBoardFile();
@@ -66,11 +71,11 @@ public class CrewBoardServiceImpl implements CrewBoardService {
                     .orElseThrow(() -> {
                         throw new IllegalArgumentException("존재하지 않는 게시글");
                     });
-            
+
             for (MultipartFile file : crewBoardDto.getCrewBoardFile()) {
                 if (!file.isEmpty()) {
                     String originalFileName = file.getOriginalFilename();
-                    
+
                     String newFileName = awsS3Service.uploadFile(file);
 
                     CrewBoardImageEntity boardImageEntity = CrewBoardImageEntity.toCrewBoardImageEntity(crewBoardEntity2, originalFileName, newFileName);
@@ -78,14 +83,14 @@ public class CrewBoardServiceImpl implements CrewBoardService {
                     crewBoardImageRepository.save(boardImageEntity);
                 }
             }
-            
+
         }
         return CrewBoardDto.toDto(crewBoardEntity, memberEntity);
     }
 
     @Override
     public CrewBoardDto boardDetail(Long crewId, Long id) {
-        
+
         CrewBoardEntity crewBoardEntity = crewBoardRepository.findByCrewEntity_IdAndId(crewId, id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글"));
 
@@ -93,17 +98,21 @@ public class CrewBoardServiceImpl implements CrewBoardService {
     }
 
     @Override
-    public CrewBoardDto updateBoard(Long id, Long crewId, CrewBoardDto crewBoardDto, Long loginUserId, 
-                                    List<MultipartFile> newImages, 
+    public CrewBoardDto updateBoard(Long id, Long crewId, CrewBoardDto crewBoardDto, Long loginUserId,
+                                    List<MultipartFile> newImages,
                                     List<Long> deleteImageId) throws IOException {
-        
-        MemberEntity memberEntity = memberRepository.findById(crewBoardDto.getMemberId())
+
+        MemberEntity memberEntity = memberRepository.findById(loginUserId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원"));
-        crewBoardDto.setMemberEntity(memberEntity);
+
+        crewRepository.findByIdAndCrewMemberEntities_MemberEntity_Id(crewId, loginUserId)
+                .orElseThrow(() -> new IllegalArgumentException("크루 회원이 아닙니다."));
+
+        crewBoardDto.setMemberId(memberEntity.getId());
         crewBoardDto.setCrewId(crewId);
         CrewBoardEntity crewBoardEntity = crewBoardRepository.findByCrewEntity_IdAndId(crewId, id)
                 .orElseThrow(() -> new NullPointerException("존재하지 않는 게시글"));
-        
+
         crewBoardEntity.setTitle(crewBoardDto.getTitle());
         crewBoardEntity.setContent(crewBoardDto.getContent());
 
@@ -116,7 +125,7 @@ public class CrewBoardServiceImpl implements CrewBoardService {
                 crewBoardImageRepository.delete(imageEntity);
             }
         }
-        
+
         // 새로운 이미지
         if (newImages != null && !newImages.isEmpty()) {
             for (MultipartFile image : newImages) {
@@ -129,17 +138,20 @@ public class CrewBoardServiceImpl implements CrewBoardService {
                 }
             }
         }
-        
+
         CrewBoardEntity updatedBoardEntity = crewBoardRepository.save(crewBoardEntity);
 
         return CrewBoardDto.toDto(updatedBoardEntity, memberEntity);
     }
 
     @Override
-    public void deleteBoard(Long id, Long loginUserId) {
+    public void deleteBoard(Long id, Long crewId, Long loginUserId) {
         CrewBoardEntity crewBoardEntity = crewBoardRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 삭제 불가"));
-        
+
+        crewRepository.findByIdAndCrewMemberEntities_MemberEntity_Id(crewId, loginUserId)
+                .orElseThrow(() -> new IllegalArgumentException("크루 회원이 아닙니다."));
+
         List<CrewBoardImageEntity> crewBoardImages = crewBoardImageRepository.findByCrewBoardEntity_Id(id);
         if (crewBoardImages != null) {
             for (CrewBoardImageEntity images : crewBoardImages) {
@@ -152,5 +164,5 @@ public class CrewBoardServiceImpl implements CrewBoardService {
     }
 
 
-    
+
 }

@@ -7,6 +7,10 @@ import org.spring.backendspring.crew.crew.entity.CrewImageEntity;
 import org.spring.backendspring.crew.crew.repository.CrewImageRepository;
 import org.spring.backendspring.crew.crew.repository.CrewRepository;
 import org.spring.backendspring.crew.crew.service.CrewService;
+import org.spring.backendspring.crew.crewMember.dto.CrewMemberDto;
+import org.spring.backendspring.crew.crewMember.entity.CrewMemberEntity;
+import org.spring.backendspring.crew.crewMember.repository.CrewMemberRepository;
+import org.spring.backendspring.member.repository.MemberRepository;
 import org.spring.backendspring.s3.AwsS3Service;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +24,7 @@ import java.util.stream.Collectors;
 public class CrewServiceImpl implements CrewService {
 
     private final CrewRepository crewRepository;
+    private final CrewMemberRepository crewMemberRepository;
     private final CrewImageRepository crewImageRepository;
     private final AwsS3Service awsS3Service;
 
@@ -108,6 +113,12 @@ public class CrewServiceImpl implements CrewService {
     @Override
     public List<CrewDto> findAllCrew() {
         return crewRepository.findAll().stream().map(CrewDto::toCrewDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CrewMemberDto> findMyAllCrew(Long memberId) {
+        List<CrewMemberEntity> crewMemberEntities = crewMemberRepository.findByMemberEntity_id(memberId);
+        return crewMemberEntities.stream().map(CrewMemberDto::toCrewMember).collect(Collectors.toList());
     }
 
     @Override

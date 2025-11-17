@@ -1,22 +1,30 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import jwtAxios from '../../../apis/util/jwtUtill';
+import { useSelector } from 'react-redux';
 
 const MyCrewMainContainer = () => {
-
+  const accessToken = useSelector(state => state.jwtSlice.accessToken);
   const {crewId} = useParams()
   const [myCrew , setMyCrew] = useState()
 
   useEffect(()=> {
     const myCrewMain = async () => {
       try {
-        const res = await axios.get(`/api/mycrew/${crewId}`)
+        const res = await jwtAxios.get(`/api/mycrew/${crewId}`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}`},
+            withCredentials: true
+          }
+        );
+
         console.log(res.data)
         setMyCrew(res.data.crew)
 
       } catch (error) {
-        console.log("내 크루 get 실패")
-        alert("내 크루 get 실패")
+        console.log("내 크루 get 실패");
+        // alert("내 크루 get 실패")
       }
     }
     myCrewMain();

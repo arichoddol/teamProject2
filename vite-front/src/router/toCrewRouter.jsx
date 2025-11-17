@@ -26,7 +26,7 @@ const toCrewRouter = () => {
             element: <Suspense fallback={Loading}><CrewMain/></Suspense>
         },
         {
-            path: 'detail/:id',
+            path: 'detail/:crewId',
             element: <Suspense fallback={Loading}><CrewDetail/></Suspense>
         },
         {

@@ -50,6 +50,9 @@ const Header = () => {
             <li>
               <Link to="/board/index">글목록</Link>
             </li>
+            <li>
+              <Link to="/crew/list">크루목록</Link>
+            </li>
             </ul> 
           </div>
         </div>
