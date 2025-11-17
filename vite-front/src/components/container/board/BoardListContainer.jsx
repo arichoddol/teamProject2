@@ -32,9 +32,6 @@ const BoardListContainer = () => {
     <div className="boardList">
 
       <h3>this section for HEADER ::</h3>
-      <h3>this section for HEADER ::</h3>
-      <h3>this section for HEADER ::</h3>
-      <h3>this section for HEADER ::</h3>
       
       <div className="boardList-con">
         <Link to="/board/newPost">
