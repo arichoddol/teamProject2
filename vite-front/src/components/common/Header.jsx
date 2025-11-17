@@ -47,6 +47,9 @@ const Header = () => {
             <li>
               <Link to="/auth/login">LOGIN</Link>
             </li> }
+            <li>
+              <Link to="/board/index">글목록</Link>
+            </li>
             </ul> 
           </div>
         </div>
