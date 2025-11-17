@@ -10,9 +10,9 @@ public interface CrewBoardCommentService {
 
     List<CrewBoardCommentDto> commentList(Long crewId, Long boardId);
 
-    CrewBoardCommentDto commentDetail(Long id, Long crewId, Long boardId);
+    CrewBoardCommentDto commentDetail(Long boardId, Long id);
 
-    CrewBoardCommentDto updateComment(CrewBoardCommentDto crewBoardCommentDto, Long loginUserId);
+    CrewBoardCommentDto updateComment(Long id, CrewBoardCommentDto crewBoardCommentDto, Long loginUserId);
 
     void deleteComment(Long id, Long loginUserId);
 
