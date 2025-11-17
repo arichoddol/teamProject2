@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
+import org.spring.backendspring.crew.crew.entity.CrewEntity;
+import org.spring.backendspring.crew.crew.repository.CrewRepository;
 import org.spring.backendspring.crew.crewBoard.dto.CrewBoardDto;
 import org.spring.backendspring.crew.crewBoard.entity.CrewBoardEntity;
 import org.spring.backendspring.crew.crewBoard.entity.CrewBoardImageEntity;
@@ -26,6 +28,7 @@ public class CrewBoardServiceImpl implements CrewBoardService {
     
     private final CrewBoardRepository crewBoardRepository;
     private final CrewBoardImageRepository crewBoardImageRepository;
+    private final CrewRepository crewRepository;
     private final MemberRepository memberRepository;
     private final AwsS3Service awsS3Service;
     
@@ -45,16 +48,17 @@ public class CrewBoardServiceImpl implements CrewBoardService {
 
     @Override
     public CrewBoardDto createBoard(Long crewId, CrewBoardDto crewBoardDto, Long loginUserId) throws IOException {
-        
+        CrewEntity crewEntity = crewRepository.findById(crewId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 크루"));
         MemberEntity memberEntity = memberRepository.findById(loginUserId)
                 .orElseThrow(IllegalArgumentException::new);
 
+        crewBoardDto.setCrewEntity(crewEntity);
         crewBoardDto.setMemberEntity(memberEntity);
-        crewBoardDto.setCrewId(crewId);
 
         List<MultipartFile> crewBoardFile = crewBoardDto.getCrewBoardFile();
 
-        CrewBoardEntity crewBoardEntity;
+        CrewBoardEntity crewBoardEntity = CrewBoardEntity.toCrewBoardEntity(crewBoardDto);
 
         if (crewBoardFile == null || crewBoardFile.isEmpty() || crewBoardFile.get(0).isEmpty()) {
             crewBoardEntity = CrewBoardEntity.toCrewBoardEntity(crewBoardDto);
@@ -63,19 +67,20 @@ public class CrewBoardServiceImpl implements CrewBoardService {
             crewBoardEntity = CrewBoardEntity.toCrewBoardEntity(crewBoardDto);
             Long boardId = crewBoardRepository.save(crewBoardEntity).getId();
             CrewBoardEntity crewBoardEntity2 = crewBoardRepository.findById(boardId)
-                    .orElseThrow(() -> {
-                        throw new IllegalArgumentException("존재하지 않는 게시글");
-                    });
+            .orElseThrow(() -> {
+                throw new IllegalArgumentException("존재하지 않는 게시글");
+            });
             
             for (MultipartFile file : crewBoardDto.getCrewBoardFile()) {
-                if (!file.isEmpty()) {
+                if (file != null && !file.isEmpty()) {
                     String originalFileName = file.getOriginalFilename();
                     
                     String newFileName = awsS3Service.uploadFile(file);
-
+                    
                     CrewBoardImageEntity boardImageEntity = CrewBoardImageEntity.toCrewBoardImageEntity(crewBoardEntity2, originalFileName, newFileName);
-
+                    
                     crewBoardImageRepository.save(boardImageEntity);
+                    crewBoardRepository.save(crewBoardEntity);
                 }
             }
             

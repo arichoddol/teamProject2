@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux'
 import axios from 'axios';
 
-const MyCrewBoardCreate = () => {
+const MyCrewBoardCreateContainer = () => {
   const { crewId } = useParams();
   const navigate = useNavigate();
   const { accessToken } = useSelector((state) => state.jwtSlice);
@@ -19,6 +19,7 @@ const MyCrewBoardCreate = () => {
   }
 
   const create = async (el) => {
+    console.log('accessToken:', accessToken);
     el.preventDefault();
 
     try {
@@ -33,7 +34,8 @@ const MyCrewBoardCreate = () => {
             formData,
             {
                 headers: {
-                    "Authorization": `Bearer ${accessToken}` 
+                    "Authorization": `Bearer ${accessToken}`,
+                    "Content-Type": "multipart/form-data"
                 },                
             }
         );
@@ -85,4 +87,4 @@ const MyCrewBoardCreate = () => {
   )
 }
 
-export default MyCrewBoardCreate
+export default MyCrewBoardCreateContainer

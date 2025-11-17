@@ -39,7 +39,10 @@ const Header = () => {
                 <button onClick={onLogoutFn}>LOGOUT</button>
               </li>
               <li>
-                <Link to= "/auth/myPage">myPage</Link>
+                <Link to= "/mycrew/1">myCrew</Link>
+              </li>
+              <li>
+              <Link to="/auth/login">LOGIN</Link>
               </li> 
               { role === 'ADMIN' ? <li><Link to= "/admin/index">admin</Link></li> : null }
             </>
