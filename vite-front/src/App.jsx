@@ -1,13 +1,9 @@
 
 import './App.css'
-import { RouterProvider } from 'react-router-dom'
+import { RouterProvider, useNavigate } from 'react-router-dom'
 import root from './router/root';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
 
 function App() {
-
-  
 
   return (
     <>
