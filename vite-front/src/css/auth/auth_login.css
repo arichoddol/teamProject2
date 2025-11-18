@@ -5,57 +5,83 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  
+  /* background-color: #f2f2f2;
+  font-family: 'Arial', sans-serif; */
 }
 
-.index {
-  position: relative;         /* 기준 컨테이너 */
+.login-con {
+  width: 400px;
+  padding: 40px 30px 20px 30px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.login-con h1 {
+  margin-bottom: 30px;
+  font-size: 28px;
+  color: #333;
+}
+
+.login-con ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.login-con li {
+  padding-bottom: 20px;
+}
+
+.login-con input[type="text"],
+.login-con input[type="password"] {
   width: 100%;
-  height: 100vh;
-  overflow: hidden;           /* 넘치는 캔버스 잘라냄 */
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
 }
 
-/* Three.js 캔버스 들어갈 영역 */
-.three-container {
-  position: absolute;         /* 부모(.index) 기준으로 절대 위치 */
-  top: 0;
-  left: 0;
+.login-con input[type="text"]:focus,
+.login-con input[type="password"]:focus {
+  border-color: #007BFF;
+  outline: none;
+}
+
+.login-con button {
   width: 100%;
-  height: 100%;
-  z-index: 0;                 /* 맨 뒤에 */
-}
-
-/* 제목 텍스트를 위에 띄우기 */
-.index-title {
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  padding: 12px;
+  background-color: #007BFF;
   color: white;
-  z-index: 2;                 /* canvas보다 위 */
-  text-align: center;
-  font-size: 3rem;
-  font-weight: bold;
-  text-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-/* 버튼/링크도 위로 */
-.index-con {
-  position: absolute;
-  bottom: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  text-align: center;
+.login-con button:hover {
+  background-color: #0056b3;
 }
 
-.canvas{
-  width: 100vw;
-  height: 100vh;
+.login-bottom {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+}
 
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -1;
+.login-bottom > li{ 
+  padding-bottom: 15px;
+}
+
+.login-bottom img {
+  height: 40px;
+  cursor: pointer;
+  transition: transform 0.2s;
 }
 
 .login-con {
@@ -65,10 +91,17 @@
     padding: 5vw;
     border-radius: 15px;
 
+.login-bottom img:hover {
+  transform: scale(1.05);
 }
 
-.canvas > canvas {
-    display: block; /* 캔버스 하단의 여백 제거 */
-    width: 100%;
-    height: 100%;
+.login-con li a {
+  margin: 0 10px;
+  color: #007BFF;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.login-con li a:hover {
+  text-decoration: underline;
 }
