@@ -113,17 +113,17 @@ const AuthLoginContainer = () => {
           <div className="login-bottom">
             <li>
               <a href="http://localhost:8088/oauth2/authorization/google">
-                <img src="/public/images/OAuth2/google.png" alt="google" />
+                <img src="/images/OAuth2/google.png" alt="google" />
               </a>
             </li>
             <li>
               <a href="http://localhost:8088/oauth2/authorization/naver">
-                <img src="/public/images/OAuth2/naver.png" alt="naver" />
+                <img src="/images/OAuth2/naver.png" alt="naver" />
               </a>
             </li>
             <li>
               <a href="http://localhost:8088/oauth2/authorization/kakao">
-                <img src="/public/images/OAuth2/kakao.webp" alt="kakao" />
+                <img src="/images/OAuth2/kakao.webp" alt="kakao" />
               </a>
             </li>
           </div>
