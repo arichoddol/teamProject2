@@ -1,0 +1,11 @@
+.admin-container{
+    display: flex;
+    height: calc(100vh - 85px);
+
+}
+
+.admin-container-right {
+    flex: 1;
+    background: #403dffdc;
+}
+  

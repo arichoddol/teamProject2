@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 
@@ -51,14 +53,19 @@ public class AdminItemController {
     }
 
     @PostMapping("/insert")
-    public ResponseEntity<?> insertItem(@RequestBody ItemDto itemDto) {
-        adminItemService.insertItem(itemDto);
+    public ResponseEntity<?> insertItem(
+            @RequestPart("itemDto") ItemDto itemDto,
+            @RequestPart("itemFile") MultipartFile itemFile) {
+        adminItemService.insertItem(itemDto, itemFile);
         return ResponseEntity.ok("관리자 상품 등록");
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ItemDto> updateItem(@PathVariable Long id, @RequestBody ItemDto updatedDto) {
-        ItemDto updatedItem = adminItemService.updateItem(id, updatedDto);
+    public ResponseEntity<ItemDto> updateItem(
+            @PathVariable Long id,
+            @RequestPart("dto") ItemDto updatedDto,
+            @RequestPart(value = "itemFile", required = false) MultipartFile itemFile) {
+        ItemDto updatedItem = adminItemService.updateItem(id, updatedDto, itemFile);
         return ResponseEntity.ok(updatedItem);
     }
 

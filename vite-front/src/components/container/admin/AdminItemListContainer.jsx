@@ -6,4 +6,6 @@ const AdminItemListContainer = () => {
   )
 }
 
+// 아이템 수정,삭제 버튼 작성
+
 export default AdminItemListContainer

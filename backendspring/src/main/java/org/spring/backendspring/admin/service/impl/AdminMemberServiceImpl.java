@@ -41,7 +41,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
             // 검색어 있을 때 → 이메일 or 닉네임 검색
             memberPage = adminMemberRepository
                     .findByUserEmailContainingIgnoreCaseOrNickNameContainingIgnoreCase(keyword, keyword, pageable)
-                    .map(MemberMapper::toDto);
+                    .map(entity -> MemberMapper.toDto(entity));
         }
 
         return PagedResponse.of(memberPage);
