@@ -49,33 +49,40 @@ const MyCrewBoardUpdateContainer = () => {
   };
 
   const update = async (el) => {
-    console.log(accessToken)
-    console.log(nickName)
 
     el.preventDefault();
-    try {
-        const formData = new FormData();
-        formData.append('title', title);
-        formData.append('content', content);
-        newImages.forEach(image => formData.append('newImages', image))
-        deleteImageId.forEach(id => formData.append('deleteImageId', id))
+    const formData = new FormData();
+  formData.append("title", title);
+  formData.append("content", content);
 
-        const response = await axios.put(`/api/mycrew/${crewId}/board/update/${boardId}`, 
-            formData,
-            {
-                headers: {
-                    "Authorization": `Bearer ${accessToken}`,
-                    "Content-type": "multipart/form-data"
-                },
-            }
-        );
-        alert('게시글 수정 완료');
-        navigate(`/mycrew/${crewId}/board/detail/${boardId}`);
-        } catch (err) {
-        console.log(err);
-        alert("게시글 수정 오류 발생")
-    }
+  // 새 이미지 첨부
+  for (let i = 0; i < newImages.length; i++) {
+    formData.append("newImages", newImages[i]);
   }
+
+  // 삭제할 이미지 ID
+  deleteImageId.forEach(id => formData.append("deleteImageId", id));
+
+  try {
+    const res = await axios.post(
+      `/api/mycrew/${crewId}/board/update/${boardId}`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    );
+
+    console.log("업데이트 완료", res.data.updatedBoard);
+    alert("게시글이 수정되었습니다!");
+    navigate(`/mycrew/${crewId}/board/detail/${boardId}`);
+  } catch (err) {
+    console.error("게시글 수정 실패", err);
+    alert("게시글 수정 실패: " + err.response?.data?.error);
+  }
+};
 
   return (
     <div className="boardCreate">

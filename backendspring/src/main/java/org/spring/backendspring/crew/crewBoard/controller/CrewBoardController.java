@@ -69,28 +69,24 @@ public class CrewBoardController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/update/{boardId}")
-    public ResponseEntity<?> updateBoard(@PathVariable("boardId") Long id,
-                                         @PathVariable("crewId") Long crewId,
-                                         @ModelAttribute CrewBoardDto crewBoardDto,
-                                         @RequestParam(value = "newImages", required = false) List<MultipartFile> newImages,
-                                         @RequestParam(value = "deleteImageId", required = false) List<Long> deleteImageId,
-                                         @AuthenticationPrincipal MyUserDetails userDetails) throws IOException {
-        if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", "로그인이 필요합니다."));
-        }
-        Long loginUserId = userDetails.getMemberId();
+    @PostMapping("/update/{crewBoardId}")
+public ResponseEntity<?> updateBoard(
+        @PathVariable("crewBoardId") Long id,
+        @PathVariable("crewId") Long crewId,
+        @ModelAttribute CrewBoardDto crewBoardDto,
+        @RequestParam(value = "newImages", required = false) List<MultipartFile> newImages,
+        @RequestParam(value = "deleteImageId", required = false) List<Long> deleteImageId,
+        @AuthenticationPrincipal MyUserDetails userDetails) throws IOException {
 
-        CrewBoardDto updateBoardDto = crewBoardService.updateBoard(id, crewId, crewBoardDto, loginUserId, newImages, deleteImageId);
+    Long loginUserId = userDetails.getMemberId();
 
-        Map<String, CrewBoardDto> response = new HashMap<>();
+    // Service 호출
+    CrewBoardDto updatedBoard = crewBoardService.updateBoard(
+            id, crewId, crewBoardDto, loginUserId, newImages, deleteImageId
+    );
 
-        response.put("updatedBoard", updateBoardDto);
-
-        return ResponseEntity.ok(response);
-    }
-
+    return ResponseEntity.ok(Map.of("updatedBoard", updatedBoard));
+}
     @DeleteMapping("/delete/{boardId}")
     public ResponseEntity<?> deleteBoard(@PathVariable("boardId") Long id,
                                          @PathVariable("crewId") Long crewId,
