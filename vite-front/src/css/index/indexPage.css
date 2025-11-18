@@ -1,28 +1,13 @@
 .index {
-  position: relative;         /* 기준 컨테이너 */
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;           /* 넘치는 캔버스 잘라냄 */
+
+    background-image: url('../../../public/images/index.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    min-height: 100vh;
+
 }
 
-/* Three.js 캔버스 들어갈 영역 */
-.three-container {
-  position: absolute;         /* 부모(.index) 기준으로 절대 위치 */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;                 /* 맨 뒤에 */
-}
-
-/* Three.js에서 append한 <canvas>도 꽉 채우게 */
-.three-container canvas {
-  width: 100% !important;
-  height: 100% !important;
-  display: block;
-}
-
-/* 제목 텍스트를 위에 띄우기 */
 .index-title {
   position: absolute;
   top: 40%;
@@ -35,8 +20,6 @@
   font-weight: bold;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
 }
-
-/* 버튼/링크도 위로 */
 .index-con {
   position: absolute;
   bottom: 20%;
