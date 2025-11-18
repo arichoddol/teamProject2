@@ -31,7 +31,7 @@ public class CrewBoardDto {
 
     private CrewEntity crewEntity; // 소속 크루
 
-    private MemberEntity memberEntity; // 작성자
+//    private MemberEntity memberEntity; // 작성자
 
     private List<CrewBoardCommentEntity> crewBoardCommentEntities; // 댓글
 
@@ -56,7 +56,7 @@ public class CrewBoardDto {
                 .content(entity.getContent())
                 .crewId(entity.getCrewEntity().getId())
                 .memberId(entity.getMemberEntity().getId())
-                .memberEntity(memberEntity)
+//                .memberEntity(memberEntity)
                 .memberNickName(entity.getMemberEntity().getNickName())
                 .crewBoardCommentEntities(entity.getCrewBoardCommentEntities())
                 .crewBoardImageEntities(entity.getCrewBoardImageEntities())

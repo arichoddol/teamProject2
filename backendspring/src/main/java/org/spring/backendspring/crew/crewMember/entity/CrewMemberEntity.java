@@ -48,4 +48,6 @@ public class CrewMemberEntity extends BasicTime {
                 .roleInCrew(CrewRole.MEMBER)
                 .build();
     }
+
+
 }

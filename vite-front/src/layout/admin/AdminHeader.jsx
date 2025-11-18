@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { logout } from '../../slices/loginSlice';
+import { logoutAction } from '../../slices/loginSlice';
 import { deleteAccessToken } from '../../slices/jwtSlice';
 import { removeCookie } from '../../apis/util/cookieUtil';
 
@@ -12,7 +12,7 @@ const AdminHeader = () => {
   const onAdminLogout = () => {
     removeCookie("member");
     removeCookie("refreshToken");
-    dispatch(logout());
+    dispatch(logoutAction());
     dispatch(deleteAccessToken());
     alert("관리자 로그아웃 완료");
     window.location.href = "/auth/login";

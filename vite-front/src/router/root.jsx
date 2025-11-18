@@ -5,7 +5,7 @@ import { toLoginOutRouter } from "./toLoginOutRouter";
 import toCrewRouter from "./toCrewRouter";
 import toAdminRouter from "./toAdminRouter";
 import toBoardRouter from "./toBoardRouter";
-import toShopRouter from "./toShopRouter";
+import toShopRouter from "./toStoreRouter";
 import toEventRouter from "./toEventRouter";
 import toCartRouter from "./toCartRouter";
 import toPaymentRouter from "./toPaymentRouter";
@@ -14,12 +14,12 @@ import toMyCrewRouter from "./toMyCrewRouter";
 const Loading = <div className="loading">Loading..</div>;
 
 // Layout
-const ShopLayout = lazy(()=> import(`../layout/ShopLayout`))
-const LoginLayout = lazy(()=> import(`../layout/LoginLayout`))
-const AdminLayout = lazy(()=> import(`../layout/admin/AdminLayout`))
-const BoardLayout = lazy(()=> import(`../layout/BoardLayout`))
-const EventLayout = lazy(()=> import(`../layout/EventLayout`))
-const CrewLayout = lazy(()=> import('../layout/CrewLayout'))
+const StoreLayout = lazy(() => import('../layout/StoreLayout'));
+const LoginLayout = lazy(() => import(`../layout/LoginLayout`));
+const AdminLayout = lazy(() => import(`../layout/admin/AdminLayout`));
+const BoardLayout = lazy(() => import(`../layout/BoardLayout`));
+const EventLayout = lazy(() => import(`../layout/EventLayout`));
+const CrewLayout = lazy(() => import("../layout/CrewLayout"));
 
 const CartLayout = lazy(() => import(`../layout/CartLayout`));
 const PaymentLayout = lazy(() => import(`../layout/PaymentLayout`));
@@ -64,7 +64,7 @@ const root = createBrowserRouter([
     path: "store",
     element: (
       <Suspense fallback={Loading}>
-        <ShopLayout />
+        <StoreLayout />
       </Suspense>
     ),
     children: toShopRouter(),

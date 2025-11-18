@@ -1,76 +1,187 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { login } from '../../../slices/loginSlice';
+
+import "../../../css/board/boardIndex.css"
+
 
 const BoardListContainer = () => {
 
-  // const [data, setData] = useState([]);
+
   const [boards, setBoards] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageInfo, setPageInfo] = useState({
+    totalPages: 0,
+    startPage: 0,
+    endPage: 0
+  })
 
-  const fetchData = async ()=>{
-    // this code for BackEnd Controller 
-    const response = await axios.get("http://localhost:8088/api/board");
 
-    // 💡response.data.content에 BoardDto 리스트가 들어있습니다.
-    if(response.data && response.data.content){
-      // setData(response.data.content);
-      setBoards(response.data.content);
+  const fetchData = async (page) => {
+    // this code for BackEnd Controller
+    // const response = await axios.get("http://localhost:8088/api/board");
+
+    console.log(`[LOG] 페이지 ${page + 1}의 데이터를 요청합니다.`);
+    try {
+
+      // REQUEST Page Query Parameter :: URL
+      const response = await axios.get(`http://localhost:8088/api/board?page=${page}`);
+      const data = response.data;
+
+      // data Update
+      setBoards(data.content || []);
+      // Page Calculate & update 
+      const totalPages = data.totalPages;
+      const pageNum = data.number;
+      const displayPageNum = 5;
+
+      const startPage = Math.floor(pageNum / displayPageNum) * displayPageNum;
+      let endPage = startPage + displayPageNum - 1;
+      if (endPage >= totalPages) {
+        endPage = totalPages - 1;
+      }
+
+      setPageInfo({
+        currentPage: pageNum,
+        totalPages: totalPages,
+        startPage: startPage,
+        endPage: endPage,
+      });
+    } catch (error) {
+      console.error("데이터 로드 실패:", error);
+      setBoards([]);
     }
-    // 배열이 아닌 객체가 할당되어 에러가 난것
-    // setBoards(response.data);
-  
+
+
+
   };
 
-  useEffect(()=>{
-    fetchData();
-  }, []);
+  useEffect(() => {
+    fetchData(currentPage);
+  }, [currentPage]);
 
+
+  const pageNumbers = [];
+  for (let i = pageInfo.startPage; i <= pageInfo.endPage; i++) {
+    pageNumbers.push(i);
+  }
+
+  const handlePageClick = (pageNumbers) => {
+    setCurrentPage(pageNumbers);
+  }
 
   // return
 
   return (
     <div className="boardList">
 
-      <h3>this section for HEADER ::</h3>
-      
+
+
       <div className="boardList-con">
-        <Link to="/board/newPost">
-           <h3>글쓰기</h3>
-        </Link>
-       
 
         <br /><br /><br />
         <h2>:: 자유게시판 ::</h2>
-        <table className='board-table'> 
+        <table className='board-table'>
           <thead>
             <tr>
-            <th scope='col'>ID</th>
-            <th scope='col'>:: 글제목</th>
-            <th scope='col'>:: 작성자</th>
-            <th scope='col'>:: 조회수</th>
-            <th scope='col'>:: 파일</th>
-          </tr>
+              <th scope='col'>ID</th>
+              <th scope='col'>:: 글제목</th>
+              <th scope='col'>:: 작성자</th>
+              <th scope='col'>:: 조회수</th>
+              <th scope='col'>:: 파일</th>
+            </tr>
           </thead>
           <tbody>
-            { console.log(boards) }
-            { console.log(boards) }
+            {console.log(boards)}
 
-             { boards.map(list =>(
+            {boards.map(list => (
               <tr key={list.id}>
                 <td>{list.id}</td>
                 <td> <Link to={`/board/detail/${list.id}`} className='board-link'>
                   {list.title}
-                    </Link>
-                  </td>
+                </Link>
+                </td>
                 <td>{list.memberNickName}</td>
                 <td>{list.hit}</td>
                 <td>{list.attachFile}</td>
               </tr>
-             ))}
+            ))}
           </tbody>
         </table>
-        
+
+        <div className="pagenation">
+          {/* PREV Page Button*/}
+          {pageInfo.startPage > 0 && (
+            <li style={{ margin: '0 5px' }}>
+              <button
+                onClick={() => handlePageClick(pageInfo.startPage - 1)}
+                style={{ padding: '5px 10px', cursor: 'pointer' }}
+              >
+                &laquo; 이전
+              </button>
+            </li>
+          )}
+
+          {/* Page */}
+          {pageNumbers.map(page => (
+            <li key={page} style={{ margin: '0 5px' }}>
+              <button
+                onClick={() => handlePageClick(page)}
+                // 현재 페이지일 경우 배경색을 회색으로 표시 (뼈대 스타일)
+                style={{
+                  padding: '5px 10px',
+                  cursor: 'pointer',
+                  fontWeight: page === pageInfo.currentPage ? 'bold' : 'normal',
+                  backgroundColor: page === pageInfo.currentPage ? '#eee' : 'white'
+                }}
+              >
+                {page + 1} {/* 사용자에게는 1부터 시작하는 페이지 번호를 보여줌 */}
+              </button>
+            </li>
+          ))}
+
+          {/* 다음 (Next) 버튼: 현재 블록의 끝 페이지(endPage)의 다음 페이지로 이동 */}
+          {pageInfo.endPage < pageInfo.totalPages - 1 && (
+            <li style={{ margin: '0 5px' }}>
+              <button
+                onClick={() => handlePageClick(pageInfo.endPage + 1)}
+                style={{ padding: '5px 10px', cursor: 'pointer' }}
+              >
+                다음 &raquo;
+              </button>
+            </li>
+          )}
+
+          {/* EOF Pagenation */}
+
+          <br />
+        </div>
+        <div className="boardList-post">
+          {/* this section is temp */}
+          <Link to="/board/newPost">
+            <h3>글쓰기</h3>
+          </Link>
+          {/* { when Loggin 
+            <>
+              <Link to="/board/newPost">
+                <h3>글쓰기</h3>
+              </Link>
+            </>
+            :
+            <>
+              <Link to="/auth">
+                <h3>로그인하세요...</h3>
+              </Link>
+            </>
+          } */}
+
+        </div>
+        <br /><br /><br />
       </div>
+
+
     </div>
   )
 }

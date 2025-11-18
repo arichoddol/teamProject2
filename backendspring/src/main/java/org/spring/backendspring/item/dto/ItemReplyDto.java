@@ -3,6 +3,8 @@ package org.spring.backendspring.item.dto;
 import java.time.LocalDateTime;
 
 import org.spring.backendspring.item.entity.ItemEntity;
+import org.spring.backendspring.item.entity.ItemReplyEntity;
+import org.spring.backendspring.member.entity.MemberEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.FetchType;
@@ -28,7 +30,6 @@ public class ItemReplyDto {
 
     private Long id;
 
-    private String title;
     private String content;
 
     // item_tb
@@ -40,10 +41,20 @@ public class ItemReplyDto {
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 
-
-    // N:1 
-    // private MemberEntity memberEntity;
-
+    private MemberEntity memberEntity;
     private ItemEntity itemEntity;
+
+    
+    public static ItemReplyDto toItemReplyDto (ItemReplyEntity itemReplyEntity){
+        return ItemReplyDto.builder()
+                        .id(itemReplyEntity.getId())
+                        .content(itemReplyEntity.getContent())
+                        .itemId(itemReplyEntity.getItemEntity().getId())
+                        .memberId(itemReplyEntity.getMemberEntity().getId())
+                        .createTime(itemReplyEntity.getCreateTime())
+                        .updateTime(itemReplyEntity.getUpdateTime())
+                    .build();
+
+    }
     
 }

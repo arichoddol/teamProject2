@@ -27,7 +27,7 @@ public class ItemController {
 
     @GetMapping("")
     public ResponseEntity<Page<ItemDto>> itemSearchList(
-        @PageableDefault(size = 10) Pageable pageable,
+        @PageableDefault(size = 8) Pageable pageable,
         @RequestParam(required = false) String subject, 
         @RequestParam(required =  false) String search) {
 

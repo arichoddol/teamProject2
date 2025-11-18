@@ -1,11 +1,10 @@
 package org.spring.backendspring;
 
 import org.junit.jupiter.api.Test;
-
+import org.spring.backendspring.common.Gender;
+import org.spring.backendspring.common.role.MemberRole;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
-import org.spring.backendspring.common.role.MemberRole;
-import org.spring.backendspring.common.Gender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,9 +22,9 @@ public class MemberTest {
         for (int i = 1; i <= 30; i++) {
             MemberEntity member = MemberEntity.builder()
                     .userEmail("user" + i + "@test.com")
-                    .userPassword(passwordEncoder.encode("pass" + i))
+                    .userPassword(passwordEncoder.encode("1111"))
                     .userName("테스트회원" + i)
-                    .nickName("nick" + i)
+                    .nickName("KKWA" + i)
                     .gender(i % 2 == 0 ? Gender.MAN : Gender.WOMAN)
                     .age(20 + i)
                     .phone("010-0000-000" + i)

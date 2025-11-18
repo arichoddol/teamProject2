@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Hahmlet:wght@100..900&display=swap');
+
+
+
+
+
+.boardList-con {}
+
+
+/* table section */
+
+.board-table {
+    width: 90vw;
+    margin: 5px;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+h2 {
+    text-align: center;
+    margin-top: 2vh;
+
+    font-family: "Hahmlet", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+.board-table th,
+.board-table td {
+    padding: 2.5vh;
+    border-bottom: 2px solid #2313a1;
+}
+
+
+
+
+/* Pagenation section */
+
+.pagenation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 20px 0;
+    list-style: none;
+    padding: 0;
+}
+
+.pagenation li {
+    margin: 0 5px;
+    list-style: none;
+}
+
+.pagenation button {
+    border-radius: 6px;
+    border: 2px solid #4069c9;
+    transition: backgound-color 0.2s, border-color 0.2;
+}
+
+.pagenation button:hover {
+    &:not([style*="background-color: #4240c9"]) {
+        background-color: #91cbf2;
+        border-color: aqua;
+    }
+}
+
+/* button section */
+.boardList-post {
+    text-align: right;
+    width: 80%;
+    margin: 10px auto;
+
+    padding: 10px 0;
+}
+
+.boardList-post h3 {
+    margin: 0;
+    display: inline-block;
+
+    padding: 8px 15px;
+    border: 1px solid blue;
+    background-color: #a8c2ff;
+}
+
+.boardList-post h3:hover {
+    background-color: #326ad5;
+    border-color: #326ad5;
+}

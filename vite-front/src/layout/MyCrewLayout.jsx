@@ -6,7 +6,7 @@ import MyCrewLeftContainer from '../components/container/myCrew/MyCrewLeftContai
 
 const MyCrewLayout = () => {
   return (
-    <>  
+    
 
     <div className="mycrew">
       <div className="mycrew-con">
@@ -23,7 +23,7 @@ const MyCrewLayout = () => {
 
       </div>
     </div>
-    </>
+    
   )
 }
 
