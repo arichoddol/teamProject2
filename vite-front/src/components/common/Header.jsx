@@ -48,8 +48,16 @@ const Header = () => {
               </>
               :
               <li>
-                <Link to="/auth/login">LOGIN</Link>
-              </li>}
+
+                <Link to= "/mycrew/1">myCrew</Link>
+              </li>
+              <li>
+              <Link to="/auth/login">LOGIN</Link>
+              </li> 
+           
+              { role === 'ADMIN' ? <li><Link to= "/admin/index">ADMIN</Link></li> : null }
+            </>
+            : 
             <li>
               <Link to="/board">BOARD</Link>
             </li>

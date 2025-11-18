@@ -1,9 +1,11 @@
 import React, { lazy, Suspense } from 'react'
 import { Navigate } from 'react-router-dom'
+import toMyCrewBoardRouter from './toMyCrewBoardRouter'
 
 
 const Loading = <div className='loading'>Loading...</div>
 
+const MyCrewBoardLayout = lazy(() => import('../layout/MyCrewBoardLayout'))
 
 const MyCrewMain = lazy(()=> import('../components/container/myCrwe/MyCrewMainContainer'))
 const MyCrewjoinRequest = lazy(()=> import('../components/container/myCrwe/MyCrewJoinRequestContainer'))
@@ -11,7 +13,6 @@ const MyCrewMember = lazy(()=> import('../components/container/myCrwe/MyCrewMemb
 const MyCrewRun = lazy(()=> import('../components/container/myCrwe/MyCrewRunContainer'))
 const MyCrewBoard = lazy(()=> import('../components/container/myCrwe/board/MyCrewBoardContainer'))
 const MyCrewChat = lazy(()=> import('../components/container/myCrwe/MyCrewChatContainer'))
-const MyCrewBoardCreate = lazy(()=> import('../components/container/myCrwe/board/MyCrewBoardCreate'))
 
 const toMyCrewRouter = () => {
   return (
@@ -39,11 +40,8 @@ const toMyCrewRouter = () => {
         },
         {
             path: 'board',
-            element: <Suspense fallback={Loading}><MyCrewBoard/></Suspense>
-        },
-        {
-            path: 'board/create',
-            element: <Suspense fallback={Loading}><MyCrewBoardCreate/></Suspense>
+            element: <Suspense fallback={Loading}><MyCrewBoardLayout/></Suspense>,
+            children: toMyCrewBoardRouter(),
         },
         {
             path: 'chat',

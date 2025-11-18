@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux'
 import axios from 'axios';
 
-const MyCrewBoardUpdate = () => {
+const MyCrewBoardUpdateContainer = () => {
   const { crewId, boardId } = useParams();
   const navigate = useNavigate();
   const { accessToken } = useSelector((state) => state.jwtSlice);
@@ -65,7 +65,8 @@ const MyCrewBoardUpdate = () => {
             formData,
             {
                 headers: {
-                    "Authorization": `Bearer ${accessToken}` 
+                    "Authorization": `Bearer ${accessToken}`,
+                    "Content-type": "multipart/form-data"
                 },
             }
         );
@@ -96,7 +97,7 @@ const MyCrewBoardUpdate = () => {
                             name="content" 
                             id="content"
                             value={content}
-                            onChange={(el) => setContent(el.target.value)}
+                            onChange={(e) => setContent(el.target.value)}
                             required
                             placeholder='내용'
                         />
@@ -112,7 +113,7 @@ const MyCrewBoardUpdate = () => {
                                 </li>
                             ))
                         ) : (
-                            <p>기존 이미지 없음</p>
+                            <p>이미지 없음</p>
                         )}
                         </ul>
                         <span>새 이미지 업로드</span>
@@ -130,4 +131,4 @@ const MyCrewBoardUpdate = () => {
   )
 }
 
-export default MyCrewBoardUpdate
+export default MyCrewBoardUpdateContainer

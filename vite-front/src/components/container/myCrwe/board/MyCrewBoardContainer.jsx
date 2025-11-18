@@ -20,7 +20,7 @@ const MyCrewBoardContainer = () => {
       })
   }, [crewId])
 
-  const create = () => navigate(`/mycrew/board/create/`)
+  const create = () => navigate(`/mycrew/${crewId}/board/create/`)
 
   return (
     <>

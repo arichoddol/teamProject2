@@ -5,8 +5,6 @@ import lombok.*;
 import org.spring.backendspring.common.BasicTime;
 import org.spring.backendspring.member.entity.MemberEntity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.spring.backendspring.crew.crewBoard.dto.CrewBoardCommentDto;
 
 @Getter

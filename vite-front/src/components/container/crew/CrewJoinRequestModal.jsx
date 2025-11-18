@@ -5,11 +5,11 @@ import React, { useState } from 'react'
 
 //  crewId 받는 useParams() 이미 있다면 크루 가입 데이터에 crewRequestId: 여기 
 //  해당 crewId 받는 useParams() 변수로 바꿔주세요
-//  const {crewId} = useParams() 
+//  const {crewId} = useParams() *--*
 
 // loginMemberId jwt isLogin로그인 아이디. 이미 있다면 크루가입데이터에
 // memberRequestId: 여기 해당 jwt isLogin로그인 아이디 받는 변수로 바꿔주세요
-// const loginMemberId = useSelector((state) => state.login.id)
+// const loginMemberId = useSelector((state) => state.login.id) *--*
 
 //  크루가입데이터
 // const crewJoinRequestData = {
@@ -65,7 +65,7 @@ import React, { useState } from 'react'
 
  // =====================================================================       
 
-const CrewJoinRequestModal = ({onCrew, onClose, onSubmit, onChange }) => {
+const CrewJoinRequestModal = ({onCrew, input, onClose, onSubmit, onChange }) => {
     //크루 속에 데이터가 비었다면?
     if (!onCrew) return <div>왜 데이터가 없지?</div>
     
