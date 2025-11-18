@@ -11,6 +11,10 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
 
     Optional<MemberEntity> findByUserEmail(String userEmail);
 
-    @EntityGraph(attributePaths = {"crewEntityList", "crewMemberEntityList"})
+    @EntityGraph(attributePaths = { "crewEntityList", "crewMemberEntityList" })
+    
     Optional<MemberEntity> findById(Long id);
+
+   
+
 }

@@ -35,34 +35,34 @@ const Header = () => {
         <h1>HOME</h1>
         <div className="gnb">
           <ul>
-             {isLogin ? (
+            {isLogin ? (
               // **로그인 상태일 때 메뉴**
               <>
                 <li>
-                  <LogoutBtn/>
+                  <LogoutBtn />
                 </li>
                 <li>
                   <Link to="/auth/myPage">myPage</Link>
                 </li>
                 {role === 'ADMIN' ? <li><Link to="/admin/index">ADMIN</Link></li> : null}
-              </> )
+              </>)
               :
               <li>
-              <Link to="/auth/login">LOGIN</Link> 
-              </li> 
-              }
-              <li>
-                <Link to="/board">BOARD</Link>
+                <Link to="/auth/login">LOGIN</Link>
               </li>
-              <li>
-                <Link to="/store">STORE</Link>
-              </li>
-              <li>
-                <Link to="/crew/list">CREW</Link>
-              </li>
-              <li>
-                <Link to={"/event"}>EVENT</Link>
-              </li>
+            }
+            <li>
+              <Link to="/board">BOARD</Link>
+            </li>
+            <li>
+              <Link to="/store">STORE</Link>
+            </li>
+            <li>
+              <Link to="/crew/list">CREW</Link>
+            </li>
+            <li>
+              <Link to={"/event"}>EVENT</Link>
+            </li>
           </ul>
         </div>
       </div>

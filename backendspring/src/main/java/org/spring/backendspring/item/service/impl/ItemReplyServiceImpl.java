@@ -1,5 +1,6 @@
 package org.spring.backendspring.item.service.impl;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.spring.backendspring.item.dto.ItemReplyDto;
@@ -65,6 +66,62 @@ public class ItemReplyServiceImpl implements ItemReplyService {
         return replyPage;
 
 
+    }
+
+    @Override
+    public void update(ItemReplyDto itemReplyDto) throws IOException {
+
+        Optional<ItemReplyEntity>opEntity 
+                = itemReplyRepository.findById(itemReplyDto.getId());
+        if (opEntity.isEmpty()) {
+            throw new IllegalArgumentException("존재하지 않는 댓글 ID 입니다");
+        }
+        ItemReplyEntity itemReplyEntity = opEntity.get();
+
+        // Board ValidCheck
+        Optional<ItemEntity> optionalItemEntity 
+                = itemRepository.findById(itemReplyDto.getItemId());
+        if (optionalItemEntity.isEmpty()) {
+            throw new IllegalArgumentException("댓글의 게시글이 존재하지 않습니다.");
+        }
+
+        itemReplyDto.setItemEntity(optionalItemEntity.get());
+
+        if (itemReplyDto.getMemberId() == null) {
+            throw new IllegalArgumentException("회원 정보가 필요합니다.");
+        }
+        Optional<MemberEntity> optionalMemberEntity
+                = memberRepository.findById(itemReplyDto.getMemberId());
+        if (optionalMemberEntity.isEmpty()) {
+            throw new IllegalArgumentException("존재하지 않는 회원 ID입니다.");
+        }
+
+        itemReplyDto.setMemberEntity(optionalMemberEntity.get());
+
+        itemReplyEntity.updateFromDto(itemReplyDto);
+        itemReplyRepository.save(itemReplyEntity);
+
+    }
+
+    @Override
+    public void deleteReply(Long replyId, Long memberId) {
+
+        if (replyId == null) {
+            throw new IllegalArgumentException("삭제할 댓글 ID 가 필요합니다");
+        }
+        Optional<ItemReplyEntity> optionalItemReplyEntity 
+                = itemReplyRepository.findById(replyId);
+        if (optionalItemReplyEntity.isEmpty()) {
+            throw new IllegalArgumentException("존재하지 않거나 이미 삭제된 댓글 ID입니다.");
+        }
+        ItemReplyEntity itemReplyEntity = optionalItemReplyEntity.get();
+        if (memberId == null) {
+            throw new IllegalArgumentException("회원 정보가 필요합니다.");
+        }
+        if (!itemReplyEntity.getMemberEntity().getId().equals(memberId)) {
+            throw new IllegalAccessError("댓글 삭제 권한이 없습니다. (작성자만 삭제 가능)");
+        }
+        itemReplyRepository.delete(itemReplyEntity);
     }
     
 }

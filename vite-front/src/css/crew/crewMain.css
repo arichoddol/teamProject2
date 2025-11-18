@@ -1,0 +1,186 @@
+/* 전체 컨테이너 스타일 */
+.crewList {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 40px;
+    background-color: #f8f9fa;
+    /* 밝은 배경 */
+    min-height: 100vh;
+    /* 최소 높이 설정 */
+    align-items: flex-start;
+    justify-content: center;
+    align-items: center;
+
+}
+
+/* 카카오맵 섹션 */
+.kakaomap {
+    padding: 40px;
+
+    /* 남은 공간을 채우도록 */
+    width: 80%;
+    height: 400px;
+    /* 맵 높이 */
+    border-radius: 12px;
+
+    /* 지도 경계를 깔끔하게 처리 */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    background-color: #e9ecef;
+
+    justify-content: center;
+}
+
+
+/* 크루 목록 컨텐츠 섹션 */
+.crewList-con {
+
+
+    /* 맵보다 더 넓은 공간 할당 */
+}
+
+/* 섹션 제목 */
+.crewList-con h1 {
+    color: #007bff;
+    /* 채도 높은 파란색 */
+    margin-bottom: 20px;
+    font-size: 28px;
+    border-left: 5px solid #007bff;
+    padding-left: 10px;
+    font-weight: 700;
+}
+
+/* 크루 목록 (ul) */
+.crewList-con ul {
+    width: 100%;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+
+
+    /* Grid 레이아웃 설정 */
+    display: grid;
+    margin-left: auto;
+
+    /* 오른쪽 마진을 0으로 명시적으로 설정 */
+    margin-right: 0;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    /* Grid 항목 간의 간격 */
+    margin-bottom: 40px;
+    /* 섹션 간 구분 */
+}
+
+/* 개별 크루 항목 (li) */
+.crewList-con ul li {
+    /* width: 70%; */
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.crewList-con ul li:hover {
+    transform: translateY(-5px);
+    /* 호버 시 살짝 떠오르는 효과 */
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.2);
+    /* 파란색 계열 강조 그림자 */
+}
+
+/* Link 태그 내부 스타일 */
+.crewList-con ul li a {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    /* 이미지를 상단, 정보를 하단에 배치 */
+    height: 100%;
+    /* li 높이 전체 사용 */
+    color: #343a40;
+}
+
+/* 크루 이미지 영역 */
+.crewListLeft {
+    height: 200px;
+    /* 이미지 고정 높이 */
+    overflow: hidden;
+    background-color: #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.crewListLeft .crewImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* 이미지가 컨테이너를 꽉 채우도록 */
+}
+
+/* 크루 정보 영역 */
+.crewListRight {
+    padding: 15px;
+    flex-grow: 1;
+    /* 남은 공간을 채우도록 */
+    display: flex;
+    flex-direction: column;
+}
+
+.crewListRight h2 {
+    font-size: 20px;
+    color: #007bff;
+    /* 제목에 채도 높은 파란색 적용 */
+    margin-top: 0;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* 넘치는 텍스트 줄임표 */
+    font-weight: 600;
+}
+
+.crewListRight p {
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+
+/* 지역 정보 (가장 마지막 p 태그) */
+.crewListRight p:last-child {
+    margin-top: auto;
+    /* 하단으로 자동 푸시 */
+    font-weight: 500;
+    color: #0056b3;
+    /* 더 진한 파란색으로 강조 */
+}
+
+/* 이미지 없음 대체 텍스트 스타일 */
+.crewListLeft>div {
+    /* "이미지 없음" div 스타일 */
+}
+
+
+/* 반응형 디자인을 위한 미디어 쿼리 (선택 사항) */
+@media (max-width: 992px) {
+    .crewList {
+        flex-direction: column;
+        /* 화면이 작아지면 세로로 배치 */
+        padding: 20px;
+    }
+
+    .kakaomap {
+        max-width: 80%;
+        /* 너비 제한 해제 */
+        height: 400px;
+        /* 모바일에서 맵 높이 줄이기 */
+    }
+
+    .crewList-con ul {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        /* 항목 너비 약간 줄임 */
+    }
+}
