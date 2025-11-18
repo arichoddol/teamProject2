@@ -58,6 +58,8 @@ public class BoardReplyDto {
                             // .memberEntity(boardReplyEntity.getMemberEntity())
                             .boardId(boardReplyEntity.getBoardEntity().getId())
                             .memberId(boardReplyEntity.getMemberEntity().getId())
+                            .createTime(boardReplyEntity.getCreateTime())
+                            .upDateTime(boardReplyEntity.getUpdateTime())
                             .build();
     }
 

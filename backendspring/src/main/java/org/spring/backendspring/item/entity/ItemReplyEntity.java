@@ -1,6 +1,7 @@
 package org.spring.backendspring.item.entity;
 
 import org.spring.backendspring.common.BasicTime;
+import org.spring.backendspring.item.dto.ItemReplyDto;
 import org.spring.backendspring.member.entity.MemberEntity;
 
 import jakarta.persistence.Column;
@@ -31,8 +32,7 @@ public class ItemReplyEntity extends BasicTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_comment_id")
     private Long id;
-    @Column(nullable = false)
-    private String title;
+
     @Column(nullable = false)
     private String content;
 
@@ -45,4 +45,15 @@ public class ItemReplyEntity extends BasicTime {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private ItemEntity itemEntity;
+
+
+    public static ItemReplyEntity toReplyEntity (ItemReplyDto itemReplyDto){
+        return ItemReplyEntity.builder()
+                            .id(itemReplyDto.getId())
+                            .content(itemReplyDto.getContent())
+                            .memberEntity(itemReplyDto.getMemberEntity())
+                            .itemEntity(itemReplyDto.getItemEntity())
+
+        .build();
+    }
 }
