@@ -9,7 +9,9 @@ const BoardWriteContainer = () => {
   const accessToken = useSelector(state => state.jwtSlice.accessToken);
   const memberId = useSelector(state => state.loginSlice.id);
   const nickName = useSelector(state => state.loginSlice.nickName);
-    // const [data, setData] = useState([]);
+
+
+  // const [data, setData] = useState([]);
   const [boards, setBoards] = useState([]);
 
   const navigate = useNavigate();
@@ -17,6 +19,8 @@ const BoardWriteContainer = () => {
   const handleSubmit = async(e)=>{
     e.preventDefault();
 
+    // below promise do not change anythings..
+    // this section is JWT TEST sEctio n
     const formData = new FormData(e.target);
     try{
         await jwtAxios.post(`http://localhost:8088/api/board/write?memberId=${memberId}`, formData,

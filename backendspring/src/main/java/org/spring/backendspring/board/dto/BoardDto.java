@@ -33,15 +33,6 @@ import lombok.ToString;
 public class BoardDto {
 
 
-    public BoardDto(String title, String content, Long memberId, String nickName) {
-        this.title = title;
-        this.content = content;
-        this.memberId = memberId;
-        this.memberNickName = nickName;
-
-        // tmp function
-    }
-
 
     
 
@@ -107,6 +98,7 @@ public class BoardDto {
                     .content(boardEntity.getContent())
                     .hit(boardEntity.getHit())
                     .boardImgDtos(boardImgDtos)
+                    .memberId(boardEntity.getMemberEntity().getId())
                     .memberNickName(boardEntity.getMemberEntity().getNickName())
                     .memberId(boardEntity.getMemberEntity().getId())
                     .createTime(boardEntity.getCreateTime())

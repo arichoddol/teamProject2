@@ -1,15 +1,18 @@
 package org.spring.backendspring.crew.crew.service.impl;
 
 import lombok.RequiredArgsConstructor;
+
+import org.spring.backendspring.common.role.MemberRole;
+import org.spring.backendspring.crew.CrewRoleCheck;
 import org.spring.backendspring.crew.crew.dto.CrewDto;
 import org.spring.backendspring.crew.crew.entity.CrewEntity;
 import org.spring.backendspring.crew.crew.entity.CrewImageEntity;
 import org.spring.backendspring.crew.crew.repository.CrewImageRepository;
 import org.spring.backendspring.crew.crew.repository.CrewRepository;
 import org.spring.backendspring.crew.crew.service.CrewService;
-import org.spring.backendspring.crew.crewMember.dto.CrewMemberDto;
 import org.spring.backendspring.crew.crewMember.entity.CrewMemberEntity;
 import org.spring.backendspring.crew.crewMember.repository.CrewMemberRepository;
+import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
 import org.spring.backendspring.s3.AwsS3Service;
 import org.springframework.stereotype.Service;
@@ -24,17 +27,27 @@ import java.util.stream.Collectors;
 public class CrewServiceImpl implements CrewService {
 
     private final CrewRepository crewRepository;
-    private final CrewMemberRepository crewMemberRepository;
     private final CrewImageRepository crewImageRepository;
+    private final MemberRepository memberRepository;
     private final AwsS3Service awsS3Service;
 
     @Override
-    public CrewDto updateCrew(Long crewId, CrewDto crewDto,
+    public CrewDto updateCrew(Long loginUserId, Long crewId, CrewDto crewDto,
                               List<MultipartFile> newImages,
                               List<Long> deleteImageId) throws IOException {
 
+        
         CrewEntity crew = crewRepository.findById(crewId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 크루"));
+
+        MemberEntity member = memberRepository.findById(loginUserId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원"));
+
+        String crewRole = CrewRoleCheck.crewRoleCheckFn(loginUserId, crewId, crewRepository);
+
+        if (!crewRole.equals("LEADER") || !member.getRole().equals(MemberRole.ADMIN)) {
+            throw new IllegalArgumentException("크루 수정 권한 없음");    
+        }
 
         // 크루 기본 정보 수정
         crew.setName(crewDto.getName());
@@ -67,9 +80,16 @@ public class CrewServiceImpl implements CrewService {
     }
 
     @Override
-    public void deleteCrew(Long crewId) {
+    public void deleteCrew(Long crewId, Long loginUserId) {
         CrewEntity crewEntity = crewRepository.findById(crewId)
                 .orElseThrow(IllegalArgumentException::new);
+        MemberEntity member = memberRepository.findById(loginUserId)
+                .orElseThrow(() -> new NullPointerException("존재하지 않는 회원"));
+        
+        String crewRole = CrewRoleCheck.crewRoleCheckFn(loginUserId, crewId, crewRepository);
+        if (!crewRole.equals("LEADER") || !member.getRole().equals(MemberRole.ADMIN)) {
+            throw new IllegalArgumentException("크루 삭제 권한 없음");    
+        }
 
         List<CrewImageEntity> crewImages = crewImageRepository.findByCrewEntity_Id(crewId);
         if (crewImages != null) {
@@ -116,12 +136,6 @@ public class CrewServiceImpl implements CrewService {
     }
 
     @Override
-    public List<CrewMemberDto> findMyAllCrew(Long memberId) {
-        List<CrewMemberEntity> crewMemberEntities = crewMemberRepository.findByMemberEntity_id(memberId);
-        return crewMemberEntities.stream().map(CrewMemberDto::toCrewMember).collect(Collectors.toList());
-    }
-
-    @Override
     public CrewDto findMyCrew(Long crewId, Long memberId) {
         CrewEntity crewEntity = crewRepository.findById(crewId)
                 .orElseThrow(() -> new IllegalArgumentException("크루를 찾을 수 없습니다."));
@@ -132,5 +146,17 @@ public class CrewServiceImpl implements CrewService {
                 .orElseThrow(() -> new IllegalArgumentException("이 크루의 멤버가 아닙니다."));
 
         return CrewDto.toCrewDto(crewEntity);
+    }
+
+    @Override
+    public List<CrewDto> mycrewList(Long memberId) {
+        MemberEntity member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원"));
+        
+        List<CrewEntity> mycrewList = member.getCrewEntityList();
+
+        return mycrewList.stream()
+                    .map(CrewDto::toCrewDto)
+                    .toList();
     }
 }

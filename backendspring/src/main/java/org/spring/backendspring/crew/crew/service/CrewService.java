@@ -9,9 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface CrewService {
 
-    CrewDto updateCrew(Long crewId, CrewDto crewDto, List<MultipartFile> newImages, List<Long> deleteImageId) throws IOException;
+    CrewDto updateCrew(Long loginUserId, Long crewId, CrewDto crewDto, List<MultipartFile> newImages, List<Long> deleteImageId) throws IOException;
 
-    void deleteCrew(Long crewId);
+    void deleteCrew(Long crewId, Long loginUserId);
 
     List<CrewDto> crewList();
 
@@ -21,5 +21,5 @@ public interface CrewService {
 
     List<CrewDto> findAllCrew();
 
-    List<CrewMemberDto> findMyAllCrew(Long memberId);
+    List<CrewDto> mycrewList(Long memberId);
 }
