@@ -74,7 +74,9 @@ const IndexPage = () => {
                 className="title-text layer-3"
                 style={getTransformStyle(depthConfig.title)}
             >
-                <h1>RUNNING INTERACTIVE</h1>
+                <Link to={"/store"}>
+                    <h1>RUNNING INTERACTIVE</h1>
+                </Link >
                 <p>Mouse over to see the Parallax Effect</p>
             </div>
         </div >

@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import jwtAxios from '../../../apis/util/jwtUtill';
+
+import jwtAxios from "../../../apis/util/jwtUtil";
 import { useSelector } from 'react-redux';
 
 
