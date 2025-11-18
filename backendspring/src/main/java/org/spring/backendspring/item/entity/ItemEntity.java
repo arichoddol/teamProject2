@@ -2,6 +2,7 @@ package org.spring.backendspring.item.entity;
 
 import java.util.List;
 
+import org.spring.backendspring.cart.entity.CartItemEntity;
 import org.spring.backendspring.common.BasicTime;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.item.dto.ItemDto;
@@ -62,10 +63,10 @@ public class ItemEntity extends BasicTime{
     private MemberEntity memberEntity;
 
     // 1:N
-    // @OneToMany(mappedBy = "itemEntity",
-    //             fetch = FetchType.LAZY,
-    //             cascade = CascadeType.REMOVE)
-    // private List<CartItemEntity> itemListEntities;
+    @OneToMany(mappedBy = "itemEntity",
+                fetch = FetchType.LAZY,
+                cascade = CascadeType.REMOVE)
+    private List<CartItemEntity> itemListEntities;
 
     @OneToMany(mappedBy = "itemEntity",
                 fetch = FetchType.LAZY,
@@ -95,7 +96,6 @@ public class ItemEntity extends BasicTime{
                     .attachFile(attachFileValue)
         .build();
 
-    
     }
 
 }

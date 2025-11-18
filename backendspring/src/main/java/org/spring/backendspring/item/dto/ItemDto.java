@@ -50,7 +50,8 @@ public class ItemDto {
     private String newFileName;
     private String oldFileName;
     private List<MultipartFile> itemFileList;
-    private List<BoardImgDto> itmeImgDtos;
+    private List<ItemImgDto> itemImgDtos;
+    
 
     private List<CartItemEntity> itemListEntities;
     private List<ItemReplyEntity> itemReplyEntities;
@@ -81,6 +82,7 @@ public class ItemDto {
                         .itemSize(itemEntity.getItemSize())
                         .attachFile(itemEntity.getAttachFile())
                         .memberId(itemEntity.getMemberEntity().getId())
+                        .itemImgDtos(itemImgDtos)
                         .newFileName(newFileName)
                         .oldFileName(oldFileName)
                         .createTime(itemEntity.getCreateTime())

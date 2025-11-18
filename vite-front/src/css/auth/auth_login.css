@@ -60,6 +60,11 @@
 
 .login-con {
     z-index: 10; 
+
+    background-color: rgba(115, 190, 255, 0.5);
+    padding: 5vw;
+    border-radius: 15px;
+
 }
 
 .canvas > canvas {

@@ -1,6 +1,7 @@
 package org.spring.backendspring.item.entity;
 
 import org.spring.backendspring.common.BasicTime;
+import org.spring.backendspring.item.dto.ItemImgDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,16 +31,23 @@ public class ItemImgEntity extends BasicTime {
     @Column(name = "item_image_id")
     private Long id;
 
+    @Column(nullable = false)
     private String oldName;
     @Column(nullable = false)
     private String newName;
-
-
 
     // N:1
     @ManyToOne
     @JoinColumn(name = "item_id")
     private ItemEntity itemEntity;
 
-    
+    public static ItemImgEntity toItemImgEntity(ItemImgDto imgDto){
+        return ItemImgEntity.builder()
+                .oldName(imgDto.getOldName())
+                .newName(imgDto.getNewName())
+                .itemEntity(imgDto.getItemEntity())
+        .build();
+    }
+
+   
 }
