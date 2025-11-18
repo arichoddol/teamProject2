@@ -47,6 +47,9 @@ const AuthLoginContainer = () => {
         setCookie("member", memberValue, 1);
         dispatch(login({ userEmail, id, role, isLogin: true }));
         dispatch(setAccessToken(access));   
+
+
+        
     };
   }
 

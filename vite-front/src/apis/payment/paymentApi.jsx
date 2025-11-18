@@ -1,59 +1,53 @@
-import axios from "axios";
+import jwtAxios from "../util/jwtUtill"; // JWT 자동 갱신 처리된 axios
 
 const PAYMENT_API = "http://localhost:8088/api/payments";
 const PAYMENT_ITEM_API = "http://localhost:8088/api/payment-items";
-
-// JWT 가져오기
-const getToken = () => localStorage.getItem("token");
 
 // -----------------------------
 // CRUD API
 // -----------------------------
 export const createPayment = async (paymentData) => {
-  const res = await axios.post(PAYMENT_API, paymentData, {
-    headers: { Authorization: `Bearer ${getToken()}` },
-  });
+  const res = await jwtAxios.post(PAYMENT_API, paymentData);
   return res.data;
 };
 
 export const getAllPayments = async () => {
-  const res = await axios.get(PAYMENT_API, {
-    headers: { Authorization: `Bearer ${getToken()}` },
-  });
+  const res = await jwtAxios.get(PAYMENT_API);
   return res.data;
 };
 
 export const deletePayment = async (paymentId) => {
-  await axios.delete(`${PAYMENT_API}/${paymentId}`, {
-    headers: { Authorization: `Bearer ${getToken()}` },
-  });
+  await jwtAxios.delete(`${PAYMENT_API}/${paymentId}`);
 };
 
 export const getPaymentItems = async (paymentId) => {
-  const res = await axios.get(`${PAYMENT_ITEM_API}/by-payment/${paymentId}`, {
-    headers: { Authorization: `Bearer ${getToken()}` },
-  });
+  const res = await jwtAxios.get(`${PAYMENT_ITEM_API}/by-payment/${paymentId}`);
   return res.data;
 };
 
 // -----------------------------
 // KakaoPay 연동
 // -----------------------------
-export const pgRequest = async (pg, productId, memberId, productPrice, productName) => {
+export const pgRequest = async (pg, productId, productPrice, productName, memberId) => {
   if (pg !== "kakao") throw new Error("지원되지 않는 PG사입니다.");
-  const res = await axios.get(`${PAYMENT_API}/pg/${pg}`, {
-    params: { productId, memberId, productPrice, productName },
-    headers: { Authorization: `Bearer ${getToken()}` },
+
+  const res = await jwtAxios.get(`${PAYMENT_API}/pg/${pg}`, {
+    params: { 
+      productId: Number(productId),      
+      productPrice: Number(productPrice), 
+      productName: encodeURIComponent(String(productName)), // ✅ 인코딩 필수
+      memberId: Number(memberId)
+    },
   });
-  return res.data.approvalUrl; // 카카오 결제 페이지 URL 반환
+
+  return res.data.approvalUrl;
 };
 
-export const approvalPayment = async (paymentId, productPrice, productName, memberId, pgToken) => {
-  await axios.get(
-    `${PAYMENT_API}/approval/${paymentId}/${productPrice}/${productName}/${memberId}`,
-    {
-      params: { pg_token: pgToken },
-      headers: { Authorization: `Bearer ${getToken()}` },
-    }
+export const approvalPayment = async (paymentId, productPrice, productName, pgToken) => {
+  if (!pgToken) throw new Error("pg_token이 필요합니다.");
+
+  await jwtAxios.get(
+    `${PAYMENT_API}/approval/${paymentId}/${Number(productPrice)}/${encodeURIComponent(String(productName))}`,
+    { params: { pg_token: pgToken } }
   );
 };

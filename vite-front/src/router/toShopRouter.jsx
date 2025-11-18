@@ -27,6 +27,10 @@ const toShopRouter = () => {
             element: <Suspense fallback={Loading}><ShopMain/></Suspense>
         },
         {
+            path: ':id',  // 추가
+            element: <Suspense fallback={Loading}><ShopMain/></Suspense>
+        },
+        {
             path: 'salezone',
             element: <Suspense fallback={Loading}><ShopSale/></Suspense>
         },

@@ -1,17 +1,17 @@
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { logoutFn } from '../../apis/auth/logout';
-import { removeCookie } from '../../apis/util/cookieUtil';
-import { logout } from '../../slices/loginSlice';
-import { deleteAccessToken } from '../../slices/jwtSlice';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutFn } from "../../apis/auth/logout";
+import { removeCookie } from "../../apis/util/cookieUtil";
+import { logout } from "../../slices/loginSlice";
+import { deleteAccessToken } from "../../slices/jwtSlice";
+import { Link } from "react-router-dom";
 
 // slice 테스트 확인용으로 작성했습니다.
 const Header = () => {
-
   const dispatch = useDispatch();
-  const isLogin = useSelector(state => state.loginSlice.isLogin);
-  const role = useSelector(state => state.loginSlice.role);
+  const isLogin = useSelector((state) => state.loginSlice.isLogin);
+  const role = useSelector((state) => state.loginSlice.role);
+  const memberId = useSelector((state) => state.loginSlice.id); // 회원 ID 가져오기
 
   const onLogoutFn = async () => {
     const rs = await logoutFn();
@@ -24,7 +24,7 @@ const Header = () => {
 
       alert("로그아웃 성공!");
     }
-  }
+  };
 
   return (
     <>
@@ -33,26 +33,37 @@ const Header = () => {
           <h1>HOME</h1>
           <div className="gnb">
             <ul>
-            { isLogin ? 
-            <>
-              <li>
-                <button onClick={onLogoutFn}>LOGOUT</button>
-              </li>
-              <li>
-                <Link to= "/auth/myPage">myPage</Link>
-              </li> 
-              { role === 'ADMIN' ? <li><Link to= "/admin/index">admin</Link></li> : null }
-            </>
-            : 
-            <li>
-              <Link to="/auth/login">LOGIN</Link>
-            </li> }
-            </ul> 
+              {isLogin ? (
+                <>
+                  <li>
+                    <Link to={`/cart/${memberId}`}>CART</Link>
+                  </li>
+                  <li>
+                    <Link to={`/shop/${memberId}`}>SHOP</Link>
+                  </li>
+                  <li>
+                    <button onClick={onLogoutFn}>LOGOUT</button>
+                  </li>
+                  <li>
+                    <Link to="/auth/myPage">myPage</Link>
+                  </li>
+                  {role === "ADMIN" ? (
+                    <li>
+                      <Link to="/admin/index">admin</Link>
+                    </li>
+                  ) : null}
+                </>
+              ) : (
+                <li>
+                  <Link to="/auth/login">LOGIN</Link>
+                </li>
+              )}
+            </ul>
           </div>
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

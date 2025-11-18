@@ -1,22 +1,40 @@
-import jwtAxios from "../util/jwtUtil";
+import jwtAxios from "../util/jwtUtill";
 
 const CART_API = "http://localhost:8088/api/cart";
 
+// JWT에서 memberId 추출 함수
+const getMemberIdFromJWT = () => {
+  const memberStr = document.cookie
+    .split("; ")
+    .find(row => row.startsWith("member="))?.split("=")[1];
+
+  if (!memberStr) return null;
+
+  const member = JSON.parse(decodeURIComponent(memberStr));
+  return member.id;
+};
+
 // === 장바구니 조회 ===
-// memberId는 JWT에서 추출됨 → 프론트에서 넣지 않음
 export const getCartByMemberId = async () => {
-  const res = await jwtAxios.get(`${CART_API}`, {
+  const memberId = getMemberIdFromJWT();
+  if (!memberId) throw new Error("로그인이 필요합니다.");
+
+  const res = await jwtAxios.get(`${CART_API}/${memberId}`, {
     withCredentials: true,
   });
-
   return res.data;
 };
 
 // === 장바구니 생성 ===
 export const createCart = async () => {
-  const res = await jwtAxios.post(`${CART_API}`, {}, {
-    withCredentials: true,
-  });
+  const memberId = getMemberIdFromJWT();
+  if (!memberId) throw new Error("로그인이 필요합니다.");
+
+  const res = await jwtAxios.post(
+    `${CART_API}/${memberId}`,
+    {},
+    { withCredentials: true }
+  );
   return res.data;
 };
 

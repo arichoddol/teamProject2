@@ -13,12 +13,13 @@ import org.spring.backendspring.payment.service.PaymentService;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,9 +30,6 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final PaymentResultRepository paymentResultRepository;
 
-    // -----------------
-    // CRUD 메서드
-    // -----------------
     @Override
     public PaymentEntity createPayment(PaymentEntity payment) {
         return paymentRepository.save(
@@ -60,14 +58,12 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public PaymentEntity updatePayment(Long paymentId, PaymentEntity payment) {
         PaymentEntity existing = getPayment(paymentId);
-
         existing.setPaymentAddr(payment.getPaymentAddr());
         existing.setPaymentMethod(payment.getPaymentMethod());
         existing.setPaymentPost(payment.getPaymentPost());
         existing.setPaymentResult(payment.getPaymentResult());
         existing.setPaymentType(payment.getPaymentType());
         existing.setPaymentStatus(payment.getPaymentStatus());
-
         return paymentRepository.save(existing);
     }
 
@@ -76,9 +72,7 @@ public class PaymentServiceImpl implements PaymentService {
         paymentRepository.deleteById(paymentId);
     }
 
-    // -----------------
-    // KakaoPay 관련
-    // -----------------
+    // ----------------- KakaoPay -----------------
     @Override
     public void paymentApproval(String pgToken, Long paymentId, Long productPrice, String productName, Long memberId) {
         paymentRepository.updatePgToken(paymentId, pgToken);
@@ -88,13 +82,13 @@ public class PaymentServiceImpl implements PaymentService {
         PaymentDto getTidPaymentDto = jsonToObject(paymentDto);
         paymentDto.setTid(getTidPaymentDto.getTid());
 
+        if (pgToken == null) throw new RuntimeException("pgToken이 존재하지 않습니다.");
         paymentApproveKakao(paymentDto, paymentId, productPrice, productName, memberId);
     }
 
-    public PaymentDto jsonToObject(PaymentDto dto) {
+    private PaymentDto jsonToObject(PaymentDto dto) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
         try {
             return objectMapper.readValue(dto.getPaymentReadyJson().toString(), PaymentDto.class);
         } catch (JsonProcessingException e) {
@@ -102,94 +96,85 @@ public class PaymentServiceImpl implements PaymentService {
         }
     }
 
-    public void paymentApproveKakao(PaymentDto paymentDto, Long paymentId, Long productPrice, String productName, Long memberId) {
+    private void paymentApproveKakao(PaymentDto paymentDto, Long paymentId, Long productPrice, String productName,
+                                     Long memberId) {
         RestTemplate restTemplate = new RestTemplate();
-        ObjectMapper objectMapper = new ObjectMapper();
-        String kakaoJsonString;
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.set("Authorization", "KakaoAK " + "5153d372489b6c481c38dab7bb500441");
 
-        Optional<PaymentEntity> optionalPaymentEntity = paymentRepository.findById(paymentDto.getPaymentId());
-        if (optionalPaymentEntity.isPresent()) {
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Authorization", "783f67cfd35797dcfb3c369ebd13d398");
-            HttpEntity<String> entity = new HttpEntity<>(headers);
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("cid", "TC0ONETIME");
+        params.add("tid", paymentDto.getTid());
+        params.add("partner_order_id", String.valueOf(paymentId));
+        params.add("partner_user_id", String.valueOf(memberId));
+        params.add("pg_token", paymentDto.getPgToken());
+        params.add("total_amount", String.valueOf(productPrice));
 
-            URI uri = UriComponentsBuilder
-                    .fromUriString("https://kapi.kakao.com")
-                    .path("/v1/payment/approve")
-                    .queryParam("cid", "TC0ONETIME")
-                    .queryParam("partner_order_id", paymentDto.getPaymentId())
-                    .queryParam("partner_user_id", memberId)
-                    .queryParam("item_name", productName)
-                    .queryParam("tid", paymentDto.getTid())
-                    .queryParam("total_amount", productPrice)
-                    .queryParam("tax_free_amount", "100")
-                    .queryParam("pg_token", paymentDto.getPgToken())
-                    .encode()
-                    .build()
-                    .toUri();
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
 
-            ResponseEntity<String> result = restTemplate.exchange(uri, HttpMethod.POST, entity, String.class);
+        ResponseEntity<String> result = restTemplate.postForEntity(
+                "https://kapi.kakao.com/v1/payment/approve",
+                entity,
+                String.class
+        );
 
-            try {
-                kakaoJsonString = objectMapper.writeValueAsString(result.getBody());
-                System.out.println(kakaoJsonString);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException("kakao payment request : json to string error : " + e);
-            }
+        System.out.println("결제 승인 응답: " + result.getBody());
 
-            paymentRepository.updateIsSucced(paymentDto.getPaymentId(), 1);
-
+        if (result.getStatusCode() == HttpStatus.OK) {
+            paymentRepository.updateIsSucced(paymentId, 1);
         } else {
-            throw new IllegalArgumentException("해당 아이디에 값이 없습니다.");
+            paymentRepository.updateIsSucced(paymentId, 0);
         }
     }
 
     @Override
     public String pgRequest(String pg, Long productId, Long memberId, Long productPrice, String productName) {
-        if (!pg.equals("kakao")) throw new RuntimeException("제휴되지 않은 결제 업체 입니다.!!!!");
+        if (!pg.equals("kakao"))
+            throw new RuntimeException("제휴되지 않은 결제 업체 입니다.");
 
-        RestTemplate restTemplate = new RestTemplate();
-        ObjectMapper objectMapper = new ObjectMapper();
         PaymentEntity paymentEntity = new PaymentEntity();
-        String kakaoJsonString;
-        Long paymentId;
-
         paymentEntity.setPaymentType("KAKAO");
         paymentEntity.setProductPrice(productPrice);
-        paymentId = paymentRepository.save(paymentEntity).getPaymentId();
+        Long paymentId = paymentRepository.save(paymentEntity).getPaymentId();
 
+        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "KakaoAK 카카오키");
-        HttpEntity<String> entity = new HttpEntity<>(headers);
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.set("Authorization", "KakaoAK " + "5153d372489b6c481c38dab7bb500441");
 
-        URI uri = UriComponentsBuilder
-                .fromUriString("https://kapi.kakao.com")
-                .path("/v1/payment/ready")
-                .queryParam("cid", "TC0ONETIME")
-                .queryParam("partner_order_id", paymentId)
-                .queryParam("partner_user_id", memberId)
-                .queryParam("item_name", productName)
-                .queryParam("quantity", "1")
-                .queryParam("total_amount", productPrice)
-                .queryParam("tax_free_amount", "100")
-                .queryParam("approval_url", "http://localhost:3000/react/payment/approval/"
-                        + paymentId + "/" + productPrice + "/" + productName + "/" + memberId)
-                .queryParam("cancel_url", "http://localhost:8088/payment/cancel")
-                .queryParam("fail_url", "http://localhost:8088/payment/fail")
-                .encode()
-                .build()
-                .toUri();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("cid", "TC0ONETIME");
+        params.add("partner_order_id", String.valueOf(paymentId));
+        params.add("partner_user_id", String.valueOf(memberId));
+        params.add("item_name", productName);
+        params.add("quantity", "1");
+        params.add("total_amount", String.valueOf(productPrice));
+        params.add("tax_free_amount", "0");
 
-        ResponseEntity<KakaoPayPrepareDto> result = restTemplate.exchange(uri, HttpMethod.POST, entity, KakaoPayPrepareDto.class);
+        String encodedProductName = URLEncoder.encode(productName, StandardCharsets.UTF_8);
+        params.add("approval_url", "http://localhost:3000/react/payment/approval/"
+                + paymentId + "/" + productPrice + "/" + encodedProductName + "/" + memberId);
+        params.add("cancel_url", "http://localhost:8088/payment/cancel");
+        params.add("fail_url", "http://localhost:8088/payment/fail");
 
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
+
+        ResponseEntity<KakaoPayPrepareDto> result = restTemplate.postForEntity(
+                "https://kapi.kakao.com/v1/payment/ready",
+                entity,
+                KakaoPayPrepareDto.class
+        );
+
+        ObjectMapper objectMapper = new ObjectMapper();
         try {
-            kakaoJsonString = objectMapper.writeValueAsString(result.getBody());
+            String kakaoJsonString = objectMapper.writeValueAsString(result.getBody());
+            paymentEntity.setPaymentReadyJson(kakaoJsonString);
+            paymentRepository.save(paymentEntity);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("kakao payment request : json to string error : " + e);
+            throw new RuntimeException("카카오 결제 요청 변환 오류", e);
         }
 
-        paymentEntity.setPaymentReadyJson(kakaoJsonString);
-        paymentRepository.save(paymentEntity);
         return result.getBody().getNext_redirect_pc_url();
     }
 
@@ -204,5 +189,4 @@ public class PaymentServiceImpl implements PaymentService {
 
         return "" + jsonDb;
     }
-
 }
