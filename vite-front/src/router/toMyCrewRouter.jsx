@@ -11,14 +11,10 @@ const MyCrewMain = lazy(()=> import('../components/container/myCrew/MyCrewMainCo
 const MyCrewjoinRequest = lazy(()=> import('../components/container/myCrew/MyCrewJoinRequestContainer'))
 const MyCrewMember = lazy(()=> import('../components/container/myCrew/MyCrewMemberContainer'))
 const MyCrewRun = lazy(()=> import('../components/container/myCrew/MyCrewRunContainer'))
-<<<<<<< HEAD
-const MyCrewBoard = lazy(()=> import('../components/container/myCrew/MyCrewBoardContainer'))
-const MyCrewChat = lazy(()=> import('../components/container/myCrew/MyCrewChatContainer'))
 
-=======
 const MyCrewBoard = lazy(()=> import('../components/container/myCrew/board/MyCrewBoardContainer'))
 const MyCrewChat = lazy(()=> import('../components/container/myCrew/MyCrewChatContainer'))
->>>>>>> dev
+
 
 const toMyCrewRouter = () => {
   return (

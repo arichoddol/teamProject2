@@ -7,11 +7,8 @@ import Footer from "../../components/common/Footer";  // 기존 footer 재사용
 import "../../css/admin/AdminLayout.css";
 import "../../css/admin/AdminHeader.css";
 import "../../css/admin/AdminSidebar.css";
-<<<<<<< HEAD
-=======
 import "../../css/common/footer.css";
 
->>>>>>> dev
 
 
 
