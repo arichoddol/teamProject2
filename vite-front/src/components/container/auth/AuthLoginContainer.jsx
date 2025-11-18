@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { loginFn } from '../../../apis/auth/login';
 import { useDispatch } from 'react-redux';
@@ -7,12 +7,20 @@ import { login } from '../../../slices/loginSlice';
 import { setCookie } from '../../../apis/util/cookieUtil';
 import { setAccessToken } from '../../../slices/jwtSlice';
 
+import { initializeThreeScene } from '../../../js/three';
+import "../../../css/auth/auth_login.css"
+
 const AuthLoginContainer = () => {
   
   // 로그인 상태 & 사용자 정보
   const [member, setMember] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  
+  const mountRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(true);
+
   
   const navigate =  useNavigate();
   const dispatch = useDispatch();
@@ -54,9 +62,40 @@ const AuthLoginContainer = () => {
     };
   }
 
+  useEffect(()=>{
+        const container = mountRef.current;
+        if (!container) return;
+
+        let cleanupFunction;
+
+        try {
+            cleanupFunction = initializeThreeScene(container);
+            
+            setIsLoading(false); 
+
+        } catch(error) {
+            console.error("Three.js init ERROR", error);
+            setIsLoading(false);
+        }
+
+        return () => {
+            if (cleanupFunction) {
+                cleanupFunction();
+            }
+        };
+
+    }, []);
+
   return (
-    <>
+    
     <div className="login">
+      <div ref={mountRef} className='canvas'>
+        {isLoading && (
+          <div className="3dloading">
+            <span className='span-3d'> 3D Loading... </span>
+          </div>
+        )}
+      </div>
       <div className="login-con">
         <h1>로그인</h1>
         <ul>
@@ -84,7 +123,7 @@ const AuthLoginContainer = () => {
         </ul>
       </div>
     </div>
-    </>
+    
   )
 }
 

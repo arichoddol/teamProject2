@@ -1,14 +1,14 @@
 import React, { lazy, Suspense } from 'react';
 
 const Loading = <div className='loading'>Loading..</div>;
-const CartPage = lazy(() => import('../components/container/cart/CartPage'));
+const CartPage = lazy(() => import('../components/container/cart/CartPage')); // 확장자 명시
 
 export default function toCartRouter() {
   return [
     {
-      path: ":memberId", // /cart/:memberId
+      path: "", // /cart
       element: (
-        <Suspense fallback={<div className='loading'>Loading..</div>}>
+        <Suspense fallback={Loading}>
           <CartPage />
         </Suspense>
       ),

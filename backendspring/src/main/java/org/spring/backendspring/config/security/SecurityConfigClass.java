@@ -49,6 +49,7 @@ public class SecurityConfigClass {
 
         http.authorizeHttpRequests(authorize -> {
             authorize
+                    .requestMatchers("/api/payments/approval/**").permitAll() // ✅ 로그인 없이 허용
                     .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "MANAGER")
                     .requestMatchers(
                             "/api/crew/create/approved",

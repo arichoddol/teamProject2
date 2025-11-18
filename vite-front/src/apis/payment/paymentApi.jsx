@@ -6,6 +6,7 @@ const PAYMENT_ITEM_API = "http://localhost:8088/api/payment-items";
 // -----------------------------
 // CRUD API
 // -----------------------------
+
 export const createPayment = async (paymentData) => {
   const res = await jwtAxios.post(PAYMENT_API, paymentData);
   return res.data;
@@ -28,6 +29,7 @@ export const getPaymentItems = async (paymentId) => {
 // -----------------------------
 // KakaoPay 연동
 // -----------------------------
+
 export const pgRequest = async (pg, productId, productPrice, productName, memberId) => {
   if (pg !== "kakao") throw new Error("지원되지 않는 PG사입니다.");
 
@@ -35,7 +37,7 @@ export const pgRequest = async (pg, productId, productPrice, productName, member
     params: { 
       productId: Number(productId),      
       productPrice: Number(productPrice), 
-      productName: encodeURIComponent(String(productName)), // ✅ 인코딩 필수
+      productName: encodeURIComponent(String(productName)), 
       memberId: Number(memberId)
     },
   });
@@ -43,11 +45,14 @@ export const pgRequest = async (pg, productId, productPrice, productName, member
   return res.data.approvalUrl;
 };
 
-export const approvalPayment = async (paymentId, productPrice, productName, pgToken) => {
+// -----------------------------
+// 결제 승인 (success 페이지에서 호출)
+// -----------------------------
+export const approvePayment = async (paymentId, productPrice, productName, memberId, pgToken) => {
   if (!pgToken) throw new Error("pg_token이 필요합니다.");
 
   await jwtAxios.get(
-    `${PAYMENT_API}/approval/${paymentId}/${Number(productPrice)}/${encodeURIComponent(String(productName))}`,
+    `${PAYMENT_API}/approval/${paymentId}/${Number(productPrice)}/${encodeURIComponent(String(productName))}/${memberId}`,
     { params: { pg_token: pgToken } }
   );
 };

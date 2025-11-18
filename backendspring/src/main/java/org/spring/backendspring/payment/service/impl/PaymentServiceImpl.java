@@ -82,7 +82,8 @@ public class PaymentServiceImpl implements PaymentService {
         PaymentDto getTidPaymentDto = jsonToObject(paymentDto);
         paymentDto.setTid(getTidPaymentDto.getTid());
 
-        if (pgToken == null) throw new RuntimeException("pgToken이 존재하지 않습니다.");
+        if (pgToken == null)
+            throw new RuntimeException("pgToken이 존재하지 않습니다.");
         paymentApproveKakao(paymentDto, paymentId, productPrice, productName, memberId);
     }
 
@@ -97,7 +98,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private void paymentApproveKakao(PaymentDto paymentDto, Long paymentId, Long productPrice, String productName,
-                                     Long memberId) {
+            Long memberId) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -116,8 +117,7 @@ public class PaymentServiceImpl implements PaymentService {
         ResponseEntity<String> result = restTemplate.postForEntity(
                 "https://kapi.kakao.com/v1/payment/approve",
                 entity,
-                String.class
-        );
+                String.class);
 
         System.out.println("결제 승인 응답: " + result.getBody());
 
@@ -153,18 +153,22 @@ public class PaymentServiceImpl implements PaymentService {
         params.add("tax_free_amount", "0");
 
         String encodedProductName = URLEncoder.encode(productName, StandardCharsets.UTF_8);
-        params.add("approval_url", "http://localhost:3000/react/payment/approval/"
-                + paymentId + "/" + productPrice + "/" + encodedProductName + "/" + memberId);
-        params.add("cancel_url", "http://localhost:8088/payment/cancel");
-        params.add("fail_url", "http://localhost:8088/payment/fail");
+
+        // 백엔드 approval API로 연결
+        params.add("approval_url",
+                "http://localhost:8088/api/payments/approval/"
+                        + paymentId + "/" + productPrice + "/" + memberId
+                        + "?productName=" + encodedProductName);
+
+        params.add("cancel_url", "http://localhost:3000/payment/cancel");
+        params.add("fail_url", "http://localhost:3000/payment/fail");
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
 
         ResponseEntity<KakaoPayPrepareDto> result = restTemplate.postForEntity(
                 "https://kapi.kakao.com/v1/payment/ready",
                 entity,
-                KakaoPayPrepareDto.class
-        );
+                KakaoPayPrepareDto.class);
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {

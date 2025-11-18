@@ -11,19 +11,17 @@ import "../../../css/cart/CartPage.css";
 export default function CartPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const itemToAdd = location.state?.itemToAdd; // ShopMainContainer에서 전달된 상품
+  const itemToAdd = location.state?.itemToAdd;
 
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 장바구니 조회 또는 생성 (JWT cookie 기반)
+  // 장바구니 조회 또는 생성
   const fetchCart = async () => {
     setLoading(true);
     try {
       let data = await getCartByMemberId();
-      if (!data) {
-        data = await createCart();
-      }
+      if (!data) data = await createCart();
       setCart(data);
     } catch (e) {
       console.error("장바구니 불러오기 실패:", e);
@@ -42,29 +40,28 @@ export default function CartPage() {
   useEffect(() => {
     if (!cart || !itemToAdd) return;
 
-    const addItemFromState = async () => {
+    const addItem = async () => {
       try {
         const newItem = await addItemToCart(cart.cartId, itemToAdd.id, 1);
-        setCart((prev) => ({
+        setCart(prev => ({
           ...prev,
           items: [...(prev.items || []), newItem],
         }));
+        navigate("/cart", { replace: true }); // state 초기화
       } catch (e) {
         console.error("상품 추가 실패:", e);
       }
     };
 
-    addItemFromState();
-    navigate(location.pathname, { replace: true }); // state 초기화
-  }, [cart, itemToAdd]);
+    addItem();
+  }, [cart, itemToAdd, navigate]);
 
-  // 장바구니 아이템 삭제
   const handleRemoveItem = async (cartItemId) => {
     try {
       await removeCartItem(cartItemId);
-      setCart((prev) => ({
+      setCart(prev => ({
         ...prev,
-        items: prev.items.filter((item) => item.cartItemId !== cartItemId),
+        items: prev.items.filter(item => item.cartItemId !== cartItemId),
       }));
     } catch (e) {
       console.error("삭제 실패:", e);
@@ -87,7 +84,7 @@ export default function CartPage() {
           </tr>
         </thead>
         <tbody>
-          {cart.items.map((item) => (
+          {cart.items.map(item => (
             <tr key={item.cartItemId}>
               <td>{item.cartItemId}</td>
               <td>{item.itemTitle || "상품명 없음"}</td>

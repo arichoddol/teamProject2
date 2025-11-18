@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 import "../../../css/store/storeDetail.css";
 
@@ -9,6 +9,8 @@ const ShopDetailContainer = () => {
   const [content, setContent] = useState("");
   const [replies, setReplies] = useState([]);
   const { id } = useParams();
+    const navigate = useNavigate(); // navigate 추가
+
 
   const API_BASE_URL = "http://localhost:8088/api/shop";
 
@@ -26,6 +28,12 @@ const ShopDetailContainer = () => {
     fetchData();
     // when id change its always restart it.
   }, [id]);
+
+   // 장바구니 담기 함수
+  const handleAddToCart = (product) => {
+    // CartPage로 이동 + state에 상품 정보 전달
+    navigate("/cart", { state: { itemToAdd: product } });
+  };
 
   return (
     <div className="itemDetail">
@@ -47,7 +55,7 @@ const ShopDetailContainer = () => {
           <br />
           <span>updateTime : {item.updatTime}</span>
           <br />
-          <button onClick={() => handleAddToCart(list)}>장바구니 담기</button>
+          <button onClick={() => handleAddToCart(item)}>장바구니 담기</button>
         </div>
       </div>
     </div>

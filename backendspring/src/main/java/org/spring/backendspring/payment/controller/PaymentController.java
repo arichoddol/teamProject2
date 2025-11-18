@@ -5,8 +5,12 @@ import org.spring.backendspring.payment.dto.PaymentDto;
 import org.spring.backendspring.payment.dto.PaymentResultDto;
 import org.spring.backendspring.payment.service.PaymentService;
 import org.spring.backendspring.payment.service.PaymentResultService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +47,7 @@ public class PaymentController {
 
     @PutMapping("/{paymentId}")
     public PaymentDto update(@PathVariable Long paymentId,
-                             @RequestBody PaymentDto paymentDto) {
+            @RequestBody PaymentDto paymentDto) {
         return PaymentDto.fromEntity(paymentService.updatePayment(paymentId, paymentDto.toEntity()));
     }
 
@@ -57,17 +61,36 @@ public class PaymentController {
     // Kakao Pay 관련
     // -----------------
 
-    @GetMapping("/approval/{paymentId}/{productPrice}/{productName}/{memberId}")
-    public String approval(
-            @PathVariable Long paymentId,
-            @PathVariable Long productPrice,
-            @PathVariable String productName,
-            @PathVariable Long memberId,
-            @RequestParam("pg_token") String pgToken
-    ) {
+    @GetMapping("/approval/{paymentId}/{productPrice}/{memberId}")
+public ResponseEntity<Void> approval(
+        @PathVariable Long paymentId,
+        @PathVariable Long productPrice,
+        @PathVariable Long memberId,
+        @RequestParam("pg_token") String pgToken,
+        @RequestParam("productName") String productName) {
+    try {
         paymentService.paymentApproval(pgToken, paymentId, productPrice, productName, memberId);
-        return "OK";
+
+        // 성공 시 프론트의 /payment/success로 redirect
+        String redirectUrl = "http://localhost:3000/payment/success" +
+                "?paymentId=" + paymentId +
+                "&productPrice=" + productPrice +
+                "&memberId=" + memberId +
+                "&productName=" + URLEncoder.encode(productName, StandardCharsets.UTF_8);
+
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .header("Location", redirectUrl)
+                .build();
+    } catch (Exception e) {
+        // 실패 시 프론트의 /payment/fail로 redirect
+        String failUrl = "http://localhost:3000/payment/fail?paymentId=" + paymentId;
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .header("Location", failUrl)
+                .build();
     }
+}
+
+
 
     @GetMapping("/pg/{pg}")
     public Map<String, Object> pgRequest(
@@ -75,8 +98,7 @@ public class PaymentController {
             @RequestParam Long productId,
             @RequestParam Long memberId,
             @RequestParam Long productPrice,
-            @RequestParam String productName
-    ) {
+            @RequestParam String productName) {
         Map<String, Object> map = new HashMap<>();
         String approvalUrl = paymentService.pgRequest(pg, productId, memberId, productPrice, productName);
         map.put("approvalUrl", approvalUrl);
@@ -86,8 +108,7 @@ public class PaymentController {
     @PostMapping("/fail")
     public Map<String, Object> fail(
             @RequestBody PaymentDto paymentDto,
-            @RequestParam("memberId") String memberId
-    ) {
+            @RequestParam("memberId") String memberId) {
         Map<String, Object> map = new HashMap<>();
         map.put("status", "fail 처리 완료");
         return map;
