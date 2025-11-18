@@ -6,3 +6,64 @@
   justify-content: center;
   align-items: center;
 }
+
+.index {
+  position: relative;         /* 기준 컨테이너 */
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;           /* 넘치는 캔버스 잘라냄 */
+}
+
+/* Three.js 캔버스 들어갈 영역 */
+.three-container {
+  position: absolute;         /* 부모(.index) 기준으로 절대 위치 */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;                 /* 맨 뒤에 */
+}
+
+/* 제목 텍스트를 위에 띄우기 */
+.index-title {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  z-index: 2;                 /* canvas보다 위 */
+  text-align: center;
+  font-size: 3rem;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+/* 버튼/링크도 위로 */
+.index-con {
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  text-align: center;
+}
+
+.canvas{
+  width: 100vw;
+  height: 100vh;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.login-con {
+    z-index: 10; 
+}
+
+.canvas > canvas {
+    display: block; /* 캔버스 하단의 여백 제거 */
+    width: 100%;
+    height: 100%;
+}
