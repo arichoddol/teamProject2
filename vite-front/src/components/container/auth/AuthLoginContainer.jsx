@@ -32,20 +32,21 @@ const AuthLoginContainer = () => {
       console.log(rs);
 
       if (rs.status === 200) {
-        const userEmail = rs.data.userEmail;
         const id = rs.data.id;
+        const userEmail = rs.data.userEmail;
+        const role = rs.data.role;
+        const nickName = rs.data.nickName;
         const access = rs.data.accessToken;
 
         const memberData = {
-          status: true,
-          userEmail: userEmail,
-          id: id
+          id: id,
+          status: true
         }
         
         const memberValue = JSON.stringify(memberData);
         
         setCookie("member", memberValue, 1);
-        dispatch(login({ userEmail, id, isLogin: true }));
+        dispatch(login({ userEmail, id, role, nickName, isLogin: true }));
         dispatch(setAccessToken(access));   
     };
   }

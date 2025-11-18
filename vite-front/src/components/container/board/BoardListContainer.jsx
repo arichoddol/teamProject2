@@ -2,7 +2,6 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 
-
 const BoardListContainer = () => {
 
   // const [data, setData] = useState([]);
@@ -32,9 +31,6 @@ const BoardListContainer = () => {
   return (
     <div className="boardList">
 
-      <h3>this section for HEADER ::</h3>
-      <h3>this section for HEADER ::</h3>
-      <h3>this section for HEADER ::</h3>
       <h3>this section for HEADER ::</h3>
       
       <div className="boardList-con">

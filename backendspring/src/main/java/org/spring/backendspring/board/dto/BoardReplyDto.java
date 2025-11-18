@@ -48,5 +48,20 @@ public class BoardReplyDto {
     // N:1
     private MemberEntity memberEntity;
 
+
+    public static BoardReplyDto tBoardReplyDto (BoardReplyEntity boardReplyEntity){
+
+        return BoardReplyDto.builder()
+                            .id(boardReplyEntity.getId())
+                            .content(boardReplyEntity.getContent())
+                            // .boardEntity(boardReplyEntity.getBoardEntity())
+                            // .memberEntity(boardReplyEntity.getMemberEntity())
+                            .boardId(boardReplyEntity.getBoardEntity().getId())
+                            .memberId(boardReplyEntity.getMemberEntity().getId())
+                            .build();
+    }
+
+   
+
     
 }

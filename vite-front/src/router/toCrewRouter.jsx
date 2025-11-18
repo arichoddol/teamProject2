@@ -6,10 +6,9 @@ const Loading = <div className='loading'>Loading...</div>
 
 
 const CrewMain = lazy(()=> import('../components/container/crew/CrewMainContainer'))
-const CrewList = lazy(()=> import('../components/container/crew/CrewListContainer'))
-const CrewDetailIndex = lazy(() => import('../components/container/crew/CrewDetailIndex'))
+const CrewDetail = lazy(() => import('../components/container/crew/CrewDetailContainer'))
 const CrewCreateRequest = lazy(() => import('../components/container/crew/CrewCreateRequestContainer'))
-const CrewBoardList = lazy(() => import('../components/container/crew/crewBoard/CrewBoardList'))
+const CrewUpdate = lazy(() => import('../components/container/crew/CrewUpdateContainer'))
 
 const toCrewRouter = () => {
   return (
@@ -25,19 +24,19 @@ const toCrewRouter = () => {
         },
         {
             path: 'list',
-            element: <Suspense fallback={Loading}><CrewList/></Suspense>
+            element: <Suspense fallback={Loading}><CrewMain/></Suspense>
         },
         {
-            path: 'detail/:id',
-            element: <Suspense fallback={Loading}><CrewDetailIndex/></Suspense>
+            path: 'detail/:crewId',
+            element: <Suspense fallback={Loading}><CrewDetail/></Suspense>
+        },
+        {
+            path: 'update/:crewId',
+            element: <Suspense fallback={Loading}><CrewUpdate/></Suspense>
         },
         {
             path: 'createRequest',
             element: <Suspense fallback={Loading}><CrewCreateRequest/></Suspense>
-        },
-        {
-            path: 'crewBoard/list',
-            element: <Suspense fallback={Loading}><CrewBoardList/></Suspense>
         }
     ]
   )

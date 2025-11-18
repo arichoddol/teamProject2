@@ -41,6 +41,8 @@ public class MemberMapper {
                 .role(entity.getRole())
                 .isProfileImg(entity.getIsProfileImg())
                 .socialLogin(entity.getSocialLogin())
+                .crewEntityList(entity.getCrewEntityList())
+                .crewMemberEntityList(entity.getCrewMemberEntityList())
                 .build();
     }
 

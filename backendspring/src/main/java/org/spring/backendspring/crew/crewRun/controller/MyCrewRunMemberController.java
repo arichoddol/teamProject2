@@ -50,7 +50,7 @@ public class MyCrewRunMemberController {
                                            @PathVariable("runId") Long runId,
                                            @PathVariable("memberId") Long memberId){
         crewRunMemberService.deleteCrewMemberRun(runId,memberId);
-        return ResponseEntity.ok("참가완료");
+        return ResponseEntity.ok("참가취소");
     }
 
 

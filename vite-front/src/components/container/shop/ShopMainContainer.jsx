@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router';
 
 const ShopMainContainer = () => {
 
@@ -22,11 +23,9 @@ const ShopMainContainer = () => {
       
       <h3>this section for HEADER ::</h3>
       <h3>this section for HEADER ::</h3>
-      <h3>this section for HEADER ::</h3>
-      <h3>this section for HEADER ::</h3>
 
       <div className="itemList-con">
-        <h2> :: 자유게시판 :: </h2>
+        <h2> :: 상품목록 :: </h2>
         <table className='item-table'>
           <thead>
             <tr>
@@ -40,7 +39,7 @@ const ShopMainContainer = () => {
             { items.map(list=>(
               <tr key={list.id}>
                 <td>{list.id}</td>
-                <td>{list.itemTitle}</td>
+                <td><Link to={`/store/detail/${list.id}`} className='board-link'>{list.itemTitle}</Link></td>
                 <td>{list.itemPrice}</td>
               </tr>
             ))}

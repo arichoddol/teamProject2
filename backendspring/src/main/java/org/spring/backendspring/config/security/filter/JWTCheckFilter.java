@@ -32,6 +32,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
                 || path.startsWith("/api/member/join")
                 || path.startsWith("/index")
                 || path.startsWith("/member")
+                || path.startsWith("/api/board/index")
                 || path.startsWith("/api/refresh/token");
     }
 

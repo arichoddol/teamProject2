@@ -36,50 +36,17 @@ const CrewDetailLayout = (props) => {
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to={`/crew/board/${id}`} 
-                    end className={({ isActive }) => isActive ? 'board active' : 'board'}>
-                      게시판
-                  </NavLink>
-                </li>
-                <li>
                   <NavLink to={`/crew/photo/${id}`} 
                     end className={({ isActive }) => isActive ? 'photo active' : 'photo'}>
                       사진
                   </NavLink>
                 </li>
-                <li>
-                  <NavLink to={`/crew/chat/${id}`} 
-                    end className={({ isActive }) => isActive ? 'chat active' : 'chat'}>
-                      채팅
-                  </NavLink>
-                </li>
               </ul>
             </div>
           </div>
-
-
-          <div className="crewDetailHome">
-        <div className="crewDetailHome-con">
-            <div className="image">
-            {crew.crewImageEntities?.length > 0 ? (
-              <img
-                src={crew.crewImageEntities[0].newName}
-                alt={`${crew.name} 이미지`}
-                className='crewImage'
-              />
-            ) : (
-              <div>이미지 없음</div>
-            )}
-            </div>
-            <h2>{crew.name}</h2>
-            <p>{crew.description}</p>
-        </div>
       </div>
-
-
           <Outlet/>
-        </div>
-      </div>
+        </div>      
     </>
   )
 }

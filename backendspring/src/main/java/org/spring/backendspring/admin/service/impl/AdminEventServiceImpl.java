@@ -23,7 +23,6 @@ public class AdminEventServiceImpl implements AdminEventService {
 
     private final AdminEventRepository adminEventRepository;
 
-
     @Override
     public EventDto createEvent(EventDto dto) {
         EventEntity entity = EventEntity.builder()
@@ -69,14 +68,20 @@ public class AdminEventServiceImpl implements AdminEventService {
         EventEntity entity = adminEventRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("이벤트가 존재하지 않습니다."));
 
-        entity.setEventTitle(dto.getEventTitle());
-        entity.setEventLink(dto.getEventLink());
-        entity.setEventDescription(dto.getEventDescription());
-        entity.setStartDate(dto.getStartDate());
-        entity.setEndDate(dto.getEndDate());
-        entity.setUpdateTime(LocalDateTime.now());
+        EventEntity updated = EventEntity.builder()
+                .id(entity.getId())
+                .eventTitle(dto.getEventTitle())
+                .eventLink(dto.getEventLink())
+                .eventDescription(dto.getEventDescription())
+                .startDate(dto.getStartDate())
+                .endDate(dto.getEndDate())
+                .createTime(entity.getCreateTime())
+                .updateTime(LocalDateTime.now())
+                .build();
 
-        return EventDto.fromEntity(adminEventRepository.save(entity));
+        EventEntity saved = adminEventRepository.save(updated);
+
+        return EventDto.fromEntity(saved);
     }
 
     @Override

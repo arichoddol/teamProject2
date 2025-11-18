@@ -20,7 +20,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -37,9 +36,9 @@ public class CrewCreateRequestServiceImpl implements CrewCreateRequestService {
     private final TopicExchange topicExchange;
 
     @Override
-    public void createRequest(@Valid CrewCreateRequestDto dto) {
+    public void createRequest(CrewCreateRequestDto dto, Long loginUserId) {
         
-        MemberEntity member = memberRepository.findById(dto.getMemberId())
+        MemberEntity member = memberRepository.findById(loginUserId)
                         .orElseThrow(() -> new IllegalArgumentException("등록되지 않은 회원"));
 
         dto.setMemberEntity(member);

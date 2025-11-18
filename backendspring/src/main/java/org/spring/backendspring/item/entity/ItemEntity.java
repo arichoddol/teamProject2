@@ -91,6 +91,7 @@ public class ItemEntity extends BasicTime{
                     .itemDetail(itemDto.getItemDetail())
                     .itemPrice(itemDto.getItemPrice())
                     .itemSize(itemDto.getItemSize())
+                    .memberEntity(itemDto.getMemberEntity())
                     .attachFile(attachFileValue)
         .build();
 

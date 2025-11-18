@@ -6,14 +6,14 @@ import org.spring.backendspring.crew.crewBoard.dto.CrewBoardCommentDto;
 
 public interface CrewBoardCommentService {
 
-    CrewBoardCommentDto writeComment(CrewBoardCommentDto commentDto);
+    CrewBoardCommentDto createComment(CrewBoardCommentDto commentDto, Long boardId, Long loginUserId);
 
-    List<CrewBoardCommentDto> commentList(Long boardId);
+    List<CrewBoardCommentDto> commentList(Long crewId, Long boardId);
 
-    CrewBoardCommentDto commentDetail(Long id);
+    CrewBoardCommentDto commentDetail(Long boardId, Long id);
 
-    CrewBoardCommentDto updateComment(CrewBoardCommentDto crewBoardCommentDto);
+    CrewBoardCommentDto updateComment(Long id, CrewBoardCommentDto crewBoardCommentDto, Long loginUserId);
 
-    void deleteComment(Long id);
+    void deleteComment(Long id, Long loginUserId);
 
 }

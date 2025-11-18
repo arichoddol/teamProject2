@@ -20,8 +20,10 @@ const beforeReq = (config) => {
   const accessToken = store.getState().jwtSlice.accessToken;
   // const memberInfo = getCookie("member");
   // header에 access 토큰이 없으면 로그인 안되어있는걸로 간주
+  
   if(!accessToken) {
     console.log("Member Not Found");
+  
     return Promise.reject({
         response:
         { data: { error: "REQUIRE_LOGIN" } }
@@ -52,13 +54,11 @@ const responseFail = async (err) => {
     try {
       rs = await refreshTokenFn();
       const id = store.getState().loginSlice.id;
-      const userEmail = store.getState().loginSlice.userEmail;
       const isLogin = store.getState().loginSlice.isLogin;
   
       const memberData = {
           id: id,
           status: isLogin,
-          userEmail: userEmail
           }
 
       const memberValue = JSON.stringify(memberData);

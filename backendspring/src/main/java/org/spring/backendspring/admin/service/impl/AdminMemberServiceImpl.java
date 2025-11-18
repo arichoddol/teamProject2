@@ -36,7 +36,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
         if (keyword == null || keyword.trim().isEmpty()) {
             // 검색어 없을 때 → 전체조회
             memberPage = memberRepository.findAll(pageable)
-                    .map(entity -> MemberMapper.toDto(entity));
+                    .map(MemberMapper::toDto);
         } else {
             // 검색어 있을 때 → 이메일 or 닉네임 검색
             memberPage = adminMemberRepository

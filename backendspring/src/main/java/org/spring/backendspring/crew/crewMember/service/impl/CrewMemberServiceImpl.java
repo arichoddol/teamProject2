@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 public class CrewMemberServiceImpl implements CrewMemberService {
 
     private final CrewMemberRepository crewMemberRepository;
-
     @Override
     public List<CrewMemberDto> findCrewMemberList(Long crewId) {
 
@@ -36,6 +35,5 @@ public class CrewMemberServiceImpl implements CrewMemberService {
         return crewMemberRepository.findByCrewEntityIdAndMemberEntityId(crewId,crewMemberId)
                 .map(CrewMemberDto::toCrewMember).orElseThrow(()->new IllegalArgumentException("크루원이 존재하지않음"));
     }
-
 
 }

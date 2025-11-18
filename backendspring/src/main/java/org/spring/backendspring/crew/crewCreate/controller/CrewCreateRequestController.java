@@ -20,13 +20,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("/api/crew/create")
+@RequestMapping("/api/crew/create/request")
 @RequiredArgsConstructor
 public class CrewCreateRequestController {
     
     private final CrewCreateRequestService createRequestService;
 
-    @PostMapping("/request")
+    @PostMapping({"/", ""})
     public ResponseEntity<?> createRequest(@Valid @RequestBody CrewCreateRequestDto crewCreateRequestDto,
                                            BindingResult bindingResult,
                                            @AuthenticationPrincipal MyUserDetails userDetails) {
@@ -34,9 +34,10 @@ public class CrewCreateRequestController {
             return ResponseEntity.badRequest().body(Map.of("message", "입력 오류"));
         }
 
-        // Long memberId = userDetails.getMemberEntity().getId();
+        Long loginUserId = userDetails.getMemberId();
         // crewCreateRequestDto.setMemberId(memberId);
-        createRequestService.createRequest(crewCreateRequestDto);
+        createRequestService.createRequest(crewCreateRequestDto, loginUserId);
+        crewCreateRequestDto.setMemberId(loginUserId);
 
         return ResponseEntity.ok().body(Map.of("message", "크루 신청 성공"));
 
@@ -59,7 +60,4 @@ public class CrewCreateRequestController {
         return ResponseEntity.ok().body(Map.of
                         ("message", "크루 신청 거절 완료", "requestId", requestId));
     }
-    
-
-    
 }
