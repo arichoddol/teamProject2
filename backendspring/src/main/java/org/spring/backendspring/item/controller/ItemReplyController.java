@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
+// temp
 @RestController
 @RequestMapping("/api/itemReply")
 @RequiredArgsConstructor
