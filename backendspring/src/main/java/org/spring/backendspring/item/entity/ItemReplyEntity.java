@@ -56,4 +56,10 @@ public class ItemReplyEntity extends BasicTime {
 
         .build();
     }
+
+    public void updateFromDto(ItemReplyDto dto) {
+        if (dto.getContent() != null) {
+            this.content = dto.getContent();
+        }
+    }
 }

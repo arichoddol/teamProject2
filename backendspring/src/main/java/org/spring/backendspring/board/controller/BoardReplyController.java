@@ -43,8 +43,7 @@ public class BoardReplyController {
     @PostMapping("/addReply")
     public ResponseEntity<?> writeReply( @RequestBody BoardReplyDto boardReplyDto){
     
-        
-        // >>>BoardReplyDto(id=null, boardId=null, memberId=null, title=null, content=ㅇㅇ, createTime=null, upDateTime=null, boardEntity=null, memberEntity=null)
+    
         System.out.println(">>>" +boardReplyDto);
         boardReplyService.insertReply(boardReplyDto);
         return ResponseEntity.ok("reply Added.");
