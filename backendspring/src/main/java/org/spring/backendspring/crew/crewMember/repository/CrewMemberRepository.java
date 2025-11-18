@@ -9,5 +9,8 @@ import java.util.Optional;
 public interface CrewMemberRepository extends JpaRepository<CrewMemberEntity, Long> {
 
     Optional<CrewMemberEntity> findByCrewEntityIdAndMemberEntityId(Long crewId, Long memberId);
+
     List<CrewMemberEntity> findAllByCrewEntityId(Long crewId);
+
+    List<CrewMemberEntity> findByMemberEntity_id(Long memberId);
 }

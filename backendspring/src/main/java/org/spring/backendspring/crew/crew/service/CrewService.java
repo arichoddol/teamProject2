@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.spring.backendspring.crew.crew.dto.CrewDto;
+import org.spring.backendspring.crew.crewMember.dto.CrewMemberDto;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface CrewService {
@@ -20,6 +21,7 @@ public interface CrewService {
 
     List<CrewDto> findAllCrew();
 
+    List<CrewMemberDto> findMyAllCrew(Long memberId);
+
     List<CrewDto> mycrewList(Long memberId);
-    
 }
