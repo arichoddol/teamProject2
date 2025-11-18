@@ -1,0 +1,68 @@
+.admin-item-detail {
+    background: #e1e1e1;
+    margin: 20px;
+    padding: 40px;
+    border-radius: 8px;
+  }
+  
+  /* 제목 */
+  .admin-item-detail h2 {
+    margin-bottom: 20px;
+    font-size: 22px;
+  }
+  
+  /* 폼 기본 */
+  .admin-item-detail form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: #f7f7f7;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  /* 라벨 */
+  .admin-item-detail label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  /* 인풋 공통 */
+  .admin-item-detail input,
+  .admin-item-detail textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+  }
+  
+  /* 텍스트 영역 */
+  .admin-item-detail textarea {
+    height: 120px;
+    resize: none;
+  }
+  
+  /* 이미지 */
+  .admin-item-detail img {
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+  
+  /* 버튼 */
+  .admin-item-detail button {
+    padding: 12px;
+    border: none;
+    background-color: #777777;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .admin-item-detail button:hover {
+    background-color: #666666;
+  }
+  

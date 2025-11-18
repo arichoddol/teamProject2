@@ -4,6 +4,7 @@ import org.spring.backendspring.admin.repository.AdminPaymentRepository;
 import org.spring.backendspring.admin.service.AdminPaymentService;
 import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.payment.dto.PaymentDto;
+import org.spring.backendspring.payment.dto.PaymentItemDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,5 +35,11 @@ public class AdminPaymentServiceImpl implements AdminPaymentService {
                     .map(entity -> PaymentDto.fromEntity(entity));
         }
         return PagedResponse.of(paymentPage);
+    }
+
+    @Override
+    public PaymentItemDto getPaymentItemsByPaymentId(Long paymentId) {
+        return adminPaymentRepository.findPaymentItemsByPaymentId(paymentId)
+        .orElseThrow(() -> new IllegalArgumentException("결제정보를 찾을 수 없습니다"));
     }
 }

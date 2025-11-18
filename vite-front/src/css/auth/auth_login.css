@@ -90,6 +90,7 @@
     background-color: rgba(115, 190, 255, 0.5);
     padding: 5vw;
     border-radius: 15px;
+}
 
 .login-bottom img:hover {
   transform: scale(1.05);

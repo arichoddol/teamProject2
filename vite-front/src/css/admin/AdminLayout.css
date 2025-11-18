@@ -1,0 +1,15 @@
+.admin-container{
+    display: flex;
+    height: calc(100vh - 85px);
+
+}
+
+.admin-container-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    background: #cececedc;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+  
