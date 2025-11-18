@@ -56,6 +56,7 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
         MyUserDetails myUserDetails = (MyUserDetails) authResult.getPrincipal();
         String userEmail = myUserDetails.getUsername();
         Long id = myUserDetails.getMemberId();
+        String nickName = myUserDetails.getNickName();
         System.out.println(id + " <<< memberId");
 
         String role = authResult.getAuthorities()
@@ -86,6 +87,7 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
                 .id(id)
                 .accessToken(accessToken)
                 .userEmail(userEmail)
+                .nickName(nickName)
                 .role(normalized)
                 .build();
 

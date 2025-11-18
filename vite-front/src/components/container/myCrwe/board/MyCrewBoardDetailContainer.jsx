@@ -7,7 +7,8 @@ const MyCrewBoardDetailContainer = () => {
   const { boardId, crewId } = useParams();
   const navigate = useNavigate();
   const { accessToken } = useSelector((state) => state.jwtSlice);
-  const { userEmail, id } = useSelector((state) => state.loginSlice);
+  const { userEmail } = useSelector((state) => state.loginSlice);
+  const loginMemberId = useSelector((state) => state.loginSlice.id)
 
   const [board, setBoard] = useState({});
   const [comment, setComment] = useState("");
@@ -53,7 +54,7 @@ const MyCrewBoardDetailContainer = () => {
   const submitComment = async () => {
     if (!comment.trim()) return;
     try {
-      const res = await axios.post(`/api/mycrew/${crewId}/board/${boardId}/comment/create`,
+      const res = await axios.post(`/api/mycrew/${crewId}/board/${boardId}/comment/write`,
         {
           content: comment,
         }
@@ -67,7 +68,7 @@ const MyCrewBoardDetailContainer = () => {
   } 
 
   const deleteComment = async (commentId, writerId) => {
-    if (writerId !== id) {
+    if (writerId !== loginMemberId) {
       alert("댓글 작성인만 삭제 가능");
       return;
     }
@@ -88,6 +89,9 @@ const MyCrewBoardDetailContainer = () => {
 
   //   }
   // }
+
+  console.log(loginMemberId)
+  console.log(board.memberId)
 
   return (
     <div className="crewBoardDetail">
@@ -123,7 +127,7 @@ const MyCrewBoardDetailContainer = () => {
             <button onClick={() => navigate(`/mycrew/${crewId}/board/create`)}>글작성</button>
             <button onClick={() => navigate(`/mycrew/${crewId}/board/list`)}>글목록</button>
           </li>
-          {board.memberId === id && (
+          {board.memberId === loginMemberId && (
             <li>
               <button onClick={() => navigate(`/mycrew/${crewId}/board/update/${boardId}`)}>수정</button>
               <button onClick={deleteBoard}>삭제</button>
@@ -153,7 +157,7 @@ const MyCrewBoardDetailContainer = () => {
                 <div className="commentContent">
                   {comment.content}
                 </div>
-                {comment.memberId === id && (
+                {comment.memberId === loginMemberId && (
                 <div className="commentBtn">
                   {/* <button onClick={}>수정</button> */}
                   <button onClick={() => deleteComment(comment.id, comment.memberId)}>삭제</button>

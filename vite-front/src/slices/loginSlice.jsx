@@ -5,6 +5,7 @@ const initState = {
   id: "",
   userEmail: "",
   role: "",
+  nickName: "",
   isLogin: false
 }
 
@@ -22,6 +23,7 @@ const loginSlice = createSlice({
         id: data.id,
         userEmail: data.userEmail,
         role: data.role,
+        nickName: data.nickName,
         isLogin: data.isLogin
       };
     },

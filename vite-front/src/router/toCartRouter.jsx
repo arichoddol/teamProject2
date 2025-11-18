@@ -6,13 +6,12 @@ const CartPage = lazy(() => import('../components/container/cart/CartPage'));
 export default function toCartRouter() {
   return [
     {
-      path: "", // 상위 /cart와 합쳐져서 최종 URL은 /cart
+      path: ":memberId", // /cart/:memberId
       element: (
-        <Suspense fallback={Loading}>
+        <Suspense fallback={<div className='loading'>Loading..</div>}>
           <CartPage />
         </Suspense>
       ),
     },
   ];
 }
-

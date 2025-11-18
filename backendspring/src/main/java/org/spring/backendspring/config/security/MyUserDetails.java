@@ -61,6 +61,10 @@ public class MyUserDetails implements UserDetails, OAuth2User {
         return memberEntity.getId();
     }
 
+    public String getNickName() {
+        return memberEntity.getNickName();
+    }
+
     // 소셜 이름
     @Override
     public String getName() {

@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
@@ -47,8 +46,9 @@ public class CrewBoardController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createBoard(@PathVariable("crewId") Long crewId,
-                                         @RequestBody CrewBoardDto crewBoardDto,
-                                         @AuthenticationPrincipal MyUserDetails userDetails) throws IOException {
+                                         @ModelAttribute CrewBoardDto crewBoardDto,
+                                         @AuthenticationPrincipal MyUserDetails userDetails
+                                         ) throws IOException {
         Long loginUserId = userDetails.getMemberId();
         CrewBoardDto createBoard = crewBoardService.createBoard(crewId, crewBoardDto, loginUserId);
         

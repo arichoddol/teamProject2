@@ -9,6 +9,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,27 +23,38 @@ import lombok.RequiredArgsConstructor;
 public class ItemController {
 
     private final ItemService itemService;
+    
 
 
     @GetMapping("")
-    public ResponseEntity<Page<ItemDto>> itemList(@PageableDefault(size = 10) Pageable pageable){
+    public ResponseEntity<Page<ItemDto>> itemList(@PageableDefault(size = 8) Pageable pageable){
 
+        // ItemServiceImpl에서 구현된 페이징 및 검색 기능을 사용합니다.
         Page<ItemDto> itemList = itemService.pagingSearchItemList(pageable, null, null);
 
         return ResponseEntity.ok(itemList);
-        // temp
-
     }
 
     @GetMapping("/search")
     public ResponseEntity<Page<ItemDto>> itemSearchList(
-        @PageableDefault(size = 10) Pageable pageable,
+        @PageableDefault(size = 8) Pageable pageable,
         @RequestParam(required = false) String subject, 
         @RequestParam(required =  false) String search) {
 
             Page<ItemDto> itemList = itemService.pagingSearchItemList(pageable, subject, search);
             return ResponseEntity.ok(itemList);
-        }
+    }
+
+    // URL: http://localhost:8088/api/shop/detail/{id}
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<?> getBoardDetail(@PathVariable("id") Long id) {
+
+        // Bring Id(Long id ) = > item ID 
+        // BoardDto boardDto = boardService.boardDetail(id);
+        ItemDto itemDto = itemService.itemDetail(id);
+
+        return ResponseEntity.ok(itemDto);
+    }
     
     
 }

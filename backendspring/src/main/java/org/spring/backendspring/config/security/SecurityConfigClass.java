@@ -53,6 +53,11 @@ public class SecurityConfigClass {
                     .requestMatchers(
                             "/api/crew/create/approved",
                             "/api/crew/create/rejected").hasRole("ADMIN")
+                    .requestMatchers(
+                            "/api/board/newPost",
+                            "/api/board/write",
+                            "/api/board/update/**",
+                            "/api/board/updatePost").authenticated()
                     .requestMatchers("/api/member/**").permitAll()
                     .requestMatchers("/login", "/logout", "/api/**", "/index").permitAll()
                     .requestMatchers("/**").permitAll(); // css, js 파일 허용
