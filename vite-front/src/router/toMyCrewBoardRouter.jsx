@@ -3,10 +3,10 @@ import { Navigate } from 'react-router-dom'
 
 const Loading = <div className='loading'>Loading...</div>
 
-const MyCrewBoardMain = lazy(() => import('../components/container/myCrwe/board/MyCrewBoardContainer'))
-const MyCrewBoardCreate = lazy(()=> import('../components/container/myCrwe/board/MyCrewBoardCreateContainer'))
-const MyCrewBoardDetail = lazy(() => import('../components/container/myCrwe/board/MyCrewBoardDetailContainer'))
-const MyCrewBoardUpdate = lazy(() => import('../components/container/myCrwe/board/MyCrewBoardUpdateContainer'))
+const MyCrewBoardMain = lazy(() => import('../components/container/myCrew/board/MyCrewBoardContainer'))
+const MyCrewBoardCreate = lazy(()=> import('../components/container/myCrew/board/MyCrewBoardCreateContainer'))
+const MyCrewBoardDetail = lazy(() => import('../components/container/myCrew/board/MyCrewBoardDetailContainer'))
+const MyCrewBoardUpdate = lazy(() => import('../components/container/myCrew/board/MyCrewBoardUpdateContainer'))
 
 const toMyCrewBoardRouter = () => {
   return (

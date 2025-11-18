@@ -7,8 +7,8 @@ const MyCrewBoardUpdateContainer = () => {
   const { crewId, boardId } = useParams();
   const navigate = useNavigate();
   const { accessToken } = useSelector((state) => state.jwtSlice);
-  const { userEmail } = useSelector((state) => state.loginSlice);  // 닉네임이 슬라이스에 있으면 좋겠당
-  //   const { nickName } = useSelector((state) => state.loginSlice);
+//   const { userEmail } = useSelector((state) => state.loginSlice);  // 닉네임이 슬라이스에 있으면 좋겠당
+  const { nickName } = useSelector((state) => state.loginSlice);
 
   const [board, setBoard] = useState([]);
   const [title, setTitle] = useState('');
@@ -20,11 +20,7 @@ const MyCrewBoardUpdateContainer = () => {
   useEffect(() => {
       const fetchBoard = async () => {
         try {
-            const res = await axios.get(`/api/mycrew/${crewId}/board/detail/${boardId}`,
-                {
-                    headers: { Authorization: `Bearer ${accessToken}`}
-                }
-            );
+            const res = await axios.get(`/api/mycrew/${crewId}/board/detail/${boardId}`);
             setBoard(res.data.boardDetail);
             setTitle(res.data.boardDetail.title);
             setContent(res.data.boardDetail.content);
@@ -53,6 +49,9 @@ const MyCrewBoardUpdateContainer = () => {
   };
 
   const update = async (el) => {
+    console.log(accessToken)
+    console.log(nickName)
+
     el.preventDefault();
     try {
         const formData = new FormData();
@@ -97,7 +96,7 @@ const MyCrewBoardUpdateContainer = () => {
                             name="content" 
                             id="content"
                             value={content}
-                            onChange={(e) => setContent(el.target.value)}
+                            onChange={(el) => setContent(el.target.value)}
                             required
                             placeholder='내용'
                         />
@@ -121,7 +120,7 @@ const MyCrewBoardUpdateContainer = () => {
                     </div>
                     <div className="boardCreater">
                         <label className="memberNickName">작성자</label>
-                        <input type="text" value={userEmail} readOnly/>
+                        <input type="text" value={nickName} readOnly/>
                     </div>
                     <button className="boardUpdate" type="submit">수정완료</button>
                 </div>

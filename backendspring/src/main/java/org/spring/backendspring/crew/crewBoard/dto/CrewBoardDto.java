@@ -73,8 +73,8 @@ public class CrewBoardDto {
                 .crewId(entity.getCrewEntity().getId())
                 .memberId(entity.getMemberEntity().getId())
                 .memberNickName(entity.getMemberEntity().getNickName())
-                .crewBoardCommentEntities(entity.getCrewBoardCommentEntities())
-                .crewBoardImageEntities(entity.getCrewBoardImageEntities())
+                // .crewBoardCommentEntities(entity.getCrewBoardCommentEntities())
+                // .crewBoardImageEntities(entity.getCrewBoardImageEntities())
                 .createTime(entity.getCreateTime())
                 .updateTime(entity.getUpdateTime())
                 .build();

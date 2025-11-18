@@ -7,8 +7,7 @@ const MyCrewBoardCreateContainer = () => {
   const { crewId } = useParams();
   const navigate = useNavigate();
   const { accessToken } = useSelector((state) => state.jwtSlice);
-  const { userEmail } = useSelector((state) => state.loginSlice);  // 닉네임이 슬라이스에 있으면 좋겠당
-  //   const { nickName } = useSelector((state) => state.loginSlice);
+  const { userEmail, nickName } = useSelector((state) => state.loginSlice);  // 닉네임이 슬라이스에 있으면 좋겠당
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -77,7 +76,7 @@ const MyCrewBoardCreateContainer = () => {
                     </div>
                     <div className="boardCreater">
                         <label className="memberNickName">작성자</label>
-                        <input type="text" value={userEmail} readOnly/>
+                        <input type="text" value={nickName} readOnly/>
                     </div>
                     <button className="boardCreate" type="submit">작성완료</button>
                 </div>

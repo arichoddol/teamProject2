@@ -11,6 +11,7 @@ import org.spring.backendspring.crew.crew.repository.CrewImageRepository;
 import org.spring.backendspring.crew.crew.repository.CrewRepository;
 import org.spring.backendspring.crew.crew.service.CrewService;
 import org.spring.backendspring.crew.crewMember.entity.CrewMemberEntity;
+import org.spring.backendspring.crew.crewMember.repository.CrewMemberRepository;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
 import org.spring.backendspring.s3.AwsS3Service;
@@ -27,6 +28,7 @@ public class CrewServiceImpl implements CrewService {
 
     private final CrewRepository crewRepository;
     private final CrewImageRepository crewImageRepository;
+    private final CrewMemberRepository crewMemberRepository;
     private final MemberRepository memberRepository;
     private final AwsS3Service awsS3Service;
 
@@ -149,10 +151,7 @@ public class CrewServiceImpl implements CrewService {
 
     @Override
     public List<CrewDto> mycrewList(Long memberId) {
-        MemberEntity member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원"));
-        
-        List<CrewEntity> mycrewList = member.getCrewEntityList();
+        List<CrewEntity> mycrewList = crewMemberRepository.findByMemberEntity_Id(memberId);
 
         return mycrewList.stream()
                     .map(CrewDto::toCrewDto)

@@ -44,7 +44,11 @@ const MyCrewBoardDetailContainer = () => {
     if (!window.confirm('게시글을 삭제하시겠습니까?')) return;
 
     try {
-      await axios.delete(`/api/mycrew/${crewId}/board/delete/${boardId}`);
+      await axios.delete(`/api/mycrew/${crewId}/board/delete/${boardId}`,
+        { headers: {
+            Authorization: `Bearer ${accessToken}`
+        }}
+      );
       navigate(`/mycrew/${crewId}/board/list`)
     } catch (err) {
       console.error("게시글 삭제 실패", err);
@@ -55,9 +59,10 @@ const MyCrewBoardDetailContainer = () => {
     if (!comment.trim()) return;
     try {
       const res = await axios.post(`/api/mycrew/${crewId}/board/${boardId}/comment/write`,
-        {
-          content: comment,
-        }
+        { content: comment },
+        { headers: {
+            Authorization: `Bearer ${accessToken}`
+        }}
       );
       console.log(res.data);
       setComment(""); 
@@ -73,7 +78,11 @@ const MyCrewBoardDetailContainer = () => {
       return;
     }
     try {
-      await axios.delete(`/api/mycrew/${crewId}/board/${boardId}/comment/delete/${commentId}`);
+      await axios.delete(`/api/mycrew/${crewId}/board/${boardId}/comment/delete/${commentId}`,
+        { headers: {
+            Authorization: `Bearer ${accessToken}`
+        }}
+      );
       fetchComments();
     } catch (err) {
       console.error("댓글 삭제 실패", err)
@@ -92,6 +101,7 @@ const MyCrewBoardDetailContainer = () => {
 
   console.log(loginMemberId)
   console.log(board.memberId)
+  console.log(accessToken)
 
   return (
     <div className="crewBoardDetail">

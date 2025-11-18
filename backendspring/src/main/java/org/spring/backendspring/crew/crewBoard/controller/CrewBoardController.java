@@ -16,6 +16,7 @@ import java.util.Map;
 import org.spring.backendspring.config.security.MyUserDetails;
 import org.spring.backendspring.crew.crewBoard.dto.CrewBoardDto;
 import org.spring.backendspring.crew.crewBoard.service.CrewBoardService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -55,8 +56,8 @@ public class CrewBoardController {
         return ResponseEntity.ok(createBoard);
     }
 
-    @GetMapping("/detail/{crewBoardId}")
-    public ResponseEntity<?> boardDetail(@PathVariable("crewBoardId") Long id,
+    @GetMapping("/detail/{boardId}")
+    public ResponseEntity<?> boardDetail(@PathVariable("boardId") Long id,
                                          @PathVariable("crewId") Long crewId) {
 
         CrewBoardDto crewBoardDto = crewBoardService.boardDetail(crewId, id);
@@ -68,13 +69,17 @@ public class CrewBoardController {
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/update/{crewBoardId}")
-    public ResponseEntity<?> updateBoard(@PathVariable("crewBoardId") Long id,
+    @PutMapping("/update/{boardId}")
+    public ResponseEntity<?> updateBoard(@PathVariable("boardId") Long id,
                                          @PathVariable("crewId") Long crewId,
                                          @ModelAttribute CrewBoardDto crewBoardDto,
                                          @RequestParam(value = "newImages", required = false) List<MultipartFile> newImages,
                                          @RequestParam(value = "deleteImageId", required = false) List<Long> deleteImageId,
                                          @AuthenticationPrincipal MyUserDetails userDetails) throws IOException {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "로그인이 필요합니다."));
+        }
         Long loginUserId = userDetails.getMemberId();
 
         CrewBoardDto updateBoardDto = crewBoardService.updateBoard(id, crewId, crewBoardDto, loginUserId, newImages, deleteImageId);
@@ -86,8 +91,8 @@ public class CrewBoardController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/delete/{crewBoardId}")
-    public ResponseEntity<?> deleteBoard(@PathVariable("crewBoardId") Long id,
+    @DeleteMapping("/delete/{boardId}")
+    public ResponseEntity<?> deleteBoard(@PathVariable("boardId") Long id,
                                          @PathVariable("crewId") Long crewId,
                                          @AuthenticationPrincipal MyUserDetails userDetails) {
         
