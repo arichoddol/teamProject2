@@ -2,16 +2,24 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
+import "../../../css/board/boardDetail.css"
+
 
 
 const BoardDetailContainer = () => {
 
 
+
     // boards 상태를 빈 객체로 초기화합니다.
     const [boards, setBoards] = useState({});
     const [content, setContent] = useState('');
-    const [replies, setReplies] = useState([]); // 댓글 목록 상태
-    const [pageInfo, setPageInfo] = useState({ // 페이지네이션 정보 상태 (first: true 추가)
+
+    // Editing
+    const [editingReplyId, setEditingReplyId] = useState(null); 
+    const [editingContent, setEditingContent] = useState(''); 
+
+    const [replies, setReplies] = useState([]); 
+    const [pageInfo, setPageInfo] = useState({ 
         page: 0,
         size: 10,
         totalPages: 0,
@@ -27,10 +35,10 @@ const BoardDetailContainer = () => {
     const API_BASE_URL = 'http://localhost:8088/api/board';
     const IMAGE_BASE_URL = 'http://localhost:8088/upload/';
     // private static final String FILE_PATH = "C:/full/upload/";
-    //
+    
 
 
-    // 날짜 포맷 함수 (컴포넌트 내부에 정의)
+
     const formatDate = (dateString) => {
         if (!dateString) return '';
         return new Date(dateString).toLocaleString('ko-KR', {
@@ -40,7 +48,7 @@ const BoardDetailContainer = () => {
         });
     }
 
-    // 게시글 상세 정보를 불러오는 함수
+
     const fetchData = async ()=>{
       const response = await axios.get(`${API_BASE_URL}/detail/${id}`);
 
@@ -80,12 +88,9 @@ const BoardDetailContainer = () => {
     }
 
 
-    useEffect(()=>{
-        fetchData();  
-    }, [id]);   // id가 변경될 때마다 재실행
 
 
-    // 페이지네이션 버튼 클릭 핸들러
+
     const handlePageChange = (newPage) => {
         if (newPage >= 0 && newPage < pageInfo.totalPages) {
             fetchReplies(boards.id, newPage, pageInfo.size);
@@ -94,7 +99,7 @@ const BoardDetailContainer = () => {
 
 
     const handleDelete = async () => {
-        // ... (삭제 로직은 유지)
+    
         if (!window.confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
             return; 
         }
@@ -121,32 +126,105 @@ const BoardDetailContainer = () => {
     const handleUpdatePost = (boardId) =>{
         navigate(`/board/update/${boardId}`);
     }
+    const handleReplyUpdate = async(replyId, currentContent) => {
+        setEditingReplyId(replyId);
+        setEditingContent(currentContent);
+    }
+    const handleReplyEditSubmit = async (replyId) => {
+        if (!editingContent.trim()) {
+            alert('수정할 내용을 입력해주세요.');
+            return;
+        }
+        const updatedReplyData = {
+            id: replyId,
+            boardId: boards.id,
+            content: editingContent.trim(),
+            memberId: boards.memberId // 권한 확인을 위해 현재 로그인된 사용자 ID 전송
+        };
+        console.log("전송할 댓글 수정 데이터:", updatedReplyData);
+        try{
+            const response = await axios.put(`${REPLY_BASE_URL}/updateReply`, updatedReplyData);
+        
+         if (response.status === 200) {
+                alert('댓글이 성공적으로 수정되었습니다.');
+                handleReplyEditCancel(); // 수정 모드 종료
+                // 현재 페이지의 댓글 목록을 갱신합니다.
+                fetchReplies(boards.id, pageInfo.page, pageInfo.size);
+            } else {
+                throw new Error("댓글 수정 요청 실패");
+            }
+
+        } catch (error) {
+            console.error('댓글 수정 중 오류 발생:', error);
+            const errorMessage = error.response?.data || '댓글 수정 중 오류가 발생했습니다.';
+            alert(errorMessage); // 백엔드에서 던진 권한 에러 메시지 등을 사용자에게 표시
+        }
+        
+    }
+
+    // Editing Reply Section
+    const handleReplyEditCancel = () => {
+        setEditingReplyId(null);
+        setEditingContent('');
+    }
+
+    const handleReplyDelete = async(replyId) => {
+        if (!window.confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
+            return;
+        }
+        if (!boards.memberId) {
+            alert('삭제 권한 확인을 위한 로그인 정보가 없습니다.');
+            return;
+        }
+        try{
+           const response = await axios.delete(`${REPLY_BASE_URL}/deleteReply/${replyId}`, {
+                params: {
+                    memberId: boards.memberId // 쿼리 파라미터로 memberId 전송
+                }
+            });
+            if (response.status === 200 || response.status === 204) {
+                alert('댓글이 성공적으로 삭제되었습니다.');
+                // 댓글 삭제 후 현재 페이지의 댓글 목록을 갱신합니다.
+                fetchReplies(boards.id, pageInfo.page, pageInfo.size);
+            } else {
+                throw new Error("댓글 삭제 요청 실패");
+            }
+        } catch (error) {
+            console.error('댓글 삭제 중 오류 발생:', error);
+            const errorMessage = error.response?.data?.message || '댓글 삭제 중 오류가 발생했습니다.';
+            alert(errorMessage); // 백엔드에서 던진 권한 에러 메시지 등을 사용자에게 표시
+        }
+        
+    }
 
 
-    // 댓글 등록 핸들러 (이전 코드에서 함수가 중첩되거나 닫히지 않은 오류 수정)
+    useEffect(()=>{
+        fetchData();  
+    }, [id]);  
+
+
+
+
+    
     const handleReplySubmit = async(e)=>{
         e.preventDefault();
 
-        // boards.memberId는 현재 게시글 작성자 ID를 임시로 사용 중
         if(!boards.id || !content.trim() || !boards.memberId){ 
             alert('댓글 내용 및 작성자 정보가 필요합니다.');
             return;
         }
-
         const replyData = {
             boardId: boards.id,
             content: content.trim(),
             memberId: boards.memberId
         };
         console.log("전송할 댓글 데이터:", replyData);
-
         try{
             const response = await axios.post(`${REPLY_BASE_URL}/addReply`, replyData);
 
             if (response.status === 200) {
                 alert('댓글이 성공적으로 등록되었습니다.');
-                setContent(''); // 입력창 초기화
-                // 댓글 등록 성공 시, 목록을 첫 페이지(0)로 갱신하여 최신 댓글 표시
+                setContent(''); 
                 fetchReplies(boards.id, 0, pageInfo.size); 
             } else { 
                 throw new Error("댓글 등록 실패 "); 
@@ -155,24 +233,27 @@ const BoardDetailContainer = () => {
             console.error('댓글 등록 중 오류 발생:', error);
             alert('댓글 등록 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
         }
-    }; // <-- handleReplySubmit 함수가 여기서 올바르게 닫힙니다.
+    };
 
     
     return (
-    
-        <div className="boardDetail">
-            {/* 게시글 제목 */}
-            <h4>{boards.title}</h4>  
+        
+        <div className="upper-boardDetail">
+           
+         <div className="boardDetail">
+   
+          
             <div className="boardDetail-con-info">
-                <span>작성자 : {boards.memberNickName} </span>
-                <span>조회수 : {boards.hit} </span>
+                <h2>{boards.title} </h2>
+                <h5> 작성자 : {boards.memberNickName} </h5>
+                <h6>조회수 : {boards.hit} </h6>
                 {/* formatDate 함수를 사용하여 날짜 포맷 적용 */}
-                <span>작성일 : {formatDate(boards.createTime)} </span> 
+                <h5>작성일 : {formatDate(boards.createTime)} </h5> 
             </div>
             
             <div className="boardDetail-con">
                 
-                {/* 💡 게시글 본문 내용을 표시하는 부분 복원 및 추가 */}
+                {/* 게시글 본문 내용을 표시하는 부분 */}
                 <p className="boardDetail-content" style={{ whiteSpace: 'pre-wrap', marginBottom: '20px' }}>
                     {boards.content}
                 </p> 
@@ -192,7 +273,7 @@ const BoardDetailContainer = () => {
                     )}
                 </div>
                 
-                {/* 💡 댓글 섹션 */}
+                {/* 댓글 섹션 */}
                 <div className="boardDetail-reply" style={{ marginTop: '30px' }}>
                     
                     {/* 1. 댓글 입력 폼 */}
@@ -205,36 +286,78 @@ const BoardDetailContainer = () => {
                         ></textarea>
                         <button type="submit">댓글 등록</button>
                     </form>
+                    {/* <button onClick={handleReplyDelete}>댓글 수정</button>
+                    <button>댓글 삭제</button> */}
 
-                    {/* 2. 댓글 목록 표시 */}
+
+                    {/* 댓글 목록 표시 */}
                     <div className="reply-list mt-8 border-t pt-4">
                         <h5>댓글 ({pageInfo.totalElements})</h5>
                         {replies.length > 0 ? (
                             replies.map((reply) => (
-                                <div key={reply.id} className="reply-item p-3 border-b border-gray-200">
-                                    <div className="flex justify-between text-sm text-gray-600 mb-1">
+                                <div key={reply.id} className="reply-key">
+                                    <div className="reply-key-sub">
                                         <p><strong>{reply.memberNickName || `작성자 ID: ${reply.memberId}`}</strong></p> 
-                                        <span className="text-xs text-gray-400">{formatDate(reply.createTime)}</span>
+                                        <span className="reply-key-createtime">{formatDate(reply.createTime)}</span>
+
+                                   
                                     </div>
-                                    <p className="text-gray-800">{reply.content}</p>
+                                    {/* 수정 */}
+                                    {editingReplyId === reply.id ? (
+                                        <div className="reply-edit-form">
+                                            <textarea
+                                                value={editingContent}
+                                                onChange={(e) => setEditingContent(e.target.value)}
+                                                rows="3"
+                                            ></textarea>
+                                            <div className="reply-edit-buttons">
+                                                <button 
+                                                    onClick={() => handleReplyEditSubmit(reply.id)}>
+                                                    수정 완료
+                                                </button>
+                                                <button 
+                                                    onClick={handleReplyEditCancel}>
+                                                    취소
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        
+                                        <>
+                                            <p className="reply-key-content">{reply.content}</p>
+                                            
+                                            {/* 수정/삭제 버튼: 현재 사용자 ID와 댓글 작성자 ID가 일치할 때만 표시 */}
+                                            {reply.memberId === boards.memberId && (
+                                                <div className="reply-actions">
+                                                    <button 
+                                                        onClick={() => handleReplyUpdate(reply.id, reply.content)}>
+                                                        수정
+                                                    </button>
+                                                    <button 
+                                                        onClick={() => handleReplyDelete(reply.id)}>
+                                                        삭제
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </>
+                                    )}
+                                    <p className="reply-key-content">{reply.content}</p>
                                 </div>
                             ))
                         ) : (
-                            <p className="text-center text-gray-500 py-4">등록된 댓글이 없습니다.</p>
+                            <p className="reply-key-content-none">등록된 댓글이 없습니다.</p>
                         )}
                     </div>
                     
-                    {/* 3. 페이지네이션 UI */}
+                    {/*  페이지네이션 UI */}
                     {pageInfo.totalPages > 1 && (
-                        <div className="flex justify-center items-center space-x-2 mt-4">
+                        <div className="page-button-top">
                             <button
                                 onClick={() => handlePageChange(pageInfo.page - 1)}
                                 disabled={pageInfo.first}
-                                style={{ padding: '5px 10px', border: '1px solid #ccc', borderRadius: '5px' }}
-                            >
+                                style={{ padding: '5px 10px', border: '1px solid #ccc', borderRadius: '5px' }}>
                                 이전
                             </button>
-                            
                             <span style={{ padding: '5px 10px', background: '#eee', borderRadius: '5px', fontWeight: 'bold' }}>
                                 {pageInfo.page + 1} / {pageInfo.totalPages}
                             </span>
@@ -242,8 +365,7 @@ const BoardDetailContainer = () => {
                             <button
                                 onClick={() => handlePageChange(pageInfo.page + 1)}
                                 disabled={pageInfo.last}
-                                style={{ padding: '5px 10px', border: '1px solid #ccc', borderRadius: '5px' }}
-                            >
+                                style={{ padding: '5px 10px', border: '1px solid #ccc', borderRadius: '5px' }}>
                                 다음
                             </button>
                         </div>
@@ -259,6 +381,7 @@ const BoardDetailContainer = () => {
 
             </div>
         </div>
+    </div>
     )
 }
 
