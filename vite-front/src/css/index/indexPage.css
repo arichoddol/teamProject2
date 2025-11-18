@@ -1,6 +1,6 @@
 .index {
 
-    background-image: url('../../../public/images/index.png');
+    background-image: url('images/index.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;

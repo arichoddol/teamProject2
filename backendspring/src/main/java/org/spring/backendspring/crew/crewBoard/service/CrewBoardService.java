@@ -14,7 +14,7 @@ public interface CrewBoardService {
     
     CrewBoardDto updateBoard(Long id, Long crewId, CrewBoardDto crewBoardDto, Long loginUserId, List<MultipartFile> newImages, List<Long> deleteImageId) throws IOException;
     
-    void deleteBoard(Long id, Long loginUserId);
+    void deleteBoard(Long id, Long crewId, Long loginUserId);
 
     List<CrewBoardDto> boardListByCrew(Long crewId);
     
