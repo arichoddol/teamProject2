@@ -27,7 +27,7 @@ const loginSlice = createSlice({
         isLogin: data.isLogin
       };
     },
-    logout: (state, action) => {
+    logoutAction: (state, action) => {
       console.log("logout...");
       state.isLogin = false;
       state.userEmail = "";
@@ -37,5 +37,5 @@ const loginSlice = createSlice({
   }
 })
 
-export const { login, logout } = loginSlice.actions
+export const { login, logoutAction } = loginSlice.actions
 export default loginSlice.reducer

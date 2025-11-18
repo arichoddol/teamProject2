@@ -7,12 +7,12 @@ const Loading = <div className='loading'>Loading...</div>
 
 const MyCrewBoardLayout = lazy(() => import('../layout/MyCrewBoardLayout'))
 
-const MyCrewMain = lazy(()=> import('../components/container/myCrwe/MyCrewMainContainer'))
-const MyCrewjoinRequest = lazy(()=> import('../components/container/myCrwe/MyCrewJoinRequestContainer'))
-const MyCrewMember = lazy(()=> import('../components/container/myCrwe/MyCrewMemberContainer'))
-const MyCrewRun = lazy(()=> import('../components/container/myCrwe/MyCrewRunContainer'))
-const MyCrewBoard = lazy(()=> import('../components/container/myCrwe/board/MyCrewBoardContainer'))
-const MyCrewChat = lazy(()=> import('../components/container/myCrwe/MyCrewChatContainer'))
+const MyCrewMain = lazy(()=> import('../components/container/myCrew/MyCrewMainContainer'))
+const MyCrewjoinRequest = lazy(()=> import('../components/container/myCrew/MyCrewJoinRequestContainer'))
+const MyCrewMember = lazy(()=> import('../components/container/myCrew/MyCrewMemberContainer'))
+const MyCrewRun = lazy(()=> import('../components/container/myCrew/MyCrewRunContainer'))
+const MyCrewBoard = lazy(()=> import('../components/container/myCrew/board/MyCrewBoardContainer'))
+const MyCrewChat = lazy(()=> import('../components/container/myCrew/MyCrewChatContainer'))
 
 const toMyCrewRouter = () => {
   return (

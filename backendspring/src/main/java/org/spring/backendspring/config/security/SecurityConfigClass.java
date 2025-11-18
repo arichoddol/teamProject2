@@ -95,7 +95,7 @@ public class SecurityConfigClass {
         http.oauth2Login(oauth2 ->
                 oauth2.userInfoEndpoint(info ->
                                 info.userService(myDefaultOAuth2UserService()))
-                        .successHandler(new OAuth2SuccessHandler(jwtUtil, memberService))
+                        .successHandler(new OAuth2SuccessHandler(jwtUtil, memberService, refreshService))
         );
 
         http.logout(logout ->
