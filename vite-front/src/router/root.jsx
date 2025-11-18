@@ -16,7 +16,7 @@ const Loading = <div className="loading">Loading..</div>;
 // Layout
 const ShopLayout = lazy(() => import(`../layout/ShopLayout`));
 const LoginLayout = lazy(() => import(`../layout/LoginLayout`));
-const AdminLayout = lazy(() => import(`../layout/AdminLayout`));
+const AdminLayout = lazy(() => import(`../layout/admin/AdminLayout`));
 const BoardLayout = lazy(() => import(`../layout/BoardLayout`));
 const EventLayout = lazy(() => import(`../layout/EventLayout`));
 const CrewLayout = lazy(() => import("../layout/CrewLayout"));

@@ -6,6 +6,10 @@
 
 .admin-container-right {
     flex: 1;
-    background: #403dffdc;
+    display: flex;
+    justify-content: center;
+    background: #cececedc;
+    overflow-y: auto;
+    overflow-x: auto;
 }
   

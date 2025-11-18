@@ -8,9 +8,9 @@ public interface AdminItemService {
 
     ItemDto findById(Long id);
 
-    void insertItem(ItemDto itemDto, MultipartFile itemFile);
+    void insertItem(ItemDto itemDto, MultipartFile itemFile, Long memberId);
 
-    ItemDto updateItem(Long id, ItemDto updatedDto, MultipartFile itemFile);
+    ItemDto updateItem(Long id, ItemDto updatedDto, MultipartFile itemFile, Long memberId);
 
     void deleteItem(Long id);
 

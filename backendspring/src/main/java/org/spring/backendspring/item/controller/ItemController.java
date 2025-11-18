@@ -25,18 +25,7 @@ public class ItemController {
     private final ItemService itemService;
     
 
-
     @GetMapping("")
-    public ResponseEntity<Page<ItemDto>> itemList(@PageableDefault(size = 10) Pageable pageable){
-
-        Page<ItemDto> itemList = itemService.pagingSearchItemList(pageable, null, null);
-
-        return ResponseEntity.ok(itemList);
-        // temp
-
-    }
-
-    @GetMapping("/search")
     public ResponseEntity<Page<ItemDto>> itemSearchList(
         @PageableDefault(size = 10) Pageable pageable,
         @RequestParam(required = false) String subject, 
