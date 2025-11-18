@@ -26,10 +26,11 @@ public class ItemServiceImpl implements ItemService {
        
         // init 
         Page<ItemEntity> itemEntities = null;
+
         if(subject==null || search==null || search.equals("")){
             itemEntities = itemRepository.findAll(pageable);
         } else {
-            if(subject.equals("itemTitle")){
+            if (subject.equals("itemTitle")) {
                 itemEntities = itemRepository.findByItemTitleContaining(pageable, search);
             } else if (subject.equals("itemDetail")) {
                 itemEntities = itemRepository.findByItemDetailContaining(pageable, search);
@@ -39,21 +40,7 @@ public class ItemServiceImpl implements ItemService {
                 itemEntities = itemRepository.findAll(pageable);
             }
         }
-        return itemEntities.map(el->{
-            int itemSize = 0; 
-    
-            return ItemDto.builder()    
-                        .id(el.getId())
-                        .itemTitle(el.getItemTitle())
-                        .itemDetail(el.getItemDetail())
-                        .itemPrice(el.getItemPrice())
-                        .itemSize(el.getItemSize())
-                        .attachFile(el.getAttachFile())
-                        .memberId(el.getMemberEntity().getId())
-                        .createTime(el.getCreateTime())
-                        .updateTime(el.getUpdateTime())
-                     .build();
-        });   
+        return itemEntities.map(ItemDto::toItemDto);
     }
 
     @Override
