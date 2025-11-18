@@ -35,7 +35,6 @@ public class AdminItemServiceImpl implements AdminItemService {
     public void insertItem(ItemDto itemDto) {
         ItemEntity item = ItemEntity.toItemEntity(itemDto);
         itemRepository.save(item);
-
     }
 
     @Override

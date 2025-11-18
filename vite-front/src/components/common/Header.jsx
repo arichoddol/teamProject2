@@ -1,8 +1,8 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { logoutFn } from '../../apis/auth/logout';
+import LogoutBtn from '../../apis/auth/LogoutBtn';
 import { removeCookie } from '../../apis/util/cookieUtil';
-import { logout } from '../../slices/loginSlice';
+import { logoutAction } from '../../slices/loginSlice';
 import { deleteAccessToken } from '../../slices/jwtSlice';
 import { Link } from 'react-router-dom';
 // CSS 
@@ -15,18 +15,18 @@ const Header = () => {
   const isLogin = useSelector(state => state.loginSlice.isLogin);
   const role = useSelector(state => state.loginSlice.role);
 
-  const onLogoutFn = async () => {
-    const rs = await logoutFn();
+  // const onLogoutFn = async () => {
+  //   const rs = await logoutFn();
 
-    if (rs == 200) {
-      removeCookie("member");
-      removeCookie("refreshToken");
-      dispatch(logout());
-      dispatch(deleteAccessToken());
+  //   if (rs == 200) {
+  //     removeCookie("member");
+  //     removeCookie("refreshToken");
+  //     dispatch(logoutAction());
+  //     dispatch(deleteAccessToken());
 
-      alert("로그아웃 성공!");
-    }
-  }
+  //     alert("로그아웃 성공!");
+  //   }
+  // }
 
   return (
 
@@ -35,52 +35,38 @@ const Header = () => {
         <h1>HOME</h1>
         <div className="gnb">
           <ul>
-       {isLogin ? (
+             {isLogin ? (
               // **로그인 상태일 때 메뉴**
               <>
                 <li>
-                  <button onClick={onLogoutFn}>LOGOUT</button>
+                  <LogoutBtn/>
                 </li>
                 <li>
                   <Link to="/auth/myPage">myPage</Link>
                 </li>
-                <li>
-                  <Link to="/mycrew/1">myCrew</Link>
-                </li>
-                {isAdmin && 
-                  <li>
-                    <Link to="/admin/index">ADMIN</Link>
-                  </li>
-                }
-              </>
-             ) : (
-              <>
+                {role === 'ADMIN' ? <li><Link to="/admin/index">ADMIN</Link></li> : null}
+              </> )
+              :
               <li>
-                <Link to= "/mycrew/1">myCrew</Link>
+              <Link to="/auth/login">LOGIN</Link> 
+              </li> 
+              }
+              <li>
+                <Link to="/board">BOARD</Link>
               </li>
               <li>
-              <Link to="/auth/login">LOGIN</Link>
-              </li> 
-              { role === 'ADMIN' ? <li><Link to= "/admin/index">ADMIN</Link></li> : null }
-              </>
-            )}
-            <li>
-              <Link to="/board">BOARD</Link>
-            </li>
-            <li>
-              <Link to="/store">STORE</Link>
-            </li>
-            <li>
-              <Link to="/crew">CREW</Link>
-            </li>
-            <li>
-              <Link to={"/event"}>EVENT</Link>
-            </li>
+                <Link to="/store">STORE</Link>
+              </li>
+              <li>
+                <Link to="/crew/list">CREW</Link>
+              </li>
+              <li>
+                <Link to={"/event"}>EVENT</Link>
+              </li>
           </ul>
         </div>
       </div>
     </div>
-
   )
 }
 

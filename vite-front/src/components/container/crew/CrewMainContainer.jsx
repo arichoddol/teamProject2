@@ -1,10 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import jwtAxios from '../../../apis/util/jwtUtill';
+import { useSelector } from 'react-redux';
 
 const CrewMainContainer = () => {
-
+  const accessToken = useSelector(state => state.jwtSlice.accessToken);
   const [crewList, setCrewList] = useState([]);
+  const [myCrewList, setMyCrewList] = useState([]);
 
   useEffect(() => {
     axios.get(`/api/crew/list`)
@@ -16,15 +19,57 @@ const CrewMainContainer = () => {
         console.error("크루 목록 실패", err)
       })
   }, [])
-  
+
+  // 본인이 가입한 크루 조회
+  useEffect(() => {
+    jwtAxios.get(`/api/mycrew/list`, {
+      headers: {Authorization : `Bearer ${accessToken}`},
+      withCredentials: true
+    }).then((res) => {
+      setMyCrewList(res.data.myCrewList);
+      console.log(res.data.myCrewList);
+    })
+    .catch(err => {
+      console.error("내 크루 목록 조회 실패 ", err);
+    })
+  }, [])
   
   return (
     <>
     <div className="crewList">
       <div className="crewList-con">
+        <h1>내 크루 목록</h1>
+        <ul>
+          {myCrewList.map((crew) => {
+            const images = crew.crewImageEntities || [];
+            return (
+              <li key={crew.id}>
+                <Link to={`/mycrew/${crew.crewId}`}>
+                  <div className="crewListLeft">
+                    {images.length > 0 ? (
+                      <img 
+                        src={images[0].newName} 
+                        alt={`${crew.name} 이미지`}
+                        className='crewImage'
+                      />
+                    ) : (
+                      <div>이미지 없음</div>
+                    )}
+                  </div>
+                  <div className="crewListRight">
+                    <h2>{crew.crewName}</h2>
+                    <p>{crew.description}</p>
+                    <p>{crew.district}</p>
+                  </div>
+                </Link>
+              </li>
+            )
+          })}
+        </ul>
         <h1>크루 목록</h1>
         <ul>
           {crewList.map((crew) => {
+            console.log(crew.id);
             const images = crew.crewImageEntities || [];
             return (
               <li key={crew.id}>
