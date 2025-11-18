@@ -35,7 +35,8 @@ const Header = () => {
         <h1>HOME</h1>
         <div className="gnb">
           <ul>
-            {isLogin ?
+       {isLogin ? (
+              // **로그인 상태일 때 메뉴**
               <>
                 <li>
                   <button onClick={onLogoutFn}>LOGOUT</button>
@@ -43,21 +44,26 @@ const Header = () => {
                 <li>
                   <Link to="/auth/myPage">myPage</Link>
                 </li>
-
-                {role === 'ADMIN' ? <li><Link to="/admin/index">ADMIN</Link></li> : null}
+                <li>
+                  <Link to="/mycrew/1">myCrew</Link>
+                </li>
+                {isAdmin && 
+                  <li>
+                    <Link to="/admin/index">ADMIN</Link>
+                  </li>
+                }
               </>
-              :
+             ) : (
+              <>
               <li>
-
                 <Link to= "/mycrew/1">myCrew</Link>
               </li>
               <li>
               <Link to="/auth/login">LOGIN</Link>
               </li> 
-           
               { role === 'ADMIN' ? <li><Link to= "/admin/index">ADMIN</Link></li> : null }
-            </>
-            : 
+              </>
+            )}
             <li>
               <Link to="/board">BOARD</Link>
             </li>
