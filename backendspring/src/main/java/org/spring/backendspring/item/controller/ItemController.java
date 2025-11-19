@@ -5,6 +5,7 @@ import org.spring.backendspring.item.dto.ItemDto;
 import org.spring.backendspring.item.service.ItemService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -27,7 +28,7 @@ public class ItemController {
 
     @GetMapping("")
     public ResponseEntity<Page<ItemDto>> itemSearchList(
-        @PageableDefault(size = 8) Pageable pageable,
+            @PageableDefault(size = 9, direction = Sort.Direction.DESC, sort = "createTime") Pageable pageable,
         @RequestParam(required = false) String subject, 
         @RequestParam(required =  false) String search) {
 
@@ -45,6 +46,6 @@ public class ItemController {
 
         return ResponseEntity.ok(itemDto);
     }
-    
+
     
 }

@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Hahmlet:wght@100..900&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Batang&display=swap');
 
 
 
@@ -22,7 +22,8 @@
     overflow: hidden;
 }
 
-h2 {
+
+ h2 {
     text-align: center;
     margin-top: 2vh;
 
@@ -35,6 +36,11 @@ h2 {
 .board-table td {
     padding: 2.5vh;
     border-bottom: 2px solid #2313a1;
+    font-size: 13px;
+
+    font-family: "Gowun Batang", serif;
+      font-weight:bold;
+    font-style: normal;
 }
 
 

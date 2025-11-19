@@ -82,7 +82,7 @@ const BoardListContainer = () => {
 
       <div className="boardList-con">
 
-        <br /><br /><br />
+        
         <h2>:: 자유게시판 ::</h2>
         <table className='board-table'>
           <thead>

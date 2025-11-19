@@ -33,6 +33,7 @@ public class ItemDto {
     private String itemDetail;
     private String itemTitle;
     private int itemPrice;
+    private String category;
 
 
     private int itemSize;
@@ -46,7 +47,7 @@ public class ItemDto {
 
     private MemberEntity memberEntity;
 
-    private MultipartFile itemFile;
+    // private MultipartFile itemFile;
     private String newFileName;
     private String oldFileName;
     private List<MultipartFile> itemFileList;
@@ -80,6 +81,7 @@ public class ItemDto {
                         .itemDetail(itemEntity.getItemDetail())
                         .itemPrice(itemEntity.getItemPrice())
                         .itemSize(itemEntity.getItemSize())
+                        .category(itemEntity.getCategory())
                         .attachFile(itemEntity.getAttachFile())
                         .memberId(itemEntity.getMemberEntity().getId())
                         .itemImgDtos(itemImgDtos)
