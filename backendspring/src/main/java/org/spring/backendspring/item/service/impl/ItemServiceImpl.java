@@ -9,6 +9,7 @@ import org.spring.backendspring.item.repository.ItemRepository;
 import org.spring.backendspring.item.service.ItemService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemImgRepository imgRepository;
 
     @Override
-    public Page<ItemDto> pagingSearchItemList(Pageable pageable, String subject, String search) {
+    public Page<ItemDto> pagingSearchItemList(Pageable pageable, String subject,  String search) {
        
         // init 
         Page<ItemEntity> itemEntities = null;
