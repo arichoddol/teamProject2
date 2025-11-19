@@ -1,25 +1,17 @@
-.index {
-
-    background-image: url('images/index.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    min-height: 100vh;
-
-}
-
 .index-title {
   position: absolute;
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
   color: white;
-  z-index: 2;                 /* canvas보다 위 */
+  z-index: 2;
+  /* canvas보다 위 */
   text-align: center;
   font-size: 3rem;
   font-weight: bold;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
 }
+
 .index-con {
   position: absolute;
   bottom: 20%;
@@ -27,4 +19,70 @@
   transform: translateX(-50%);
   z-index: 2;
   text-align: center;
+}
+
+.title-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  /* 요소가 움직여서 뷰포트 밖으로 나가는 것을 숨김 */
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  /* 자식 요소의 absolute 기준 */
+  background-color: #333;
+  /* bg.png가 보이지 않을 경우 대비 */
+}
+
+.parallax-layer,
+.title-text {
+  position: absolute;
+  /* JS가 transform을 적용할 때 부드럽게 움직이도록 transition 설정 */
+  transition: transform 0.3s ease-out;
+  will-change: transform;
+  /* 애니메이션 성능 최적화 */
+}
+
+.layer-1 {
+  opacity: 0.6;
+  z-index: 10;
+  max-width: 80%;
+  left: 50%;
+  transform: translateX(-50%);
+  /* 중앙 정렬 */
+}
+
+.layer-2 {
+  max-width: 50%;
+  z-index: 20;
+  right: 5%;
+  bottom: 5%;
+}
+
+.title-text {
+  z-index: 30;
+  text-align: center;
+  color: white;
+  text-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+
+  /* 마우스 오버 시 강조 효과 (CSS Hover 추가) */
+  transition: transform 0.3s ease-out, text-shadow 0.3s ease;
+}
+
+.title-text:hover {
+  text-shadow: 0 0 25px rgba(255, 255, 255, 0.9), 0 0 10px #00f;
+}
+
+.title-text h1 {
+  font-size: 5vw;
+  margin: 0;
+  letter-spacing: 5px;
+}
+
+.title-text p {
+  font-size: 1.5vw;
+  margin-top: 10px;
 }

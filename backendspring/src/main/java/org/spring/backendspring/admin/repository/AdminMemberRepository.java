@@ -9,9 +9,15 @@ import org.springframework.data.util.Streamable;
 
 public interface AdminMemberRepository extends JpaRepository<MemberEntity, Long> {
 
+    // search 용도
     Page<MemberEntity> findByUserEmailContainingIgnoreCaseOrNickNameContainingIgnoreCase(
             String emailKeyword,
             String nickKeyword,
             Pageable pageable);
 
+    Page<MemberEntity> findByUserEmailContaining(Pageable pageable, String search);
+
+    Page<MemberEntity> findByUserNameContaining(Pageable pageable, String search);
+
+    Page<MemberEntity> findByNickNameContaining(Pageable pageable, String search);
 }

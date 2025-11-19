@@ -69,4 +69,12 @@ public class BoardReplyEntity extends BasicTime {
     }
 
 
+    // DTO is Empty? if Fill content-> then Update
+    public void updateFromDto(BoardReplyDto dto) {
+       if (dto.getContent() != null) {
+        this.content = dto.getContent();
+    }
+    }
+
+
 }

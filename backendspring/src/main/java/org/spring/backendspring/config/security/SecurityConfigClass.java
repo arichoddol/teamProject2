@@ -49,6 +49,7 @@ public class SecurityConfigClass {
 
         http.authorizeHttpRequests(authorize -> {
             authorize
+                    .requestMatchers("/api/payments/approval/**").permitAll() // ✅ 로그인 없이 허용
                     .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "MANAGER")
                     .requestMatchers(
                             "/api/crew/create/approved",
@@ -113,8 +114,13 @@ public class SecurityConfigClass {
         // 프론트(리액트) 임시 허용
         configuration.setAllowedOriginPatterns(Arrays.asList(
                 "http://localhost:3000",
-                "http://localhost:8088"
+                "http://localhost:8088",
+                "https://online-payment.kakaopay.com/**",
+                "https://kapi.kakao.com/v1/payment/ready/**",
+                "https://kapi.kakao.com/v1/payment/approve/**"
+
         ));
+        
         configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE"));
         // 임시로 모든 헤더 요청 허용
         configuration.setAllowedHeaders(Arrays.asList("*"));

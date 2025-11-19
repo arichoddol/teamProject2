@@ -8,21 +8,21 @@ import { setCookie } from '../../../apis/util/cookieUtil';
 import { setAccessToken } from '../../../slices/jwtSlice';
 import { BACK_BASIC_URL } from '../../../apis/commonApis';
 
-import { initializeThreeScene } from '../../../js/three';
+import { initializeThreeScene } from '../../../js/loginThree';
 import "../../../css/auth/auth_login.css"
 
 const AuthLoginContainer = () => {
-  
+
   // 로그인 상태 & 사용자 정보
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  
+
   const mountRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  
-  const navigate =  useNavigate();
+
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   // 입력한 값 감지 후 변경
@@ -35,53 +35,53 @@ const AuthLoginContainer = () => {
   }
 
   const onLoginFn = async () => {
-      const rs = await loginFn(username, password);
+    const rs = await loginFn(username, password);
 
-      // 응답코드
-      console.log(rs);
-      
-      if (rs.status === 200) {
-        const id = rs.data.id;
-        const userEmail = rs.data.userEmail;
-        const role = rs.data.role;
-        const nickName = rs.data.nickName;
-        const access = rs.data.accessToken;
-        
-        localStorage.setItem("accessToken", access);
+    // 응답코드
+    console.log(rs);
 
-        dispatch(login({ userEmail, id, role, nickName, isLogin: true }));
-        dispatch(setAccessToken(access));   
+    if (rs.status === 200) {
+      const id = rs.data.id;
+      const userEmail = rs.data.userEmail;
+      const role = rs.data.role;
+      const nickName = rs.data.nickName;
+      const access = rs.data.accessToken;
 
-        navigate("/store/index");
+      localStorage.setItem("accessToken", access);
+
+      dispatch(login({ userEmail, id, role, nickName, isLogin: true }));
+      dispatch(setAccessToken(access));
+
+      navigate("/store/index");
     };
   }
 
-  useEffect(()=>{
-        const container = mountRef.current;
-        if (!container) return;
+  useEffect(() => {
+    const container = mountRef.current;
+    if (!container) return;
 
-        let cleanupFunction;
+    let cleanupFunction;
 
-        try {
-            cleanupFunction = initializeThreeScene(container);
-            
-            setIsLoading(false); 
+    try {
+      cleanupFunction = initializeThreeScene(container);
+      // if success init 
+      setIsLoading(false);
 
-        } catch(error) {
-            console.error("Three.js init ERROR", error);
-            setIsLoading(false);
-        }
+    } catch (error) {
+      console.error("Three.js init ERROR", error);
+      setIsLoading(false);
+    }
 
-        return () => {
-            if (cleanupFunction) {
-                cleanupFunction();
-            }
-        };
+    return () => {
+      if (cleanupFunction) {
+        cleanupFunction();
+      }
+    };
 
-    }, []);
+  }, []);
 
   return (
-    
+
     <div className="login">
       <div ref={mountRef} className='canvas'>
         {isLoading && (
@@ -94,18 +94,18 @@ const AuthLoginContainer = () => {
         <h1>로그인</h1>
         <ul>
           <li>
-            <input type="text" 
-            name='username' 
-            placeholder='email'
-            value={username}
-            onChange={onUsernameChange}/>
+            <input type="text"
+              name='username'
+              placeholder='email'
+              value={username}
+              onChange={onUsernameChange} />
           </li>
           <li>
-            <input type="password" 
-            name='password' 
-            placeholder='password'
-            value={password}
-            onChange={onPasswordChange}/>
+            <input type="password"
+              name='password'
+              placeholder='password'
+              value={password}
+              onChange={onPasswordChange} />
           </li>
           <li>
             <button onClick={onLoginFn}>로그인</button>
@@ -134,7 +134,7 @@ const AuthLoginContainer = () => {
         </ul>
       </div>
     </div>
-    
+
   )
 }
 

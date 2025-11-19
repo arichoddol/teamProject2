@@ -1,7 +1,7 @@
 import axios from "axios";
 import { BACK_BASIC_URL } from "../commonApis";
 import store from "../../store/store";
-import jwtAxios from "../util/jwtUtill";
+import jwtAxios from "../util/jwtUtil";
 
 export const authDetailFn = async () => {
   const accessToken = store.getState().jwtSlice.accessToken;

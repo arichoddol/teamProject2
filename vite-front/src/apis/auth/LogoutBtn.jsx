@@ -32,6 +32,10 @@ const LogoutBtn = () => {
       return res.status;
       
     } catch(err) {
+      localStorage.removeItem(ACCESS_TOKEN_KEY);
+      dispatch(logoutAction());
+      alert("로그아웃 처리되었습니다!");
+      navigate("/store/index");
       console.log("로그아웃 처리 중 오류 발생:", err);
     }
   }

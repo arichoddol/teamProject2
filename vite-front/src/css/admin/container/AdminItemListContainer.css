@@ -1,0 +1,87 @@
+.admin-itemList-container {
+    padding: 20px;
+    width: 95%;
+  }
+  
+  .admin-itemList-container h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+  
+  /* 테이블 스타일 */
+  .admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .admin-table th, .admin-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #e1e1e1;
+  }
+  
+  .admin-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+  
+  .admin-table tr:hover {
+    background-color: #fafafa;
+  }
+  
+  /* 버튼 스타일 */
+  .admin-table button {
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .admin-table button:hover {
+    opacity: 0.8;
+  }
+  
+  /* 수정 버튼 */
+  .admin-table button:first-child {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  /* 삭제 버튼 */
+  .admin-table button:last-child {
+    background-color: #e74c3c;
+    color: white;
+  }
+  
+  /* 페이징 */
+  .pagination {
+    display: flex;
+    gap: 6px;
+    margin-top: 15px;
+    justify-content: center;
+  }
+  
+  .pagination button {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .pagination button:hover {
+    background: #e6e6e6;
+  }
+  
+  .pagination .active {
+    background: #333;
+    color: white;
+    font-weight: bold;
+    border-color: #333;
+  }
+  
