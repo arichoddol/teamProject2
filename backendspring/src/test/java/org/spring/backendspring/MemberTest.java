@@ -21,8 +21,8 @@ public class MemberTest {
     public void insertDummyMembers() {
         for (int i = 1; i <= 30; i++) {
             MemberEntity member = MemberEntity.builder()
-                    .userEmail("user" + i + "@test.com")
-                    .userPassword(passwordEncoder.encode("1111"))
+                    .userEmail("user" + i + "@email.com")
+                    .userPassword(passwordEncoder.encode("11"))
                     .userName("테스트회원" + i)
                     .nickName("KKWA" + i)
                     .gender(i % 2 == 0 ? Gender.MAN : Gender.WOMAN)
