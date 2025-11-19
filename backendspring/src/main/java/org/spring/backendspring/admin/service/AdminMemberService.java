@@ -7,7 +7,7 @@ import org.spring.backendspring.member.dto.MemberDto;
 
 public interface AdminMemberService {
 
-     public PagedResponse<MemberDto> findAllMembers(String keyword, int page, int size);
+     public PagedResponse<MemberDto> findAllMembers(String search, String subject, int page, int size);
 
      void deleteMemberByAdmin(Long id);
 }

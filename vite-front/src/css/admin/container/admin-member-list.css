@@ -1,0 +1,83 @@
+.admin-memberList {
+  padding: 20px;
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.admin-memberList-con {
+  flex: 0 1 1200px; 
+}
+
+/* .admin-memberList-con h1 {
+  font-size: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #eee;
+} */
+
+.admin-memberList table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-memberList thead th {
+  padding: 12px 8px;
+  background: #f7f7f7;
+  font-weight: 600;
+  border-bottom: 2px solid #ddd;
+  text-align: left;
+}
+
+.admin-memberList tbody td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.admin-memberList tbody tr:hover {
+  background: #fafafa;
+}
+
+.admin-memberList-search {
+  display: flex;
+  align-items: center; 
+  justify-content: space-between;
+  gap: 4px;           
+  padding-bottom: 10px;
+}
+
+.admin-memberList-search h1 {
+  margin: 0;           /* 기본 margin 제거 */
+  font-size: 16px;
+}
+
+.admin-memberList-search
+.admin-memberList-select {
+  display: flex;
+  gap: 5px;
+}
+
+.admin-memberList-search select,
+.admin-memberList-search input,
+.admin-memberList-search button {
+  padding: 4px 8px;    
+  font-size: 14px;
+  border: 1px solid #ccc; 
+  background-color: #f8f8f8;
+  cursor: pointer;
+}
+
+.admin-memberList-search input {
+  flex: 1; 
+}
+
+.admin-memberList-search button {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.admin-memberList-search button:hover {
+  opacity: 0.9;
+}

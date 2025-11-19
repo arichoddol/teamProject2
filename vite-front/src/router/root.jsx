@@ -5,7 +5,7 @@ import { toLoginOutRouter } from "./toLoginOutRouter";
 import toCrewRouter from "./toCrewRouter";
 import toAdminRouter from "./toAdminRouter";
 import toBoardRouter from "./toBoardRouter";
-import toShopRouter from "./toStoreRouter";
+import toStoreRouter from "./toStoreRouter";
 import toEventRouter from "./toEventRouter";
 import toCartRouter from "./toCartRouter";
 import toPaymentRouter from "./toPaymentRouter";
@@ -14,7 +14,7 @@ import toMyCrewRouter from "./toMyCrewRouter";
 const Loading = <div className="loading">Loading..</div>;
 
 // Layout
-const StoreLayout = lazy(() => import('../layout/StoreLayout'));
+const StoreLayout = lazy(() => import(`../layout/StoreLayout`));
 const LoginLayout = lazy(() => import(`../layout/LoginLayout`));
 const AdminLayout = lazy(() => import(`../layout/admin/AdminLayout`));
 const BoardLayout = lazy(() => import(`../layout/BoardLayout`));
@@ -67,7 +67,7 @@ const root = createBrowserRouter([
         <StoreLayout />
       </Suspense>
     ),
-    children: toShopRouter(),
+    children: toStoreRouter(),
   },
   {
     // crew

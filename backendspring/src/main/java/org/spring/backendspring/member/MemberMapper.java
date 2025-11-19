@@ -39,12 +39,31 @@ public class MemberMapper {
                 .phone(entity.getPhone())
                 .address(entity.getAddress())
                 .role(entity.getRole())
-                .isProfileImg(entity.getIsProfileImg())
-                .socialLogin(entity.getSocialLogin())
                 .crewEntityList(entity.getCrewEntityList())
                 .crewMemberEntityList(entity.getCrewMemberEntityList())
+                .isProfileImg(entity.getIsProfileImg())
+                .socialLogin(entity.getSocialLogin())
                 .build();
     }
+
+    // 회원 list
+    public static MemberDto toDtoList(MemberEntity entity) {
+        return MemberDto.builder()
+                .id(entity.getId())
+                .userEmail(entity.getUserEmail())
+                .userName(entity.getUserName())
+                .nickName(entity.getNickName())
+                .gender(entity.getGender())
+                .age(entity.getAge())
+                .phone(entity.getPhone())
+                .address(entity.getAddress())
+                .role(entity.getRole())
+                .isProfileImg(entity.getIsProfileImg())
+                .socialLogin(entity.getSocialLogin())
+                .createTime(entity.getCreateTime())
+                .build();
+    }
+
 
     // 소셜 로그인 처리
     public static MemberEntity toSocialEntity(String userEmail,
