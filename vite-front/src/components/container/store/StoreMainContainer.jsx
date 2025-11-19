@@ -23,23 +23,24 @@ const ShopMainContainer = () => {
   const displayPageNum = 5; // 화면에 표시할 페이지 버튼 개수
 
   const fetchData = async (page) => {
-    const response = await axios.get("http://localhost:8088/api/shop");
+
+    // const response = await axios.get("http://localhost:8088/api/shop");
+    const response = await axios.get(`http://localhost:8088/api/shop?page=${page}`);
     const data = response.data;
-    // if (response.data && response.data.content) {
-    //   setItems(response.data.content);
-    // }
     console.log(`[LOG] 페이지 ${page + 1}의 데이터를 요청합니다.`);
+
     try {
       if (data && data.content) {
-        setItems(data.content);
+
+        setItems(data.content || []) ;
 
         // 페이지 정보 계산 및 업데이트
         const totalPages = data.totalPages;
         const pageNum = data.number;
+        const displayPageNum = 5;
 
         const startPage = Math.floor(pageNum / displayPageNum) * displayPageNum;
         let endPage = startPage + displayPageNum - 1;
-
         if (endPage >= totalPages) {
           endPage = totalPages - 1;
         }
