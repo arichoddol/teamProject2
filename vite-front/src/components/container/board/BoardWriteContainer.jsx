@@ -10,7 +10,7 @@ const BoardWriteContainer = () => {
   const memberId = useSelector(state => state.loginSlice.id);
   const nickName = useSelector(state => state.loginSlice.nickName);
 
-  // tmp
+
     const { id } = useParams();
     const initialBoardState = {
     id: null,
