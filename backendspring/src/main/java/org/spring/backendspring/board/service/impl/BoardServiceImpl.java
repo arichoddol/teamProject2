@@ -50,7 +50,7 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public void insertBoard(BoardDto boardDto) throws IOException {
         
-        BoardImgDto boardImgDto = new BoardImgDto();
+       
         // Membmer Check 
         MemberEntity memberEntity = memberRepository.findById(boardDto.getMemberId())
                     .orElseThrow(IllegalArgumentException::new);

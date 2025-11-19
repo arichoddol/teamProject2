@@ -1,10 +1,11 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutFn } from "../../apis/auth/logout";
+import LogoutBtn from "../../apis/auth/LogoutBtn";
 import { removeCookie } from "../../apis/util/cookieUtil";
-import { logout } from "../../slices/loginSlice";
+import { logoutAction } from "../../slices/loginSlice";
 import { deleteAccessToken } from "../../slices/jwtSlice";
 import { Link } from "react-router-dom";
+
 // CSS
 import "../../css/common/header.css";
 
@@ -13,20 +14,21 @@ const Header = () => {
   const dispatch = useDispatch();
   const isLogin = useSelector((state) => state.loginSlice.isLogin);
   const role = useSelector((state) => state.loginSlice.role);
-  const memberId = useSelector((state) => state.loginSlice.id); // 회원 ID 가져오기
+  const memberId = useSelector((state) => state.loginSlice.memberId); // 추가
 
-  const onLogoutFn = async () => {
-    const rs = await logoutFn();
 
-    if (rs == 200) {
-      removeCookie("member");
-      removeCookie("refreshToken");
-      dispatch(logout());
-      dispatch(deleteAccessToken());
+  // const onLogoutFn = async () => {
+  //   const rs = await logoutFn();
 
-      alert("로그아웃 성공!");
-    }
-  };
+  //   if (rs == 200) {
+  //     removeCookie("member");
+  //     removeCookie("refreshToken");
+  //     dispatch(logoutAction());
+  //     dispatch(deleteAccessToken());
+
+  //     alert("로그아웃 성공!");
+  //   }
+  // }
 
   return (
     <div className="header">
@@ -38,27 +40,16 @@ const Header = () => {
               // **로그인 상태일 때 메뉴**
               <>
                 <li>
-                  <Link to="/auth/login">LOGIN</Link>
+                  <LogoutBtn />
+                </li>
+                <li>
+                  <Link to={`/cart/${memberId}`}>CART</Link>
+                </li>
+                <li>
+                  <Link to={`/store/${memberId}`}>SHOP</Link>
                 </li>
                 <li>
                   <Link to="/auth/myPage">myPage</Link>
-                </li>
-                <li>
-                  <Link to="/mycrew/1">myCrew</Link>
-                </li>
-                {/* {isAdmin && (
-                  <li>
-                    <Link to="/admin/index">ADMIN</Link>
-                  </li>
-                )} */}
-              </>
-            ) : (
-              <>
-                <li>
-                  <Link to="/mycrew/1">myCrew</Link>
-                </li>
-                <li>
-                  <Link to="/auth/login">LOGIN</Link>
                 </li>
                 {role === "ADMIN" ? (
                   <li>
@@ -66,13 +57,11 @@ const Header = () => {
                   </li>
                 ) : null}
               </>
+            ) : (
+              <li>
+                <Link to="/auth/login">LOGIN</Link>
+              </li>
             )}
-            <li>
-              <Link to={`/cart/${memberId}`}>CART</Link>
-            </li>
-            <li>
-              <Link to={`/store/${memberId}`}>SHOP</Link>
-            </li>
             <li>
               <Link to="/board">BOARD</Link>
             </li>
@@ -80,7 +69,7 @@ const Header = () => {
               <Link to="/store">STORE</Link>
             </li>
             <li>
-              <Link to="/crew">CREW</Link>
+              <Link to="/crew/list">CREW</Link>
             </li>
             <li>
               <Link to={"/event"}>EVENT</Link>
@@ -91,53 +80,5 @@ const Header = () => {
     </div>
   );
 };
-
-//   <div className="header">
-//     <div className="nav">
-//       <h1>HOME</h1>
-//       <div className="gnb">
-//         <ul>
-//           {isLogin ?
-//             <>
-//               <li>
-//                 <button onClick={onLogoutFn}>LOGOUT</button>
-//               </li>
-//               <li>
-//                 <Link to="/auth/myPage">myPage</Link>
-//               </li>
-
-//               {role === 'ADMIN' ? <li><Link to="/admin/index">ADMIN</Link></li> : null}
-//             </>
-//             :
-//             <li>
-
-//               <Link to= "/mycrew/1">myCrew</Link>
-//             </li>
-//             <li>
-//             <Link to="/auth/login">LOGIN</Link>
-//             </li>
-
-//             { role === 'ADMIN' ? <li><Link to= "/admin/index">ADMIN</Link></li> : null }
-//           </>
-//           :
-//           <li>
-//             <Link to="/board">BOARD</Link>
-//           </li>
-//           <li>
-//             <Link to="/store">STORE</Link>
-//           </li>
-//           <li>
-//             <Link to="/crew">CREW</Link>
-//           </li>
-//           <li>
-//             <Link to={"/event"}>EVENT</Link>
-//           </li>
-//         </ul>
-//       </div>
-//     </div>
-//   </div>
-
-// )
-// }
 
 export default Header;

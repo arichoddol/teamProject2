@@ -1,4 +1,4 @@
-import jwtAxios from "../util/jwtUtill";
+import jwtAxios from "../util/jwtUtil";
 
 const CART_API = "http://localhost:8088/api/cart";
 

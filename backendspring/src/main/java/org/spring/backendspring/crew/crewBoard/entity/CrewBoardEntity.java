@@ -1,5 +1,6 @@
 package org.spring.backendspring.crew.crewBoard.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.spring.backendspring.common.BasicTime;
@@ -17,6 +18,7 @@ import java.util.List;
 @Entity
 @Table(name = "crew_board_tb")
 public class CrewBoardEntity extends BasicTime {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "crew_board_id")
@@ -28,10 +30,12 @@ public class CrewBoardEntity extends BasicTime {
     @Column(nullable = false)
     private String content; // 내용
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "crew_id", nullable = false)
     private CrewEntity crewEntity; // 소속 크루
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private MemberEntity memberEntity; // 작성자
@@ -46,8 +50,12 @@ public class CrewBoardEntity extends BasicTime {
         return CrewBoardEntity.builder()
                 .title(dto.getTitle())
                 .content(dto.getContent())
-                .crewEntity(dto.getCrewEntity())
-                .memberEntity(dto.getMemberEntity())
+                .crewEntity(CrewEntity.builder()
+                        .id(dto.getCrewId())
+                        .build())
+                .memberEntity(MemberEntity.builder()
+                        .id(dto.getMemberId())
+                        .build())
                 .crewBoardCommentEntities(dto.getCrewBoardCommentEntities())
                 .crewBoardImageEntities(dto.getCrewBoardImageEntities())
                 .build();

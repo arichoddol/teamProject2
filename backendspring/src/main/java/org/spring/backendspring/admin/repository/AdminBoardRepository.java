@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AdminBoardRepository extends JpaRepository<BoardEntity, Long> {
+
+    // search 용도
     Page<BoardEntity> findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(
             String titleKeyword,
             String contentKeyword,

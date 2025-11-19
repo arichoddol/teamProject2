@@ -2,17 +2,10 @@ package org.spring.backendspring.board.dto;
 
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.spring.backendspring.board.entity.BoardEntity;
 import org.spring.backendspring.board.entity.BoardReplyEntity;
 import org.spring.backendspring.member.entity.MemberEntity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,7 +25,6 @@ public class BoardReplyDto {
     private Long boardId;
     private Long memberId;
 
-    private String title;
     private String content;
 
 
@@ -58,6 +50,8 @@ public class BoardReplyDto {
                             // .memberEntity(boardReplyEntity.getMemberEntity())
                             .boardId(boardReplyEntity.getBoardEntity().getId())
                             .memberId(boardReplyEntity.getMemberEntity().getId())
+                            .createTime(boardReplyEntity.getCreateTime())
+                            .upDateTime(boardReplyEntity.getUpdateTime())
                             .build();
     }
 

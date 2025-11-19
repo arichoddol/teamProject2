@@ -59,6 +59,10 @@ public class SecurityConfigClass {
                             "/api/board/write",
                             "/api/board/update/**",
                             "/api/board/updatePost").authenticated()
+                    .requestMatchers("/api/mycrew/*/board/create",
+                            "/api/mycrew/*/board/update",
+                            "/api/mycrew/*/board/delete",
+                            "/api/mycrew/*/board/*/comment/write").authenticated()
                     .requestMatchers("/api/member/**").permitAll()
                     .requestMatchers("/login", "/logout", "/api/**", "/index").permitAll()
                     .requestMatchers("/**").permitAll(); // css, js 파일 허용
@@ -92,7 +96,7 @@ public class SecurityConfigClass {
         http.oauth2Login(oauth2 ->
                 oauth2.userInfoEndpoint(info ->
                                 info.userService(myDefaultOAuth2UserService()))
-                        .successHandler(new OAuth2SuccessHandler(jwtUtil, memberService))
+                        .successHandler(new OAuth2SuccessHandler(jwtUtil, memberService, refreshService))
         );
 
         http.logout(logout ->

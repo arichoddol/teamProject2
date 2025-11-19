@@ -1,65 +1,356 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router';
 
-import "../../../css/store/storeDetail.css";
+import "../../../css/store/storeDetail.css"
 
 const ShopDetailContainer = () => {
-  const [item, setItem] = useState({});
-  const [content, setContent] = useState("");
-  const [replies, setReplies] = useState([]);
-  const { id } = useParams();
-    const navigate = useNavigate(); // navigate 추가
+
+    const NO_IMAGE_URL = "/images/noimage.jpg";
 
 
-  const API_BASE_URL = "http://localhost:8088/api/shop";
+    const [item, setItem] = useState({});
+    const [content, setContent] = useState('');
+    const [replies, setReplies] = useState([]);
 
-  const fetchData = async () => {
-    const response = await axios.get(`${API_BASE_URL}/detail/${id}`);
+    const [editingReplyId, setEditingReplyId] = useState(null);
+    const [editingContent, setEditingContent] = useState('');
 
-    if (response.data) {
-      setItem(response.data);
-    } else {
-      console.log("게시물 데이터가 존재하지 않음.");
+    const [pageInfo, setPageInfo] = useState({ // 페이지네이션 정보 상태 (first: true 추가)
+        page: 0,
+        size: 10,
+        totalPages: 0,
+        totalElements: 0,
+        last: true,
+        first: true,
+    });
+
+    const { id } = useParams();
+    const navigate = useNavigate();
+
+    const REPLY_BASE_URL = 'http://localhost:8088/api/itemReply';
+    const API_BASE_URL = 'http://localhost:8088/api/shop';
+
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        return new Date(dateString).toLocaleString('ko-KR', {
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit'
+
+        });
     }
-  };
 
-  useEffect(() => {
-    fetchData();
-    // when id change its always restart it.
-  }, [id]);
 
-   // 장바구니 담기 함수
-  const handleAddToCart = (product) => {
-    // CartPage로 이동 + state에 상품 정보 전달
-    navigate("/cart", { state: { itemToAdd: product } });
-  };
+    const fetchData = async () => {
+        const response = await axios.get(`${API_BASE_URL}/detail/${id}`);
 
-  return (
-    <div className="itemDetail">
-      <div className="itemDetail-con">
-        <h4>{item.itemTitle}</h4>
-        <div className="itemDetail-con-image"></div>
-        <div className="itemDetail-con-info">
-          <span>상품ID : {item.id}</span>
-          <br />
-          <span>상세설명 : {item.itemDetail}</span>
-          <br />
-          <span>상품가격 : {item.itemPrice}</span>
-          <br />
-          <span>itemSize(temp) : {item.itemSize}</span>
-          <br />
-          <span>attachFile(temp) : {item.attachFile}</span>
-          <br />
-          <span>createTime : {item.createTime}</span>
-          <br />
-          <span>updateTime : {item.updatTime}</span>
-          <br />
-          <button onClick={() => handleAddToCart(item)}>장바구니 담기</button>
+        if (response.data) {
+            setItem(response.data);
+            fetchReplies(response.data.id, 0, pageInfo.size);
+
+        } else {
+            console.log("게시물 데이터가 존재하지 않음.")
+        }
+    };
+
+    const fetchReplies = async (itemId, page = 0, size = 10) => {
+        if (!item) return;
+
+        try {
+            const response = await axios.get(
+                `${REPLY_BASE_URL}/list/${itemId}?page=${page}&size=${size}&sort=createTime,desc`
+            );
+
+            setReplies(response.data.content);
+            setPageInfo({
+                page: response.data.pageable.pageNumber,
+                size: response.data.pageable.pageSize,
+                totalPages: response.data.totalPages,
+                totalElements: response.data.totalElements,
+                last: response.data.last,
+                first: response.data.first,
+            });
+
+        } catch (error) {
+            console.log('댓글 목록 조회 실패: ', error);
+            setReplies([]);
+        }
+    }
+
+    const handlePageChange = (newPage) => {
+        if (newPage >= 0 && newPage < pageInfo.totalPages) {
+            fetchReplies(item.id, newPage, pageInfo.size);
+        }
+    };
+    const handleUpdatePost = (itemId) => {
+        navigate(`/store/update/${itemId}`);
+    }
+
+    const handleReplyUpdate = async (replyId, currentContent) => {
+        setEditingReplyId(replyId);
+        setEditingContent(currentContent);
+    }
+    // Editing Reply Section
+    const handleReplyEditCancel = () => {
+        setEditingReplyId(null);
+        setEditingContent('');
+    }
+
+    const handleReplyEditSubmit = async (replyId) => {
+        if (!editingContent.trim()) {
+            alert('수정할 내용을 입력해주세요.');
+            return;
+        }
+        const updatedReplyData = {
+            id: replyId,
+            itemId: item.id,
+            content: editingContent.trim(),
+            memberId: item.memberId // 권한 확인을 위해 현재 로그인된 사용자 ID 전송
+        };
+        console.log("전송할 댓글 수정 데이터:", updatedReplyData);
+        try {
+            const response = await axios.put(`${REPLY_BASE_URL}/updateReply`, updatedReplyData);
+
+            if (response.status === 200) {
+                alert('댓글이 성공적으로 수정되었습니다.');
+                handleReplyEditCancel(); // 수정 모드 종료
+                // 현재 페이지의 댓글 목록을 갱신합니다.
+                fetchReplies(item.id, pageInfo.page, pageInfo.size);
+            } else {
+                throw new Error("댓글 수정 요청 실패");
+            }
+
+        } catch (error) {
+            console.error('댓글 수정 중 오류 발생:', error);
+            const errorMessage = error.response?.data || '댓글 수정 중 오류가 발생했습니다.';
+            alert(errorMessage); // 백엔드에서 던진 권한 에러 메시지 등을 사용자에게 표시
+        }
+
+    }
+
+    const handleReplyDelete = async (replyId) => {
+        if (!window.confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
+            return;
+        }
+        if (!item.memberId) {
+            alert('삭제 권한 확인을 위한 로그인 정보가 없습니다.');
+            return;
+        }
+        try {
+            const response = await axios.delete(`${REPLY_BASE_URL}/deleteReply/${replyId}`, {
+                params: {
+                    memberId: item.memberId // 쿼리 파라미터로 memberId 전송
+                }
+            });
+            if (response.status === 200 || response.status === 204) {
+                alert('댓글이 성공적으로 삭제되었습니다.');
+                // 댓글 삭제 후 현재 페이지의 댓글 목록을 갱신합니다.
+                fetchReplies(item.id, pageInfo.page, pageInfo.size);
+            } else {
+                throw new Error("댓글 삭제 요청 실패");
+            }
+        } catch (error) {
+            console.error('댓글 삭제 중 오류 발생:', error);
+            const errorMessage = error.response?.data?.message || '댓글 삭제 중 오류가 발생했습니다.';
+            alert(errorMessage); // 백엔드에서 던진 권한 에러 메시지 등을 사용자에게 표시
+        }
+
+    }
+
+
+
+    const handleReplySubmit = async (e) => {
+        e.preventDefault();
+
+        if (!item.id || !content.trim() || !item.memberId) {
+            alert('댓글 내용 및 작성자 정보가 필요합니다.');
+            return;
+        }
+
+        const replyData = {
+            itemId: item.id,
+            content: content.trim(),
+            memberId: item.memberId
+        };
+        console.log("전송할 댓글 데이터:", replyData);
+
+        try {
+            const response = await axios.post(`${REPLY_BASE_URL}/addReply`, replyData);
+
+            if (response.status === 200) {
+                alert('댓글이 성공적으로 등록되었습니다.');
+                setContent('');
+                fetchReplies(item.id, 0, pageInfo.size);
+            } else {
+                throw new Error("댓글 등록 실패 ");
+            }
+        } catch (error) {
+            console.error('댓글 등록 중 오류 발생:', error);
+            alert('댓글 등록 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+        }
+    };
+
+     // 장바구니 담기 함수 추가
+    const handleAddToCart = () => {
+        const product = {
+            id: item.id,
+            title: item.itemTitle,
+            price: item.itemPrice,
+            size: item.itemSize,
+            image: item.attachFile,
+            detail: item.itemDetail
+        };
+
+        navigate("/cart", { state: { itemToAdd: product } });
+    };
+
+    useEffect(() => {
+        fetchData();
+        // when id change its always restart it.
+    }, [id]);
+
+    return (
+        <div className="itemDetail">
+            {console.log(item)}
+
+            <div className="itemDetail-con">
+
+                <div className="itemDetail-con-image">
+                    {item.attachFile && item.attachFile !== 0 ? (
+                        <img
+                            src={null}
+                            alt={item.itemTitle || "첨부 이미지"}
+                        />
+                    ) : (
+                        <img
+                            src={NO_IMAGE_URL}
+                            alt="이미지 없음"
+                        />
+                    )}
+                </div>
+                <div className="itemDetail-con-info">
+                    <h4>{item.itemTitle}</h4>
+                    <span>상품ID : {item.id}</span><br />
+                    <span>상세설명 : {item.itemDetail}</span><br />
+                    <span>상품가격 : {item.itemPrice}</span><br />
+                    <span>itemSize(temp) : {item.itemSize}</span><br />
+                    <span>attachFile(temp) : {item.attachFile}</span><br />
+                    <span>createTime : {item.createTime}</span><br />
+                    <span>updateTime : {item.updatTime}</span><br />
+
+                    <button className="add-cart-btn" onClick={handleAddToCart}>
+                        장바구니 담기
+                    </button>
+
+                </div>
+                <div className="itemDetail-con-reply">
+
+                    {/* 댓글 입력 폼 */}
+                    <form onSubmit={handleReplySubmit}>
+                        <textarea name="reply" id="reply"
+                            rows="4" required
+                            value={content}
+                            onChange={(e) => setContent(e.target.value)}
+                            placeholder='댓글을 입력해주세요..'
+                        ></textarea>
+                        <button type='submit'>댓글등록</button>
+                    </form>
+                </div>
+
+
+                {/* 댓글 목록 표시 */}
+                <div className="replyList">
+                    <h5>댓글 ({pageInfo.totalElements})</h5>
+                    {replies.length > 0 ? (
+                        replies.map((reply) => (
+                            <div key={reply.id} >
+                                <div className='tab'>
+                                    {console.log(reply)}
+                                    <p><strong>{reply.memberNickName || `작성자 ID: ${reply.memberId}`}</strong></p>
+                                    <span className="reply-createTime">{formatDate(reply.createTime)}</span>
+                                </div>
+                                {/* 수정 */}
+                                {editingReplyId === reply.id ? (
+                                    <div className="reply-edit-form">
+                                        <textarea
+                                            value={editingContent}
+                                            onChange={(e) => setEditingContent(e.target.value)}
+                                            rows="3"
+                                        ></textarea>
+                                        <div className="reply-edit-buttons">
+                                            <button
+                                                onClick={() => handleReplyEditSubmit(reply.id)}>
+                                                수정 완료
+                                            </button>
+                                            <button
+                                                onClick={handleReplyEditCancel}>
+                                                취소
+                                            </button>
+                                        </div>
+                                    </div>
+                                ) : (
+
+                                    <>
+                                        <p className="reply-key-content">{reply.content}</p>
+
+                                        {/* 수정/삭제 버튼: 현재 사용자 ID와 댓글 작성자 ID가 일치할 때만 표시 */}
+                                        {reply.memberId === item.memberId && (
+                                            <div className="reply-actions">
+                                                <button
+                                                    onClick={() => handleReplyUpdate(reply.id, reply.content)}>
+                                                    수정
+                                                </button>
+                                                <button
+                                                    onClick={() => handleReplyDelete(reply.id)}>
+                                                    삭제
+                                                </button>
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+                                <p className="reply-content">{reply.content}</p>
+                            </div>
+                        ))
+                    ) : (
+                        <p className="text-center text-gray-500 py-4">등록된 댓글이 없습니다.</p>
+                    )}
+
+                    {/* 3. Pagenation UI */}
+                    {pageInfo.totalPages > 1 && (
+                        <div className="tab">
+                            <button
+                                onClick={() => handlePageChange(pageInfo.page - 1)}
+                                disabled={pageInfo.first}
+                                style={{ padding: '5px 10px', border: '1px solid #ccc', borderRadius: '5px' }}
+                            >
+                                이전
+                            </button>
+
+                            <span style={{ padding: '5px 10px', background: '#eee', borderRadius: '5px', fontWeight: 'bold' }}>
+                                {pageInfo.page + 1} / {pageInfo.totalPages}
+                            </span>
+
+                            <button
+                                onClick={() => handlePageChange(pageInfo.page + 1)}
+                                disabled={pageInfo.last}
+                                style={{ padding: '5px 10px', border: '1px solid #ccc', borderRadius: '5px' }}
+                            >
+                                다음
+                            </button>
+                        </div>
+                    )}
+
+
+                </div>
+            </div>
+
         </div>
-      </div>
-    </div>
-  );
-};
 
-export default ShopDetailContainer;
+
+    )
+
+
+
+}
+
+export default ShopDetailContainer

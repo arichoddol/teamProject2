@@ -1,4 +1,4 @@
-import jwtAxios from "../util/jwtUtill"; // JWT 자동 갱신 처리된 axios
+import jwtAxios from "../util/jwtUtil"; // JWT 자동 갱신 처리된 axios
 
 const PAYMENT_API = "http://localhost:8088/api/payments";
 const PAYMENT_ITEM_API = "http://localhost:8088/api/payment-items";
