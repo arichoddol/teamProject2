@@ -27,7 +27,7 @@ public class AdminController {
     private final MemberService memberService;
     private final AdminMemberService adminMemberService;
 
-    @GetMapping({ "", "/", "/adminIndex" })
+    @GetMapping({ "", "/", "/index" })
     // public ResponseEntity<?> adminIndex(@RequestBody MemberDto memberDto)
     public ResponseEntity<?> adminIndex() {
         // if (memberDto.getRole() == null || !memberDto.getRole().equals("ADMIN")) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import jwtAxios from '../../../apis/util/jwtUtill'
+import jwtAxios from '../../../apis/util/jwtUtil'
 import { BACK_BASIC_URL } from '../../../apis/commonApis'
 import { useSelector } from 'react-redux'
 import AdminPagingComponent from '../../common/AdminPagingComponent'

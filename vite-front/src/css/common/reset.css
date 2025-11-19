@@ -3,15 +3,18 @@
   padding: 0;
 }
 
-html, body {
+html,
+body {
   width: 100%;
 }
 
 a {
   text-decoration: none;
-  color: #000;
+  /* color: #000; */
+
 }
 
-ul, li {
+ul,
+li {
   list-style: none;
 }
