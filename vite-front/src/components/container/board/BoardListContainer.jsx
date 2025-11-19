@@ -69,6 +69,7 @@ const BoardListContainer = () => {
   }
 
   const handlePageClick = (pageNumbers) => {
+    console.log(pageNumbers);
     setCurrentPage(pageNumbers);
   }
 
