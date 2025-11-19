@@ -69,7 +69,6 @@ const CrewMainContainer = () => {
         <h1>크루 목록</h1>
         <ul>
           {crewList.map((crew) => {
-            console.log(crew.id);
             const images = crew.crewImageEntities || [];
             return (
               <li key={crew.id}>

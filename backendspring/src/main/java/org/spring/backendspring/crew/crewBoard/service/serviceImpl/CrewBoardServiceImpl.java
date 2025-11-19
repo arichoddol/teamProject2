@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import org.spring.backendspring.crew.crew.repository.CrewRepository;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
+import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.crew.crew.entity.CrewEntity;
-import org.spring.backendspring.crew.crew.repository.CrewRepository;
 import org.spring.backendspring.crew.crewBoard.dto.CrewBoardDto;
 import org.spring.backendspring.crew.crewBoard.entity.CrewBoardEntity;
 import org.spring.backendspring.crew.crewBoard.entity.CrewBoardImageEntity;
@@ -16,6 +16,10 @@ import org.spring.backendspring.crew.crewBoard.repository.CrewBoardImageReposito
 import org.spring.backendspring.crew.crewBoard.repository.CrewBoardRepository;
 import org.spring.backendspring.crew.crewBoard.service.CrewBoardService;
 import org.spring.backendspring.s3.AwsS3Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,17 +38,21 @@ public class CrewBoardServiceImpl implements CrewBoardService {
     private final AwsS3Service awsS3Service;
 
     @Override
-    public List<CrewBoardDto> boardListByCrew(Long crewId) {
+    public PagedResponse<CrewBoardDto> boardListByCrew(Long crewId, String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
 
-        List<CrewBoardEntity> crewBoardEntityList = crewBoardRepository.findByCrewEntity_Id(crewId);
+        Page<CrewBoardDto> crewBoardPage;
 
-        if (crewBoardEntityList.isEmpty()) {
-            throw new NullPointerException("조회할 게시글 없음");
+        if (keyword == null || keyword.trim().isEmpty()) {
+            crewBoardPage = crewBoardRepository.findByCrewEntity_Id(crewId, pageable)
+                        .map(CrewBoardDto::toDto2);
+        } else {
+            crewBoardPage = crewBoardRepository
+                    .findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(keyword, keyword, pageable)
+                    .map(CrewBoardDto::toDto2);
         }
 
-        return crewBoardEntityList.stream()
-                    .map(CrewBoardDto::toDto2)
-                    .collect(Collectors.toList());
+        return PagedResponse.of(crewBoardPage);
     }
 
     @Override
@@ -118,13 +126,7 @@ public class CrewBoardServiceImpl implements CrewBoardService {
 
         CrewBoardEntity crewBoardEntity = crewBoardRepository.findByCrewEntity_IdAndId(crewId, id)
                 .orElseThrow(() -> new NullPointerException("존재하지 않는 게시글"));
-
-        // loginUser == memberEntity는 항상 같을수 밖에 없어용 -> loginUser를 조회해서 나온게 memberEntity라서
-        // 삭제 or 검토요청
-        // if (!loginUserId.equals(memberEntity.getId())) {
-        //     throw new IllegalArgumentException("게시글 수정 권한 없음");
-        // }
-                
+                    
         crewBoardEntity.setTitle(crewBoardDto.getTitle());
         crewBoardEntity.setContent(crewBoardDto.getContent());
 

@@ -1,8 +1,7 @@
 package org.spring.backendspring.crew.crewBoard.controller;
 
-import org.spring.backendspring.board.service.BoardService;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,11 +15,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.config.security.MyUserDetails;
 import org.spring.backendspring.crew.crewBoard.dto.CrewBoardDto;
 import org.spring.backendspring.crew.crewBoard.service.CrewBoardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.ui.Model;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,9 +40,13 @@ public class CrewBoardController {
     private final CrewBoardService crewBoardService;
 
     @GetMapping({"", "/", "/list"})
-    public ResponseEntity<?> boardListByCrew(@PathVariable("crewId") Long crewId) {
+    public ResponseEntity<?> boardListByCrew
+                    (@PathVariable("crewId") Long crewId,
+                     @RequestParam(name = "keyword", required = false) String keyword,
+                     @RequestParam(name = "page", defaultValue = "0") int page,
+                     @RequestParam(name = "size", defaultValue = "10") int size) {
 
-        List<CrewBoardDto> crewBoardDtoList = crewBoardService.boardListByCrew(crewId);
+        PagedResponse<CrewBoardDto> crewBoardDtoList = crewBoardService.boardListByCrew(crewId, keyword, page, size);
 
         Map<String, Object> crewBoardList = new HashMap<>();
 
@@ -80,13 +88,13 @@ public class CrewBoardController {
                                          @AuthenticationPrincipal MyUserDetails userDetails) throws IOException {
         Long loginUserId = userDetails.getMemberId();
 
-        if (!loginUserId.equals(crewBoardDto.getMemberId())) {
+        
+        CrewBoardDto updateBoardDto = crewBoardService.updateBoard(id, crewId, crewBoardDto, loginUserId, newImages,
+        deleteImageId);
+        
+        if (!loginUserId.equals(updateBoardDto.getMemberId())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 권한이 없습니다.");
         }
-
-        CrewBoardDto updateBoardDto = crewBoardService.updateBoard(id, crewId, crewBoardDto, loginUserId, newImages,
-                deleteImageId);
-
         Map<String, CrewBoardDto> response = new HashMap<>();
 
         response.put("updatedBoard", updateBoardDto);

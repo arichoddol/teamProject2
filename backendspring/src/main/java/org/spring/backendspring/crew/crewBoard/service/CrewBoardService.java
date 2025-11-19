@@ -3,6 +3,7 @@ package org.spring.backendspring.crew.crewBoard.service;
 import java.io.IOException;
 import java.util.List;
 
+import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.crew.crewBoard.dto.CrewBoardDto;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +17,6 @@ public interface CrewBoardService {
     
     void deleteBoard(Long id, Long crewId, Long loginUserId);
 
-    List<CrewBoardDto> boardListByCrew(Long crewId);
+    PagedResponse<CrewBoardDto> boardListByCrew(Long crewId, String keyword, int page, int size);
     
 }

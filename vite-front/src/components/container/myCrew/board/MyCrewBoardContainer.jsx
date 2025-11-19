@@ -7,18 +7,27 @@ const MyCrewBoardContainer = () => {
   const navigate = useNavigate();
   const [crewBoardList, setCrewBoardList] = useState([]);
   
+
+  const [page, setPage] = useState(0);
+  const [size] = useState(10);
+  const [totalPages, setTotalPages] = useState(0);
+  const [keyword, setKeyword] = useState('');
+
   useEffect(() => {
     if (!crewId) return; 
 
-    axios.get(`/api/mycrew/${crewId}/board/list`)
+    axios.get(`/api/mycrew/${crewId}/board/list`, {
+        params: { page, size, keyword} 
+    })
       .then((res) => {
-        setCrewBoardList(res.data.crewBoardList);
-        console.log(res.data.crewBoardList);
+        setCrewBoardList(res.data.crewBoardList.content);
+        setTotalPages(data.totalPages);
+        console.log(res.data.crewBoardList.content);
       })
       .catch((err) => {
         console.error("크루 게시글 목록 실패", err)
       })
-  }, [crewId])
+  }, [crewId, page, keyword])
 
   const create = () => navigate(`/mycrew/${crewId}/board/create/`)
 
@@ -27,7 +36,7 @@ const MyCrewBoardContainer = () => {
     <div className="crewBoardList">
         <div className="crewBoardList-con">
             {/* <h1>{crewBoardList.crewEntity.name} 게시판</h1> */}
-            <button className='boardCreate' onClick={create}>게시글 작성</button>
+            <button className='createCrewBoard' onClick={create}>게시글 작성</button>
             {crewBoardList.length === 0 ? (
               <p>등록된 게시글이 없습니다.</p>
             ) : (
@@ -57,6 +66,18 @@ const MyCrewBoardContainer = () => {
                 })}
             </ul>
             )}
+
+          <div className="pagination">
+          {Array.from({ length: totalPages }).map((_, idx) => (
+            <button 
+              key={idx} 
+              onClick={() => setPage(idx)}
+              disabled={idx === page}
+            >
+              {idx + 1}
+            </button>
+          ))}
+        </div>
         </div>
     </div>
     </>

@@ -30,7 +30,6 @@ public class CrewServiceImpl implements CrewService {
     private final CrewRepository crewRepository;
     private final CrewMemberRepository crewMemberRepository;
     private final CrewImageRepository crewImageRepository;
-    private final CrewMemberRepository crewMemberRepository;
     private final MemberRepository memberRepository;
     private final AwsS3Service awsS3Service;
 
@@ -155,14 +154,5 @@ public class CrewServiceImpl implements CrewService {
                 .orElseThrow(() -> new IllegalArgumentException("이 크루의 멤버가 아닙니다."));
 
         return CrewDto.toCrewDto(crewEntity);
-    }
-
-    @Override
-    public List<CrewDto> mycrewList(Long memberId) {
-        List<CrewEntity> mycrewList = crewMemberRepository.findByMemberEntity_Id(memberId);
-
-        return mycrewList.stream()
-                    .map(CrewDto::toCrewDto)
-                    .toList();
     }
 }

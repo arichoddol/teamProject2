@@ -7,8 +7,8 @@ const MyCrewBoardUpdateContainer = () => {
   const { crewId, boardId } = useParams();
   const navigate = useNavigate();
   const { accessToken } = useSelector((state) => state.jwtSlice);
-//   const { userEmail } = useSelector((state) => state.loginSlice);  // 닉네임이 슬라이스에 있으면 좋겠당
-  const { nickName } = useSelector((state) => state.loginSlice);
+  const { userEmail } = useSelector((state) => state.loginSlice);  // 닉네임이 슬라이스에 있으면 좋겠당
+  const nickName = useSelector(state => state.loginSlice.nickName);
 
   const [board, setBoard] = useState([]);
   const [title, setTitle] = useState('');
@@ -17,6 +17,7 @@ const MyCrewBoardUpdateContainer = () => {
   const [exFiles, setExFiles] = useState([]);
   const [deleteImageId, setDeleteImageId] = useState([]);
 
+  console.log(nickName)
   useEffect(() => {
       const fetchBoard = async () => {
         try {
@@ -51,37 +52,26 @@ const MyCrewBoardUpdateContainer = () => {
   const update = async (el) => {
 
     el.preventDefault();
-    const formData = new FormData();
-  formData.append("title", title);
-  formData.append("content", content);
+    try {
+      const formData = new FormData();
+      formData.append('title', title)
+      formData.append('content', content)
+      newImages.forEach(image => formData.append('newImages', image))
+      deleteImageId.forEach(id => formData.append('deleteImageId', id))
 
-  // 새 이미지 첨부
-  for (let i = 0; i < newImages.length; i++) {
-    formData.append("newImages", newImages[i]);
-  }
-
-  // 삭제할 이미지 ID
-  deleteImageId.forEach(id => formData.append("deleteImageId", id));
-
-  try {
-    const res = await axios.post(
-      `/api/mycrew/${crewId}/board/update/${boardId}`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "multipart/form-data"
-        }
-      }
-    );
-
-    console.log("업데이트 완료", res.data.updatedBoard);
-    alert("게시글이 수정되었습니다!");
-    navigate(`/mycrew/${crewId}/board/detail/${boardId}`);
-  } catch (err) {
-    console.error("게시글 수정 실패", err);
-    alert("게시글 수정 실패: " + err.response?.data?.error);
-  }
+      const response = await axios.put(`/api/mycrew/${crewId}/board/update/${boardId}`,
+        formData,
+        { headers: {
+            "Authorization": `Bearer ${accessToken}`,
+            "Content-Type": "multipart/form-data"
+        }}
+      )
+      alert('게시글 수정 완료')
+      navigate(`/mycrew/${crewId}/board/detail/${boardId}`)
+    } catch (err) {
+      console.log(err)
+      alert("게시글 수정 오류 발생")
+    }
 };
 
   return (
@@ -89,7 +79,7 @@ const MyCrewBoardUpdateContainer = () => {
         <div className="boardCreate-con">
             <form onSubmit={update}>
                 <div className="boardTitle">
-                    <label className="title">제목</label>
+                    <label className="crewBoardLabel">제목</label>
                     <input 
                         type="text"
                         value={title}
@@ -97,39 +87,41 @@ const MyCrewBoardUpdateContainer = () => {
                         required
                         placeholder='제목'
                     />
-                    <div className="boardContent">
-                        <label className="content">내용</label>
-                        <textarea 
-                            name="content" 
-                            id="content"
-                            value={content}
-                            onChange={(el) => setContent(el.target.value)}
-                            required
-                            placeholder='내용'
-                        />
-                    </div>
-                    <div className="boardFile">
-                        <span>기존 이미지</span>
-                        <ul>
-                            {exFiles.length > 0 ? (
-                                exFiles.map(img => (
-                                <li key={img.id}>
-                                    <img src={img.newName} alt="boardImage" />
-                                    <button type='button' onClick={() => deleteImage(img.id)}>X</button>
-                                </li>
-                            ))
-                        ) : (
-                            <p>이미지 없음</p>
-                        )}
-                        </ul>
-                        <span>새 이미지 업로드</span>
-                        <input type="file" name='crewBoardImages' onChange={uploadNewFile} multiple/>
-                    </div>
-                    <div className="boardCreater">
-                        <label className="memberNickName">작성자</label>
-                        <input type="text" value={nickName} readOnly/>
-                    </div>
-                    <button className="boardUpdate" type="submit">수정완료</button>
+                </div>
+                <div className="boardContent">
+                    <label className="crewBoardLabel">내용</label>
+                    <textarea 
+                        name="content" 
+                        id="content"
+                        value={content}
+                        onChange={(el) => setContent(el.target.value)}
+                        required
+                        placeholder='내용'
+                    />
+                </div>
+                <div className="boardFile">
+                    <span>기존 이미지</span>
+                    <ul>
+                        {exFiles.length > 0 ? (
+                            exFiles.map(img => (
+                            <li key={img.id}>
+                                <img src={img.newName} alt="boardImage" />
+                                <button type='button' onClick={() => deleteImage(img.id)}>X</button>
+                            </li>
+                        ))
+                    ) : (
+                        <p>이미지 없음</p>
+                    )}
+                    </ul>
+                    <span>새 이미지 업로드</span>
+                    <input type="file" name='crewBoardImages' onChange={uploadNewFile} multiple/>
+                </div>
+                <div className="boardCreater">
+                    <label className="crewBoardLabel">작성자</label>
+                    <input type="text" value={nickName} readOnly/>
+                </div>
+                <div className="crewBoardCreateBtn">
+                    <button className="crewBoardCreate" type="submit">수정완료</button>
                 </div>
             </form>
         </div>

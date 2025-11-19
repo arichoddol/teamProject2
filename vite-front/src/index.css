@@ -13,3 +13,6 @@
 
 /* 내 크루  */
 @import url(css/mycrew/mycrew.css);
+
+/* 크루 보드 */
+@import url(css/mycrew/board/myCrewBoardCreate.css);

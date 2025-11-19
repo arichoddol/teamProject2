@@ -96,20 +96,6 @@ public class CrewController {
         joinMap.put("joinRequest", crewJoinRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(joinMap);
     }
-
-     @GetMapping("mycrewList/{memberId}")
-     public ResponseEntity<?> mycrewList(@PathVariable("memberId") Long memberId,
-                                         @AuthenticationPrincipal MyUserDetails userDetails) {
-        
-          Long loginUserId = userDetails.getMemberId();
-          if (!loginUserId.equals(memberId)) {
-              throw new IllegalArgumentException("본인 크루 리스트는 본인만 조회 가능");
-          }
-
-         List<CrewDto> mycrewList = crewService.mycrewList(memberId);
-        
-         return ResponseEntity.ok(mycrewList);
-     }
     
     
 }

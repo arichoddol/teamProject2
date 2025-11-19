@@ -51,7 +51,7 @@ const MyCrewBoardCreateContainer = () => {
         <div className="boardCreate-con">
             <form onSubmit={create}>
                 <div className="boardTitle">
-                    <label className="title">제목</label>
+                    <label className="crewBoardLabel">제목</label>
                     <input 
                         type="text"
                         value={title}
@@ -59,26 +59,28 @@ const MyCrewBoardCreateContainer = () => {
                         required
                         placeholder='제목'
                     />
-                    <div className="boardContent">
-                        <label className="content">내용</label>
-                        <textarea 
-                            name="content" 
-                            id="content"
-                            value={content}
-                            onChange={(el) => setContent(el.target.value)}
-                            required
-                            placeholder='내용'
-                        />
-                    </div>
-                    <div className="boardFile">
-                        <span>파일</span>
-                        <input type="file" name='crewBoardfile' onChange={fileChange} multiple/>
-                    </div>
-                    <div className="boardCreater">
-                        <label className="memberNickName">작성자</label>
-                        <input type="text" value={nickName} readOnly/>
-                    </div>
-                    <button className="boardCreate" type="submit">작성완료</button>
+                </div>
+                <div className="boardContent">
+                    <label className="crewBoardLabel">내용</label>
+                    <textarea 
+                        name="content" 
+                        id="content"
+                        value={content}
+                        onChange={(el) => setContent(el.target.value)}
+                        required
+                        placeholder='내용'
+                    />
+                </div>
+                <div className="boardFile">
+                    <span>파일</span>
+                    <input type="file" name='crewBoardfile' onChange={fileChange} multiple/>
+                </div>
+                <div className="boardCreater">
+                    <label className="crewBoardLabel">작성자</label>
+                    <input type="text" value={nickName} readOnly/>
+                </div>
+                <div className="crewBoardCreateBtn">
+                    <button className="crewBoardCreate" type="submit">작성완료</button>
                 </div>
             </form>
         </div>

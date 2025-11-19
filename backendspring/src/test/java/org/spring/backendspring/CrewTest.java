@@ -68,7 +68,7 @@ public class CrewTest {
 
     @Test
     void crewJoin(){
-        Long crewId = 1L;
+        Long crewId = 3L;
         Long memberId = 4L;
         String message =" test 통과 ";
 
@@ -100,7 +100,7 @@ public class CrewTest {
 
     @Test
     void crewJoinApproved() {
-        Long crewId = 1L;
+        Long crewId = 3L;
         Long memberId = 4L;
         CrewJoinRequestEntity request = crewJoinRequestRepository.findByCrewEntityIdAndMemberEntityId(crewId, memberId)
                 .orElseThrow(()->new NullPointerException("가입신청 없음"));
