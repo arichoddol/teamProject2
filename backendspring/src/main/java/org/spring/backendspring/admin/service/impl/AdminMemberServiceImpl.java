@@ -29,22 +29,27 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 
     // 멤버 전체 조회
     @Override
-    public PagedResponse<MemberDto> findAllMembers(String keyword, int page, int size) {
+    public PagedResponse<MemberDto> findAllMembers(String search, String subject, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        Page<MemberDto> memberPage;
+        Page<MemberEntity> memberEntities = null;
 
-        if (keyword == null || keyword.trim().isEmpty()) {
+        if (subject == null || search == null || search.trim().isEmpty()) {
             // 검색어 없을 때 → 전체조회
-            memberPage = memberRepository.findAll(pageable)
-                    .map(MemberMapper::toDto);
+            memberEntities = memberRepository.findAll(pageable);
+        } else if (subject.equals("userEmail")) {
+            memberEntities = adminMemberRepository.findByUserEmailContaining(pageable, search);
+        } else if (subject.equals("userName")) {
+            memberEntities = adminMemberRepository.findByUserNameContaining(pageable, search);
+        } else if (subject.equals("nickName")) {
+            memberEntities = adminMemberRepository.findByNickNameContaining(pageable, search);
         } else {
+            memberEntities = memberRepository.findAll(pageable);
             // 검색어 있을 때 → 이메일 or 닉네임 검색
-            memberPage = adminMemberRepository
-                    .findByUserEmailContainingIgnoreCaseOrNickNameContainingIgnoreCase(keyword, keyword, pageable)
-                    .map(MemberMapper::toDto);
+//            memberPage = adminMemberRepository
+//                    .findByUserEmailContainingIgnoreCaseOrNickNameContainingIgnoreCase(keyword, keyword, pageable)
+//                    .map(MemberMapper::toDtoList);
         }
-
-        return PagedResponse.of(memberPage);
+        return PagedResponse.of(memberEntities.map(MemberMapper::toDtoList));
     }
 
     @Override

@@ -1,9 +1,11 @@
 package org.spring.backendspring.member.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.spring.backendspring.common.Gender;
 import org.spring.backendspring.common.role.MemberRole;
+import org.spring.backendspring.crew.crew.dto.CrewDto;
 import org.spring.backendspring.crew.crew.entity.CrewEntity;
 import org.spring.backendspring.crew.crewMember.entity.CrewMemberEntity;
 import org.spring.backendspring.member.entity.MemberEntity;
@@ -60,7 +63,13 @@ public class MemberDto {
 
     private int isProfileImg;
 
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
+
+    @JsonIgnore
     private List<CrewEntity> crewEntityList;
+
+    private List<CrewDto> crewDtoList;
 
     private List<CrewMemberEntity> crewMemberEntityList;
 }
