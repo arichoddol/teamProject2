@@ -44,6 +44,8 @@ public class ItemEntity extends BasicTime {
     private String itemTitle;
     @Column(nullable = false)
     private int itemPrice;
+    @Column(nullable = false)
+    private String category;
 
     @Column(nullable = false)
     private int itemSize;
@@ -87,16 +89,15 @@ public class ItemEntity extends BasicTime {
                 !itemDto.getNewFileName().isEmpty()) ? 1 : 0;
 
         return ItemEntity.builder()
-                .id(itemDto.getId())
-                .itemTitle(itemDto.getItemTitle())
-                .itemDetail(itemDto.getItemDetail())
-                .itemPrice(itemDto.getItemPrice())
-                .itemSize(itemDto.getItemSize())
-                .oldFileName(itemDto.getOldFileName())
-                .newFileName(itemDto.getNewFileName())
-                .memberEntity(itemDto.getMemberEntity())
-                .attachFile(attachFileValue)
-                .build();
+                    .id(itemDto.getId())
+                    .itemTitle(itemDto.getItemTitle())
+                    .itemDetail(itemDto.getItemDetail())
+                    .itemPrice(itemDto.getItemPrice())
+                    .itemSize(itemDto.getItemSize())
+                    .category(itemDto.getCategory())
+                    .memberEntity(itemDto.getMemberEntity())
+                    .attachFile(attachFileValue)
+        .build();
 
     }
 

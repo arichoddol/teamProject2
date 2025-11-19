@@ -35,7 +35,8 @@ public class AdminItemServiceImpl implements AdminItemService {
     private final ItemImgRepository itemImgRepository;
     private final MemberRepository memberRepository;
 
-    private final String uploadPath = "E:\\uploadImg\\";
+//    private final String uploadPath = "E:\\uploadImg\\";
+    private static final String uploadPath = "C:/full/upload/";
 
     // ===========================================================
     //  FIND ONE

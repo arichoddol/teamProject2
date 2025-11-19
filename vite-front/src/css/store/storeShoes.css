@@ -29,18 +29,17 @@
 .itemList-banner img {
     width: 100%;
  
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 
 .item-grid-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    /* grid-template-columns: repeat(4, 1fr); */
+    grid-template-columns: repeat(3, 250px);
+
     gap: 20px;
     margin-bottom: 20px;
-    width: 80%;
+    width: 100%;
     /* 그리드 영역을 부모 컨테이너에 꽉 채우도록 수정 (20% -> 100%) */
     margin: 4px auto;
     justify-content: center;
@@ -53,9 +52,11 @@
 .item-card {
   
     height: 100%;
+    width: 100%;
     border: 2px solid #2722ba;
-    /* border-radius: 20px; */
+    border-radius: 20px;
     /* ... */
+    overflow: hidden;
 }
 
 /* 상품 카드 링크 스타일 */
@@ -110,7 +111,7 @@
 }
 
 .item-price {
-    font-size: 1.3em;
+    font-size: 1.2em;
     color: #d90429;
     /* 가격 강조 색상 */
     font-weight: bold;

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import jwtAxios from '../../../apis/util/jwtUtill';
+import jwtAxios from '../../../apis/util/jwtUtil';
 import { useSelector } from 'react-redux';
 
 
@@ -61,8 +61,8 @@ const BoardUpdateContainer = () => {
       alert(`${boards.id}번 게시물이 수정되었습니다`);
       navigate(`/board/detail/${boards.id}`); // 수정된 게시글 상세 페이지로 이동
 
-    } catch (err) {
-      console.error("게시물등록 실패!", err);
+    } catch (error) {
+      console.error("게시물등록 실패!", error);
       alert("글쓰기 실패");
 
       if (err.response && err.response.data) {
@@ -78,7 +78,12 @@ const BoardUpdateContainer = () => {
     const formData = new FormData(e.target);
     formData.append('id', boards.id);
     try {
-      await axios.post("http://localhost:8088/api/board/updatePost", formData);
+      await jwtAxios.post(`${API_BASE_URL}/updatePost`, formData,
+        {
+           headers: { Authorization: `Bearer ${accessToken}` },
+           withCredentials: true
+        },
+      );
       alert("게시물이 수정되었습니다");
       navigate("/board");
 
@@ -120,13 +125,13 @@ const BoardUpdateContainer = () => {
 
       console.log(response.data.content)
     } catch (error) {
-      console.error("게시물 조회 실패:", err.response);
+      console.error("게시물 조회 실패:", error.response);
 
-      if (err.response) {
-        if (err.response.status === 400) {
-          alert(err.response.data);
+      if (error.response) {
+        if (error.response.status === 400) {
+          alert(error.response.data);
           navigate(`/board/${id}`);
-        } else if (err.response.status === 404) {
+        } else if (error.response.status === 404) {
           alert("게시글 정보를 찾을 수 없습니다.");
           navigate("/board");
         } else {
@@ -150,6 +155,7 @@ const BoardUpdateContainer = () => {
     <div className="boardUpdate">
       <h4>:: 게시글수정하기 ::</h4>
       <div className="boardUpdate-con">
+
         <form onSubmit={handleUpdateSubmit} encType="multipart/form-data">
           <ul>
             <li className="first_li">
