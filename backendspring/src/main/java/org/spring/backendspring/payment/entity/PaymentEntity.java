@@ -2,13 +2,11 @@ package org.spring.backendspring.payment.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.spring.backendspring.common.BasicTime;
 import org.spring.backendspring.payment.PaymentStatus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,7 +15,6 @@ import org.spring.backendspring.payment.PaymentStatus;
 @AllArgsConstructor
 @Builder
 @Table(name = "payment_tb")
-
 public class PaymentEntity extends BasicTime {
 
     @Id
@@ -25,7 +22,6 @@ public class PaymentEntity extends BasicTime {
     private Long paymentId;
 
     private Long memberId;
-
     private String paymentAddr;
     private String paymentMethod;
     private String paymentPost;
@@ -39,8 +35,17 @@ public class PaymentEntity extends BasicTime {
     @OneToMany(mappedBy = "payment", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<PaymentItemEntity> paymentItemEntities = new ArrayList<>();
 
-    public Object getItems() {
+    // ---------------- KakaoPay 관련 ----------------
+    private Long productPrice;
+    private String tid;
+    private String pgToken;
 
+    @Column(columnDefinition = "TEXT")
+    private String paymentReadyJson;
+
+    private int isSucceeded;
+
+    public Object getItems() {
         throw new UnsupportedOperationException("Unimplemented method 'getItems'");
     }
 }

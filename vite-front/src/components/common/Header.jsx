@@ -1,19 +1,21 @@
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import LogoutBtn from '../../apis/auth/LogoutBtn';
-import { removeCookie } from '../../apis/util/cookieUtil';
-import { logoutAction } from '../../slices/loginSlice';
-import { deleteAccessToken } from '../../slices/jwtSlice';
-import { Link } from 'react-router-dom';
-// CSS 
-import "../../css/common/header.css"
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import LogoutBtn from "../../apis/auth/LogoutBtn";
+import { removeCookie } from "../../apis/util/cookieUtil";
+import { logoutAction } from "../../slices/loginSlice";
+import { deleteAccessToken } from "../../slices/jwtSlice";
+import { Link } from "react-router-dom";
+
+// CSS
+import "../../css/common/header.css";
 
 // slice 테스트 확인용으로 작성했습니다.
 const Header = () => {
-
   const dispatch = useDispatch();
-  const isLogin = useSelector(state => state.loginSlice.isLogin);
-  const role = useSelector(state => state.loginSlice.role);
+  const isLogin = useSelector((state) => state.loginSlice.isLogin);
+  const role = useSelector((state) => state.loginSlice.role);
+  const memberId = useSelector((state) => state.loginSlice.memberId); // 추가
+
 
   // const onLogoutFn = async () => {
   //   const rs = await logoutFn();
@@ -29,7 +31,6 @@ const Header = () => {
   // }
 
   return (
-
     <div className="header">
       <div className="nav">
         <h1>HOME</h1>
@@ -42,15 +43,25 @@ const Header = () => {
                   <LogoutBtn />
                 </li>
                 <li>
+                  <Link to={`/cart/${memberId}`}>CART</Link>
+                </li>
+                <li>
+                  <Link to={`/store/${memberId}`}>SHOP</Link>
+                </li>
+                <li>
                   <Link to="/auth/myPage">myPage</Link>
                 </li>
-                {role === 'ADMIN' ? <li><Link to="/admin/index">ADMIN</Link></li> : null}
-              </>)
-              :
+                {role === "ADMIN" ? (
+                  <li>
+                    <Link to="/admin/index">ADMIN</Link>
+                  </li>
+                ) : null}
+              </>
+            ) : (
               <li>
                 <Link to="/auth/login">LOGIN</Link>
               </li>
-            }
+            )}
             <li>
               <Link to="/board">BOARD</Link>
             </li>
@@ -67,7 +78,7 @@ const Header = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

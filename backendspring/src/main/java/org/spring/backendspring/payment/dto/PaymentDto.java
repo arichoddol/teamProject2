@@ -1,7 +1,6 @@
 package org.spring.backendspring.payment.dto;
 
 import lombok.*;
-
 import org.spring.backendspring.payment.PaymentStatus;
 import org.spring.backendspring.payment.entity.PaymentEntity;
 import org.spring.backendspring.payment.entity.PaymentItemEntity;
@@ -28,13 +27,17 @@ public class PaymentDto {
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 
-    // 하위 아이템 DTO 리스트 포함
     private List<PaymentItemDto> paymentItems;
+
+    private Long productPrice;
+    private String tid;
+    private String pgToken;
+    private String paymentReadyJson;
+    private int isSucceeded;
 
     // Entity → DTO 변환
     public static PaymentDto fromEntity(PaymentEntity entity) {
-        if (entity == null)
-            return null;
+        if (entity == null) return null;
 
         return PaymentDto.builder()
                 .paymentId(entity.getPaymentId())
@@ -46,11 +49,16 @@ public class PaymentDto {
                 .paymentType(entity.getPaymentType())
                 .createTime(entity.getCreateTime())
                 .updateTime(entity.getUpdateTime())
-                .paymentItems(entity.getPaymentItemEntities() != null ? entity.getPaymentItemEntities().stream()
-                        .map(PaymentItemDto::fromEntity)
-                        .collect(Collectors.toList())
-                        : null)
+                .paymentItems(entity.getPaymentItemEntities() != null ?
+                        entity.getPaymentItemEntities().stream()
+                                .map(PaymentItemDto::fromEntity)
+                                .collect(Collectors.toList()) : null)
                 .paymentStatus(entity.getPaymentStatus())
+                .productPrice(entity.getProductPrice())
+                .tid(entity.getTid())
+                .pgToken(entity.getPgToken())
+                .paymentReadyJson(entity.getPaymentReadyJson())
+                .isSucceeded(entity.getIsSucceeded())
                 .build();
     }
 
@@ -65,6 +73,11 @@ public class PaymentDto {
                 .paymentResult(this.paymentResult)
                 .paymentType(this.paymentType)
                 .paymentStatus(this.paymentStatus)
+                .productPrice(this.productPrice)
+                .tid(this.tid)
+                .pgToken(this.pgToken)
+                .paymentReadyJson(this.paymentReadyJson)
+                .isSucceeded(this.isSucceeded)
                 .build();
 
         if (this.paymentItems != null) {
@@ -72,12 +85,15 @@ public class PaymentDto {
                     this.paymentItems.stream()
                             .map(itemDto -> {
                                 PaymentItemEntity itemEntity = itemDto.toEntity();
-                                itemEntity.setPayment(entity); // 양방향 관계 설정
+                                itemEntity.setPayment(entity);
                                 return itemEntity;
-                            })
-                            .collect(Collectors.toList()));
+                            }).collect(Collectors.toList()));
         }
-
         return entity;
+    }
+
+    // toDto 추가
+    public static PaymentDto toDto(PaymentEntity entity) {
+        return fromEntity(entity);
     }
 }

@@ -190,6 +190,20 @@ const ShopDetailContainer = () => {
         }
     };
 
+     // 장바구니 담기 함수 추가
+    const handleAddToCart = () => {
+        const product = {
+            id: item.id,
+            title: item.itemTitle,
+            price: item.itemPrice,
+            size: item.itemSize,
+            image: item.attachFile,
+            detail: item.itemDetail
+        };
+
+        navigate("/cart", { state: { itemToAdd: product } });
+    };
+
     useEffect(() => {
         fetchData();
         // when id change its always restart it.
@@ -223,6 +237,11 @@ const ShopDetailContainer = () => {
                     <span>attachFile(temp) : {item.attachFile}</span><br />
                     <span>createTime : {item.createTime}</span><br />
                     <span>updateTime : {item.updatTime}</span><br />
+
+                    <button className="add-cart-btn" onClick={handleAddToCart}>
+                        장바구니 담기
+                    </button>
+
                 </div>
                 <div className="itemDetail-con-reply">
 

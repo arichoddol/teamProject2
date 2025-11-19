@@ -152,7 +152,7 @@ const ShopMainContainer = () => {
 
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ShopMainContainer
+export default ShopMainContainer;
