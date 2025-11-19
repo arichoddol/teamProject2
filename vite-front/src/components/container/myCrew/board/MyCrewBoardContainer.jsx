@@ -17,7 +17,7 @@ const MyCrewBoardContainer = () => {
     if (!crewId) return; 
 
     axios.get(`/api/mycrew/${crewId}/board/list`, {
-        params: { page, size, keyword} 
+        params: { page, size, keyword } 
     })
       .then((res) => {
         setCrewBoardList(res.data.crewBoardList.content);

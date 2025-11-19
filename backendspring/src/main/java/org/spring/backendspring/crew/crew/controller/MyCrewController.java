@@ -6,7 +6,6 @@ import org.spring.backendspring.config.security.MyUserDetails;
 import org.spring.backendspring.crew.crew.dto.CrewDto;
 import org.spring.backendspring.crew.crew.service.CrewService;
 import org.spring.backendspring.crew.crewMember.dto.CrewMemberDto;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties.Http;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

@@ -2,7 +2,6 @@ package org.spring.backendspring.crew.crewBoard.service.serviceImpl;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.spring.backendspring.crew.crew.repository.CrewRepository;
 import org.spring.backendspring.member.entity.MemberEntity;
