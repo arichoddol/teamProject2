@@ -13,3 +13,9 @@
 
 /* 내 크루  */
 @import url(css/mycrew/mycrew.css);
+
+/* 관리자 */
+@import url(css/admin/container/admin-member-list.css);
+
+/* 관리자 페이징 */
+@import url(css/common/admin-paging.css);

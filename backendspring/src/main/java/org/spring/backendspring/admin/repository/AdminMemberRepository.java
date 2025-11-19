@@ -15,4 +15,9 @@ public interface AdminMemberRepository extends JpaRepository<MemberEntity, Long>
             String nickKeyword,
             Pageable pageable);
 
+    Page<MemberEntity> findByUserEmailContaining(Pageable pageable, String search);
+
+    Page<MemberEntity> findByUserNameContaining(Pageable pageable, String search);
+
+    Page<MemberEntity> findByNickNameContaining(Pageable pageable, String search);
 }

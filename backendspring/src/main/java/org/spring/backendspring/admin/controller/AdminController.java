@@ -46,11 +46,12 @@ public class AdminController {
     // 공통 BasicPagingDto 클래스 만들어서 사용하는 방향으로
     @GetMapping("/member/memberList")
     public ResponseEntity<PagedResponse<MemberDto>> getAllMembers(
-            @RequestParam(name = "keyword", required = false) String keyword,
+            @RequestParam(name = "search", required = false) String search,
+            @RequestParam(name = "subject", required = false) String subject,
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size) {
 
-        PagedResponse<MemberDto> memberList = adminMemberService.findAllMembers(keyword, page, size);
+        PagedResponse<MemberDto> memberList = adminMemberService.findAllMembers(search, subject, page, size);
         return ResponseEntity.ok(memberList);
     }
 
