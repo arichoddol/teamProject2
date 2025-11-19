@@ -30,14 +30,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "item_tb" )
-public class ItemEntity extends BasicTime{
+@Table(name = "item_tb")
+public class ItemEntity extends BasicTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id", unique = true)
     private Long id;
-    
+
     @Column(nullable = false)
     private String itemDetail;
     @Column(nullable = false, unique = true)
@@ -55,7 +55,7 @@ public class ItemEntity extends BasicTime{
     private String newFileName;
     private String oldFileName;
 
-
+    private String itemImage;
     // createTime
     // updateTime
 
@@ -66,28 +66,28 @@ public class ItemEntity extends BasicTime{
 
     // 1:N
     @OneToMany(mappedBy = "itemEntity",
-                fetch = FetchType.LAZY,
-                cascade = CascadeType.REMOVE)
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
     private List<CartItemEntity> itemListEntities;
 
     @OneToMany(mappedBy = "itemEntity",
-                fetch = FetchType.LAZY,
-                cascade = CascadeType.REMOVE)
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
     private List<ItemImgEntity> itemImgEntities;
 
-    
+
     @OneToMany(mappedBy = "itemEntity",
-                fetch = FetchType.LAZY,
-                cascade = CascadeType.REMOVE)
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
     private List<ItemReplyEntity> itemReplyEntities;
-    
+
 
     // toEntity 
-    public static ItemEntity toItemEntity(ItemDto itemDto){
+    public static ItemEntity toItemEntity(ItemDto itemDto) {
         //builder()
         int attachFileValue = (itemDto.getNewFileName() != null &&
-                            !itemDto.getNewFileName().isEmpty()) ? 1:0;
-        
+                !itemDto.getNewFileName().isEmpty()) ? 1 : 0;
+
         return ItemEntity.builder()
                     .id(itemDto.getId())
                     .itemTitle(itemDto.getItemTitle())
