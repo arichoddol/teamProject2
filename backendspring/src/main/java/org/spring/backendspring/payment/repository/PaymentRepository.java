@@ -1,6 +1,8 @@
 package org.spring.backendspring.payment.repository;
 
 import org.spring.backendspring.payment.entity.PaymentEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +23,10 @@ public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
     @Transactional
     @Query("UPDATE PaymentEntity p SET p.isSucceeded = :status WHERE p.paymentId = :paymentId")
     void updateIsSucced(Long paymentId, int status);
+
+    // PaymentRepository.java
+      Page<PaymentEntity> findByPaymentTypeContainingIgnoreCaseOrPaymentPostContainingIgnoreCase(
+            String paymentType, String paymentPost, Pageable pageable
+    );
+
 }

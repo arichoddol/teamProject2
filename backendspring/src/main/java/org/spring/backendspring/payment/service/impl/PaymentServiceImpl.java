@@ -10,6 +10,9 @@ import org.spring.backendspring.payment.entity.PaymentEntity;
 import org.spring.backendspring.payment.repository.PaymentRepository;
 import org.spring.backendspring.payment.repository.PaymentResultRepository;
 import org.spring.backendspring.payment.service.PaymentService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -193,4 +196,17 @@ public class PaymentServiceImpl implements PaymentService {
 
         return "" + jsonDb;
     }
+
+    // PaymentServiceImpl.java
+    @Override
+    public Page<PaymentEntity> getPayments(int page, int size, String keyword) {
+        Pageable pageable = PageRequest.of(page, size);
+        if (keyword == null || keyword.isEmpty()) {
+            return paymentRepository.findAll(pageable);
+        } else {
+            return paymentRepository.findByPaymentTypeContainingIgnoreCaseOrPaymentPostContainingIgnoreCase(
+                    keyword, keyword, pageable);
+        }
+    }
+
 }

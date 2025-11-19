@@ -1,10 +1,14 @@
 package org.spring.backendspring.payment.controller;
 
 import lombok.RequiredArgsConstructor;
+
+import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.payment.dto.PaymentDto;
 import org.spring.backendspring.payment.dto.PaymentResultDto;
+import org.spring.backendspring.payment.entity.PaymentEntity;
 import org.spring.backendspring.payment.service.PaymentService;
 import org.spring.backendspring.payment.service.PaymentResultService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,35 +66,33 @@ public class PaymentController {
     // -----------------
 
     @GetMapping("/approval/{paymentId}/{productPrice}/{memberId}")
-public ResponseEntity<Void> approval(
-        @PathVariable Long paymentId,
-        @PathVariable Long productPrice,
-        @PathVariable Long memberId,
-        @RequestParam("pg_token") String pgToken,
-        @RequestParam("productName") String productName) {
-    try {
-        paymentService.paymentApproval(pgToken, paymentId, productPrice, productName, memberId);
+    public ResponseEntity<Void> approval(
+            @PathVariable Long paymentId,
+            @PathVariable Long productPrice,
+            @PathVariable Long memberId,
+            @RequestParam("pg_token") String pgToken,
+            @RequestParam("productName") String productName) {
+        try {
+            paymentService.paymentApproval(pgToken, paymentId, productPrice, productName, memberId);
 
-        // 성공 시 프론트의 /payment/success로 redirect
-        String redirectUrl = "http://localhost:3000/payment/success" +
-                "?paymentId=" + paymentId +
-                "&productPrice=" + productPrice +
-                "&memberId=" + memberId +
-                "&productName=" + URLEncoder.encode(productName, StandardCharsets.UTF_8);
+            // 성공 시 프론트의 /payment/success로 redirect
+            String redirectUrl = "http://localhost:3000/payment/success" +
+                    "?paymentId=" + paymentId +
+                    "&productPrice=" + productPrice +
+                    "&memberId=" + memberId +
+                    "&productName=" + URLEncoder.encode(productName, StandardCharsets.UTF_8);
 
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .header("Location", redirectUrl)
-                .build();
-    } catch (Exception e) {
-        // 실패 시 프론트의 /payment/fail로 redirect
-        String failUrl = "http://localhost:3000/payment/fail?paymentId=" + paymentId;
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .header("Location", failUrl)
-                .build();
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .header("Location", redirectUrl)
+                    .build();
+        } catch (Exception e) {
+            // 실패 시 프론트의 /payment/fail로 redirect
+            String failUrl = "http://localhost:3000/payment/fail?paymentId=" + paymentId;
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .header("Location", failUrl)
+                    .build();
+        }
     }
-}
-
-
 
     @GetMapping("/pg/{pg}")
     public Map<String, Object> pgRequest(
@@ -137,4 +139,22 @@ public ResponseEntity<Void> approval(
         map.put("payRsList", lists);
         return map;
     }
+
+    @GetMapping("/page")
+public PagedResponse<PaymentDto> getPayments(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(required = false) String keyword) {
+
+    // 1. Page<PaymentEntity> 가져오기
+    Page<PaymentEntity> pageResult = paymentService.getPayments(page, size, keyword);
+
+    // 2. Entity -> DTO 변환
+    Page<PaymentDto> dtoPage = pageResult.map(PaymentDto::fromEntity);
+
+    // 3. PagedResponse로 변환 후 반환
+    return PagedResponse.of(dtoPage);
+}
+
+
 }

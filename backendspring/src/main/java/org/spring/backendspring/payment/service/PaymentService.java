@@ -1,6 +1,7 @@
 package org.spring.backendspring.payment.service;
 
 import org.spring.backendspring.payment.entity.PaymentEntity;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -20,4 +21,8 @@ public interface PaymentService {
     String pgRequest(String pg, Long productId, Long memberId, Long productPrice, String productName);
 
     String getJsonDb();
+
+    // PaymentService.java
+    Page<PaymentEntity> getPayments(int page, int size, String keyword);
+
 }

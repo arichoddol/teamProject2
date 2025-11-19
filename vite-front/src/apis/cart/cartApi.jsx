@@ -57,3 +57,13 @@ export const removeCartItem = async (cartItemId) => {
     withCredentials: true,
   });
 };
+
+// === 장바구니 아이템 페이징 조회 + 검색 ===
+export const getCartItemsByPage = async (cartId, page = 0, size = 10, keyword = "") => {
+  const res = await jwtAxios.get(`${CART_API}/${cartId}/items`, {
+    withCredentials: true,
+    params: { page, size, keyword },
+  });
+  return res.data;
+};
+

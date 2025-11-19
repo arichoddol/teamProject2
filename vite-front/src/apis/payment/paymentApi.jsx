@@ -27,6 +27,20 @@ export const getPaymentItems = async (paymentId) => {
 };
 
 // -----------------------------
+// 페이징 + 검색 API
+// -----------------------------
+export const getPaymentsByPage = async (page = 0, size = 5, keyword = "") => {
+  const res = await jwtAxios.get(`${PAYMENT_API}/page`, {
+    params: {
+      page,
+      size,
+      keyword
+    }
+  });
+  return res.data;
+};
+
+// -----------------------------
 // KakaoPay 연동
 // -----------------------------
 
