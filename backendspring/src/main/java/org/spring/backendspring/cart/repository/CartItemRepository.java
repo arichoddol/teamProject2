@@ -3,6 +3,7 @@ package org.spring.backendspring.cart.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.spring.backendspring.cart.entity.CartEntity;
 import org.spring.backendspring.cart.entity.CartItemEntity;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public interface CartItemRepository extends JpaRepository<CartItemEntity, Long> 
     Page<CartItemEntity> findByCartEntity_Id(Long cartId, Pageable pageable);
 
     Page<CartItemEntity> findByCartEntity_IdAndItemEntity_ItemTitleContainingIgnoreCase(
-            Long cartId, String keyword, Pageable pageable
-    );
+            Long cartId, String keyword, Pageable pageable);
+
+    List<CartItemEntity> findByCartEntityAndItemEntity_IdIn(CartEntity cartEntity, List<Long> itemIds);
 }

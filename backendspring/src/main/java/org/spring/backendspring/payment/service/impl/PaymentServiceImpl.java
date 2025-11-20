@@ -4,10 +4,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+
+import org.spring.backendspring.cart.entity.CartEntity; 
+import org.spring.backendspring.cart.entity.CartItemEntity; 
+import org.spring.backendspring.cart.repository.CartItemRepository;
+import org.spring.backendspring.cart.repository.CartRepository;
 import org.spring.backendspring.payment.dto.KakaoPayPrepareDto;
 import org.spring.backendspring.payment.dto.PaymentDto;
 import org.spring.backendspring.payment.entity.PaymentEntity;
-import org.spring.backendspring.payment.entity.PaymentItemEntity; // ⭐️ 추가
+import org.spring.backendspring.payment.entity.PaymentItemEntity;
 import org.spring.backendspring.payment.repository.PaymentRepository;
 import org.spring.backendspring.payment.repository.PaymentResultRepository;
 import org.spring.backendspring.payment.service.PaymentService;
@@ -31,10 +36,13 @@ import java.util.stream.Collectors;
 @Transactional
 public class PaymentServiceImpl implements PaymentService {
 
+    // Lombok @RequiredArgsConstructor가 필드들을 자동 주입합니다.
     private final PaymentRepository paymentRepository;
     private final PaymentResultRepository paymentResultRepository;
+    private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
 
-    // ... (CRUD 메서드 생략) ...
+    // --- CRUD 메서드 ---
 
     @Override
     public PaymentEntity createPayment(PaymentEntity payment) {
@@ -78,10 +86,10 @@ public class PaymentServiceImpl implements PaymentService {
         paymentRepository.deleteById(paymentId);
     }
 
-    // ----------------- KakaoPay -----------------
+    // --- KakaoPay 관련 메서드 ---
 
-    // ... (paymentApproval, jsonToObject, paymentApproveKakao 메서드 생략) ...
     @Override
+    @Transactional // ⭐️ 트랜잭션 보장 (결제 승인과 장바구니 삭제를 하나의 트랜잭션으로)
     public void paymentApproval(String pgToken, Long paymentId, Long productPrice, String productName, Long memberId) {
         paymentRepository.updatePgToken(paymentId, pgToken);
         PaymentEntity paymentEntity = paymentRepository.findById(paymentId).orElseThrow();
@@ -92,14 +100,23 @@ public class PaymentServiceImpl implements PaymentService {
 
         if (pgToken == null)
             throw new RuntimeException("pgToken이 존재하지 않습니다.");
+        
+        // 1. 카카오페이 최종 승인 요청 및 isSucceeded 업데이트
         paymentApproveKakao(paymentDto, paymentId, productPrice, productName, memberId);
+
+        // 2. 결제 성공 확인 후 장바구니 아이템 삭제
+        PaymentEntity approvedPayment = paymentRepository.findById(paymentId).orElseThrow();
+        
+        // paymentApproveKakao에서 isSucceeded가 1로 업데이트되었다고 가정합니다.
+        if (approvedPayment.getIsSucceeded() == 1) { 
+            removePaidItemsFromCart(approvedPayment);
+        }
     }
 
     private PaymentDto jsonToObject(PaymentDto dto) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         try {
-            // 주의: dto.getPaymentReadyJson().toString() 대신 dto.getPaymentReadyJson() 사용 권장
             return objectMapper.readValue(dto.getPaymentReadyJson(), PaymentDto.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -111,7 +128,7 @@ public class PaymentServiceImpl implements PaymentService {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.set("Authorization", "KakaoAK " + "5153d372489b6c481c38dab7bb500441");
+        headers.set("Authorization", "KakaoAK " + "5153d372489b6c481c38dab7bb500441"); // 🔑 인증키
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("cid", "TC0ONETIME");
@@ -131,15 +148,42 @@ public class PaymentServiceImpl implements PaymentService {
         System.out.println("결제 승인 응답: " + result.getBody());
 
         if (result.getStatusCode() == HttpStatus.OK) {
-            paymentRepository.updateIsSucced(paymentId, 1);
+            paymentRepository.updateIsSucced(paymentId, 1); // 성공 처리
         } else {
-            paymentRepository.updateIsSucced(paymentId, 0);
+            paymentRepository.updateIsSucced(paymentId, 0); // 실패 처리
+        }
+    }
+    
+    // ⭐️ [신규 메서드] 결제된 상품을 장바구니에서 삭제하는 로직
+    private void removePaidItemsFromCart(PaymentEntity paymentEntity) {
+        
+        Long memberId = paymentEntity.getMemberId();
+        
+        // 1. 결제된 상품 ID 목록 추출 (PaymentEntity는 Lazy Loading이므로 트랜잭션 내에서 호출 필요)
+        List<Long> paidItemIds = paymentEntity.getPaymentItemEntities().stream()
+            .map(PaymentItemEntity::getItemId) 
+            .collect(Collectors.toList());
+        
+        // 2. 해당 회원의 장바구니 찾기
+        CartEntity cartEntity = cartRepository.findByMemberId(memberId).orElse(null); 
+
+        if (cartEntity != null && !paidItemIds.isEmpty()) {
+            // 3. ⭐️ 수정된 Repository 메서드 이름 사용
+            List<CartItemEntity> itemsToDelete = cartItemRepository.findByCartEntityAndItemEntity_IdIn(
+                cartEntity, paidItemIds
+            );
+            
+            if (!itemsToDelete.isEmpty()) {
+                cartItemRepository.deleteAll(itemsToDelete);
+                System.out.println("장바구니에서 결제 완료된 상품 " + itemsToDelete.size() + "개를 삭제했습니다.");
+            }
         }
     }
 
-    // ⭐️ [수정된 pgRequest] - 다중 아이템 결제를 위해 시그니처 및 로직 변경
+    // --- PG 요청 (결제 준비) 메서드 ---
+
     @Override
-    public String pgRequest(String pg, Long memberId, List<PaymentItemEntity> itemsToPay) { // ⭐️ 시그니처 변경
+    public String pgRequest(String pg, Long memberId, List<PaymentItemEntity> itemsToPay) {
         if (!pg.equals("kakao"))
             throw new RuntimeException("제휴되지 않은 결제 업체 입니다.");
 
@@ -147,23 +191,20 @@ public class PaymentServiceImpl implements PaymentService {
         long totalAmount = itemsToPay.stream()
                 .mapToLong(item -> (long) item.getPrice() * item.getSize())
                 .sum();
-        String mainItemName = itemsToPay.size() > 1 
-                                ? itemsToPay.get(0).getTitle() + " 외 " + (itemsToPay.size() - 1) + "건"
-                                : itemsToPay.get(0).getTitle();
+        String mainItemName = itemsToPay.size() > 1
+                                 ? itemsToPay.get(0).getTitle() + " 외 " + (itemsToPay.size() - 1) + "건"
+                                 : itemsToPay.get(0).getTitle();
         
         // 2. PaymentEntity 생성 및 아이템 연결
         PaymentEntity paymentEntity = new PaymentEntity();
         paymentEntity.setPaymentType("KAKAO");
         paymentEntity.setProductPrice(totalAmount);
-        paymentEntity.setMemberId(memberId); // 멤버 ID 설정 추가
+        paymentEntity.setMemberId(memberId);
 
-        // ⭐️ [핵심 로직 1] PaymentEntity에 PaymentItemEntity 연결
         for (PaymentItemEntity item : itemsToPay) {
-            paymentEntity.addPaymentItem(item); // 👈 payment_item_tb 저장을 위한 핵심 호출
+            paymentEntity.addPaymentItem(item); 
         }
 
-        // ⭐️ [핵심 로직 2] PaymentEntity 저장 (Cascade로 PaymentItemEntity도 함께 저장됨)
-        // 주의: 이전에 paymentEntity를 저장하고 ID를 가져왔으나, 아이템 연결 후 한 번만 저장하는 것이 깔끔합니다.
         Long paymentId = paymentRepository.save(paymentEntity).getPaymentId();
 
 
@@ -171,15 +212,15 @@ public class PaymentServiceImpl implements PaymentService {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.set("Authorization", "KakaoAK " + "5153d372489b6c481c38dab7bb500441");
+        headers.set("Authorization", "KakaoAK " + "5153d372489b6c481c38dab7bb500441"); // 🔑 인증키
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("cid", "TC0ONETIME");
         params.add("partner_order_id", String.valueOf(paymentId));
         params.add("partner_user_id", String.valueOf(memberId));
-        params.add("item_name", mainItemName); // ⭐️ 대표 상품명 사용
-        params.add("quantity", String.valueOf(itemsToPay.size())); // ⭐️ 총 아이템 수량 사용
-        params.add("total_amount", String.valueOf(totalAmount)); // ⭐️ 총 결제 금액 사용
+        params.add("item_name", mainItemName);
+        params.add("quantity", String.valueOf(itemsToPay.size()));
+        params.add("total_amount", String.valueOf(totalAmount));
         params.add("tax_free_amount", "0");
 
         String encodedItemName = URLEncoder.encode(mainItemName, StandardCharsets.UTF_8);
@@ -187,8 +228,8 @@ public class PaymentServiceImpl implements PaymentService {
         // 백엔드 approval API로 연결
         params.add("approval_url",
                 "http://localhost:8088/api/payments/approval/"
-                        + paymentId + "/" + totalAmount + "/" + memberId // ⭐️ totalAmount 사용
-                        + "?productName=" + encodedItemName); // ⭐️ 대표 상품명 사용
+                        + paymentId + "/" + totalAmount + "/" + memberId
+                        + "?productName=" + encodedItemName);
 
         params.add("cancel_url", "http://localhost:3000/payment/cancel");
         params.add("fail_url", "http://localhost:3000/payment/fail");
@@ -205,15 +246,16 @@ public class PaymentServiceImpl implements PaymentService {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String kakaoJsonString = objectMapper.writeValueAsString(result.getBody());
-            // ⭐️ [핵심 로직 3] PaymentReadyJson 업데이트 후 다시 저장
             paymentEntity.setPaymentReadyJson(kakaoJsonString);
-            paymentRepository.save(paymentEntity); // 👈 업데이트 저장
+            paymentRepository.save(paymentEntity);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("카카오 결제 요청 변환 오류", e);
         }
 
         return result.getBody().getNext_redirect_pc_url();
     }
+
+    // --- 기타 메서드 ---
 
     @Override
     public String getJsonDb() {
@@ -227,13 +269,11 @@ public class PaymentServiceImpl implements PaymentService {
         return "" + jsonDb;
     }
 
-    // PaymentServiceImpl.java
     @Override
     public Page<PaymentEntity> getPayments(int page, int size, String keyword) {
         Pageable pageable = PageRequest.of(page, size);
         if (keyword == null || keyword.isEmpty()) {
-            // ⭐️ [개선 권장] N+1 문제 해결을 위해 Repository에 Fetch Join 메서드를 만들어 사용해야 합니다.
-            return paymentRepository.findAll(pageable); 
+            return paymentRepository.findAll(pageable);
         } else {
             return paymentRepository.findByPaymentTypeContainingIgnoreCaseOrPaymentPostContainingIgnoreCase(
                     keyword, keyword, pageable);
