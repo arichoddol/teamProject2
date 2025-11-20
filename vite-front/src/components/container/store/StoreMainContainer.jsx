@@ -2,7 +2,15 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router';
 
+import ImageSlider from './ImageSlider';
 import "../../../css/store/storeIndex.css"
+
+const images = [
+    { src: "/images/store/swiper/header1.jpg", alt: 'header1' },
+    { src: "/images/store/swiper/header2.jpg", alt: 'header2' },
+    { src: "/images/store/swiper/header3.jpg", alt: 'header3' },
+    { src: "/images/store/swiper/header4.jpg", alt: 'header4' },
+]
 
 const ShopMainContainer = () => {
 
@@ -23,23 +31,24 @@ const ShopMainContainer = () => {
   const displayPageNum = 5; // 화면에 표시할 페이지 버튼 개수
 
   const fetchData = async (page) => {
-    const response = await axios.get("http://localhost:8088/api/shop");
+
+    // const response = await axios.get("http://localhost:8088/api/shop");
+    const response = await axios.get(`http://localhost:8088/api/shop?page=${page}`);
     const data = response.data;
-    // if (response.data && response.data.content) {
-    //   setItems(response.data.content);
-    // }
     console.log(`[LOG] 페이지 ${page + 1}의 데이터를 요청합니다.`);
+
     try {
       if (data && data.content) {
-        setItems(data.content);
+
+        setItems(data.content || []) ;
 
         // 페이지 정보 계산 및 업데이트
         const totalPages = data.totalPages;
         const pageNum = data.number;
+        const displayPageNum = 5;
 
         const startPage = Math.floor(pageNum / displayPageNum) * displayPageNum;
         let endPage = startPage + displayPageNum - 1;
-
         if (endPage >= totalPages) {
           endPage = totalPages - 1;
         }
@@ -72,7 +81,12 @@ const ShopMainContainer = () => {
 
   return (
     <div className="itemList">
-      <br /><br /><br />
+      <br />
+
+      <div className="itemList-banner">
+        {/* <img src="/images/tmpBanner.png" alt="banner" /> */}
+         <ImageSlider images={images} />
+      </div>
       {/* i guess i can insert later => here Pagingnation Effect... */}
       <div className="itemList-con">
         <h2> :: 상품목록 :: </h2>

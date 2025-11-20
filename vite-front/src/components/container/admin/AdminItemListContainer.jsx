@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import jwtAxios from '../../../apis/util/jwtUtil';
 import { useSelector } from 'react-redux';
 import { BACK_BASIC_URL } from '../../../apis/commonApis';
@@ -11,18 +11,41 @@ const AdminItemListContainer = () => {
 
   const accessToken = useSelector((state) => state.jwtSlice.accessToken);
 
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const keyword = params.get("keyword") || "";
+
   const [items, setItems] = useState([]);
   const navigate = useNavigate();
 
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
+  const [searchText, setSearchText] = useState("");
+
+  // 검색 기능
+  const handleSearch = () => {
+    if (!searchText.trim()) {
+      alert("검색어를 입력하세요")
+      return;
+    }
+    navigate(`/admin/itemList?keyword=${searchText}`);
+  };
+
+  useEffect(() => {
+    fetchItems(keyword);
+  }, [keyword]);
+
+  useEffect(() => {
+    fetchItems();
+  }, [page]);
+  
   //  목록 가져오기
-  const fetchItems = async () => {
+  const fetchItems = async (keyword) => {
     try {
       const res = await jwtAxios.get(`${BACK_BASIC_URL}/api/admin/item/itemList`, {
         headers: { Authorization: `Bearer ${accessToken}` },
-        params: { page: page, size: 10 },
+        params: { page: page, size: 10, keyword: keyword },
 
         withCredentials: true,
       });
@@ -36,9 +59,7 @@ const AdminItemListContainer = () => {
     }
   };
 
-  useEffect(() => {
-    fetchItems();
-  }, [page]);
+
 
   // 수정 이동
   const handleUpdate = (itemId) => {
@@ -64,7 +85,15 @@ const AdminItemListContainer = () => {
     <div className="admin-itemList-container">
 
       <h2>상품 목록</h2>
-
+      <div className="item-search-box">
+        <input
+          type="text"
+          placeholder="상품명 검색"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
+        <button onClick={handleSearch}>검색</button>
+      </div>
       <table className="admin-table">
         <thead>
           <tr>

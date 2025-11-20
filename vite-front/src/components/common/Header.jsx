@@ -4,6 +4,7 @@ import LogoutBtn from "../../apis/auth/LogoutBtn";
 import { removeCookie } from "../../apis/util/cookieUtil";
 import { logoutAction } from "../../slices/loginSlice";
 import { deleteAccessToken } from "../../slices/jwtSlice";
+import HeaderStore from "../common/HeaderModal/HeaderStore";
 import { Link } from "react-router-dom";
 
 // CSS
@@ -31,9 +32,7 @@ const Header = () => {
                 <li>
                   <Link to={`/cart`}>CART</Link>
                 </li>
-                <li>
-                  <Link to={`/store/index`}>SHOP</Link>
-                </li>
+
                 <li>
                   <Link to="/myPage">myPage</Link>
                 </li>
@@ -56,9 +55,15 @@ const Header = () => {
             <li>
               <Link to="/board">BOARD</Link>
             </li>
-            <li>
+            <HeaderStore>
+              <li>
+                <Link to="/store">STORE</Link>
+              </li>
+            </HeaderStore>
+
+            {/* <li>
               <Link to="/store">STORE</Link>
-            </li>
+            </li> */}
             <li>
               <Link to="/crew/list">CREW</Link>
             </li>
