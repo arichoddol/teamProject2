@@ -10,12 +10,14 @@ import toEventRouter from "./toEventRouter";
 import toCartRouter from "./toCartRouter";
 import toPaymentRouter from "./toPaymentRouter";
 import toMyCrewRouter from "./toMyCrewRouter";
+import { toMyPageRouter } from "./toMyPageRouter";
 
 const Loading = <div className="loading">Loading..</div>;
 
 // Layout
 const StoreLayout = lazy(() => import(`../layout/StoreLayout`));
 const LoginLayout = lazy(() => import(`../layout/LoginLayout`));
+const MyPageLayout = lazy(() => import(`../layout/MyPageLayout`));
 const AdminLayout = lazy(() => import(`../layout/admin/AdminLayout`));
 const BoardLayout = lazy(() => import(`../layout/BoardLayout`));
 const EventLayout = lazy(() => import(`../layout/EventLayout`));
@@ -58,6 +60,15 @@ const root = createBrowserRouter([
       </Suspense>
     ),
     children: toLoginOutRouter(),
+  },
+  {
+    path: "myPage",
+    element: (
+      <Suspense fallback={Loading}>
+        <MyPageLayout />
+      </Suspense>
+    ),
+    children: toMyPageRouter(),
   },
   {
     // shop
@@ -132,4 +143,3 @@ const root = createBrowserRouter([
 ]);
 
 export default root;
-

@@ -14,21 +14,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const isLogin = useSelector((state) => state.loginSlice.isLogin);
   const role = useSelector((state) => state.loginSlice.role);
-  const memberId = useSelector((state) => state.loginSlice.memberId); // 추가
-
-
-  // const onLogoutFn = async () => {
-  //   const rs = await logoutFn();
-
-  //   if (rs == 200) {
-  //     removeCookie("member");
-  //     removeCookie("refreshToken");
-  //     dispatch(logoutAction());
-  //     dispatch(deleteAccessToken());
-
-  //     alert("로그아웃 성공!");
-  //   }
-  // }
+  const memberId = useSelector((state) => state.loginSlice.id); // 추가
 
   return (
     <div className="header">
@@ -43,13 +29,13 @@ const Header = () => {
                   <LogoutBtn />
                 </li>
                 <li>
-                  <Link to={`/cart/${memberId}`}>CART</Link>
+                  <Link to={`/cart`}>CART</Link>
                 </li>
                 <li>
-                  <Link to={`/store/${memberId}`}>SHOP</Link>
+                  <Link to={`/store/index`}>SHOP</Link>
                 </li>
                 <li>
-                  <Link to="/auth/myPage">myPage</Link>
+                  <Link to="/myPage">myPage</Link>
                 </li>
                 {role === "ADMIN" ? (
                   <li>
@@ -58,9 +44,14 @@ const Header = () => {
                 ) : null}
               </>
             ) : (
-              <li>
-                <Link to="/auth/login">LOGIN</Link>
-              </li>
+              <>
+                <li>
+                  <Link to="/auth/login">LOGIN</Link>
+                </li>
+                <li>
+                  <Link to="/auth/join">JOIN</Link>
+                </li>
+              </>
             )}
             <li>
               <Link to="/board">BOARD</Link>

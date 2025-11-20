@@ -1,13 +1,16 @@
 package org.spring.backendspring.member;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import org.spring.backendspring.admin.dto.AdminMemberDto;
 import org.spring.backendspring.common.Gender;
 import org.spring.backendspring.common.role.MemberRole;
 import org.spring.backendspring.member.dto.MemberDto;
 import org.spring.backendspring.member.entity.MemberEntity;
+import org.spring.backendspring.member.entity.MemberProfileImageEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class MemberMapper {
-
     // 일반 회원가입
     public static MemberEntity toEntity(MemberDto dto,
                                         PasswordEncoder passwordEncoder) {
@@ -29,7 +32,7 @@ public class MemberMapper {
 
     // 회원 불러오기
     public static MemberDto toDto(MemberEntity entity) {
-        return MemberDto.builder()
+        MemberDto.MemberDtoBuilder memberDtoBuilder = MemberDto.builder()
                 .id(entity.getId())
                 .userEmail(entity.getUserEmail())
                 .userName(entity.getUserName())
@@ -41,8 +44,36 @@ public class MemberMapper {
                 .role(entity.getRole())
                 .crewEntityList(entity.getCrewEntityList())
                 .crewMemberEntityList(entity.getCrewMemberEntityList())
-                .isProfileImg(entity.getIsProfileImg())
                 .socialLogin(entity.getSocialLogin())
+                .createTime(entity.getCreateTime())
+                .updateTime(entity.getUpdateTime());
+
+        List<MemberProfileImageEntity> profileImagesList = entity.getProfileImagesList();
+
+        if (profileImagesList != null && !profileImagesList.isEmpty()) {
+            memberDtoBuilder.isProfileImg(1)
+                    .profileImagesList(profileImagesList);
+        }
+
+        return memberDtoBuilder.build();
+    }
+
+    // 회원 update
+    public static MemberEntity toUpdateEntity(MemberDto memberDto,
+                                            MemberEntity memberEntity) {
+        return MemberEntity.builder()
+                .id(memberEntity.getId())
+                .userEmail(memberEntity.getUserEmail())
+                .userPassword(memberEntity.getUserPassword())
+                .userName(memberDto.getUserName())
+                .nickName(memberDto.getNickName())
+                .age(memberDto.getAge())
+                .gender(memberEntity.getGender())
+                .address(memberDto.getAddress())
+                .phone(memberDto.getPhone())
+                .socialLogin(memberEntity.getSocialLogin())
+                .role(memberEntity.getRole())
+                .isProfileImg(memberDto.getIsProfileImg())
                 .build();
     }
 
@@ -62,6 +93,20 @@ public class MemberMapper {
                 .socialLogin(entity.getSocialLogin())
                 .createTime(entity.getCreateTime())
                 .build();
+    }
+
+    // admin 회원 업데이트
+    // MemberEntity 새 객체 만들어서 기존 memberEntity 다 정보 넣고
+    // 수정된 memberDto 넣는게 너무 비효율적인거 같아서 set 사용했아요
+    public static MemberEntity toAdminMemberUpdate(AdminMemberDto memberDto,
+                                                   MemberEntity memberEntity) {
+        memberEntity.setUserName(memberDto.getUserName());
+        memberEntity.setNickName(memberDto.getNickName());
+        memberEntity.setAddress(memberDto.getAddress());
+        memberEntity.setPhone(memberDto.getPhone());
+        memberEntity.setAge(memberDto.getAge());
+        memberEntity.setUpdateTime(LocalDateTime.now());
+        return memberEntity;
     }
 
 

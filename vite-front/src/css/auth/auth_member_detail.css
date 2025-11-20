@@ -1,0 +1,220 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.memberDetail {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    sans-serif;
+}
+
+.memberDetail h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: #222;
+  padding-left: 40px;
+  text-align: left;
+}
+
+.memberDetail-con {
+  display: flex;
+  gap: 30px;
+  min-height: 600px;
+}
+
+/* 왼쪽 사이드바 */
+.memberDetail-left {
+  flex: 0 0 200px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px 0;
+  height: auto;
+}
+
+.memberDetail-left nav ul {
+  list-style: none;
+}
+
+.memberDetail-left nav ul li {
+  padding: 15px 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  color: #555;
+  font-weight: 500;
+}
+
+.memberDetail-left nav ul li:hover {
+  background: #e9ecef;
+  color: #222;
+}
+
+.memberDetail-left nav ul li.active {
+  background: #4a90e2;
+  color: white;
+  border-left: 4px solid #2563eb;
+}
+
+/* 오른쪽 메인 영역 */
+.memberDetail-right {
+  flex: 1;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 프로필 이미지 섹션 */
+.profile-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+  padding-bottom: 30px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.profile-image {
+  text-align: center;
+}
+
+.profile-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 15px;
+}
+
+.profile-image img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 정보 섹션 */
+.info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  flex: 0 0 120px;
+  font-weight: 600;
+  color: #374151;
+  font-size: 15px;
+}
+
+.info-value {
+  flex: 1;
+  color: #4b5563;
+  font-size: 15px;
+}
+
+/* 버튼 그룹 */
+.button-group {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  padding-top: 30px;
+  border-top: 2px solid #f3f4f6;
+}
+
+.button-group button {
+  padding: 12px 40px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-edit {
+  background: #4a90e2;
+  color: white;
+}
+
+.btn-edit:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.btn-delete {
+  background: white;
+  color: #dc2626;
+  border: 2px solid #dc2626;
+}
+
+.btn-delete:hover {
+  background: #dc2626;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .memberDetail-con {
+    flex-direction: column;
+  }
+
+  .memberDetail-left {
+    flex: 1;
+  }
+
+  .memberDetail-left nav ul {
+    display: flex;
+    gap: 10px;
+  }
+
+  .memberDetail-left nav ul li {
+    flex: 1;
+    text-align: center;
+    padding: 12px 15px;
+  }
+
+  .memberDetail-right {
+    padding: 25px;
+  }
+
+  .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .info-label {
+    flex: none;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .button-group button {
+    width: 100%;
+  }
+}

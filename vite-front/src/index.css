@@ -1,8 +1,11 @@
 @import url(css/common/reset.css);
 @import url(css/common/react_basic.css);
 
-/* 회원가입, 로그인 css */
+/* 회원가입, 로그인, 회원정보 css */
 @import url(css/auth/auth_login.css);
+@import url(css/auth/auth_join.css);
+@import url(css/auth/auth_logout.css);
+@import url(css/auth/auth_member_detail.css);
 
 /* 장바구니 css */
 @import url(css/cart/CartPage.css);
@@ -16,6 +19,7 @@
 
 /* 관리자 */
 @import url(css/admin/container/admin-member-list.css);
+@import url(css/admin/container/admin-member-detail.css);
 
 /* 관리자 페이징 */
 @import url(css/common/admin-paging.css);

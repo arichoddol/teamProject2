@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.spring.backendspring.crew.crew.dto.CrewDto;
 import org.spring.backendspring.crew.crew.entity.CrewEntity;
 import org.spring.backendspring.crew.crewMember.entity.CrewMemberEntity;
 import org.spring.backendspring.member.entity.MemberEntity;
+import org.spring.backendspring.member.entity.MemberProfileImageEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
@@ -35,7 +37,7 @@ public class MemberDto {
     private String userEmail;
 
     @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
-    @Size(min = 8, message = "비밀번호는 최소 8자 이상이어야 합니다.")
+    @Size(min = 4, message = "비밀번호는 최소 4자 이상이어야 합니다.")
     private String userPassword;
 
     @NotBlank(message = "이름은 필수 입력 값입니다.")
@@ -46,10 +48,10 @@ public class MemberDto {
 
     private MemberRole role = MemberRole.MEMBER;
 
-    @NotBlank(message = "성별은 필수 입력 값입니다.")
+//    @NotBlank(message = "성별은 필수 입력 값입니다.")
     private Gender gender;
 
-    @NotBlank(message = "나이는 필수 입력 값입니다.")
+    @NotNull(message = "나이는 필수 입력 값입니다.")
     @Min(value = 1, message = "나이는 1 이상이어야 합니다.")
     private int age;
 
@@ -62,6 +64,8 @@ public class MemberDto {
     private int socialLogin;
 
     private int isProfileImg;
+
+    private List<MemberProfileImageEntity> profileImagesList;
 
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
