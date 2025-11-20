@@ -1,8 +1,10 @@
 package org.spring.backendspring.crew.crewBoard.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.spring.backendspring.common.role.CrewRole;
 import org.spring.backendspring.crew.crew.entity.CrewEntity;
 import org.spring.backendspring.crew.crewBoard.entity.CrewBoardCommentEntity;
 import org.spring.backendspring.crew.crewBoard.entity.CrewBoardEntity;
@@ -45,21 +47,31 @@ public class CrewBoardDto {
     private List<String> newFileName;
 
     private Long crewId;
+    private String crewName;
     private Long memberId;
     private String memberNickName;
+    private CrewRole role;
 
-    public static CrewBoardDto toDto(CrewBoardEntity entity, MemberEntity memberEntity) {
+    public static CrewBoardDto toDto(CrewBoardEntity entity) {
+        List<String> newFileName = entity.getCrewBoardImageEntities().stream()
+                    .map(CrewBoardImageEntity::getNewName)
+                    .toList();
+        List<String> originalFileName = entity.getCrewBoardImageEntities().stream()
+                    .map(CrewBoardImageEntity::getOldName)
+                    .toList();
 
         return CrewBoardDto.builder()
                 .id(entity.getId())
                 .title(entity.getTitle())
                 .content(entity.getContent())
                 .crewId(entity.getCrewEntity().getId())
+                .crewName(entity.getCrewEntity().getName())
                 .memberId(entity.getMemberEntity().getId())
 //                .memberEntity(memberEntity)
                 .memberNickName(entity.getMemberEntity().getNickName())
-                .crewBoardCommentEntities(entity.getCrewBoardCommentEntities())
-                .crewBoardImageEntities(entity.getCrewBoardImageEntities())
+                // .crewBoardCommentEntities(entity.getCrewBoardCommentEntities())
+                .originalFileName(originalFileName)
+                .newFileName(newFileName)
                 .createTime(entity.getCreateTime())
                 .updateTime(entity.getUpdateTime())
                 .build();
@@ -71,6 +83,7 @@ public class CrewBoardDto {
                 .title(entity.getTitle())
                 .content(entity.getContent())
                 .crewId(entity.getCrewEntity().getId())
+                .crewName(entity.getCrewEntity().getName())
                 .memberId(entity.getMemberEntity().getId())
                 .memberNickName(entity.getMemberEntity().getNickName())
                 // .crewBoardCommentEntities(entity.getCrewBoardCommentEntities())

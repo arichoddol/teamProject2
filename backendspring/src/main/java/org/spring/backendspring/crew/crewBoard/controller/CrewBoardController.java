@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -42,11 +43,12 @@ public class CrewBoardController {
     @GetMapping({"", "/", "/list"})
     public ResponseEntity<?> boardListByCrew
                     (@PathVariable("crewId") Long crewId,
+                     @RequestParam(name = "subject", required = false) String subject,
                      @RequestParam(name = "keyword", required = false) String keyword,
                      @RequestParam(name = "page", defaultValue = "0") int page,
                      @RequestParam(name = "size", defaultValue = "10") int size) {
 
-        PagedResponse<CrewBoardDto> crewBoardDtoList = crewBoardService.boardListByCrew(crewId, keyword, page, size);
+        PagedResponse<CrewBoardDto> crewBoardDtoList = crewBoardService.boardListByCrew(crewId, subject, keyword, page, size);
 
         Map<String, Object> crewBoardList = new HashMap<>();
 
@@ -56,10 +58,18 @@ public class CrewBoardController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createBoard(@PathVariable("crewId") Long crewId,
-                                         @ModelAttribute CrewBoardDto crewBoardDto,
-                                         @AuthenticationPrincipal MyUserDetails userDetails
-                                         ) throws IOException {
+    public ResponseEntity<?> createBoard(
+                @PathVariable("crewId") Long crewId,
+                @RequestPart("title") String title,
+                @RequestPart("content") String content,
+                @RequestPart(value = "crewBoardFile", required = false) List<MultipartFile> crewBoardFile,
+                @AuthenticationPrincipal MyUserDetails userDetails
+    ) throws IOException {
+        CrewBoardDto crewBoardDto = new CrewBoardDto();
+        crewBoardDto.setTitle(title);
+        crewBoardDto.setContent(content);
+        crewBoardDto.setCrewBoardFile(crewBoardFile);
+
         Long loginUserId = userDetails.getMemberId();
         CrewBoardDto createBoard = crewBoardService.createBoard(crewId, crewBoardDto, loginUserId);
 
@@ -80,17 +90,24 @@ public class CrewBoardController {
     }
 
     @PutMapping("/update/{crewBoardId}")
-    public ResponseEntity<?> updateBoard(@PathVariable("crewBoardId") Long id,
-                                         @PathVariable("crewId") Long crewId,
-                                         @ModelAttribute CrewBoardDto crewBoardDto,
-                                         @RequestParam(value = "newImages", required = false) List<MultipartFile> newImages,
-                                         @RequestParam(value = "deleteImageId", required = false) List<Long> deleteImageId,
-                                         @AuthenticationPrincipal MyUserDetails userDetails) throws IOException {
+    public ResponseEntity<?> updateBoard(
+                @PathVariable("crewBoardId") Long id,
+                @PathVariable("crewId") Long crewId,
+                @RequestPart("title") String title,
+                @RequestPart("content") String content,
+                @RequestParam(value = "newImages", required = false) List<MultipartFile> newImages,
+                @RequestParam(value = "deleteImageName", required = false) List<String> deleteImageName,
+                @AuthenticationPrincipal MyUserDetails userDetails) throws IOException {
+        
+        CrewBoardDto crewBoardDto = new CrewBoardDto();
+        crewBoardDto.setTitle(title);
+        crewBoardDto.setContent(content);
+
         Long loginUserId = userDetails.getMemberId();
 
         
         CrewBoardDto updateBoardDto = crewBoardService.updateBoard(id, crewId, crewBoardDto, loginUserId, newImages,
-        deleteImageId);
+        deleteImageName);
         
         if (!loginUserId.equals(updateBoardDto.getMemberId())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 권한이 없습니다.");

@@ -13,10 +13,10 @@ public interface CrewBoardService {
         
     CrewBoardDto boardDetail(Long crewId, Long id);
     
-    CrewBoardDto updateBoard(Long id, Long crewId, CrewBoardDto crewBoardDto, Long loginUserId, List<MultipartFile> newImages, List<Long> deleteImageId) throws IOException;
+    CrewBoardDto updateBoard(Long id, Long crewId, CrewBoardDto crewBoardDto, Long loginUserId, List<MultipartFile> newImages, List<String> deleteImageName) throws IOException;
     
     void deleteBoard(Long id, Long crewId, Long loginUserId);
 
-    PagedResponse<CrewBoardDto> boardListByCrew(Long crewId, String keyword, int page, int size);
+    PagedResponse<CrewBoardDto> boardListByCrew(Long crewId, String subject, String keyword, int page, int size);
     
 }

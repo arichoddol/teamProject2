@@ -13,6 +13,7 @@
 
 /* 내 크루  */
 @import url(css/mycrew/mycrew.css);
+@import url(css/mycrew/board/myCrewBoardCreate.css);
 
 /* 관리자 */
 @import url(css/admin/container/admin-member-list.css);

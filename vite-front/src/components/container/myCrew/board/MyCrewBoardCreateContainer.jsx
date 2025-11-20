@@ -14,37 +14,51 @@ const MyCrewBoardCreateContainer = () => {
   const [files, setFiles] = useState([]);
 
   const fileChange = (e) => {
-    setFiles(e.target.files);
+    const selectedFiles = Array.from(e.target.files)
+    setFiles(exFiles => [...exFiles, ...selectedFiles])
+  }
+
+  const removeFile = (idx) => {
+    setFiles(exFiles => exFiles.filter((_, i) => i != idx))
   }
 
   const create = async (el) => {
-    console.log('accessToken:', accessToken);
     el.preventDefault();
+    console.log('accessToken:', accessToken);
 
     try {
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
 
-        for (let i = 0; i < files.length; i ++) {
-            formData.append('crewBoardFile', files[i]);
+        if (files.length > 0) {
+            // 선택된 파일이 있을 경우 모두 추가
+            files.forEach(file => formData.append('crewBoardFile', file));
+        } else {
+            // 파일이 없으면 빈 파일을 하나 넣어서 multipart 형식 유지
+            const emptyFile = new File([''], 'empty.txt', { type: 'text/plain' });
+            formData.append('crewBoardFile', emptyFile);
         }
-        const response = await axios.post(`/api/mycrew/${crewId}/board/create`, 
+
+        const response = await axios.post(
+            `/api/mycrew/${crewId}/board/create`,
             formData,
             {
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,
                     "Content-Type": "multipart/form-data"
-                },                
+                },
+                withCredentials: true, // 쿠키 사용 시 필요
             }
         );
+
         alert('게시글 작성 완료');
         navigate(`/mycrew/${crewId}/board/detail/${response.data.id}`);
-        } catch (err) {
-        console.log(err);
-        alert("오류 발생: " + err.message);
+    } catch (err) {
+        console.error(err.response || err);
+        alert("오류 발생: " + (err.response?.data?.error || err.message));
     }
-  }
+};
 
   return (
     <div className="boardCreate">
@@ -66,14 +80,24 @@ const MyCrewBoardCreateContainer = () => {
                         name="content" 
                         id="content"
                         value={content}
-                        onChange={(el) => setContent(el.target.value)}
+                        onChange={(e) => setContent(e.target.value)}
                         required
                         placeholder='내용'
                     />
                 </div>
                 <div className="boardFile">
                     <span>파일</span>
-                    <input type="file" name='crewBoardfile' onChange={fileChange} multiple/>
+                    <input type="file" name='crewBoardFile' onChange={fileChange} multiple/>
+                    {files.length > 0 && (
+                        <ul>
+                            {files.map((file, idx) => (
+                                <li key={idx}>
+                                    {file.name}
+                                    <button type='button' onClick={() => removeFile(idx)}>x</button>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
                 <div className="boardCreater">
                     <label className="crewBoardLabel">작성자</label>

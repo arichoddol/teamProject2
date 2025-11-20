@@ -14,11 +14,28 @@ const MyCrewBoardDetailContainer = () => {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
 
+  const formattedDate = (el) => new Date(el).toLocaleString('ko-KR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  });
+  const formattedDateForComment = (el) => new Date(el).toLocaleString('ko-KR', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: false
+  });
+
   // 상세 게시글
   const fetchBoard = async () => {
     try {
       const res = await axios.get(`/api/mycrew/${crewId}/board/detail/${boardId}`);
-      setBoard(res.data.boardDetail);
+      setBoard(res.data.boardDetail || {});
       console.log(res.data.boardDetail);
     } catch (err) {
       console.error("크루 게시글 상세 실패", err)
@@ -84,6 +101,7 @@ const MyCrewBoardDetailContainer = () => {
         }}
       );
       fetchComments();
+      fetchBoard();
     } catch (err) {
       console.error("댓글 삭제 실패", err)
     }
@@ -108,12 +126,12 @@ const MyCrewBoardDetailContainer = () => {
       <div className="crewBoardDetail-con">
         <ul>
           <li className="image">
-            {board.crewBoardImageEntities && board.crewBoardImageEntities.length > 0 && (
+            {board.newFileName && board.newFileName.length > 0 && (
               <div className="images">
-                {board.crewBoardImageEntities.map((img, index) => (
+                {board.newFileName.map((fileName, index) => (
                   <img
                     key={index} 
-                    src={img.newName} 
+                    src={`http://localhost:8088/upload/${fileName}`} 
                     alt={`${board.title} 이미지 ${index + 1}`}
                     className='crewBoardImg'
                   />
@@ -124,6 +142,15 @@ const MyCrewBoardDetailContainer = () => {
           <li className="s1">
             <span>제목</span>
             <span className="s2">{board.title}</span>
+          </li>
+          <li className="s1">
+            <span className="s2">{board.createTime && formattedDate(board.createTime)}</span>
+            {board.updateTime &&
+            <>
+            <span>수정</span>
+            <span className="s2">{formattedDate(board.updateTime)}</span> 
+            </>
+            }
           </li>
           <li className="s1">
             <span>내용</span>
@@ -148,7 +175,7 @@ const MyCrewBoardDetailContainer = () => {
       <div className="crewBoardComment">
         <div className="crewBoardComment-con">
           <div className="writeComment">
-            <h2>댓글</h2>
+            <h2 className='crewComment'>댓글</h2>
               <textarea 
                 name="comment"
                 id='comment'
@@ -163,7 +190,7 @@ const MyCrewBoardDetailContainer = () => {
             {comments.length > 0 ? comments.map((comment) => (
               <div key={comment.id} className="aComment">
                 <strong>{comment.memberNickName}</strong>
-                <span className="commentTime">{comment.createTime}</span>
+                <span className="commentTime">{comment.createTime && formattedDateForComment(comment.createTime)}</span>
                 <div className="commentContent">
                   {comment.content}
                 </div>

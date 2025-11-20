@@ -1,8 +1,11 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 const MyCrewJoinRequestContainer = () => {
+  const {accessToken} = useSelector((state) => state.jwtSlice)
+
   const {crewId} = useParams()
   const [myCrewJoinRequestList , setMyCrewJoinRequestList] = useState([])
   
@@ -34,17 +37,23 @@ const MyCrewJoinRequestContainer = () => {
 
   //크루가입승인
   const onJoinApproved = async (joinReq) =>{
+    console.log(joinReq)
       try {
         const res = await axios.post(`/api/mycrew/${crewId}/joinRequest/approved`,
           { crewRequestId: crewId,
             memberRequestId: joinReq.memberRequestId,
             message: joinReq.message },
-          { headers: { "Content-Type": "application/json" } }
+          { headers: { 
+              "Authorization": `Bearer ${accessToken}`,
+              "Content-Type": "application/json" 
+            } 
+          }
 
         )
         console.log(res.data)
         
       } catch (error) {
+        console.log(error)
         console.log("내 크루 가입승인 실패")
         alert("내 크루 가입승인 실패")
       }
@@ -58,7 +67,11 @@ const MyCrewJoinRequestContainer = () => {
           { crewRequestId: crewId,
             memberRequestId: joinReq.memberRequestId,
             message: joinReq.message},
-          { headers: { "Content-Type": "application/json" } }
+          { headers: { 
+              "Authorization": `Bearer ${accessToken}`,
+              "Content-Type": "application/json" 
+            } 
+          }
 
         )
         console.log(res.data)

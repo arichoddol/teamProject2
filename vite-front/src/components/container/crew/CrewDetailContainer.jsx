@@ -46,6 +46,9 @@ const CrewDetailContainer = () => {
 
   // 가입 함수
   const onJoinRequest = async () => {
+    if (!loginMemberId) {
+      alert("로그인이 필요합니다.")
+    }
     try {
       const res = await axios.post(`/api/crew/joinRequest`,
         joinRequestData,

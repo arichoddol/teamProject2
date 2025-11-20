@@ -15,7 +15,7 @@ const MyCrewBoardUpdateContainer = () => {
   const [content, setContent] = useState('');
   const [newImages, setNewImages] = useState([]);
   const [exFiles, setExFiles] = useState([]);
-  const [deleteImageId, setDeleteImageId] = useState([]);
+  const [deleteImageName, setDeleteImageName] = useState([]);
 
   console.log(nickName)
   useEffect(() => {
@@ -25,11 +25,10 @@ const MyCrewBoardUpdateContainer = () => {
             setBoard(res.data.boardDetail);
             setTitle(res.data.boardDetail.title);
             setContent(res.data.boardDetail.content);
-            if (res.data.boardDetail.crewBoardImageEntities && res.data.boardDetail.crewBoardImageEntities.length > 0) {
+            if (res.data.boardDetail.newFileName && res.data.boardDetail.newFileName.length > 0) {
                 setExFiles(
-                    res.data.boardDetail.crewBoardImageEntities.map(img => ({
-                        id: img.id,
-                        newName: img.newName
+                    res.data.boardDetail.newFileName.map(name => ({
+                        newFileName: name
                     }))
                 );
             };
@@ -40,9 +39,11 @@ const MyCrewBoardUpdateContainer = () => {
       fetchBoard();
   }, [crewId, boardId])
 
-  const deleteImage = (id) => {
-    setDeleteImageId(prev => [...prev, id]);
-    setExFiles(prev => prev.filter(img => img.id !== id));
+  console.log(exFiles)
+
+  const deleteImage = (name) => {
+    setDeleteImageName(prev => [...prev, name]);
+    setExFiles(prev => prev.filter(img => img.newFileName !== name));
   }
 
   const uploadNewFile = (e) => {
@@ -57,7 +58,7 @@ const MyCrewBoardUpdateContainer = () => {
       formData.append('title', title)
       formData.append('content', content)
       newImages.forEach(image => formData.append('newImages', image))
-      deleteImageId.forEach(id => formData.append('deleteImageId', id))
+      deleteImageName.forEach(name => formData.append('deleteImageName[]', name))
 
       const response = await axios.put(`/api/mycrew/${crewId}/board/update/${boardId}`,
         formData,
@@ -103,10 +104,10 @@ const MyCrewBoardUpdateContainer = () => {
                     <span>기존 이미지</span>
                     <ul>
                         {exFiles.length > 0 ? (
-                            exFiles.map(img => (
-                            <li key={img.id}>
-                                <img src={img.newName} alt="boardImage" />
-                                <button type='button' onClick={() => deleteImage(img.id)}>X</button>
+                            exFiles.map((img, idx) => (
+                            <li key={idx}>
+                                <img src={img.newFileName} alt={img.newFileName} />
+                                <button type='button' onClick={() => deleteImage(img.newFileName)}>X</button>
                             </li>
                         ))
                     ) : (
@@ -114,7 +115,7 @@ const MyCrewBoardUpdateContainer = () => {
                     )}
                     </ul>
                     <span>새 이미지 업로드</span>
-                    <input type="file" name='crewBoardImages' onChange={uploadNewFile} multiple/>
+                    <input type="file" name='newImages' onChange={uploadNewFile} multiple/>
                 </div>
                 <div className="boardCreater">
                     <label className="crewBoardLabel">작성자</label>
