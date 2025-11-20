@@ -65,6 +65,8 @@ public class SecurityConfigClass {
                             "/api/mycrew/*/board/*/comment/write").authenticated()
                     .requestMatchers("/api/member/**").permitAll()
                     .requestMatchers("/login", "/logout", "/api/**", "/index").permitAll()
+                    .requestMatchers("/marathon").permitAll()
+
                     .requestMatchers("/**").permitAll(); // css, js 파일 허용
         });
 
