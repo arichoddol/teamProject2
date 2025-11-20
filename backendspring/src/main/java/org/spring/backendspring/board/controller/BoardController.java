@@ -158,7 +158,8 @@ public class BoardController {
     // DELETE
     @DeleteMapping("/detail/{boardId}")
     public ResponseEntity<String> deleteBoard(@PathVariable("boardId") Long boardId,
-                                              @AuthenticationPrincipal MyUserDetails myUserDetails) {
+            @AuthenticationPrincipal MyUserDetails myUserDetails) {
+                                                
         Long authMemberId = myUserDetails.getMemberId();
         Long memberId = boardService.boardDetail(boardId).getMemberId();
 

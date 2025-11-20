@@ -2,7 +2,6 @@ package org.spring.backendspring.board.service.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -12,25 +11,14 @@ import org.spring.backendspring.board.entity.BoardEntity;
 import org.spring.backendspring.board.entity.BoardImgEntity;
 import org.spring.backendspring.board.repository.BoardImgRepository;
 import org.spring.backendspring.board.repository.BoardRepository;
-
 import org.spring.backendspring.board.service.BoardService;
-import org.spring.backendspring.item.entity.ItemImgEntity;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
-import org.spring.backendspring.s3.AwsS3Service;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-
 
 import lombok.RequiredArgsConstructor;
 
@@ -218,21 +206,17 @@ public class BoardServiceImpl implements BoardService {
             }
             // DB delete
             boardImgRepository.delete(boardImgEntity);
+            
+            //  for (BoardImgEntity boardImgEntity1 : boardEntity.getBoardImgEntities()) {
+            // File realDelete1 = new File(FILE_PATH + boardImgEntity1.getNewName());
+            // if(realDelete.exists()){
+            // realDelete1.delete();
+            // 파일 삭제 실패 시 로그 처리만 합니다.
         }
         // Board Entity Delete 
         boardRepository.delete(boardEntity);
 
     }
 
-    // 조회수
-    // @Override
-    // @Transactional
-    // @Modifying
-    // @Query("UPDATE Board b SET b.hit = b.hit + 1 WHERE b.id = :id")
-    // public void upHitDo(@Param("id")Long id) {
-    //   boardRepository.updateHit(id);
-    // }
-
-   
     
 }

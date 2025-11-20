@@ -14,26 +14,26 @@ const BoardWriteContainer = () => {
   const memberId = useSelector(state => state.loginSlice.id);
   const nickName = useSelector(state => state.loginSlice.nickName);
 
-  const API_BASE_URL ='http://localhost:8088/api/board';
+  console.log('Redux에서 가져온 nickName:', nickName);
+  console.log('Redux에서 가져온 memberId:', memberId);
+
+  const API_BASE_URL = 'http://localhost:8088/api/board';
 
 
-    const { id } = useParams();
-    const initialBoardState = {
+  const { id } = useParams();
+
+  const getInitialBoardState = useCallback(() => ({
     id: null,
     memberId: memberId,
     title: '',
     content: '',
     memberNickName: nickName,
-    };
-    const getInitialBoardState = useCallback(() => ({
-        id: null, 
-        memberId: memberId,
-        title: '',
-        content: '',
-        memberNickName: nickName,
-    }), [memberId, nickName]);
+  }), [memberId, nickName]);
 
   const [boards, setBoards] = useState(getInitialBoardState);
+  // const [boards, setBoards] = useState([]);
+
+
 
   const navigate = useNavigate();
 
@@ -51,7 +51,7 @@ const BoardWriteContainer = () => {
     const formData = new FormData();
     formData.append('title', boards.title);
     formData.append('content', boards.content);
-    
+
     const boardFile = e.target.boardFile.files[0];
     if (boardFile) {
       formData.append('boardFile', boardFile);
@@ -85,50 +85,52 @@ const BoardWriteContainer = () => {
       navigate("/auth/login");
       return;
     }
-     console.log(accessToken)
+    console.log(accessToken)
 
-     if(id){
-    try{
+    if (id) {
+      try {
 
-      const response = await jwtAxios.get(`${API_BASE_URL}/newPost`, 
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-          withCredentials: true, 
-        });
+        const response = await jwtAxios.get(`${API_BASE_URL}/newPost`,
+          {
+            headers: { Authorization: `Bearer ${accessToken}` },
+            withCredentials: true,
+          });
 
-    const data = response.data; 
-    console.log("서버 응답 데이터 타입:", typeof data); 
-    console.log("서버 응답 데이터 내용:", data);
+        const data = response.data;
+        console.log("서버 응답 데이터 타입:", typeof data);
+        console.log("서버 응답 데이터 내용:", data);
 
         // Set into Data <- Bring Data
-      setBoards({
-        id: data.id,
-        title: data.title,
-        content: data.content,
-        memberNickName: data.nickName || data.memberNickName || nickName,
-      });
+        // setBoards({
+        //   id: data.id,
+        //   title: data.title,
+        //   content: data.content,
+        //   memberNickName: data.memberNickName
 
-      console.log(response.data)
-    } catch (error) {
-       
-      console.error("게시물 조회 실패:", error.response);
- if (error.response) {
-        if (error.response.status === 400) {
-          alert(error.response.data);
-          navigate(`/board/${memberId}`);
-        } else if (error.response.status === 404) {
-          alert("게시글 정보를 찾을 수 없습니다.");
-          navigate("/board");
+        // });
+        setBoards(data);
+
+        console.log(response.data)
+      } catch (error) {
+
+        console.error("게시물 조회 실패:", error.response);
+        if (error.response) {
+          if (error.response.status === 400) {
+            alert(error.response.data);
+            navigate(`/board/${memberId}`);
+          } else if (error.response.status === 404) {
+            alert("게시글 정보를 찾을 수 없습니다.");
+            navigate("/board");
+          } else {
+            alert("서버 오류로 게시글 정보를 가져오지 못했습니다.");
+          }
         } else {
-          alert("서버 오류로 게시글 정보를 가져오지 못했습니다.");
+          alert("네트워크 오류가 발생했습니다.");
         }
-      } else {
-        alert("네트워크 오류가 발생했습니다.");
       }
     }
   }
-}
-  
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
@@ -138,7 +140,7 @@ const BoardWriteContainer = () => {
       <div className="boardPost-con">
 
         {console.log(boards)}
-       
+
         <form onSubmit={handleSubmit} encType="multipart/form-data">
           <h4>:: 게시글작성 ::</h4>
           <ul>
@@ -149,18 +151,18 @@ const BoardWriteContainer = () => {
 
             <li>
               <label htmlFor="title">글제목::</label>
-              <input type="text" name="title" id="title"  value={boards.title || ''}
-                                onChange={handleChange}     required />
+              <input type="text" name="title" id="title" value={boards.title || ''}
+                onChange={handleChange} required />
             </li><br />
             <li>
               <label htmlFor="content">글내용::</label>
               <textarea name="content" id="content" rows="10" value={boards.content || ''}
-                                onChange={handleChange} required></textarea>
+                onChange={handleChange} required></textarea>
             </li>
 
             <li>
               <label htmlFor="nickName">NickName::</label>
-              <input type="text" name="nickName" id="nickName" value={nickName} readOnly />
+              <input type="text" name="nickName" id="nickName" value={boards.memberNickName} readOnly />
             </li>
 
             <li>
