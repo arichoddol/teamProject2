@@ -9,8 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface BoardRepository extends JpaRepository<BoardEntity, Long>
 {
@@ -25,7 +26,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long>
     @Modifying // ⭐ 쿼리가 데이터를 변경(UPDATE, DELETE)함을 알림
     @Transactional // ⭐ UPDATE 쿼리는 트랜잭션 내에서 실행되어야 함
     @Query("UPDATE BoardEntity b SET b.hit = b.hit + 1 WHERE b.id = :id")
-    void updateHit(Long id);
+    void updateHit(@Param("id")Long id);
     
 
 }

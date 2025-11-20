@@ -1,13 +1,19 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import jwtAxios from '../../../apis/util/jwtUtil';
 
 import "../../../css/board/boardDetail.css"
+import { useSelector } from 'react-redux';
 
 
 
 const BoardDetailContainer = () => {
 
+    // JWT
+    const accessToken = useSelector(state => state.jwtSlice.accessToken);
+    const memberId = useSelector(state => state.loginSlice.id);
+    const nickName = useSelector(state => state.loginSlice.nickName);
 
 
     // boards 상태를 빈 객체로 초기화합니다.
@@ -34,7 +40,6 @@ const BoardDetailContainer = () => {
     const REPLY_BASE_URL = 'http://localhost:8088/api/reply';
     const API_BASE_URL = 'http://localhost:8088/api/board';
     const IMAGE_BASE_URL = 'http://localhost:8088/upload/';
-    // private static final String FILE_PATH = "C:/full/upload/";
 
 
 
@@ -71,6 +76,7 @@ const BoardDetailContainer = () => {
             );
 
             // 데이터와 페이지 정보 업데이트
+            console.log("리스폰스 >>" + response);
             setReplies(response.data.content);
             setPageInfo({
                 page: response.data.pageable.pageNumber,
@@ -88,9 +94,6 @@ const BoardDetailContainer = () => {
     }
 
 
-
-
-
     const handlePageChange = (newPage) => {
         if (newPage >= 0 && newPage < pageInfo.totalPages) {
             fetchReplies(boards.id, newPage, pageInfo.size);
@@ -103,10 +106,19 @@ const BoardDetailContainer = () => {
         if (!window.confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
             return;
         }
-
         try {
-            // axios.delete를 사용하여 DELETE 요청을 보냅니다.
-            const response = await axios.delete(`${API_BASE_URL}/detail/${boards.id}`);
+            // axios.delete를 사용하여 DELETE 요청을 보냅니다.( 나 이 게시물 번호를 삭제하고 싶어요~ )
+            const response = await jwtAxios.delete(`${API_BASE_URL}/detail/${boards.id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}` // 인증 헤더
+                    },
+                    withCredentials: true, // 자격 증명 포함
+                    // 만약 백엔드에서 삭제 권한 확인을 위해 쿼리 파라미터를 요구한다면:
+                    // params: {
+                    //     memberId: boards.memberId 
+                    // }
+                });
 
             if (response.status === 200) {
                 alert('게시글이 성공적으로 삭제되었습니다.');
@@ -126,17 +138,18 @@ const BoardDetailContainer = () => {
     const handleUpdatePost = (boardId) => {
         navigate(`/board/update/${boardId}`);
     }
-    const handleReplyUpdate = async (replyId, currentContent) => {
-        setEditingReplyId(replyId);
+    const handleReplyUpdate = async (replyMemberId, currentContent) => {
+        setEditingReplyId(replyMemberId);
         setEditingContent(currentContent);
+
     }
-    const handleReplyEditSubmit = async (replyId) => {
+    const handleReplyEditSubmit = async (replyMemberId) => {
         if (!editingContent.trim()) {
             alert('수정할 내용을 입력해주세요.');
             return;
         }
         const updatedReplyData = {
-            id: replyId,
+            id: replyMemberId,
             boardId: boards.id,
             content: editingContent.trim(),
             memberId: boards.memberId // 권한 확인을 위해 현재 로그인된 사용자 ID 전송
@@ -172,16 +185,23 @@ const BoardDetailContainer = () => {
         if (!window.confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
             return;
         }
-        if (!boards.memberId) {
-            alert('삭제 권한 확인을 위한 로그인 정보가 없습니다.');
-            return;
-        }
+        // if (!reply.memberId === replyMemberId) {
+        //     alert('댓글 삭제 권한이 없습니다. (작성자만 삭제 가능) :: handleReplyDelete');
+        //     return;
+        // }
         try {
-            const response = await axios.delete(`${REPLY_BASE_URL}/deleteReply/${replyId}`, {
-                params: {
-                    memberId: boards.memberId // 쿼리 파라미터로 memberId 전송
-                }
-            });
+            const response = await jwtAxios.delete(`${REPLY_BASE_URL}/deleteReply/${replyId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    },
+                    params: {
+                        // 3. 삭제 권한 확인을 위한 현재 사용자 ID를 쿼리 파라미터로 전송
+                        memberId: memberId
+                    },
+                    withCredentials: true, // 4. 자격 증명 포함 설정
+                });
+
             if (response.status === 200 || response.status === 204) {
                 alert('댓글이 성공적으로 삭제되었습니다.');
                 // 댓글 삭제 후 현재 페이지의 댓글 목록을 갱신합니다.
@@ -216,7 +236,7 @@ const BoardDetailContainer = () => {
         const replyData = {
             boardId: boards.id,
             content: content.trim(),
-            memberId: boards.memberId
+            memberId: memberId
         };
         console.log("전송할 댓글 데이터:", replyData);
         try {
@@ -260,6 +280,7 @@ const BoardDetailContainer = () => {
 
                     <div className="boardDetail-con-image">
 
+
                         {boards.boardImgDtos && boards.boardImgDtos.length > 0 && (
                             boards.boardImgDtos.map((imgDto) => (
                                 <img
@@ -295,14 +316,16 @@ const BoardDetailContainer = () => {
                                 replies.map((reply) => (
                                     <div key={reply.id} className="reply-key">
                                         <div className="reply-key-sub">
-                                            <p><strong>{reply.memberNickName || `작성자 ID: ${reply.memberId}`}</strong></p>
+                                            <p><strong>{`작성자 ID: ${reply.memberId}`}</strong></p>
                                             <span className="reply-key-createtime">{formatDate(reply.createTime)}</span>
-
-
                                         </div>
-                                        {/* 수정 */}
-                                        {editingReplyId === reply.id ? (
+                                        <p className="reply-key-content">{reply.content}</p>
+                                        {/* 해당 댓글의 버튼이 눌려 ID가 상태에 저장되었을 때만 폼 표시 */}
+                                        {reply.id === editingReplyId && (
+
                                             <div className="reply-edit-form">
+                                                {console.log(reply)}
+                                                {/* {console.log(editingReplyId)} */}
                                                 <textarea
                                                     value={editingContent}
                                                     onChange={(e) => setEditingContent(e.target.value)}
@@ -311,7 +334,7 @@ const BoardDetailContainer = () => {
                                                 <div className="reply-edit-buttons">
                                                     <button
                                                         onClick={() => handleReplyEditSubmit(reply.id)}>
-                                                        수정 완료
+                                                        수정
                                                     </button>
                                                     <button
                                                         onClick={handleReplyEditCancel}>
@@ -319,36 +342,31 @@ const BoardDetailContainer = () => {
                                                     </button>
                                                 </div>
                                             </div>
-                                        ) : (
-
-                                            <>
-                                                <p className="reply-key-content">{reply.content}</p>
-
-                                                {/* 수정/삭제 버튼: 현재 사용자 ID와 댓글 작성자 ID가 일치할 때만 표시 */}
-                                                {reply.memberId === boards.memberId && (
-                                                    <div className="reply-actions">
-                                                        <button
-                                                            onClick={() => handleReplyUpdate(reply.id, reply.content)}>
-                                                            수정
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleReplyDelete(reply.id)}>
-                                                            삭제
-                                                        </button>
-                                                    </div>
-                                                )}
-                                            </>
                                         )}
-                                        <p className="reply-key-content">{reply.content}</p>
+                                        { /*conditional rendering below here */}
+                                        {reply.memberId === memberId && (
+                                            <div className="reply-actions">
+                                                {console.log(reply)}
+                                                <button onClick={() => handleReplyUpdate(reply.memberId, reply.content)}>
+                                                    수정 </button>
+                                                { /* reply.id -> send delete request. */}
+                                                <button onClick={() => handleReplyDelete(reply.id)}>
+                                                    삭제 </button>
+                                            </div>
+
+                                        )}
                                     </div>
+
                                 ))
                             ) : (
-                                <p className="reply-key-content-none">등록된 댓글이 없습니다.</p>
+                                < p className="reply-key-content-none">등록된 댓글이 없습니다.</p>
                             )}
                         </div>
+                    </div>
 
-                        {/*  페이지네이션 UI */}
-                        {pageInfo.totalPages > 1 && (
+
+                    {
+                        pageInfo.totalPages > 1 && (
                             <div className="page-button-top">
                                 <button
                                     onClick={() => handlePageChange(pageInfo.page - 1)}
@@ -367,21 +385,27 @@ const BoardDetailContainer = () => {
                                     다음
                                 </button>
                             </div>
-                        )}
+                        )
+                    }
 
-                    </div>
+                </div>
 
-                    {/* 게시글 수정/삭제 버튼 */}
+                {/* 게시글 수정/삭제 버튼 */}
+                { /*conditional rendering below here */}
+                {boards.memberId === memberId && (
                     <div className="boardDetail-act">
                         <button onClick={() => handleUpdatePost(boards.id)}>게시글 수정</button>
                         <button onClick={handleDelete}>게시글 삭제</button>
                     </div>
 
-                </div>
+                )}
+
             </div>
-        </div>
+        </div >
+
     )
 }
+
 
 
 export default BoardDetailContainer
