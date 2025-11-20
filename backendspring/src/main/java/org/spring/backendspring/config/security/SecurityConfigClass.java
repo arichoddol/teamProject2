@@ -54,6 +54,7 @@ public class SecurityConfigClass {
                     .requestMatchers(
                             "/api/crew/create/approved",
                             "/api/crew/create/rejected").hasRole("ADMIN")
+                //     .requestMatchers("/api/member/detail/**").authenticated()
                     .requestMatchers(
                             "/api/board/newPost",
                             "/api/board/write",

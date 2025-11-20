@@ -21,13 +21,17 @@ import org.spring.backendspring.s3.AwsS3Service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -58,7 +62,7 @@ public class BoardServiceImpl implements BoardService {
 
 
         // if file is Empty..
-        if(boardDto.getBoardFile().isEmpty()){
+        if(boardDto.getBoardFile() == null || boardDto.getBoardFile().isEmpty()){
            
             boardDto.setAttachFile(0);
             boardDto.setMemberentity(memberEntity);
@@ -128,8 +132,11 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardDto boardDetail(Long boardId) {
-       BoardEntity boardEntity = boardRepository.findById(boardId)
+        boardRepository.updateHit(boardId);
+        BoardEntity boardEntity = boardRepository.findById(boardId)
                 .orElseThrow(()-> new IllegalArgumentException("게시글 아이디가 존재하지 않음" + boardId));
+        
+         
         return BoardDto.toBoardDto(boardEntity);        
     }
 
@@ -218,11 +225,13 @@ public class BoardServiceImpl implements BoardService {
     }
 
     // 조회수
-    @Override
-    @Transactional
-    public void upHitDo(Long id) {
-      boardRepository.updateHit(id);
-    }
+    // @Override
+    // @Transactional
+    // @Modifying
+    // @Query("UPDATE Board b SET b.hit = b.hit + 1 WHERE b.id = :id")
+    // public void upHitDo(@Param("id")Long id) {
+    //   boardRepository.updateHit(id);
+    // }
 
    
     

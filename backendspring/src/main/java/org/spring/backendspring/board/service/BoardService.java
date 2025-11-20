@@ -24,8 +24,6 @@ public interface BoardService {
     void deleteBoard(Long boardId);
 
 
-    // ETC 
-    void upHitDo(Long id);
 
 
 

@@ -1,14 +1,20 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import jwtAxios from '../../../apis/util/jwtUtil';
 import { useSelector } from 'react-redux';
 
+import "../../../css/board/boardWrite.css"
+
+
 
 const BoardWriteContainer = () => {
+  // JWT
   const accessToken = useSelector(state => state.jwtSlice.accessToken);
   const memberId = useSelector(state => state.loginSlice.id);
   const nickName = useSelector(state => state.loginSlice.nickName);
+
+  const API_BASE_URL ='http://localhost:8088/api/board';
 
 
     const { id } = useParams();
@@ -18,11 +24,16 @@ const BoardWriteContainer = () => {
     title: '',
     content: '',
     memberNickName: nickName,
+    };
+    const getInitialBoardState = useCallback(() => ({
+        id: null, 
+        memberId: memberId,
+        title: '',
+        content: '',
+        memberNickName: nickName,
+    }), [memberId, nickName]);
 
-  };
-
-
-  const [boards, setBoards] = useState([]);
+  const [boards, setBoards] = useState(getInitialBoardState);
 
   const navigate = useNavigate();
 
@@ -35,10 +46,9 @@ const BoardWriteContainer = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Current boards state on submit:", boards);
 
     const formData = new FormData();
-    formData.append('id', boards.id);
-    formData.append('memberId', boards.memberId); // 수정 권한 확인을 위해 필요
     formData.append('title', boards.title);
     formData.append('content', boards.content);
     
@@ -47,25 +57,17 @@ const BoardWriteContainer = () => {
       formData.append('boardFile', boardFile);
     }
 
-
-    // below promise do not change anythings..
-    // this section is JWT TEST sEctio n
-      if (memberId) {
-        formData.append('memberId', memberId);
-    }
-    
     try {
-      await jwtAxios.post(`http://localhost:8088/api/board/write?memberId=${memberId}`, formData,
+      await jwtAxios.post(`${API_BASE_URL}/write`, formData,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
           withCredentials: true
-        },
-      );
-      alert(`${boards.id}번 게시물이 등록되었습니다`);
+        });
+      alert(`게시물이 등록되었습니다`);
       navigate("/board");
 
     } catch (error) {
-      console.error("게시물등록 실패!", error);
+      console.error("게시물등록 실패!", error.response);
       alert("글쓰기 실패");
       if (error.response && error.response.data) {
         alert("수정 실패: " + error.response.data); // 서버 오류 메시지 출력 ("수정 권한이 없습니다." 등)
@@ -78,35 +80,37 @@ const BoardWriteContainer = () => {
 
 
   const fetchData = async () => {
-
-
     // there is NO Token ... Send Login...=>
     if (!accessToken) {
       navigate("/auth/login");
       return;
     }
+     console.log(accessToken)
 
-
+     if(id){
     try{
-    const response = await jwtAxios.get(`${API_BASE_URL}/newPost`,
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-        withCredentials: true
-      },
-    );
 
-    const data = response.data;
+      const response = await jwtAxios.get(`${API_BASE_URL}/newPost`, 
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          withCredentials: true, 
+        });
+
+    const data = response.data; 
+    console.log("서버 응답 데이터 타입:", typeof data); 
+    console.log("서버 응답 데이터 내용:", data);
+
         // Set into Data <- Bring Data
       setBoards({
         id: data.id,
-        memberId: data.memberId,
         title: data.title,
         content: data.content,
         memberNickName: data.nickName || data.memberNickName || nickName,
       });
 
-            console.log(response.data.content)
+      console.log(response.data)
     } catch (error) {
+       
       console.error("게시물 조회 실패:", error.response);
  if (error.response) {
         if (error.response.status === 400) {
@@ -123,17 +127,17 @@ const BoardWriteContainer = () => {
       }
     }
   }
+}
   
   useEffect(() => {
     fetchData();
-  }, [id, accessToken]);
+  }, [fetchData]);
 
   return (
     <div className="boardPost">
-      <h1>:: 글쓰기 ::</h1>
       <div className="boardPost-con">
 
-
+        {console.log(boards)}
        
         <form onSubmit={handleSubmit} encType="multipart/form-data">
           <h4>:: 게시글작성 ::</h4>
@@ -145,11 +149,13 @@ const BoardWriteContainer = () => {
 
             <li>
               <label htmlFor="title">글제목::</label>
-              <input type="text" name="title" id="title" required />
+              <input type="text" name="title" id="title"  value={boards.title || ''}
+                                onChange={handleChange}     required />
             </li><br />
             <li>
               <label htmlFor="content">글내용::</label>
-              <textarea name="content" id="content" rows="10" required></textarea>
+              <textarea name="content" id="content" rows="10" value={boards.content || ''}
+                                onChange={handleChange} required></textarea>
             </li>
 
             <li>
