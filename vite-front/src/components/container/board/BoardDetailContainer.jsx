@@ -42,8 +42,6 @@ const BoardDetailContainer = () => {
     const IMAGE_BASE_URL = 'http://localhost:8088/upload/';
 
 
-
-
     const formatDate = (dateString) => {
         if (!dateString) return '';
         return new Date(dateString).toLocaleString('ko-KR', {
@@ -55,7 +53,11 @@ const BoardDetailContainer = () => {
 
 
     const fetchData = async () => {
-        const response = await axios.get(`${API_BASE_URL}/detail/${id}`);
+        const response = await jwtAxios.get(`${API_BASE_URL}/detail/${id}`,
+            {
+                headers: { Authorization: `Bearer ${accessToken}` },
+                withCredentials: true,
+            });
 
         if (response.data) {
             setBoards(response.data);
@@ -71,9 +73,12 @@ const BoardDetailContainer = () => {
         if (!boardId) return;
 
         try {
-            const response = await axios.get(
-                `${REPLY_BASE_URL}/list/${boardId}?page=${page}&size=${size}&sort=createTime,desc`
-            );
+            const response = await jwtAxios.get(
+                `${REPLY_BASE_URL}/list/${boardId}?page=${page}&size=${size}&sort=createTime,desc`,
+                {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                    withCredentials: true,
+                });
 
             // 데이터와 페이지 정보 업데이트
             console.log("리스폰스 >>" + response);
@@ -138,25 +143,25 @@ const BoardDetailContainer = () => {
     const handleUpdatePost = (boardId) => {
         navigate(`/board/update/${boardId}`);
     }
-    const handleReplyUpdate = async (replyMemberId, currentContent) => {
-        setEditingReplyId(replyMemberId);
+    const handleReplyUpdate = async (replyId, currentContent) => {
+        setEditingReplyId(replyId);
         setEditingContent(currentContent);
 
     }
-    const handleReplyEditSubmit = async (replyMemberId) => {
+    const handleReplyEditSubmit = async (replyId) => {
         if (!editingContent.trim()) {
             alert('수정할 내용을 입력해주세요.');
             return;
         }
         const updatedReplyData = {
-            id: replyMemberId,
+            id: replyId,
             boardId: boards.id,
             content: editingContent.trim(),
-            memberId: boards.memberId // 권한 확인을 위해 현재 로그인된 사용자 ID 전송
+            memberId: memberId // 권한 확인을 위해 현재 로그인된 사용자 ID 전송
         };
         console.log("전송할 댓글 수정 데이터:", updatedReplyData);
         try {
-            const response = await axios.put(`${REPLY_BASE_URL}/updateReply`, updatedReplyData);
+            const response = await jwtAxios.put(`${REPLY_BASE_URL}/updateReply`, updatedReplyData);
 
             if (response.status === 200) {
                 alert('댓글이 성공적으로 수정되었습니다.');
@@ -240,7 +245,11 @@ const BoardDetailContainer = () => {
         };
         console.log("전송할 댓글 데이터:", replyData);
         try {
-            const response = await axios.post(`${REPLY_BASE_URL}/addReply`, replyData);
+            const response = await jwtAxios.post(`${REPLY_BASE_URL}/addReply`, replyData,
+                {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                    withCredentials: true
+                });
 
             if (response.status === 200) {
                 alert('댓글이 성공적으로 등록되었습니다.');
@@ -315,6 +324,7 @@ const BoardDetailContainer = () => {
                             {replies.length > 0 ? (
                                 replies.map((reply) => (
                                     <div key={reply.id} className="reply-key">
+
                                         <div className="reply-key-sub">
                                             <p><strong>{`작성자 ID: ${reply.memberId}`}</strong></p>
                                             <span className="reply-key-createtime">{formatDate(reply.createTime)}</span>
@@ -323,8 +333,10 @@ const BoardDetailContainer = () => {
                                         {/* 해당 댓글의 버튼이 눌려 ID가 상태에 저장되었을 때만 폼 표시 */}
                                         {reply.id === editingReplyId && (
 
+
                                             <div className="reply-edit-form">
                                                 {console.log(reply)}
+                                                {console.log('editingReplyId >>' + editingReplyId)}
                                                 {/* {console.log(editingReplyId)} */}
                                                 <textarea
                                                     value={editingContent}
@@ -347,7 +359,7 @@ const BoardDetailContainer = () => {
                                         {reply.memberId === memberId && (
                                             <div className="reply-actions">
                                                 {console.log(reply)}
-                                                <button onClick={() => handleReplyUpdate(reply.memberId, reply.content)}>
+                                                <button onClick={() => handleReplyUpdate(reply.id, reply.content)}>
                                                     수정 </button>
                                                 { /* reply.id -> send delete request. */}
                                                 <button onClick={() => handleReplyDelete(reply.id)}>
