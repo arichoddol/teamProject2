@@ -48,7 +48,8 @@ const beforeRes = async (res) => {
 const responseFail = async (err) => {
   console.log("response fail error....(access 토큰 갱신 필요)");
   
-  if (err.status == 401) {
+  if(err.response && err.response.status === 401){
+  // if (err.status == 401) {
     let rs;
 
     try {

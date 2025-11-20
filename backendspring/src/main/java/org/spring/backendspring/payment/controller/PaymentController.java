@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 
 import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.payment.dto.PaymentDto;
+import org.spring.backendspring.payment.dto.PaymentItemDto;
 import org.spring.backendspring.payment.dto.PaymentResultDto;
 import org.spring.backendspring.payment.entity.PaymentEntity;
+import org.spring.backendspring.payment.entity.PaymentItemEntity;
 import org.spring.backendspring.payment.service.PaymentService;
 import org.spring.backendspring.payment.service.PaymentResultService;
 import org.springframework.data.domain.Page;
@@ -94,15 +96,25 @@ public class PaymentController {
         }
     }
 
-    @GetMapping("/pg/{pg}")
+    @PostMapping("/pg/{pg}") // GET 대신 POST로 변경하는 것이 RESTful 설계에 더 적합합니다.
     public Map<String, Object> pgRequest(
             @PathVariable String pg,
-            @RequestParam Long productId,
-            @RequestParam Long memberId,
-            @RequestParam Long productPrice,
-            @RequestParam String productName) {
+            @RequestBody PaymentDto paymentDto) { // ⭐️ @RequestBody로 PaymentDto 전체를 받음
+
+        // 1. PaymentItemDto 리스트 추출 및 유효성 검사
+        List<PaymentItemDto> itemDtos = paymentDto.getPaymentItems();
+
+        if (itemDtos == null || itemDtos.isEmpty()) {
+            throw new IllegalArgumentException("결제할 상품 목록이 요청에 포함되어야 합니다.");
+        }
+
+        // 2. DTO 리스트를 Entity 리스트로 변환
+        List<PaymentItemEntity> itemsToPay = itemDtos.stream()
+                .map(PaymentItemDto::toEntity)
+                .collect(Collectors.toList());
+        // 3. Service 호출 (memberId와 itemsToPay 리스트 전달)
         Map<String, Object> map = new HashMap<>();
-        String approvalUrl = paymentService.pgRequest(pg, productId, memberId, productPrice, productName);
+        String approvalUrl = paymentService.pgRequest(pg, paymentDto.getMemberId(), itemsToPay);
         map.put("approvalUrl", approvalUrl);
         return map;
     }
@@ -141,20 +153,19 @@ public class PaymentController {
     }
 
     @GetMapping("/page")
-public PagedResponse<PaymentDto> getPayments(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size,
-        @RequestParam(required = false) String keyword) {
+    public PagedResponse<PaymentDto> getPayments(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String keyword) {
 
-    // 1. Page<PaymentEntity> 가져오기
-    Page<PaymentEntity> pageResult = paymentService.getPayments(page, size, keyword);
+        // 1. Page<PaymentEntity> 가져오기
+        Page<PaymentEntity> pageResult = paymentService.getPayments(page, size, keyword);
 
-    // 2. Entity -> DTO 변환
-    Page<PaymentDto> dtoPage = pageResult.map(PaymentDto::fromEntity);
+        // 2. Entity -> DTO 변환
+        Page<PaymentDto> dtoPage = pageResult.map(PaymentDto::fromEntity);
 
-    // 3. PagedResponse로 변환 후 반환
-    return PagedResponse.of(dtoPage);
-}
-
+        // 3. PagedResponse로 변환 후 반환
+        return PagedResponse.of(dtoPage);
+    }
 
 }

@@ -16,4 +16,5 @@ public interface AdminItemService {
 
     PagedResponse<ItemDto> findAllItems(String keyword, int page, int size);
 
+    public void deleteImage(Long id);
 }

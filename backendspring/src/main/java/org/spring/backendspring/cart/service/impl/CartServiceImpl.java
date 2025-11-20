@@ -82,4 +82,15 @@ public class CartServiceImpl implements CartService {
         return cartItemRepository.findByCartEntity_IdAndItemEntity_ItemTitleContainingIgnoreCase(
                 cartId, keyword, pageable);
     }
+
+    // 수량 변경 구현
+    @Override
+    public CartItemEntity updateItemQuantity(Long cartItemId, int quantity) {
+        CartItemEntity cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new RuntimeException("장바구니 아이템을 찾을 수 없습니다: " + cartItemId));
+
+        cartItem.setItemSize(quantity); 
+
+        return cartItemRepository.save(cartItem); 
+    }
 }

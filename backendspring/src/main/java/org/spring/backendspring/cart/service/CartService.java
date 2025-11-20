@@ -23,4 +23,5 @@ public interface CartService {
 
     Page<CartItemEntity> searchCartItems(Long cartId, String keyword, Pageable pageable);
 
+    CartItemEntity updateItemQuantity(Long cartItemId, int quantity);
 }

@@ -7,6 +7,7 @@ import org.spring.backendspring.cart.entity.CartEntity;
 import org.spring.backendspring.cart.entity.CartItemEntity;
 import org.spring.backendspring.cart.service.CartService;
 import org.spring.backendspring.common.dto.PagedResponse;
+import org.spring.backendspring.config.security.util.JWTUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
@@ -19,22 +20,26 @@ import java.util.List;
 public class CartController {
 
     private final CartService cartService;
+    private final JWTUtil jwtUtil;
 
-    // 회원 장바구니 조회 또는 생성
-    @GetMapping("/{memberId}")
-    public CartDto getOrCreateCart(@PathVariable("memberId") Long memberId) {
+    // JWT 기반 회원 장바구니 조회/생성
+    @GetMapping("/me")
+    public CartDto getMyCart(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        var claims = jwtUtil.validateToken(token);
+        Long memberId = Long.valueOf(claims.get("id").toString());
+
         CartEntity cart = cartService.getCartByMemberId(memberId);
-        if (cart == null) {
-            cart = cartService.createCart(memberId);
-        }
+        if (cart == null) cart = cartService.createCart(memberId);
+
         return cart.toDto();
     }
 
     // 장바구니에 아이템 추가
     @PostMapping("/{cartId}/item")
     public CartItemDto addItem(@PathVariable("cartId") Long cartId,
-            @RequestParam("itemId") Long itemId,
-            @RequestParam("itemSize") int itemSize) {
+                               @RequestParam("itemId") Long itemId,
+                               @RequestParam("itemSize") int itemSize) {
         return cartService.addItemToCart(cartId, itemId, itemSize).toDto();
     }
 
@@ -45,13 +50,24 @@ public class CartController {
         return "삭제 완료";
     }
 
+    // 장바구니 아이템 수량 변경
+    @PutMapping("/item/{cartItemId}/quantity")
+    public CartItemDto updateItemQuantity(
+            @PathVariable("cartItemId") Long cartItemId,
+            @RequestParam("quantity") int quantity) {
+        if (quantity < 1) {
+            throw new IllegalArgumentException("수량은 1 이상이어야 합니다.");
+        }
+        return cartService.updateItemQuantity(cartItemId, quantity).toDto();
+    }
+
     // 장바구니 아이템 페이징 조회
     @GetMapping("/{cartId}/items")
     public PagedResponse<CartItemDto> getCartItems(
             @PathVariable("cartId") Long cartId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "") String keyword // ✅ 검색 키워드
+            @RequestParam(defaultValue = "") String keyword
     ) {
         Page<CartItemEntity> pageResult;
 
@@ -80,5 +96,4 @@ public class CartController {
                 .blockSize(5)
                 .build();
     }
-
 }

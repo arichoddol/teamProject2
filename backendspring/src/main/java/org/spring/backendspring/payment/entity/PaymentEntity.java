@@ -32,7 +32,7 @@ public class PaymentEntity extends BasicTime {
     @Builder.Default
     private PaymentStatus paymentStatus = PaymentStatus.PENDING;
 
-    @OneToMany(mappedBy = "payment", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "payment", cascade = { CascadeType.REMOVE, CascadeType.PERSIST }, fetch = FetchType.LAZY)
     private List<PaymentItemEntity> paymentItemEntities = new ArrayList<>();
 
     // ---------------- KakaoPay 관련 ----------------
@@ -43,9 +43,12 @@ public class PaymentEntity extends BasicTime {
     @Column(columnDefinition = "TEXT")
     private String paymentReadyJson;
 
-    private int isSucceeded;
+    @Builder.Default
+    private Integer isSucceeded = 0;
 
-    public Object getItems() {
-        throw new UnsupportedOperationException("Unimplemented method 'getItems'");
+    // ServiceImpl에서 이 메서드를 호출하여 PaymentItemEntity에 PaymentEntity 참조를 설정해야 합니다.
+    public void addPaymentItem(PaymentItemEntity item) {
+        this.paymentItemEntities.add(item);
+        item.setPayment(this); // 👈 PaymentItemEntity의 payment_id 외래 키를 설정
     }
 }
