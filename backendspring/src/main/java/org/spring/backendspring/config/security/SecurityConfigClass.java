@@ -113,8 +113,9 @@ public class SecurityConfigClass {
         CorsConfiguration configuration = new CorsConfiguration();
         // 프론트(리액트) 임시 허용
         configuration.setAllowedOriginPatterns(Arrays.asList(
-                "http://localhost:3000",
                 "http://localhost:8088",
+                "http://localhost:3000",
+                "http://localhost:3001",
                 "https://online-payment.kakaopay.com/**",
                 "https://kapi.kakao.com/v1/payment/ready/**",
                 "https://kapi.kakao.com/v1/payment/approve/**"
