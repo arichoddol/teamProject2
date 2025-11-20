@@ -1,176 +1,166 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Hahmlet:wght@100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
-body {
-    background-color: #ffffff;
-    font-family: 'Noto Sans KR', sans-serif;
-    color: #333;
-    margin: 0;
-    padding: 0;
+
+.itemDetail {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
 }
 
 .itemDetail-con {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 40px 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
 }
 
-.itemDetail-con-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    margin-bottom: 60px;
+
+.itemDetail-con-image {
+    flex: 1 1 400px;
+    max-width: 100%;
+    border: 1px solid #eee;
+    padding: 15px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
 }
 
 .itemDetail-con-image img {
-    width: 400px;
+    max-width: 100%;
     height: auto;
     display: block;
-    margin-bottom: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 10px;
+    border-radius: 5px;
+    object-fit: contain;
+
 }
 
-.itemDetail-con-image img[src*="No+Image"] {
-    background-color: #f8f8f8;
-    border: 1px solid #eee;
-}
 
 .itemDetail-con-info {
-    padding-top: 5px;
+    flex: 1 1 400px;
+    padding: 20px;
+    border: 1px solid #eee;
+    background-color: #fff;
+    box-sizing: border-box;
 }
 
 .itemDetail-con-info h4 {
-    font-size: 2.25rem;
-    font-weight: 500;
-    margin: 0 0 10px 0;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #f0f0f0;
+    font-size: 1.8em;
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+    border-bottom: 2px solid #f2f2f2;
+    padding-bottom: 10px;
 }
 
 .itemDetail-con-info span {
     display: block;
-    font-size: 1rem;
-    line-height: 1.6;
+    line-height: 1.8;
     color: #555;
-    padding: 4px 0;
+    font-size: 0.95em;
 }
 
-.itemDetail-con-info span:nth-child(3) {
-    font-weight: 700;
-    color: #222;
-    font-size: 1.1rem;
-    margin-bottom: 20px;
+.itemDetail-con-info span strong {
+    font-weight: bold;
+    color: #333;
 }
 
+/* 장바구니 추가 버튼 및 수량 입력 영역 */
 .item-add-cart {
     display: flex;
     align-items: center;
-    gap: 15px;
-    padding-top: 25px;
-    margin-top: 25px;
-    border-top: 1px solid #f0f0f0;
-}
-
-.item-add-cart input[type="number"] {
-    width: 80px;
-    padding: 12px 10px;
-    text-align: center;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1.1rem;
-    appearance: textfield;
-}
-.item-add-cart input[type="number"]::-webkit-outer-spin-button,
-.item-add-cart input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+    margin-top: 30px;
+    gap: 10px;
 }
 
 .add-cart-btn {
-    flex-grow: 1;
-    padding: 12px 20px;
-    background-color: #333;
+    padding: 10px 20px;
+    background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 1.1rem;
-    font-weight: 500;
-    transition: background-color 0.2s, transform 0.1s;
+    font-size: 1em;
+    transition: background-color 0.3s;
 }
 
 .add-cart-btn:hover {
-    background-color: #555;
-    transform: translateY(-1px);
+    background-color: #0056b3;
 }
 
-.itemDetail-con-reply {
-    margin-top: 60px;
-    padding-top: 40px;
-    border-top: 2px solid #f0f0f0;
+.item-add-cart input[type="number"] {
+    width: 60px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1em;
 }
 
+/* --- 댓글 입력 폼 및 댓글 목록 영역 --- */
+
+.itemDetail-con-reply,
+.replyList {
+    flex: 1 1 100%;
+    /* 전체 너비 사용 */
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #eee;
+    background-color: #fff;
+}
+
+/* 댓글 입력 폼 */
 .itemDetail-con-reply form {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    margin-bottom: 30px;
-    padding: 20px;
-    background-color: #fcfcfc;
-    border: 1px solid #f5f5f5;
-    border-radius: 8px;
+    gap: 10px;
 }
 
 .itemDetail-con-reply textarea {
     width: 100%;
-    padding: 15px;
-    border: 1px solid #eee;
-    border-radius: 6px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     resize: vertical;
-    font-size: 0.95rem;
-    margin-bottom: 10px;
     box-sizing: border-box;
-    transition: border-color 0.2s;
-}
-
-.itemDetail-con-reply textarea:focus {
-    border-color: #aaa;
-    outline: none;
+    font-size: 0.95em;
 }
 
 .itemDetail-con-reply button[type='submit'] {
-    padding: 10px 20px;
-    background-color: #333;
+    align-self: flex-end;
+    /* 오른쪽 정렬 */
+    padding: 8px 15px;
+    background-color: #28a745;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 0.95rem;
-    transition: background-color 0.2s;
+    transition: background-color 0.3s;
 }
 
 .itemDetail-con-reply button[type='submit']:hover {
-    background-color: #555;
+    background-color: #1e7e34;
 }
 
+/* 댓글 목록 */
 .replyList h5 {
-    font-size: 1.5rem;
-    font-weight: 500;
+    font-size: 1.2em;
     color: #333;
+    border-bottom: 2px solid #f2f2f2;
     padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.replyList>div {
     border-bottom: 1px solid #eee;
-    margin: 0 0 20px 0;
+    padding: 15px 0;
 }
 
-.replyList > div {
-    padding: 20px 0;
-    border-bottom: 1px solid #f5f5f5;
-}
-
-.replyList > div:last-child {
+.replyList>div:last-child {
     border-bottom: none;
-    padding-bottom: 0;
 }
 
 .replyList .tab {
@@ -180,135 +170,116 @@ body {
     margin-bottom: 5px;
 }
 
-.replyList strong {
-    font-weight: 500;
-    color: #444;
+.replyList .tab strong {
+    color: #007bff;
+    font-size: 1em;
 }
 
-.reply-createTime {
-    font-size: 0.8rem;
+.replyList .reply-createTime {
+    font-size: 0.85em;
     color: #999;
 }
 
-.reply-content {
-    font-size: 1rem;
-    line-height: 1.6;
-    margin: 10px 0;
+.replyList .reply-key-content {
+    margin: 5px 0 10px 0;
+    white-space: pre-wrap;
+    /* 줄 바꿈 유지 */
     color: #333;
 }
 
+.replyList .reply-key-content-none {
+    text-align: center;
+    color: #777;
+    padding: 20px;
+}
+
+/* 댓글 수정 및 삭제 버튼 */
 .reply-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+    text-align: right;
     margin-top: 10px;
 }
 
 .reply-actions button {
-    background: none;
-    border: none;
-    color: #777;
+    margin-left: 5px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
     cursor: pointer;
-    font-size: 0.85rem;
-    padding: 5px 8px;
-    border-radius: 4px;
-    transition: color 0.2s, background-color 0.2s;
+    border-radius: 3px;
+    font-size: 0.9em;
 }
 
 .reply-actions button:hover {
-    color: #333;
-    background-color: #f8f8f8;
+    background-color: #e9e9e9;
+}
+
+/* 댓글 수정 폼 */
+.reply-edit-form {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #fafafa;
+    border-radius: 5px;
 }
 
 .reply-edit-form textarea {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
     resize: vertical;
-    margin-bottom: 10px;
+    box-sizing: border-box;
+    font-size: 0.9em;
+}
+
+.reply-edit-buttons {
+    text-align: right;
+    margin-top: 5px;
 }
 
 .reply-edit-buttons button {
-    padding: 8px 15px;
+    margin-left: 5px;
+    padding: 5px 10px;
+    background-color: #ffc107;
+    color: #333;
     border: none;
-    border-radius: 6px;
-    font-size: 0.9rem;
+    border-radius: 3px;
     cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.reply-edit-buttons button:first-child {
-    background-color: #007bff;
-    color: white;
+    font-size: 0.9em;
 }
 
 .reply-edit-buttons button:last-child {
-    background-color: #ccc;
-    color: #333;
+    background-color: #6c757d;
+    color: white;
 }
 
-.replyList .tab {
-    justify-content: center;
-    gap: 10px;
-    margin-top: 30px;
-    padding: 10px 0;
+.reply-edit-buttons button:hover:last-child {
+    background-color: #5a6268;
 }
 
-.replyList .tab button {
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    background-color: white;
-    color: #333;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.2s;
-}
-
-.replyList .tab button:hover:not(:disabled) {
-    background-color: #f8f8f8;
-}
-
-.replyList .tab button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.replyList .tab span {
-    padding: 10px 15px;
-    background-color: #f5f5f5;
-    border-radius: 6px;
-    font-weight: 500;
-}
-
-@media (max-width: 1024px) {
-    .itemDetail-con-layout {
-        grid-template-columns: 1fr;
-        gap: 40px;
-    }
-}
-
-@media (max-width: 640px) {
+/* 미디어 쿼리: 모바일 환경 대응 (너비 768px 이하) */
+@media (max-width: 768px) {
     .itemDetail-con {
-        padding: 20px 16px;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .itemDetail-con-image,
+    .itemDetail-con-info {
+        flex: 1 1 100%;
+        /* 모바일에서는 전체 너비 사용 */
+        max-width: 100%;
     }
 
     .itemDetail-con-info h4 {
-        font-size: 1.75rem;
+        font-size: 1.5em;
     }
 
     .item-add-cart {
-        flex-direction: column;
-        align-items: stretch;
+        justify-content: space-between;
     }
 
-    .item-add-cart input[type="number"] {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-
-    .replyList h5 {
-        font-size: 1.25rem;
+    .add-cart-btn {
+        flex-grow: 1;
     }
 }

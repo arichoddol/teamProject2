@@ -1,18 +1,23 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router';
+import jwtAxios from '../../../apis/util/jwtUtil';
+import { useSelector } from 'react-redux';
 
 import "../../../css/store/storeDetail.css"
 
 const ShopDetailContainer = () => {
 
-    const NO_IMAGE_URL = "/images/noimage.jpg";
-
+    // JWT
+    const accessToken = useSelector(state => state.jwtSlice.accessToken);
+    const memberId = useSelector(state => state.loginSlice.id);
+    const nickName = useSelector(state => state.loginSlice.nickName);
 
     const [item, setItem] = useState({});
     const [content, setContent] = useState('');
     const [replies, setReplies] = useState([]);
 
+    // Editing
     const [editingReplyId, setEditingReplyId] = useState(null);
     const [editingContent, setEditingContent] = useState('');
 
@@ -31,6 +36,7 @@ const ShopDetailContainer = () => {
     const REPLY_BASE_URL = 'http://localhost:8088/api/itemReply';
     const API_BASE_URL = 'http://localhost:8088/api/shop';
     const IMAGE_BASE_URL = 'http://localhost:8088/upload/';
+    const NO_IMAGE_URL = "/images/noimage.jpg";
 
     const formatDate = (dateString) => {
         if (!dateString) return '';
@@ -41,9 +47,14 @@ const ShopDetailContainer = () => {
         });
     }
 
-
     const fetchData = async () => {
-        const response = await axios.get(`${API_BASE_URL}/detail/${id}`);
+        const response = await jwtAxios.get(`${API_BASE_URL}/detail/${id}`,
+            {
+                headers: { Authorization: `Bearer ${accessToken}` },
+                withCredentials: true,
+            });
+
+
 
         if (response.data) {
             setItem(response.data);
@@ -58,7 +69,7 @@ const ShopDetailContainer = () => {
         if (!item) return;
 
         try {
-            const response = await axios.get(
+            const response = await jwtAxios.get(
                 `${REPLY_BASE_URL}/list/${itemId}?page=${page}&size=${size}&sort=createTime,desc`
             );
 
@@ -83,9 +94,9 @@ const ShopDetailContainer = () => {
             fetchReplies(item.id, newPage, pageInfo.size);
         }
     };
-    const handleUpdatePost = (itemId) => {
-        navigate(`/store/update/${itemId}`);
-    }
+    // const handleUpdatePost = (itemId) => {
+    //     navigate(`/store/update/${itemId}`);
+    // }
 
     const handleReplyUpdate = async (replyId, currentContent) => {
         setEditingReplyId(replyId);
@@ -98,6 +109,7 @@ const ShopDetailContainer = () => {
     }
 
     const handleReplyEditSubmit = async (replyId) => {
+
         if (!editingContent.trim()) {
             alert('수정할 내용을 입력해주세요.');
             return;
@@ -106,11 +118,17 @@ const ShopDetailContainer = () => {
             id: replyId,
             itemId: item.id,
             content: editingContent.trim(),
-            memberId: item.memberId // 권한 확인을 위해 현재 로그인된 사용자 ID 전송
+            memberId: memberId // 권한 확인을 위해 현재 로그인된 사용자 ID 전송
         };
         console.log("전송할 댓글 수정 데이터:", updatedReplyData);
+        console.log('전송 memberId:', updatedReplyData.memberId);
         try {
-            const response = await axios.put(`${REPLY_BASE_URL}/updateReply`, updatedReplyData);
+            const response = await jwtAxios.put(`${REPLY_BASE_URL}/updateReply`, updatedReplyData,
+                {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                    withCredentials: true,
+                });
+
 
             if (response.status === 200) {
                 alert('댓글이 성공적으로 수정되었습니다.');
@@ -138,11 +156,17 @@ const ShopDetailContainer = () => {
             return;
         }
         try {
-            const response = await axios.delete(`${REPLY_BASE_URL}/deleteReply/${replyId}`, {
-                params: {
-                    memberId: item.memberId // 쿼리 파라미터로 memberId 전송
-                }
-            });
+            const response = await jwtAxios.delete(`${REPLY_BASE_URL}/deleteReply/${replyId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    },
+                    params: {
+                        memberId: memberId // 쿼리 파라미터로 memberId 전송
+                    },
+                    withCredentials: true, // 4. 자격 증명 포함 설정
+                });
+
             if (response.status === 200 || response.status === 204) {
                 alert('댓글이 성공적으로 삭제되었습니다.');
                 // 댓글 삭제 후 현재 페이지의 댓글 목록을 갱신합니다.
@@ -171,12 +195,16 @@ const ShopDetailContainer = () => {
         const replyData = {
             itemId: item.id,
             content: content.trim(),
-            memberId: item.memberId
+            memberId: memberId
         };
         console.log("전송할 댓글 데이터:", replyData);
 
         try {
-            const response = await axios.post(`${REPLY_BASE_URL}/addReply`, replyData);
+            const response = await jwtAxios.post(`${REPLY_BASE_URL}/addReply`, replyData,
+                {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                    withCredentials: true
+                });
 
             if (response.status === 200) {
                 alert('댓글이 성공적으로 등록되었습니다.');
@@ -191,7 +219,7 @@ const ShopDetailContainer = () => {
         }
     };
 
-     // 장바구니 담기 함수 추가
+    // 장바구니 담기 함수 추가
     const handleAddToCart = () => {
         const product = {
             id: item.id,
@@ -207,12 +235,13 @@ const ShopDetailContainer = () => {
 
     useEffect(() => {
         fetchData();
-        // when id change its always restart it.
     }, [id]);
 
     return (
         <div className="itemDetail">
             {console.log(item)}
+            {console.log(replies)}
+
 
             <div className="itemDetail-con">
 
@@ -229,17 +258,17 @@ const ShopDetailContainer = () => {
                         />
                     )}
 
-                {item.itemImgDtos && item.itemImgDtos.length > 0 && (
-                            item.itemImgDtos.map((imgDto) => (
-                                <img
-                                    // bring File by NewName Field
-                                    key={imgDto.id || imgDto.newName}
-                                    src={`${IMAGE_BASE_URL}${imgDto.newName}`}
-                                    alt={imgDto.oldName}
-                                    style={{ maxWidth: '100%', height: 'auto', display: 'block', margin: '10px 0' }}
-                                />
-                            ))
-                        )}
+                    {item.itemImgDtos && item.itemImgDtos.length > 0 && (
+                        item.itemImgDtos.map((imgDto) => (
+                            <img
+                                // bring File by NewName Field
+                                key={imgDto.id || imgDto.newName}
+                                src={`${IMAGE_BASE_URL}${imgDto.newName}`}
+                                alt={imgDto.oldName}
+                                style={{ maxWidth: '100%', height: 'auto', display: 'block', margin: '10px 0' }}
+                            />
+                        ))
+                    )}
                 </div>
                 <div className="itemDetail-con-info">
                     <h4>{item.itemTitle}</h4>
@@ -251,16 +280,16 @@ const ShopDetailContainer = () => {
                     <span>createTime : {item.createTime}</span><br />
                     <span>updateTime : {item.updatTime}</span><br />
 
-                     <div className="item-add-cart">
+                    <div className="item-add-cart">
                         <button className="add-cart-btn" onClick={handleAddToCart}>
-                        장바구니 담기
+                            장바구니 담기
                         </button>
-                        <input type="number" id="quantity" name="quantity" 
-                                min="1" max="9" defaultValue="1"></input>
+                        <input type="number" id="quantity" name="quantity"
+                            min="1" max="9" defaultValue="1"></input>
 
 
-                     </div>
-                 
+                    </div>
+
                 </div>
                 <div className="itemDetail-con-reply">
 
@@ -285,12 +314,17 @@ const ShopDetailContainer = () => {
                             <div key={reply.id} >
                                 <div className='tab'>
                                     {console.log(reply)}
-                                    <p><strong>{reply.memberNickName || `작성자 ID: ${reply.memberId}`}</strong></p>
+                                    {console.log(editingReplyId)}
+                                    <p><strong>{`작성자 ID: ${reply.memberId}`}</strong></p>
                                     <span className="reply-createTime">{formatDate(reply.createTime)}</span>
                                 </div>
-                                {/* 수정 */}
-                                {editingReplyId === reply.id ? (
+                                <p className="reply-key-content">{reply.content}</p>
+                                {/* 해당 댓글의 버튼이 눌려 ID가 상태에 저장되었을 때만 폼 표시 */}
+                                {reply.id === editingReplyId && (
+
                                     <div className="reply-edit-form">
+                                        {console.log(reply)}
+                                        {console.log(editingReplyId)}
                                         <textarea
                                             value={editingContent}
                                             onChange={(e) => setEditingContent(e.target.value)}
@@ -299,7 +333,7 @@ const ShopDetailContainer = () => {
                                         <div className="reply-edit-buttons">
                                             <button
                                                 onClick={() => handleReplyEditSubmit(reply.id)}>
-                                                수정 완료
+                                                수정
                                             </button>
                                             <button
                                                 onClick={handleReplyEditCancel}>
@@ -307,63 +341,29 @@ const ShopDetailContainer = () => {
                                             </button>
                                         </div>
                                     </div>
-                                ) : (
-
-                                    <>
-                                        <p className="reply-key-content">{reply.content}</p>
-
-                                        {/* 수정/삭제 버튼: 현재 사용자 ID와 댓글 작성자 ID가 일치할 때만 표시 */}
-                                        {reply.memberId === item.memberId && (
-                                            <div className="reply-actions">
-                                                <button
-                                                    onClick={() => handleReplyUpdate(reply.id, reply.content)}>
-                                                    수정
-                                                </button>
-                                                <button
-                                                    onClick={() => handleReplyDelete(reply.id)}>
-                                                    삭제
-                                                </button>
-                                            </div>
-                                        )}
-                                    </>
                                 )}
-                                <p className="reply-content">{reply.content}</p>
+                                { /*conditional rendering below here */}
+                                {reply.memberId === memberId && (
+                                    <div className="reply-actions">
+                                        {console.log(reply)}
+                                        <button onClick={() => handleReplyUpdate(reply.id, reply.content)}>
+                                            수정 </button>
+                                        { /* reply.id -> send delete request. */}
+                                        <button onClick={() => handleReplyDelete(reply.id)}>
+                                            삭제 </button>
+                                    </div>
+
+                                )}
                             </div>
+
                         ))
                     ) : (
-                        <p className="text-center text-gray-500 py-4">등록된 댓글이 없습니다.</p>
+                        < p className="reply-key-content-none">등록된 댓글이 없습니다.</p>
                     )}
-
-                    {/* 3. Pagenation UI */}
-                    {pageInfo.totalPages > 1 && (
-                        <div className="tab">
-                            <button
-                                onClick={() => handlePageChange(pageInfo.page - 1)}
-                                disabled={pageInfo.first}
-                                style={{ padding: '5px 10px', border: '1px solid #ccc', borderRadius: '5px' }}
-                            >
-                                이전
-                            </button>
-
-                            <span style={{ padding: '5px 10px', background: '#eee', borderRadius: '5px', fontWeight: 'bold' }}>
-                                {pageInfo.page + 1} / {pageInfo.totalPages}
-                            </span>
-
-                            <button
-                                onClick={() => handlePageChange(pageInfo.page + 1)}
-                                disabled={pageInfo.last}
-                                style={{ padding: '5px 10px', border: '1px solid #ccc', borderRadius: '5px' }}
-                            >
-                                다음
-                            </button>
-                        </div>
-                    )}
-
-
                 </div>
-            </div>
+            </div >
 
-        </div>
+        </div >
 
 
     )
