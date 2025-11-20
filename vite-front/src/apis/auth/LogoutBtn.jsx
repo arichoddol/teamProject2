@@ -4,6 +4,7 @@ import { BACK_BASIC_URL } from "../commonApis";
 import { useDispatch } from "react-redux";
 import { logoutAction } from "../../slices/loginSlice";
 import { useNavigate } from "react-router";
+import { deleteAccessToken } from "../../slices/jwtSlice";
 
 const LogoutBtn = () => {
   const ACCESS_TOKEN_KEY = "accessToken";
@@ -26,6 +27,7 @@ const LogoutBtn = () => {
 
       localStorage.removeItem(ACCESS_TOKEN_KEY);
       dispatch(logoutAction());
+      dispatch(deleteAccessToken());
       alert("로그아웃 처리되었습니다!");
       navigate("/store/index");
 

@@ -49,11 +49,10 @@ const beforeRes = async (res) => {
 
 // ----------- response fail -----------
 const responseFail = async (err) => {
-  console.log("response fail error....(access 토큰 갱신 필요)");
-  console.log(err.response);
+  console.log("response fail error....");
 
-  if (err.response && err.response.status === 401) {
-    // if (err.status == 401) {
+  if (err.response.status === 401 && err.response.data === "TOKEN_EXPIRED") {
+    console.log("토큰이 만료되어 재발급 받습니다.");
     let rs;
 
     try {
@@ -61,14 +60,15 @@ const responseFail = async (err) => {
       const id = store.getState().loginSlice.id;
       const isLogin = store.getState().loginSlice.isLogin;
 
-      const memberData = {
-        id: id,
-        status: isLogin,
-      };
+      // 쿠키 빼고 최대한 상태로 관리할거임
+      // const memberData = {
+      //   id: id,
+      //   status: isLogin,
+      // };
 
-      const memberValue = JSON.stringify(memberData);
-      // 만료정보 재발급
-      setCookie("member", memberValue, 1);
+      // const memberValue = JSON.stringify(memberData);
+      // // 만료정보 재발급
+      // setCookie("member", memberValue, 1);
     } catch (err) {
       console.log("리프레시 토큰 갱신 실패 ", +err);
       return Promise.reject(err);

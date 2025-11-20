@@ -34,13 +34,15 @@ const CrewRequestModal = ({ isModal, setIsModal, crewRequestId }) => {
   const crewApproved = async () => {
     try {
       await jwtAxios.post(
-        `${BACK_BASIC_URL}/api/crew/create/request/approved`,
+        `${BACK_BASIC_URL}/api/crew/create/request/approved?requestId=${crewRequestId}`,
         {},
         {
           headers: { Authorization: `Bearer ${accessToken}` },
           withCredentials: true,
         }
       );
+      alert("크루 승인 완료!");
+      setIsModal(false);
     } catch (err) {
       console.log("수락 요청을 실패했습니다. " + err);
     }
@@ -49,13 +51,15 @@ const CrewRequestModal = ({ isModal, setIsModal, crewRequestId }) => {
   const crewRejected = async () => {
     try {
       await jwtAxios.post(
-        `${BACK_BASIC_URL}/api/crew/create/request/rejected`,
+        `${BACK_BASIC_URL}/api/crew/create/request/rejected?requestId=${crewRequestId}`,
         {},
         {
           headers: { Authorization: `Bearer ${accessToken}` },
           withCredentials: true,
         }
       );
+      alert("크루 거절 완료!");
+      setIsModal(false);
     } catch (err) {
       console.log("거절 요청을 실패했습니다. " + err);
     }
@@ -68,22 +72,78 @@ const CrewRequestModal = ({ isModal, setIsModal, crewRequestId }) => {
   console.log(crewRequestDetail);
   return (
     <>
-      <div className="adminCrewDetail">
-        <div className="adminCrewDetail-con">
-          <span onClick={modalClick}>X</span>
-          <h3>{crewRequestDetail.crewName}</h3>
-          <ul>
-            <li>{crewRequestDetail.district}</li>
-            <li>{crewRequestDetail.message}</li>
-            <li>{crewRequestDetail.status}</li>
-            <li>{formatDate(crewRequestDetail.createTime)}</li>
-            {crewStatus == "APPROVED" ? null : (
-              <li>
-                <button onClick={crewApproved}>수락</button>
-                <button onClick={crewRejected}>거절</button>
-              </li>
+      <div className="admin-crew-modal-overlay" onClick={modalClick}>
+        <div
+          className="admin-crew-modal-container"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* 헤더 */}
+          <div className="admin-crew-modal-header">
+            <h3 className="admin-crew-modal-title">
+              {crewRequestDetail.crewName}
+            </h3>
+            <button className="admin-crew-modal-close" onClick={modalClick}>
+              ✕
+            </button>
+          </div>
+
+          {/* 컨텐츠 */}
+          <div className="admin-crew-modal-content">
+            {/* 지역 */}
+            <div className="info-row">
+              <div className="info-icon icon-location">📍</div>
+              <div className="info-text">
+                <p className="info-label">지역</p>
+                <p className="info-value">{crewRequestDetail.district}</p>
+              </div>
+            </div>
+
+            {/* 신청 메시지 */}
+            <div className="message-box">
+              <p className="info-label">신청 메시지</p>
+              <p className="message-text">{crewRequestDetail.message}</p>
+            </div>
+
+            {/* 상태 */}
+            <div className="info-row">
+              <div className="info-icon icon-status">⏳</div>
+              <div className="info-text">
+                <p className="info-label">상태</p>
+                <span
+                  className={`status-badge status-${crewRequestDetail.status}`}
+                >
+                  {crewRequestDetail.status === "APPROVED"
+                    ? "승인됨"
+                    : crewRequestDetail.status === "REJECTED"
+                    ? "거절됨"
+                    : "대기중"}
+                </span>
+              </div>
+            </div>
+
+            {/* 신청일 */}
+            <div className="info-row">
+              <div className="info-icon icon-date">📅</div>
+              <div className="info-text">
+                <p className="info-label">신청일</p>
+                <p className="info-value">
+                  {formatDate(crewRequestDetail.createTime)}
+                </p>
+              </div>
+            </div>
+
+            {/* 버튼 */}
+            {crewRequestDetail.status !== "APPROVED" && (
+              <div className="button-group">
+                <button className="btn btn-approve" onClick={crewApproved}>
+                  ✓ 수락
+                </button>
+                <button className="btn btn-reject" onClick={crewRejected}>
+                  ✕ 거절
+                </button>
+              </div>
             )}
-          </ul>
+          </div>
         </div>
       </div>
     </>

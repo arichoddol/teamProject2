@@ -1,17 +1,22 @@
 package org.spring.backendspring.config.security.filter;
 
 import com.google.gson.Gson;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.spring.backendspring.common.role.MemberRole;
 import org.spring.backendspring.config.security.MyUserDetails;
+import org.spring.backendspring.config.security.exception.CustomJWTException;
 import org.spring.backendspring.config.security.util.JWTUtil;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -76,14 +81,25 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             filterChain.doFilter(request, response);
 
-        } catch (Exception e) {
-            log.error("JWT 검증 실패, ", e);
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json;charset=UTF-8");
-            String msg = new Gson().toJson(Map.of("error", "INVALID_ACCESS_TOKEN"));
-            try (PrintWriter writer = response.getWriter()) {
-                writer.println(msg);
+        } catch (CustomJWTException e) {
+            log.error("JWT 에러 발생", e);
+            if (e.getMessage().contains("Expired")) {
+                sendErrorResponse(response, 401, "TOKEN_EXPIRED");
+            } else {
+                sendErrorResponse(response, 401, "INVALID_ACCESS_TOKEN");
             }
+        } catch (Exception e) {
+            log.error("응답 에러! 콘솔 확인 ㄱㄱ", e);
+            filterChain.doFilter(request, response);
         }
+    }
+
+    private void sendErrorResponse(HttpServletResponse response,
+                                   int status,
+                                   String body) throws IOException {
+        response.setStatus(status);
+        response.setContentType("application/json;charset=UTF-8");
+        String msg = new Gson().toJson(body);
+        response.getWriter().write(msg);
     }
 }

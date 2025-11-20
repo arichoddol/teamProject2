@@ -8,7 +8,7 @@ const AdminMemberDetailContainer = () => {
   const accessToken = useSelector((state) => state.jwtSlice.accessToken);
   const { memberId } = useParams();
   const [gender, setGender] = useState("남성");
-  const [memberDto, setMemberDto] = useState({});
+  const [memberDto, setMemberDto] = useState({ userName: "" });
   const [updateMemberDto, setUpdateMemberDto] = useState({});
 
   const navigate = useNavigate();
@@ -26,7 +26,6 @@ const AdminMemberDetailContainer = () => {
       if (rs.data.gender != "MAN") {
         setGender("여성");
       }
-      console.log(rs.data);
     } catch (err) {
       console.log("에러가 발생했습니다. -> admin memberDetail " + err);
     }
@@ -54,7 +53,7 @@ const AdminMemberDetailContainer = () => {
   };
 
   let jsonData = JSON.stringify(updateMemberDto);
-  console.log(jsonData);
+
   const adminMemberUpdateFn = async (e) => {
     e.preventDefault();
 

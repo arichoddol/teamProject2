@@ -20,6 +20,9 @@
 /* 관리자 */
 @import url(css/admin/container/admin-member-list.css);
 @import url(css/admin/container/admin-member-detail.css);
+@import url(css/admin/container/admin-crew-allow-list.css);
+@import url(css/admin/container/admin-crew-list.css);
+@import url(css/admin/modal/admin-crew-modal.css);
 
 /* 관리자 페이징 */
 @import url(css/common/admin-paging.css);

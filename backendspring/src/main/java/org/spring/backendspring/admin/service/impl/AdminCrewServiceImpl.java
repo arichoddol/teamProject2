@@ -45,20 +45,19 @@ public class AdminCrewServiceImpl implements AdminCrewService {
     @Override
     public PagedResponse<CrewDto> findAllCrews(String keyword, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        Page<CrewDto> crewPage;
+        Page<CrewEntity> crewPage = adminCrewRepository.findAll(pageable);
 
-        if (keyword == null || keyword.trim().isEmpty()) {
-            // 검색어 없을 때 전체 목록
-            crewPage = adminCrewRepository.findAll(pageable)
-                    .map(CrewDto::toCrewDto);
-        } else {
-            // 검색어 있을 때 name 기준으로 검색
-            crewPage = adminCrewRepository
-                    .findByNameContainingIgnoreCase(keyword, pageable)
-                    .map(CrewDto::toCrewDto);
+        if (crewPage.isEmpty()) {
+            throw new IllegalArgumentException("크루가 없습니다.");
         }
 
-        return PagedResponse.of(crewPage);
+        if (keyword == null || keyword.trim().isEmpty()) {
+            crewPage = adminCrewRepository.findAll(pageable);
+        } else {
+            crewPage = adminCrewRepository.findByNameContainingIgnoreCase(keyword, pageable);
+        }
+
+        return PagedResponse.of(crewPage.map(CrewDto::toCrewDto));
     }
 
     @Override

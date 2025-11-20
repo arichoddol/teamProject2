@@ -40,8 +40,6 @@ const AdminMemberListContainer = () => {
     adminMemberListFn();
   }, [currentPage]);
 
-  console.log(subject);
-
   const hadlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -95,6 +93,7 @@ const AdminMemberListContainer = () => {
                   <th>번호</th>
                   <th>이메일</th>
                   <th>이름</th>
+                  <th>닉네임</th>
                   <th>권한</th>
                   <th>가입일</th>
                   <th>관리</th>
@@ -107,6 +106,7 @@ const AdminMemberListContainer = () => {
                       <td>{el.id}</td>
                       <td>{el.userEmail}</td>
                       <td>{el.userName}</td>
+                      <td>{el.nickName}</td>
                       <td>{el.role}</td>
                       <td>{formatDate(el.createTime)}</td>
                       <td>
