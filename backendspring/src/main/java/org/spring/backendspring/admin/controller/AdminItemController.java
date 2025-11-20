@@ -86,4 +86,9 @@ public class AdminItemController {
         return ResponseEntity.ok("관리자 상품 삭제 완료");
     }
 
+    // @DeleteMapping("/delete/{itemId}/image")
+    // public ResponseEntity<String> deleteImage(@PathVariable("itemId") Long id) {
+    //     adminItemService.deleteImage(id);
+    //     return ResponseEntity.ok("이미지 삭제 완료");
+    // }
 }

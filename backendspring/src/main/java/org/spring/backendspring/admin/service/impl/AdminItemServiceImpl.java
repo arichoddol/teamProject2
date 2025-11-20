@@ -35,7 +35,8 @@ public class AdminItemServiceImpl implements AdminItemService {
     private final ItemImgRepository itemImgRepository;
     private final MemberRepository memberRepository;
 
-    private final String uploadPath = "E:\\uploadImg\\";
+//    private final String uploadPath = "E:\\uploadImg\\";
+    private static final String uploadPath = "C:/full/upload/";
 
     // ===========================================================
     //  FIND ONE
@@ -57,54 +58,52 @@ public class AdminItemServiceImpl implements AdminItemService {
         MemberEntity member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new RuntimeException("멤버 없음"));
 
-        // 🔥 builder로 생성
+        // 1) 빌더로 엔티티 생성
         ItemEntity item = ItemEntity.builder()
                 .itemTitle(itemDto.getItemTitle())
                 .itemDetail(itemDto.getItemDetail())
                 .itemPrice(itemDto.getItemPrice())
                 .itemSize(itemDto.getItemSize())
-                .attachFile(0)   // 기본값
+                .attachFile(0)
                 .memberEntity(member)
                 .build();
 
-        itemRepository.save(item);
+        String originalName = null;
+        String newName = null;
 
-        // 이미지 없으면 끝
-        if (itemFile == null || itemFile.isEmpty()) return;
+        // 2) 파일 처리
+        if (itemFile != null && !itemFile.isEmpty()) {
 
-        // 이미지 처리
-        File folder = new File(uploadPath);
-        if (!folder.exists()) folder.mkdirs();
+            File folder = new File(uploadPath);
+            if (!folder.exists()) folder.mkdirs();
 
-        String originalName = itemFile.getOriginalFilename();
-        String newName = UUID.randomUUID() + "_" + originalName;
+            originalName = itemFile.getOriginalFilename();
+            newName = UUID.randomUUID() + "_" + originalName;
 
-        try {
-            itemFile.transferTo(new File(uploadPath + newName));
-        } catch (IOException e) {
-            throw new RuntimeException("파일 저장 실패", e);
+            try {
+                itemFile.transferTo(new File(uploadPath + newName));
+            } catch (IOException e) {
+                throw new RuntimeException("파일 저장 실패", e);
+            }
+
+            item.setOldFileName(originalName);
+            item.setNewFileName(newName);
+            item.setAttachFile(1);
         }
 
-        itemImgRepository.save(
-                ItemImgEntity.builder()
-                        .itemEntity(item)
-                        .oldName(originalName)
-                        .newName(newName)
-                        .build()
-        );
+        // 3) 최종 save 딱 한 번
+        itemRepository.save(item);
 
-        // 🔥 attachFile 변경된 버전 다시 저장
-        ItemEntity updated = ItemEntity.builder()
-                .id(item.getId())
-                .itemTitle(item.getItemTitle())
-                .itemDetail(item.getItemDetail())
-                .itemPrice(item.getItemPrice())
-                .itemSize(item.getItemSize())
-                .attachFile(1)
-                .memberEntity(member)
-                .build();
-
-        itemRepository.save(updated);
+        // 4) 이미지 테이블 저장
+        if (newName != null) {
+            itemImgRepository.save(
+                    ItemImgEntity.builder()
+                            .itemEntity(item)
+                            .oldName(originalName)
+                            .newName(newName)
+                            .build()
+            );
+        }
     }
 
 
@@ -122,11 +121,15 @@ public class AdminItemServiceImpl implements AdminItemService {
 
         ItemImgEntity oldImg = itemImgRepository.findByItemEntity(old);
 
-        // ======================================================
-        // CASE 1: 이미지 없애기 (attachFile = 0)
-        // ======================================================
+        String originalName = null;
+        String newName = null;
+
+    /* ===========================================
+        CASE 1 : 이미지 삭제 요청 (attachFile = 0)
+       =========================================== */
         if (dto.getAttachFile() == 0) {
 
+            // 기존 이미지 삭제
             if (oldImg != null) {
                 new File(uploadPath + oldImg.getNewName()).delete();
                 itemImgRepository.delete(oldImg);
@@ -139,21 +142,20 @@ public class AdminItemServiceImpl implements AdminItemService {
                     .itemPrice(dto.getItemPrice())
                     .itemSize(dto.getItemSize())
                     .attachFile(0)
+                    .oldFileName(null)
+                    .newFileName(null)
                     .memberEntity(member)
                     .build();
 
             return ItemDto.toItemDto(itemRepository.save(updated));
         }
 
-
-        // ======================================================
-        // CASE 2: 새 이미지 교체
-        // ======================================================
-        String originalName = null;
-        String newName = null;
-
+    /* ===========================================
+        CASE 2 : 새 이미지 업로드
+       =========================================== */
         if (itemFile != null && !itemFile.isEmpty()) {
 
+            // 기존 이미지 삭제
             if (oldImg != null) {
                 new File(uploadPath + oldImg.getNewName()).delete();
                 itemImgRepository.delete(oldImg);
@@ -171,6 +173,7 @@ public class AdminItemServiceImpl implements AdminItemService {
                 throw new RuntimeException("파일 저장 실패", e);
             }
 
+            // 새 이미지 저장
             itemImgRepository.save(
                     ItemImgEntity.builder()
                             .itemEntity(old)
@@ -180,9 +183,9 @@ public class AdminItemServiceImpl implements AdminItemService {
             );
         }
 
-        // ======================================================
-        // CASE 3: 정보만 수정 or 정보 + 이미지 수정
-        // ======================================================
+    /* ===========================================
+        CASE 3 : 파일 유지 / 또는 CASE2 끝난 후 최종 조립
+       =========================================== */
         ItemEntity updated = ItemEntity.builder()
                 .id(old.getId())
                 .itemTitle(dto.getItemTitle())
@@ -190,10 +193,20 @@ public class AdminItemServiceImpl implements AdminItemService {
                 .itemPrice(dto.getItemPrice())
                 .itemSize(dto.getItemSize())
                 .attachFile(newName != null ? 1 : old.getAttachFile())
+                .oldFileName(newName != null ? originalName : old.getOldFileName())
+                .newFileName(newName != null ? newName : old.getNewFileName())
                 .memberEntity(member)
                 .build();
 
-        return ItemDto.toItemDto(itemRepository.save(updated));
+        ItemEntity saved = itemRepository.save(updated);
+
+// 🔥 연관 이미지가 포함된 엔티티로 다시 조회해야 DTO에 itemImgDtos가 들어감
+        ItemEntity loaded = itemRepository.findById(saved.getId())
+                .orElseThrow(() -> new RuntimeException("업데이트 후 재조회 실패"));
+
+        return ItemDto.toItemDto(loaded);
+
+
     }
 
 
@@ -216,6 +229,17 @@ public class AdminItemServiceImpl implements AdminItemService {
         itemRepository.delete(item);
     }
 
+    @Override
+    public void deleteImage(Long id) {
+        ItemEntity item = itemRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("상품 없음"));
+
+        item.setItemImage(null);
+        item.setAttachFile(0);
+
+        itemRepository.save(item);
+
+    }
 
     // ===========================================================
     //  FIND ALL

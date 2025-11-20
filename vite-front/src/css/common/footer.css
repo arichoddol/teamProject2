@@ -6,6 +6,7 @@
     color: #f1f1f1;
     padding: 20px 1px;
     box-sizing: border-box;
+    overflow: hidden;
 
     /* border: 1px solid;
   box-sizing: border-box; */
@@ -17,8 +18,9 @@
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 15px;
+    padding: 2vw;
     max-width: 1200px;
-    margin: 0 auto 30px auto;
+    /* margin: 0 auto 30px auto; */
 
     /* border: 1px solid;
   box-sizing: border-box; */
@@ -89,7 +91,7 @@
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
-        padding: 0 16px;
+        padding: 1vw;
         justify-items: center;
         box-sizing: border-box;
     }

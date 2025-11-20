@@ -30,6 +30,7 @@ const ShopDetailContainer = () => {
 
     const REPLY_BASE_URL = 'http://localhost:8088/api/itemReply';
     const API_BASE_URL = 'http://localhost:8088/api/shop';
+    const IMAGE_BASE_URL = 'http://localhost:8088/upload/';
 
     const formatDate = (dateString) => {
         if (!dateString) return '';
@@ -227,6 +228,18 @@ const ShopDetailContainer = () => {
                             alt="이미지 없음"
                         />
                     )}
+
+                {item.itemImgDtos && item.itemImgDtos.length > 0 && (
+                            item.itemImgDtos.map((imgDto) => (
+                                <img
+                                    // bring File by NewName Field
+                                    key={imgDto.id || imgDto.newName}
+                                    src={`${IMAGE_BASE_URL}${imgDto.newName}`}
+                                    alt={imgDto.oldName}
+                                    style={{ maxWidth: '100%', height: 'auto', display: 'block', margin: '10px 0' }}
+                                />
+                            ))
+                        )}
                 </div>
                 <div className="itemDetail-con-info">
                     <h4>{item.itemTitle}</h4>
@@ -238,10 +251,16 @@ const ShopDetailContainer = () => {
                     <span>createTime : {item.createTime}</span><br />
                     <span>updateTime : {item.updatTime}</span><br />
 
-                    <button className="add-cart-btn" onClick={handleAddToCart}>
+                     <div className="item-add-cart">
+                        <button className="add-cart-btn" onClick={handleAddToCart}>
                         장바구니 담기
-                    </button>
+                        </button>
+                        <input type="number" id="quantity" name="quantity" 
+                                min="1" max="9" defaultValue="1"></input>
 
+
+                     </div>
+                 
                 </div>
                 <div className="itemDetail-con-reply">
 

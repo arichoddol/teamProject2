@@ -58,6 +58,13 @@
     color: white;
   }
   
+  .item-search-box {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+    gap: 3px;
+  }
+
   /* 페이징 */
   .pagination {
     display: flex;

@@ -32,7 +32,7 @@
         //             .paymentItemEntities(null) // 혹은 new ArrayList<>()
         //             .build();
 
-// <<<<<<< HEAD
+
 //             PaymentEntity payment = PaymentEntity.builder()
 //                     .memberId((long) i)
 //                     .paymentAddr("서울시 테스트로 " + i + "길")
@@ -42,6 +42,7 @@
 //                     .paymentType(i % 2 == 0 ? "ORDER" : "SUBSCRIBE")
 //                     .paymentItemEntities(null) // 혹은 new ArrayList<>()
 //                     .build();
+
 
 //             PaymentEntity payment = PaymentEntity.builder()
 //                     .memberId((long) i)
@@ -54,6 +55,7 @@
 //                     // .updateTime(LocalDateTime.now())
 //                     .paymentItemEntities(null) // 혹은 new ArrayList<>()
 //                     .build();
+
 
 
 // //             paymentRepository.save(payment);

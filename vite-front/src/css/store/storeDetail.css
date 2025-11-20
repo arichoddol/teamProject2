@@ -1,2 +1,314 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Hahmlet:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
+body {
+    background-color: #ffffff;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.itemDetail-con {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 40px 32px;
+}
+
+.itemDetail-con-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-bottom: 60px;
+}
+
+.itemDetail-con-image img {
+    width: 400px;
+    height: auto;
+    display: block;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.itemDetail-con-image img[src*="No+Image"] {
+    background-color: #f8f8f8;
+    border: 1px solid #eee;
+}
+
+.itemDetail-con-info {
+    padding-top: 5px;
+}
+
+.itemDetail-con-info h4 {
+    font-size: 2.25rem;
+    font-weight: 500;
+    margin: 0 0 10px 0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.itemDetail-con-info span {
+    display: block;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+    padding: 4px 0;
+}
+
+.itemDetail-con-info span:nth-child(3) {
+    font-weight: 700;
+    color: #222;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+.item-add-cart {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-top: 25px;
+    margin-top: 25px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.item-add-cart input[type="number"] {
+    width: 80px;
+    padding: 12px 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    appearance: textfield;
+}
+.item-add-cart input[type="number"]::-webkit-outer-spin-button,
+.item-add-cart input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.add-cart-btn {
+    flex-grow: 1;
+    padding: 12px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.add-cart-btn:hover {
+    background-color: #555;
+    transform: translateY(-1px);
+}
+
+.itemDetail-con-reply {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 2px solid #f0f0f0;
+}
+
+.itemDetail-con-reply form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #fcfcfc;
+    border: 1px solid #f5f5f5;
+    border-radius: 8px;
+}
+
+.itemDetail-con-reply textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    resize: vertical;
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.itemDetail-con-reply textarea:focus {
+    border-color: #aaa;
+    outline: none;
+}
+
+.itemDetail-con-reply button[type='submit'] {
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background-color 0.2s;
+}
+
+.itemDetail-con-reply button[type='submit']:hover {
+    background-color: #555;
+}
+
+.replyList h5 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #333;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    margin: 0 0 20px 0;
+}
+
+.replyList > div {
+    padding: 20px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.replyList > div:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.replyList .tab {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.replyList strong {
+    font-weight: 500;
+    color: #444;
+}
+
+.reply-createTime {
+    font-size: 0.8rem;
+    color: #999;
+}
+
+.reply-content {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 10px 0;
+    color: #333;
+}
+
+.reply-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.reply-actions button {
+    background: none;
+    border: none;
+    color: #777;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 5px 8px;
+    border-radius: 4px;
+    transition: color 0.2s, background-color 0.2s;
+}
+
+.reply-actions button:hover {
+    color: #333;
+    background-color: #f8f8f8;
+}
+
+.reply-edit-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    resize: vertical;
+    margin-bottom: 10px;
+}
+
+.reply-edit-buttons button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.reply-edit-buttons button:first-child {
+    background-color: #007bff;
+    color: white;
+}
+
+.reply-edit-buttons button:last-child {
+    background-color: #ccc;
+    color: #333;
+}
+
+.replyList .tab {
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+    padding: 10px 0;
+}
+
+.replyList .tab button {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: white;
+    color: #333;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.replyList .tab button:hover:not(:disabled) {
+    background-color: #f8f8f8;
+}
+
+.replyList .tab button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.replyList .tab span {
+    padding: 10px 15px;
+    background-color: #f5f5f5;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+@media (max-width: 1024px) {
+    .itemDetail-con-layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+}
+
+@media (max-width: 640px) {
+    .itemDetail-con {
+        padding: 20px 16px;
+    }
+
+    .itemDetail-con-info h4 {
+        font-size: 1.75rem;
+    }
+
+    .item-add-cart {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .item-add-cart input[type="number"] {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .replyList h5 {
+        font-size: 1.25rem;
+    }
+}

@@ -19,7 +19,9 @@ const AdminItemDetailContainer = () => {
     itemImage: "", // 🔥 기존 이미지 URL 받기
   });
 
+
   const [file, setFile] = useState(null);
+
 
   // 상세 불러오기
   const fetchItemDetail = async () => {
@@ -71,50 +73,93 @@ const AdminItemDetailContainer = () => {
 
   console.log("TOKEN", accessToken);
 
+  const handleDeleteImage = async () => {
+    if (!window.confirm('정말 상품 이미지를 삭제하시겠습니까?')) return;
+    try {
+      await jwtAxios.delete(
+        `${BACK_BASIC_URL}/api/admin/item/image/delete/${itemId}`
+        ,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        }
+      );
+
+      setItem({ ...item, attachFile: 0, itemImage: null });
+      alert("이미지 삭제 완료");
+
+    } catch (err) {
+      console.error(err);
+      alert("이미지 삭제 실패");
+    }
+  };
+
 
   return (
     <div className="admin-item-detail">
       <h2>상품 상세 / 수정</h2>
+      <div className="item-detail-con">
+        <div className="detail-left">
+          {/* 🔥 기존 이미지 미리보기 */}
+          <div className="detail-img">
+            {item.itemImgDtos && item.itemImgDtos.length > 0 && (
+              <img
+                src={`${BACK_BASIC_URL}/uploadImg/${item.itemImgDtos[0].newName}`}
+                alt="상품 이미지"
+                width="250"
+                height="350"
+              />
+            )}
+          </div>
+          <button type="button" onClick={handleDeleteImage}>
+            이미지 삭제
+          </button>
+        </div>
+        <div className="detail-right">
+          <form onSubmit={handleUpdate} encType="multipart/form-data">
 
-      {/* 🔥 기존 이미지 미리보기 */}
-      {item.itemImage && (
-        <img src={item.itemImage} alt="상품 이미지" width="150" />
-      )}
+            <label>상품명</label>
+            <input
+              type="text"
+              value={item.itemTitle}
+              onChange={(e) => setItem({ ...item, itemTitle: e.target.value })}
+            />
 
-      <form onSubmit={handleUpdate}>
+            <label>가격</label>
+            <input
+              type="number"
+              value={item.itemPrice}
+              onChange={(e) => setItem({ ...item, itemPrice: e.target.value })}
+            />
 
-        <label>상품명</label>
-        <input
-          type="text"
-          value={item.itemTitle}
-          onChange={(e) => setItem({ ...item, itemTitle: e.target.value })}
-        />
+            <label>상세 설명</label>
+            <textarea
+              value={item.itemDetail}
+              onChange={(e) => setItem({ ...item, itemDetail: e.target.value })}
+            />
 
-        <label>가격</label>
-        <input
-          type="number"
-          value={item.itemPrice}
-          onChange={(e) => setItem({ ...item, itemPrice: e.target.value })}
-        />
+            <label>재고</label>
+            <input
+              type="number"
+              value={item.itemSize}
+              onChange={(e) => setItem({ ...item, itemSize: e.target.value })}
+            />
 
-        <label>상세 설명</label>
-        <textarea
-          value={item.itemDetail}
-          onChange={(e) => setItem({ ...item, itemDetail: e.target.value })}
-        />
+            <label>상품 이미지 변경</label>
+            <input
+              type="file"
+              onChange={(e) => {
+                setFile(e.target.files[0]);
+                setItem({ ...item, attachFile: 1 });
+              }}
+            />
 
-        <label>재고</label>
-        <input
-          type="number"
-          value={item.itemSize}
-          onChange={(e) => setItem({ ...item, itemSize: e.target.value })}
-        />
 
-        <label>상품 이미지 변경</label>
-        <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+            <button type="submit">수정하기</button>
 
-        <button type="submit">수정하기</button>
-      </form>
+          </form>
+        </div>
+
+      </div>
     </div>
   );
 };
