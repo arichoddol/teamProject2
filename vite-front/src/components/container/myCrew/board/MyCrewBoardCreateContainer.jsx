@@ -7,7 +7,7 @@ const MyCrewBoardCreateContainer = () => {
   const { crewId } = useParams();
   const navigate = useNavigate();
   const { accessToken } = useSelector((state) => state.jwtSlice);
-  const { userEmail, nickName } = useSelector((state) => state.loginSlice);  // 닉네임이 슬라이스에 있으면 좋겠당
+  const { userEmail, nickName } = useSelector((state) => state.loginSlice);
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -23,8 +23,8 @@ const MyCrewBoardCreateContainer = () => {
   }
 
   const create = async (el) => {
-    el.preventDefault();
     console.log('accessToken:', accessToken);
+    el.preventDefault();
 
     try {
         const formData = new FormData();
@@ -32,33 +32,28 @@ const MyCrewBoardCreateContainer = () => {
         formData.append('content', content);
 
         if (files.length > 0) {
-            // 선택된 파일이 있을 경우 모두 추가
-            files.forEach(file => formData.append('crewBoardFile', file));
-        } else {
-            // 파일이 없으면 빈 파일을 하나 넣어서 multipart 형식 유지
-            const emptyFile = new File([''], 'empty.txt', { type: 'text/plain' });
-            formData.append('crewBoardFile', emptyFile);
+            for (let i = 0; i < files.length; i ++) {
+                formData.append('crewBoardFile', files[i]);
+            }
+        } else if (!files) {
+            formData.append("crewBoardFile", new Blob([]), "");
         }
-
-        const response = await axios.post(
-            `/api/mycrew/${crewId}/board/create`,
+        const response = await axios.post(`/api/mycrew/${crewId}/board/create`, 
             formData,
             {
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,
-                    "Content-Type": "multipart/form-data"
-                },
-                withCredentials: true, // 쿠키 사용 시 필요
+                },      
+                withCredentials: true,        
             }
         );
-
         alert('게시글 작성 완료');
         navigate(`/mycrew/${crewId}/board/detail/${response.data.id}`);
-    } catch (err) {
-        console.error(err.response || err);
-        alert("오류 발생: " + (err.response?.data?.error || err.message));
+        } catch (err) {
+        console.log(err);
+        alert("error: " + err.message);
     }
-};
+  }
 
   return (
     <div className="boardCreate">

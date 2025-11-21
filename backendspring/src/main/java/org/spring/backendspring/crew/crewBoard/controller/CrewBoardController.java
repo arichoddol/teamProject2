@@ -71,7 +71,7 @@ public class CrewBoardController {
         crewBoardDto.setCrewBoardFile(crewBoardFile);
 
         Long loginUserId = userDetails.getMemberId();
-        CrewBoardDto createBoard = crewBoardService.createBoard(crewId, crewBoardDto, loginUserId);
+        CrewBoardDto createBoard = crewBoardService.createBoard(crewId, crewBoardDto, loginUserId, crewBoardFile);
 
         return ResponseEntity.ok(createBoard);
     }

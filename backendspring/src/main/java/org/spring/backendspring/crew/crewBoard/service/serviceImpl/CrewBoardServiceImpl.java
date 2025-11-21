@@ -65,7 +65,7 @@ public class CrewBoardServiceImpl implements CrewBoardService {
     }
 
     @Override
-    public CrewBoardDto createBoard(Long crewId, CrewBoardDto crewBoardDto, Long loginUserId) throws IOException {
+    public CrewBoardDto createBoard(Long crewId, CrewBoardDto crewBoardDto, Long loginUserId, List<MultipartFile> crewBoardFile) throws IOException {
         CrewEntity crewEntity = crewRepository.findById(crewId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 크루"));
 
@@ -82,7 +82,7 @@ public class CrewBoardServiceImpl implements CrewBoardService {
         
         CrewBoardEntity savedBoard = null;
 
-        List<MultipartFile> crewBoardFile = crewBoardDto.getCrewBoardFile();
+        crewBoardFile = crewBoardDto.getCrewBoardFile();
         
         if (crewBoardFile == null || crewBoardFile.isEmpty() || crewBoardFile.get(0).isEmpty()) {
             savedBoard = crewBoardRepository.save(crewBoardEntity);            

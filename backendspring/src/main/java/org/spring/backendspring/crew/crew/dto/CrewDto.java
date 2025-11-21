@@ -2,6 +2,7 @@ package org.spring.backendspring.crew.crew.dto;
 
 import lombok.*;
 import org.spring.backendspring.common.BasicTime;
+import org.spring.backendspring.common.role.CrewRole;
 import org.spring.backendspring.crew.crewBoard.entity.CrewBoardEntity;
 import org.spring.backendspring.crew.crewJoin.entity.CrewJoinRequestEntity;
 import org.spring.backendspring.crew.crewMember.entity.CrewMemberEntity;

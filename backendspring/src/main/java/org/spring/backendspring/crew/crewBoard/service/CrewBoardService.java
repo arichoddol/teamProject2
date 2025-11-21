@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface CrewBoardService {
 
-    CrewBoardDto createBoard(Long crewId, CrewBoardDto crewBoardDto, Long loginUserId) throws IOException;
+    CrewBoardDto createBoard(Long crewId, CrewBoardDto crewBoardDto, Long loginUserId, List<MultipartFile> crewBoardFile) throws IOException;
         
     CrewBoardDto boardDetail(Long crewId, Long id);
     
