@@ -2,14 +2,16 @@ package org.spring.backendspring.board.controller;
 
 
 import java.io.IOException;
-
+import java.nio.file.AccessDeniedException;
 
 import org.spring.backendspring.board.dto.BoardDto;
+import org.spring.backendspring.board.repository.BoardRepository;
 import org.spring.backendspring.board.service.BoardService;
 import org.spring.backendspring.config.security.MyUserDetails;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +24,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import jakarta.validation.Valid;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 // RestController is Data Only
@@ -39,9 +43,12 @@ import lombok.RequiredArgsConstructor;
 public class BoardController {
 
     private final BoardService boardService;
+    private final BoardRepository boardRepository;
 
     @GetMapping("")
-    public ResponseEntity<Page<BoardDto>> boardList(@PageableDefault(size = 10) Pageable pageable) {
+    public ResponseEntity<Page<BoardDto>> boardList(@PageableDefault(size = 10,
+                                                direction = Sort.Direction.DESC, sort = "createTime" ) 
+                                    Pageable pageable) {
 
         Page<BoardDto> boardList = boardService.boardListPage(pageable, null, null);
 
@@ -51,7 +58,7 @@ public class BoardController {
     // search function
     @GetMapping("/search")
     public ResponseEntity<Page<BoardDto>> boardSearchList(
-            @PageableDefault(size = 10) Pageable pageable,
+            @PageableDefault(size = 10,  direction = Sort.Direction.DESC, sort = "createTime") Pageable pageable,
             @RequestParam(required = false) String subject,
             @RequestParam(required = false) String search) {
 
@@ -71,62 +78,77 @@ public class BoardController {
 
     // this Fragments -> form action="/board/write" Data request.
     @PostMapping("/write")
-    public ResponseEntity<?> writeBoard(@RequestParam("memberId") Long memberId,
+    public ResponseEntity<?> writeBoard(
                                         @ModelAttribute BoardDto boardDto,
                                         @AuthenticationPrincipal MyUserDetails myUserDetails) throws IOException {
-        if (!myUserDetails.getMemberId().equals(memberId)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원의 정보가 일치하지 않습니다.");
-        }
+        
+        Long memberId = myUserDetails.getMemberId();
+        boardDto.setMemberId(memberId);
         boardService.insertBoard(boardDto);
         return ResponseEntity.ok("DONE");
+        
+        //  if (!myUserDetails.getMemberId().equals(memberId)) {
+        //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원의 정보가 일치하지 않습니다.");
+        // }
+        // boardService.insertBoard(boardDto);
+        // return ResponseEntity.ok("DONE");
     }
 
     // URL: http://localhost:8088/api/board/detail/{id}
-    @GetMapping("/detail/{id}")
-    public ResponseEntity<BoardDto> getBoardDetail(@PathVariable("id") Long id) {
+    @GetMapping("/detail/{boardId}")
+    public ResponseEntity<BoardDto> getBoardDetail(@PathVariable("boardId") Long boardId) {
 
-        // Bring Id(Long id )
-        BoardDto boardDto = boardService.boardDetail(id);
-
+       
+        BoardDto boardDto = boardService.boardDetail(boardId);
         return ResponseEntity.ok(boardDto);
     }
 
     // UPDATE
     @GetMapping("/update/{boardId}")
-    public ResponseEntity<?> updateBoard(@PathVariable("boardId") Long boardId,
-                                         @AuthenticationPrincipal MyUserDetails myUserDetails) {
-        Long memberId = myUserDetails.getMemberId();
+    public ResponseEntity<BoardDto> updateBoard(@PathVariable("boardId") Long boardId, // PathVariable로 boardId를 받습니다.
+                              @AuthenticationPrincipal MyUserDetails myUserDetails
+                              ) throws AccessDeniedException {
 
-        try {
-            BoardDto boardDto = boardService.boardDetail(boardId);
+    try {
+        BoardDto boardDto = boardService.boardDetail(boardId);
+        if(!boardDto.getMemberId().equals(myUserDetails.getMemberId()))
+            { throw new AccessDeniedException("수정권한이 없습니다."); }
+        
+        return ResponseEntity.ok(boardDto);
+       } catch (EntityNotFoundException e) {
+            // 게시글을 찾을 수 없는 경우 404 Not Found 응답
+            return ResponseEntity.notFound().build();
+        } 
+         // AccessDeniedException은 throws 처리되어 상위 핸들러에서 처리.
 
-            if (!memberId.equals(boardDto.getMemberId())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 권한이 없습니다.");
-            }
-
-            if (boardDto != null) {
-                return ResponseEntity.ok(boardDto);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(null);
-        }
     }
-
-    @PostMapping("/updatePost")
+    @PutMapping("/updatePost")
     public ResponseEntity<?> updateBoard(@ModelAttribute BoardDto boardDto,
-                                         @AuthenticationPrincipal MyUserDetails myUserDetails) throws IOException {
+                                        @AuthenticationPrincipal MyUserDetails myUserDetails) throws IOException {
+        
         Long memberId = myUserDetails.getMemberId();
-
-        if (!memberId.equals(boardDto.getMemberId())) {
+         if (!memberId.equals(boardDto.getMemberId())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 권한이 없습니다.");
-        }
-
-        boardService.update(boardDto);
+         }
+         boardService.update(boardDto);
         return ResponseEntity.ok("UPDATE DONE");
 
     }
+
+    // @PutMapping("/updatePost")
+    // public ResponseEntity<?> updateBoard(
+    //                                      @RequestBody BoardDto boardDto,
+    //                                      @AuthenticationPrincipal MyUserDetails myUserDetails) throws IOException {
+    //     Long memberId = myUserDetails.getMemberId();
+
+    //     if (!memberId.equals(boardDto.getMemberId())) {
+    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 권한이 없습니다.");
+    //     }
+
+    //     boardService.update(boardDto);
+    //     return ResponseEntity.ok("UPDATE DONE");
+
+    // }
     // UPDATE
 
 
@@ -136,7 +158,8 @@ public class BoardController {
     // DELETE
     @DeleteMapping("/detail/{boardId}")
     public ResponseEntity<String> deleteBoard(@PathVariable("boardId") Long boardId,
-                                              @AuthenticationPrincipal MyUserDetails myUserDetails) {
+            @AuthenticationPrincipal MyUserDetails myUserDetails) {
+                                                
         Long authMemberId = myUserDetails.getMemberId();
         Long memberId = boardService.boardDetail(boardId).getMemberId();
 

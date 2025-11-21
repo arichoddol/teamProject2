@@ -54,6 +54,7 @@ public class SecurityConfigClass {
                     .requestMatchers(
                             "/api/crew/create/approved",
                             "/api/crew/create/rejected").hasRole("ADMIN")
+                //     .requestMatchers("/api/member/detail/**").authenticated()
                     .requestMatchers(
                             "/api/board/newPost",
                             "/api/board/write",
@@ -65,6 +66,8 @@ public class SecurityConfigClass {
                             "/api/mycrew/*/board/*/comment/write").authenticated()
                     .requestMatchers("/api/member/**").permitAll()
                     .requestMatchers("/login", "/logout", "/api/**", "/index").permitAll()
+                    .requestMatchers("/marathon").permitAll()
+
                     .requestMatchers("/**").permitAll(); // css, js 파일 허용
         });
 

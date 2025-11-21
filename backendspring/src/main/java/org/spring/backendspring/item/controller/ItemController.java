@@ -28,9 +28,9 @@ public class ItemController {
 
     @GetMapping("")
     public ResponseEntity<Page<ItemDto>> itemSearchList(
-            @PageableDefault(size = 9, direction = Sort.Direction.DESC, sort = "createTime") Pageable pageable,
-        @RequestParam(required = false) String subject, 
-        @RequestParam(required =  false) String search) {
+        @PageableDefault(size = 9, direction = Sort.Direction.DESC, sort = "createTime") Pageable pageable,
+        @RequestParam(value = "subject", required = false) String subject, 
+        @RequestParam(value = "search", required =  false) String search) {
 
             Page<ItemDto> itemList = itemService.pagingSearchItemList(pageable, subject, search);
             return ResponseEntity.ok(itemList);

@@ -17,7 +17,6 @@ const Header = () => {
   const role = useSelector((state) => state.loginSlice.role);
   const memberId = useSelector((state) => state.loginSlice.memberId); // 추가
 
-
   // const onLogoutFn = async () => {
   //   const rs = await logoutFn();
 
@@ -44,7 +43,10 @@ const Header = () => {
                   <LogoutBtn />
                 </li>
                 <li>
-                  <Link to={`/cart/${memberId}`}>CART</Link>
+                  <Link to="/cart">CART</Link>
+                </li>
+                <li>
+                  <Link to="/store">SHOP</Link>
                 </li>
                 <li>
                   <Link to="/auth/myPage">myPage</Link>
@@ -77,6 +79,9 @@ const Header = () => {
             </li>
             <li>
               <Link to={"/event"}>EVENT</Link>
+            </li>
+            <li>
+              <Link to="/api/marathon">MARATHON</Link>
             </li>
           </ul>
         </div>

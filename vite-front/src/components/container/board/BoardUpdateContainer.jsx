@@ -1,32 +1,41 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import jwtAxios from '../../../apis/util/jwtUtil';
 import { useSelector } from 'react-redux';
 
+import "../../../css/board/boardUpdate.css"
+
 
 const BoardUpdateContainer = () => {
-
   // JWT
   const accessToken = useSelector(state => state.jwtSlice.accessToken);
   const memberId = useSelector(state => state.loginSlice.id);
   const nickName = useSelector(state => state.loginSlice.nickName);
 
+  const API_BASE_URL ='http://localhost:8088/api/board';
+  const IMAGE_BASE_URL = 'http://localhost:8088/upload/';
+
+  const { id } = useParams();
 
   const initialBoardState = {
-    id: null,
-    memberId: memberId,
+    id: 0,
+    memberId: 0,
     title: '',
     content: '',
     memberNickName: nickName,
-
   };
+  const getInitialBoardState = useCallback(() => ({ 
+          id: null, 
+          memberId: memberId,
+          title: '',
+          content: '',
+          memberNickName: nickName,
+  }), [memberId, nickName]);
 
   const [boards, setBoards] = useState(initialBoardState);
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const API_BASE_URL = 'http://localhost:8088/api/board';
 
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setBoards({
@@ -35,16 +44,15 @@ const BoardUpdateContainer = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleUpdateSubmit = async (e) => {
     e.preventDefault();
+    console.log("Current boards state on submit:", boards);
 
-    // below promise do not change anythings..
-    // this section is JWT TEST sEctio n
     const formData = new FormData();
     formData.append('id', boards.id);
-    formData.append('memberId', boards.memberId); // 수정 권한 확인을 위해 필요
     formData.append('title', boards.title);
     formData.append('content', boards.content);
+    formData.append('memberId', boards.memberId);
 
     const boardFile = e.target.boardFile.files[0];
     if (boardFile) {
@@ -52,12 +60,14 @@ const BoardUpdateContainer = () => {
     }
 
     try {
-      await jwtAxios.post(`${API_BASE_URL}/updatePost`, formData,
+      await jwtAxios.put(`${API_BASE_URL}/updatePost`, formData,
         {
-          headers: { Authorization: `Bearer ${accessToken}` },
+          headers: { 
+            // 서버에서 JSON (@RequestBody)을 받도록 했으므로 Content-Type을 지정합니다.
+            // 'Authorization' 헤더는 jwtAxios 인터셉터가 자동으로 추가합니다.
+          },
           withCredentials: true
-        },
-      );
+        });
       alert(`${boards.id}번 게시물이 수정되었습니다`);
       navigate(`/board/detail/${boards.id}`); // 수정된 게시글 상세 페이지로 이동
 
@@ -65,36 +75,17 @@ const BoardUpdateContainer = () => {
       console.error("게시물등록 실패!", error);
       alert("글쓰기 실패");
 
-      if (err.response && err.response.data) {
-        alert("수정 실패: " + err.response.data); // 서버 오류 메시지 출력 ("수정 권한이 없습니다." 등)
+      if (error.response && error.response.data) {
+        alert("수정 실패: " + error.response.data); // 서버 오류 메시지 출력 ("수정 권한이 없습니다." 등)
       } else {
         alert("게시물 수정 중 알 수 없는 오류가 발생했습니다.");
       }
     }
   };
 
-  const handleUpdateSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    formData.append('id', boards.id);
-    try {
-      await jwtAxios.post(`${API_BASE_URL}/updatePost`, formData,
-        {
-           headers: { Authorization: `Bearer ${accessToken}` },
-           withCredentials: true
-        },
-      );
-      alert("게시물이 수정되었습니다");
-      navigate("/board");
-
-    } catch (err) {
-      console.error("게시물수정 실패!", err);
-      alert("글쓰기 실패");
-    }
-  };
 
   // Data Fetching
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
 
     // there is NO Token ... Send Login...=>
     if (!accessToken) {
@@ -109,19 +100,19 @@ const BoardUpdateContainer = () => {
         {
           headers: { Authorization: `Bearer ${accessToken}` },
           withCredentials: true
-        },
-      );
-
+        });
+   
       const data = response.data;
+   
+      
+
 
       // Set into Data <- Bring Data
-      setBoards({
-        id: data.id,
-        memberId: data.memberId,
-        title: data.title,
-        content: data.content,
-        memberNickName: data.nickName || data.memberNickName || nickName,
-      });
+      setBoards(data);
+      console.log(data);
+      console.log("서버 응답 데이터 타입:", typeof data); 
+      console.log("서버 응답 데이터 내용:", data);
+      console.log("Current boards state on submit:", boards);
 
       console.log(response.data.content)
     } catch (error) {
@@ -141,27 +132,44 @@ const BoardUpdateContainer = () => {
         alert("네트워크 오류가 발생했습니다.");
       }
     }
-  };
+  },[accessToken, id]);
 
   useEffect(() => {
     fetchData();
 
-  }, [id, accessToken]);
+  }, [fetchData]);
 
 
 
 
   return (
     <div className="boardUpdate">
-      <h4>:: 게시글수정하기 ::</h4>
-      <div className="boardUpdate-con">
 
+      <div className="boardUpdate-con">
+        {console.log(boards)}
         <form onSubmit={handleUpdateSubmit} encType="multipart/form-data">
+          <h4>:: 게시글수정하기 ::</h4>
+
+          <div className="boardUpdate-con-img">
+               {boards.boardImgDtos && boards.boardImgDtos.length > 0 && (
+                            boards.boardImgDtos.map((imgDto) => (
+                                <img
+                                    // bring File by NewName Field
+                                    key={imgDto.id || imgDto.newName}
+                                    src={`${IMAGE_BASE_URL}${imgDto.newName}`}
+                                    alt={imgDto.oldName}
+                                    style={{ maxWidth: '100%', height: 'auto', display: 'block', margin: '10px 0' }}
+                                />
+                            ))
+                        )}
+          </div>
           <ul>
             <li className="first_li">
               <label htmlFor='memberId'>글 ID::</label>
-              {/* boards.id를 표시 */}
-              <input type="text" name="id" id="id" value={boards.id || ''} readOnly />
+              <input type="text" name="id" id="id" value={boards.id} readOnly />
+
+              <label htmlFor='memberId'>memberId ID::</label>
+              <input type="text" name="memberId" id="memberId" value={boards.memberId} readOnly />
             </li>
             <li>
               <label htmlFor="title">글제목::</label>

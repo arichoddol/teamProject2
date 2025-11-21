@@ -10,6 +10,7 @@
 /* 결제 css */
 @import url(css/payment/PaymentPage.css);
 @import url(css/payment/PaymentListPage.css);
+@import url(css/payment/PaymentSuccess.css);
 
 /* 내 크루  */
 @import url(css/mycrew/mycrew.css);
@@ -20,3 +21,6 @@
 
 /* 관리자 페이징 */
 @import url(css/common/admin-paging.css);
+
+/* api css*/
+@import url(css/api/Marathon_list.css);

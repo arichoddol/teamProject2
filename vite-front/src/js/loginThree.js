@@ -16,7 +16,7 @@ const fragmentShader = `
     uniform vec2 resolution;
 
     const int complexity = 1;        // 더 복잡하게
-    const float fluid_speed = 10.0;   // 약간 느리게 → 더 무겁고 강한 느낌
+    const float fluid_speed = 14.0;   // 약간 느리게 → 더 무겁고 강한 느낌
     const float distortion = 1.1;    // ★ 뒤틀림 강도 2배 증가
 
     
@@ -36,11 +36,11 @@ const fragmentShader = `
 }
 
 void main() {
-    vec2 uv = (gl_FragCoord.xy * 2.0 - resolution.xy) /
+    vec2 uv = (gl_FragCoord.xy * 3.0 - resolution.xy) /
         min(resolution.x, resolution.y);
 
     // 시간에 따라 화면 자체가 천천히 회전 (소용돌이)
-    uv = rotate2D(uv, time * 0.15);
+    uv = rotate2D(uv, (time) * 0.005);
 
     vec2 baseUv = uv;
 
@@ -150,7 +150,7 @@ export const initializeThreeScene = (container) => {
     // 7. Animation Loop
     const animate = () => {
         animationId = requestAnimationFrame(animate);
-        uniforms.time.value += 0.05;
+        uniforms.time.value += 0.02;
         renderer.render(scene, camera);
     };
 
