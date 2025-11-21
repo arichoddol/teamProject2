@@ -4,11 +4,13 @@ import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.payment.dto.PaymentDto;
 import org.spring.backendspring.payment.dto.PaymentItemDto;
 
+import java.util.List;
+
 public interface AdminPaymentService {
 
     PagedResponse<PaymentDto> getAllPayments(String keyword, int page, int size);
 
-    PaymentItemDto getPaymentItemsByPaymentId(Long paymentId);
+    List<PaymentItemDto> getPaymentItemsByPaymentId(Long paymentId);
 
     
     

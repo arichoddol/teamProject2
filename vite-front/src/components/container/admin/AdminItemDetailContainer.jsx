@@ -144,6 +144,18 @@ const AdminItemDetailContainer = () => {
               onChange={(e) => setItem({ ...item, itemSize: e.target.value })}
             />
 
+            <select
+              onChange={(e) => setItemDto({ ...itemDto, category: e.target.value })}>
+              <option value="">카테고리 선택 (필수)</option>
+              <option value="ACCESSORY">악세사리</option>
+              <option value="CLOTHES">의류</option>
+              <option value="EQUIPMENT">장비류</option>
+              <option value="NUTRITION">영양보조식품</option>
+              <option value="SHOES">신발</option>
+              <option value="SALES">세일품목</option>
+              <option value="ETC">기타</option>
+            </select>
+
             <label>상품 이미지 변경</label>
             <input
               type="file"
