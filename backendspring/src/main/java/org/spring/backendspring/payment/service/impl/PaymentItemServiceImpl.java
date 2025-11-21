@@ -20,18 +20,11 @@ public class PaymentItemServiceImpl implements PaymentItemService {
     //결제 상품 아이템 등록
     @Override
     public PaymentItemEntity createPaymentItem(PaymentItemEntity item) {
-        PaymentItemEntity newItem = PaymentItemEntity.builder()
-                .payment(item.getPayment()) // 어떤 결제에 속하는지
-                .itemId(item.getItemId())
-                .price(item.getPrice())
-                .size(item.getSize())
-                .title(item.getTitle())
-                .s3file(item.getS3file())
-                .createTime(LocalDateTime.now())
-                .updateTime(LocalDateTime.now())
-                .build();
-
-        return itemRepository.save(newItem);
+       
+        item.setCreateTime(LocalDateTime.now());
+        item.setUpdateTime(LocalDateTime.now());
+        
+        return itemRepository.save(item);
     }
 
     //특정 결제에 포함된 아이템 목록 조회

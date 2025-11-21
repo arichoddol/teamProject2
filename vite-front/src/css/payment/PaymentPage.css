@@ -1,99 +1,73 @@
+/* PaymentPage.css */
+
 .payment {
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f9f9f9;
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333333;
 }
 
-.payment-con h1 {
+.payment h1 {
   text-align: center;
   margin-bottom: 30px;
-  color: #333;
+  font-size: 1.8rem;
+  color: #222222;
 }
 
-.payment table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
+.payment div {
+  margin-bottom: 15px;
+  line-height: 1.6;
 }
 
-.payment th, .payment td {
+.payment .cart-item {
+  display: flex;
+  justify-content: space-between;
   padding: 12px 15px;
-  text-align: center;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #f0f0f0;
+  border-radius: 8px;
+  background-color: #fafafa;
+  margin-bottom: 8px;
 }
 
-.payment th {
-  background-color: #4CAF50;
-  color: white;
-  font-weight: 600;
+.payment .cart-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
 }
 
-.payment tbody tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-.payment tbody tr:hover {
-  background-color: #e0f7fa;
-}
-
-.payment select, 
-.payment input[type="text"] {
-  padding: 6px 10px;
+.payment select {
+  padding: 8px 12px;
   border-radius: 6px;
   border: 1px solid #ccc;
-  margin-right: 10px;
-  font-size: 14px;
+  font-size: 1rem;
+  margin-left: 10px;
 }
 
 .payment button {
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-top: 20px;
+  background-color: #ffeb00;
+  color: #333;
+  font-size: 1.1rem;
+  font-weight: 600;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: 0.3s all ease;
+  transition: all 0.2s ease-in-out;
 }
 
 .payment button:hover {
-  background-color: #45a049;
+  background-color: #ffd700;
   transform: translateY(-2px);
 }
 
-.payment td span {
-  font-weight: 500;
-  margin-right: 5px;
-}
-
-.payment-con td[colspan="10"] {
-  text-align: left;
-  padding: 15px;
-  background-color: #fafafa;
-  border-top: 2px solid #4CAF50;
-}
-
-@media screen and (max-width: 1024px) {
-  .payment table, .payment th, .payment td {
-    font-size: 14px;
-    padding: 10px;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .payment {
-    padding: 15px;
-  }
-  .payment table {
-    font-size: 12px;
-  }
-  .payment button {
-    width: 100%;
-    margin-top: 10px;
-  }
+.payment p {
+  text-align: center;
+  font-size: 1rem;
+  color: #666;
 }

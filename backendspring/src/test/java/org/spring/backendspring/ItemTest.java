@@ -31,6 +31,7 @@ public class ItemTest {
                     .itemPrice(10000 + (i * 500)) // 점점 비싸지게
                     .itemSize(250 + (i % 10)) // 예: 사이즈 250~259
                     .attachFile(0)
+                    .category("Cloth")
                     .newFileName(null)
                     .oldFileName(null)
                     .memberEntity(member) // 등록자 지정

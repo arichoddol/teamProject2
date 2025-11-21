@@ -77,7 +77,11 @@ public class ItemReplyServiceImpl implements ItemReplyService {
             throw new IllegalArgumentException("존재하지 않는 댓글 ID 입니다");
         }
         ItemReplyEntity itemReplyEntity = opEntity.get();
+        if (!itemReplyEntity.getMemberEntity().getId().equals(itemReplyDto.getMemberId())) {
+            // Controller -> 403 ::  RuntimeException 사용 권장
+            throw new IllegalAccessError("댓글 수정 권한이 없습니다. (작성자만 수정 가능)");
 
+        }
         // Board ValidCheck
         Optional<ItemEntity> optionalItemEntity 
                 = itemRepository.findById(itemReplyDto.getItemId());

@@ -8,6 +8,8 @@ import org.spring.backendspring.cart.repository.CartItemRepository;
 import org.spring.backendspring.cart.service.CartService;
 import org.spring.backendspring.item.entity.ItemEntity;
 import org.spring.backendspring.item.repository.ItemRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,14 +22,14 @@ public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
-    private final ItemRepository itemRepository; // Item 조회용
+    private final ItemRepository itemRepository;
 
     @Override
     @Transactional
     public CartEntity getCartByMemberId(Long memberId) {
         CartEntity cart = cartRepository.findByMemberId(memberId).orElse(null);
         if (cart != null) {
-            cart.getCartItemEntities().size(); // 강제로 로딩
+            cart.getCartItemEntities().size(); // 강제 로딩
         }
         return cart;
     }
@@ -55,8 +57,6 @@ public class CartServiceImpl implements CartService {
                 .build();
 
         CartItemEntity savedItem = cartItemRepository.save(cartItem);
-
-        // CartEntity 내부 리스트에도 추가
         cart.getCartItemEntities().add(savedItem);
 
         return savedItem;
@@ -70,5 +70,27 @@ public class CartServiceImpl implements CartService {
     @Override
     public void removeItem(Long cartItemId) {
         cartItemRepository.deleteById(cartItemId);
+    }
+
+    @Override
+    public Page<CartItemEntity> getCartItems(Long cartId, Pageable pageable) {
+        return cartItemRepository.findByCartEntity_Id(cartId, pageable);
+    }
+
+    @Override
+    public Page<CartItemEntity> searchCartItems(Long cartId, String keyword, Pageable pageable) {
+        return cartItemRepository.findByCartEntity_IdAndItemEntity_ItemTitleContainingIgnoreCase(
+                cartId, keyword, pageable);
+    }
+
+    // 수량 변경 구현
+    @Override
+    public CartItemEntity updateItemQuantity(Long cartItemId, int quantity) {
+        CartItemEntity cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new RuntimeException("장바구니 아이템을 찾을 수 없습니다: " + cartItemId));
+
+        cartItem.setItemSize(quantity); 
+
+        return cartItemRepository.save(cartItem); 
     }
 }

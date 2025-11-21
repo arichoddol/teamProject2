@@ -95,11 +95,11 @@ public class MemberEntity extends BasicTime {
 
     // Member ↔ Crew(개설자) (1:N)
     @JsonIgnore
-    @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<CrewEntity> crewEntityList;
 
      // Member ↔ CrewMember (1:N)
-     @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY)
+     @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
      private List<CrewMemberEntity> crewMemberEntityList;
 
     // // Member ↔ CrewCreateRequest / CrewJoinRequest (1:N)

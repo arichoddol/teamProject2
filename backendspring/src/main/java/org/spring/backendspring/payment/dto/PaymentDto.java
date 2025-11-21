@@ -33,7 +33,7 @@ public class PaymentDto {
     private String tid;
     private String pgToken;
     private String paymentReadyJson;
-    private int isSucceeded;
+    private Integer isSucceeded;
 
     // Entity → DTO 변환
     public static PaymentDto fromEntity(PaymentEntity entity) {

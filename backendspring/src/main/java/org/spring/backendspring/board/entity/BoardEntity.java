@@ -56,7 +56,6 @@ public class BoardEntity extends BasicTime {
     @ManyToOne
     @Fetch(FetchMode.JOIN)
     @JoinColumn(name ="member_id")
-    @JsonIgnore
     private MemberEntity memberEntity;
 
     // 1:N
@@ -72,7 +71,7 @@ public class BoardEntity extends BasicTime {
     
 
     // toEntity
-    public static BoardEntity toBoardEntity(BoardDto boardDto) {
+    public static BoardEntity toBoardEntity(BoardDto boardDto ) {
         // builder()
         int attachFileValue = boardDto.getBoardFile() != null && 
                                 !boardDto.getBoardFile().isEmpty() ? 1:0;
