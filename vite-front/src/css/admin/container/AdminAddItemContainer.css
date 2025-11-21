@@ -48,6 +48,15 @@
     padding: 10px 0;
     border: none;
   }
+
+  .admin-add-item select{
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+  }
   
   /* 버튼 */
   .admin-add-item button {
