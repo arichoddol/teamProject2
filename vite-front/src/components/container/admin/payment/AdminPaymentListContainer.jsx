@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import jwtAxios from '../../../apis/util/jwtUtil';
-import { useNavigate } from 'react-router-dom';
-import { BACK_BASIC_URL } from "../../../apis/commonApis";
+import React, { useEffect, useState } from "react";
+import jwtAxios from "../../../../apis/util/jwtUtil";
+import { useNavigate } from "react-router-dom";
+import { BACK_BASIC_URL } from "../../../../apis/commonApis";
 
-import "../../../css/admin/container/AdminPaymentListContainer.css";
-import { useSelector } from 'react-redux';
-
+import "../../../../css/admin/container/AdminPaymentListContainer.css";
+import { useSelector } from "react-redux";
 
 const AdminPaymentListContainer = () => {
   const [payments, setPayments] = useState([]);
@@ -20,11 +19,11 @@ const AdminPaymentListContainer = () => {
   };
 
   useEffect(() => {
-    fetchData()
+    fetchData();
   }, []);
 
   return (
-    <div className='admin-payment-list'>
+    <div className="admin-payment-list">
       <h2>결제리스트</h2>
       <table>
         <thead>
@@ -40,7 +39,7 @@ const AdminPaymentListContainer = () => {
           </tr>
         </thead>
         <tbody>
-          {payments.map(pay => (
+          {payments.map((pay) => (
             <tr key={pay.id}>
               <td>{pay.paymentId}</td>
               <td>{pay.memberId}</td>
@@ -51,8 +50,11 @@ const AdminPaymentListContainer = () => {
               <td>{pay.createTime}</td>
               <td>
                 <button
-                  onClick={() => navigate(`/admin/paymentDetail/${pay.paymentId}`)}
-                  className="view-btn">
+                  onClick={() =>
+                    navigate(`/admin/paymentDetail/${pay.paymentId}`)
+                  }
+                  className="view-btn"
+                >
                   보기
                 </button>
               </td>
@@ -61,8 +63,7 @@ const AdminPaymentListContainer = () => {
         </tbody>
       </table>
     </div>
+  );
+};
 
-  )
-}
-
-export default AdminPaymentListContainer
+export default AdminPaymentListContainer;

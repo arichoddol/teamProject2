@@ -13,6 +13,7 @@ const AdminAddItemContainer = () => {
     itemPrice: "",
     itemSize: "",
     itemDetail: "",
+    category: "",
   });
 
   const [file, setFile] = useState(null);
@@ -77,6 +78,19 @@ const AdminAddItemContainer = () => {
           placeholder="재고"
           onChange={(e) => setItemDto({ ...itemDto, itemSize: e.target.value })}
         />
+
+        <select
+          onChange={(e) => setItemDto({ ...itemDto, category: e.target.value })}
+        >
+          <option value="">카테고리 선택 (필수)</option>
+          <option value="ACCESSORY">악세사리</option>
+          <option value="CLOTHES">의류</option>
+          <option value="EQUIPMENT">장비류</option>
+          <option value="NUTRITION">영양보조식품</option>
+          <option value="SHOES">신발</option>
+          <option value="SALES">세일품목</option>
+          <option value="ETC">기타</option>
+        </select>
 
         <input type="file" onChange={(e) => setFile(e.target.files[0])} />
 

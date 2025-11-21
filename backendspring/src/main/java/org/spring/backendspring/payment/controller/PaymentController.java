@@ -168,4 +168,13 @@ public class PaymentController {
         return PagedResponse.of(dtoPage);
     }
 
+//     회원의 결제 목록을 가져옵니다.
+    @GetMapping("/myPayment/{memberId}")
+    public ResponseEntity<?> getMemberPaymentList(@PathVariable("memberId") Long memberId,
+                                                  @RequestParam(name = "page", defaultValue = "0") int page,
+                                                  @RequestParam(name = "size", defaultValue = "10") int size) {
+        PagedResponse<PaymentDto> myPaymentList = paymentService.findMyPaymentList(memberId, page, size);
+        return ResponseEntity.ok(myPaymentList);
+    }
+
 }

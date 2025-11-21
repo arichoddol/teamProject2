@@ -3,21 +3,25 @@ package org.spring.backendspring.payment.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 
 import org.spring.backendspring.cart.entity.CartEntity;
 import org.spring.backendspring.cart.repository.CartItemRepository;
 import org.spring.backendspring.cart.repository.CartRepository;
+import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.payment.dto.KakaoPayPrepareDto;
 import org.spring.backendspring.payment.dto.PaymentDto;
 import org.spring.backendspring.payment.entity.PaymentEntity;
 import org.spring.backendspring.payment.entity.PaymentItemEntity;
 import org.spring.backendspring.payment.repository.PaymentRepository;
 import org.spring.backendspring.payment.repository.PaymentResultRepository;
+import org.spring.backendspring.payment.service.PaymentResultService;
 import org.spring.backendspring.payment.service.PaymentService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -272,4 +276,15 @@ public class PaymentServiceImpl implements PaymentService {
             return paymentRepository.findByKeywordWithItems(keyword, pageable);
         }
     }
+
+    @Override
+    public PagedResponse<PaymentDto> findMyPaymentList(Long memberId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<PaymentEntity> paymentEntities = paymentRepository.findByMemberId(pageable, memberId);
+        if (paymentEntities.isEmpty()) {
+            throw new IllegalArgumentException("회원의 결제가 존재하지 않습니다.");
+        }
+        return PagedResponse.of(paymentEntities.map(PaymentDto::toDto));
+    }
+
 }

@@ -1,5 +1,7 @@
 package org.spring.backendspring.payment.service;
 
+import org.spring.backendspring.common.dto.PagedResponse;
+import org.spring.backendspring.payment.dto.PaymentDto;
 import org.spring.backendspring.payment.entity.PaymentEntity;
 import org.spring.backendspring.payment.entity.PaymentItemEntity; // ⭐️ 임포트 추가
 import org.springframework.data.domain.Page;
@@ -27,4 +29,5 @@ public interface PaymentService {
     // PaymentService.java
     Page<PaymentEntity> getPayments(int page, int size, String keyword);
 
+    PagedResponse<PaymentDto> findMyPaymentList(Long memberId,  int page, int size);
 }

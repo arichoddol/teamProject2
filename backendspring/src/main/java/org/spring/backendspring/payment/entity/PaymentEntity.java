@@ -36,7 +36,7 @@ public class PaymentEntity extends BasicTime {
     private List<PaymentItemEntity> paymentItemEntities = new ArrayList<>();
 
     // ---------------- KakaoPay 관련 ----------------
-    private Long productPrice;
+    private Long productPrice; // 총금액
     private String tid;
     private String pgToken;
 
