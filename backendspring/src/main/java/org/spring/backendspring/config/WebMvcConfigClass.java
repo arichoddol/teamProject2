@@ -14,6 +14,7 @@ public class WebMvcConfigClass implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/upload/**") // 💡 웹에서 접근할 URL 패턴
-                .addResourceLocations(filePath); // 💡 실제 파일이 저장된 로컬 경로
+                .addResourceLocations("file:///E:/full/upload/");
+        // .addResourceLocations(filePath); // 💡 실제 파일이 저장된 로컬 경로
     }
 }

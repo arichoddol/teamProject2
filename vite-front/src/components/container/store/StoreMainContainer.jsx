@@ -2,15 +2,9 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router';
 
-import ImageSlider from './ImageSlider';
 import "../../../css/store/storeIndex.css"
 
-const images = [
-    { src: "/images/store/swiper/header1.jpg", alt: 'header1' },
-    { src: "/images/store/swiper/header2.jpg", alt: 'header2' },
-    { src: "/images/store/swiper/header3.jpg", alt: 'header3' },
-    { src: "/images/store/swiper/header4.jpg", alt: 'header4' },
-]
+
 
 const ShopMainContainer = () => {
 
@@ -85,7 +79,7 @@ const ShopMainContainer = () => {
 
       <div className="itemList-banner">
         {/* <img src="/images/tmpBanner.png" alt="banner" /> */}
-         <ImageSlider images={images} />
+        
       </div>
       {/* i guess i can insert later => here Pagingnation Effect... */}
       <div className="itemList-con">
