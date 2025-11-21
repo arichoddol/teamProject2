@@ -46,7 +46,8 @@ public class PaymentEntity extends BasicTime {
     @Builder.Default
     private Integer isSucceeded = 0;
 
-    // ServiceImpl에서 이 메서드를 호출하여 PaymentItemEntity에 PaymentEntity 참조를 설정해야 합니다.
+    // ---------------- PaymentItemEntity 연관관계 편의 메서드 ----------------
+    // ServiceImpl에서 이 메서드를 호출하여 PaymentItemEntity에 PaymentEntity 참조를 설정합니다.
     public void addPaymentItem(PaymentItemEntity item) {
         this.paymentItemEntities.add(item);
         item.setPayment(this); // 👈 PaymentItemEntity의 payment_id 외래 키를 설정
