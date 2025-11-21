@@ -26,11 +26,14 @@ const AdminAddItemContainer = () => {
 
     const formData = new FormData();
 
+
     formData.append(
       "itemDto", new Blob([JSON.stringify(itemDto)], { type: "application/json" })
     );
 
     formData.append("itemFile", file);
+
+
 
     try {
       await jwtAxios.post("/api/admin/item/insert", formData, {
@@ -65,10 +68,9 @@ const AdminAddItemContainer = () => {
         <input type="number" placeholder="재고"
           onChange={(e) => setItemDto({ ...itemDto, itemSize: e.target.value })} />
 
-        <select
-          onChange={(e) => setItemDto({ ...itemDto, category: e.target.value })}>
+        <select onChange={(e) => setItemDto({ ...itemDto, category: e.target.value })}>
           <option value="">카테고리 선택 (필수)</option>
-          <option value="ACCESSORY">악세사리</option> 
+          <option value="ACCESSORY">악세사리</option>
           <option value="CLOTHES">의류</option>
           <option value="EQUIPMENT">장비류</option>
           <option value="NUTRITION">영양보조식품</option>

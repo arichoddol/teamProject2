@@ -35,11 +35,13 @@ public class AdminItemServiceImpl implements AdminItemService {
     private final ItemImgRepository itemImgRepository;
     private final MemberRepository memberRepository;
 
-//    private final String uploadPath = "E:\\uploadImg\\";
-    private static final String uploadPath = "C:/full/upload/";
+    // private final String uploadPath = "E:\\uploadImg\\";
+    // private static final String uploadPath = "C:/full/upload/";
+    private static final String uploadPath = "E:/full/upload/";
+
 
     // ===========================================================
-    //  FIND ONE
+    // FIND ONE
     // ===========================================================
     @Override
     public ItemDto findById(Long id) {
@@ -48,9 +50,8 @@ public class AdminItemServiceImpl implements AdminItemService {
                 .orElseThrow(() -> new EntityNotFoundException("해당 상품이 존재하지 않습니다"));
     }
 
-
     // ===========================================================
-    //  INSERT
+    // INSERT
     // ===========================================================
     @Override
     public void insertItem(ItemDto itemDto, MultipartFile itemFile, Long memberId) {
@@ -64,6 +65,7 @@ public class AdminItemServiceImpl implements AdminItemService {
                 .itemDetail(itemDto.getItemDetail())
                 .itemPrice(itemDto.getItemPrice())
                 .itemSize(itemDto.getItemSize())
+                .category(itemDto.getCategory())
                 .attachFile(0)
                 .memberEntity(member)
                 .build();
@@ -75,7 +77,8 @@ public class AdminItemServiceImpl implements AdminItemService {
         if (itemFile != null && !itemFile.isEmpty()) {
 
             File folder = new File(uploadPath);
-            if (!folder.exists()) folder.mkdirs();
+            if (!folder.exists())
+                folder.mkdirs();
 
             originalName = itemFile.getOriginalFilename();
             newName = UUID.randomUUID() + "_" + originalName;
@@ -101,14 +104,12 @@ public class AdminItemServiceImpl implements AdminItemService {
                             .itemEntity(item)
                             .oldName(originalName)
                             .newName(newName)
-                            .build()
-            );
+                            .build());
         }
     }
 
-
     // ===========================================================
-    //  UPDATE
+    // UPDATE
     // ===========================================================
     @Override
     public ItemDto updateItem(Long id, ItemDto dto, MultipartFile itemFile, Long memberId) {
@@ -124,9 +125,11 @@ public class AdminItemServiceImpl implements AdminItemService {
         String originalName = null;
         String newName = null;
 
-    /* ===========================================
-        CASE 1 : 이미지 삭제 요청 (attachFile = 0)
-       =========================================== */
+        /*
+         * ===========================================
+         * CASE 1 : 이미지 삭제 요청 (attachFile = 0)
+         * ===========================================
+         */
         if (dto.getAttachFile() == 0) {
 
             // 기존 이미지 삭제
@@ -142,6 +145,7 @@ public class AdminItemServiceImpl implements AdminItemService {
                     .itemPrice(dto.getItemPrice())
                     .itemSize(dto.getItemSize())
                     .attachFile(0)
+                    .category(dto.getCategory())
                     .oldFileName(null)
                     .newFileName(null)
                     .memberEntity(member)
@@ -150,9 +154,11 @@ public class AdminItemServiceImpl implements AdminItemService {
             return ItemDto.toItemDto(itemRepository.save(updated));
         }
 
-    /* ===========================================
-        CASE 2 : 새 이미지 업로드
-       =========================================== */
+        /*
+         * ===========================================
+         * CASE 2 : 새 이미지 업로드
+         * ===========================================
+         */
         if (itemFile != null && !itemFile.isEmpty()) {
 
             // 기존 이미지 삭제
@@ -162,7 +168,8 @@ public class AdminItemServiceImpl implements AdminItemService {
             }
 
             File folder = new File(uploadPath);
-            if (!folder.exists()) folder.mkdirs();
+            if (!folder.exists())
+                folder.mkdirs();
 
             originalName = itemFile.getOriginalFilename();
             newName = UUID.randomUUID() + "_" + originalName;
@@ -179,13 +186,14 @@ public class AdminItemServiceImpl implements AdminItemService {
                             .itemEntity(old)
                             .oldName(originalName)
                             .newName(newName)
-                            .build()
-            );
+                            .build());
         }
 
-    /* ===========================================
-        CASE 3 : 파일 유지 / 또는 CASE2 끝난 후 최종 조립
-       =========================================== */
+        /*
+         * ===========================================
+         * CASE 3 : 파일 유지 / 또는 CASE2 끝난 후 최종 조립
+         * ===========================================
+         */
         ItemEntity updated = ItemEntity.builder()
                 .id(old.getId())
                 .itemTitle(dto.getItemTitle())
@@ -193,6 +201,7 @@ public class AdminItemServiceImpl implements AdminItemService {
                 .itemPrice(dto.getItemPrice())
                 .itemSize(dto.getItemSize())
                 .attachFile(newName != null ? 1 : old.getAttachFile())
+                .category(dto.getCategory())
                 .oldFileName(newName != null ? originalName : old.getOldFileName())
                 .newFileName(newName != null ? newName : old.getNewFileName())
                 .memberEntity(member)
@@ -200,18 +209,16 @@ public class AdminItemServiceImpl implements AdminItemService {
 
         ItemEntity saved = itemRepository.save(updated);
 
-// 🔥 연관 이미지가 포함된 엔티티로 다시 조회해야 DTO에 itemImgDtos가 들어감
+        // 🔥 연관 이미지가 포함된 엔티티로 다시 조회해야 DTO에 itemImgDtos가 들어감
         ItemEntity loaded = itemRepository.findById(saved.getId())
                 .orElseThrow(() -> new RuntimeException("업데이트 후 재조회 실패"));
 
         return ItemDto.toItemDto(loaded);
 
-
     }
 
-
     // ===========================================================
-    //  DELETE
+    // DELETE
     // ===========================================================
     @Override
     public void deleteItem(Long id) {
@@ -242,7 +249,7 @@ public class AdminItemServiceImpl implements AdminItemService {
     }
 
     // ===========================================================
-    //  FIND ALL
+    // FIND ALL
     // ===========================================================
     @Override
     public PagedResponse<ItemDto> findAllItems(String keyword, int page, int size) {
@@ -261,7 +268,6 @@ public class AdminItemServiceImpl implements AdminItemService {
         return PagedResponse.of(itemPage);
     }
 }
-
 
 // package org.spring.backendspring.admin.service.impl;
 
@@ -294,173 +300,176 @@ public class AdminItemServiceImpl implements AdminItemService {
 // @RequiredArgsConstructor
 // public class AdminItemServiceImpl implements AdminItemService {
 
-//     private final ItemRepository itemRepository;
-//     private final AdminItemRepository adminItemRepository;
-//     private final ItemImgRepository itemImgRepository;
-//     private final MemberRepository memberRepository;
+// private final ItemRepository itemRepository;
+// private final AdminItemRepository adminItemRepository;
+// private final ItemImgRepository itemImgRepository;
+// private final MemberRepository memberRepository;
 
-//     @Override
-//     public ItemDto findById(Long id) {
-//         return itemRepository.findById(id)
-//                 .map(entity -> ItemDto.toItemDto(entity))
-//                 .orElseThrow(() -> new EntityNotFoundException("해당 상품이 존재하지 않습니다"));
-//     }
-
-//     @Override
-//     public void insertItem(ItemDto itemDto, MultipartFile itemFile, Long memberId) {
-
-//         MemberEntity member = memberRepository.findById(memberId)
-//                 .orElseThrow(() -> new RuntimeException("멤버 없음"));
-
-//         ItemEntity item = ItemEntity.toItemEntity(itemDto);
-
-//         item.setAttachFile(0); // 기본값 파일 이미지 없음
-
-//         item.setMemberEntity(member);
-
-//         if (itemFile == null || itemFile.isEmpty()) {
-//             return;
-//         }
-
-//         String uploadPath = "E:\\uploadImg\\";
-//         File folder = new File(uploadPath);
-
-//         if (!folder.exists()) {
-//             folder.mkdirs(); // 폴더가 없으면 자동 생성
-//         }
-
-//         String originalName = itemFile.getOriginalFilename();
-//         String newName = UUID.randomUUID() + "_" + originalName;
-
-//         try {
-//             itemFile.transferTo(new File(uploadPath + newName));
-//         } catch (IOException e) {
-//             throw new RuntimeException("파일 저장 실패", e);
-//         }
-
-//         // 6) 이미지 엔티티 저장
-//         ItemImgEntity img = ItemImgEntity.builder()
-//                 .itemEntity(item)
-//                 .oldName(originalName)
-//                 .newName(newName)
-//                 .build();
-
-//         itemRepository.save(item);
-
-//         item.setAttachFile(1);
-
-//         itemImgRepository.save(img);
-
-//         // 7) 첨부파일 상태 업데이트
-
-//     }
-
-//     @Override
-//     public ItemDto updateItem(Long id, ItemDto updatedDto, MultipartFile itemFile, Long memberId) {
-//         ItemEntity existingItem = itemRepository.findById(id)
-//                 .orElseThrow(() -> new EntityNotFoundException("해당 상품이 존재하지 않습니다"));
-//         // 업데이트 필드 설정
-//         MemberEntity member = memberRepository.findById(memberId)
-//                 .orElseThrow(() -> new RuntimeException("멤버 없음"));
-
-//         existingItem.setMemberEntity(member);
-
-//         ItemImgEntity oldImg = itemImgRepository.findByItemEntity(existingItem);
-//         String uploadPath = "E:\\uploadImg\\";
-
-//         if (updatedDto.getAttachFile() == 0) {
-//             // 기존 이미지 파일 삭제
-//             if (oldImg != null) {
-//                 new File(uploadPath + oldImg.getNewName()).delete();
-//                 itemImgRepository.delete(oldImg);
-//             }
-
-//             ItemEntity updatedEntity = ItemEntity.builder()
-//                     .id(existingItem.getId())
-//                     .itemTitle(updatedDto.getItemTitle())
-//                     .itemDetail(updatedDto.getItemDetail())
-//                     .itemPrice(updatedDto.getItemPrice())
-//                     .itemSize(updatedDto.getItemSize())
-//                     .attachFile(updatedDto.getAttachFile())
-//                     .build();
-
-//             return ItemDto.toItemDto(itemRepository.save(updatedEntity));
-//         }
-//         // 이미지 파일이 있는 경우
-//         if (itemFile != null && !itemFile.isEmpty()) {
-//             // 기존 이미지 파일 삭제
-//             if (oldImg != null) {
-//                 new File(uploadPath + oldImg.getNewName()).delete();
-//                 itemImgRepository.delete(oldImg);
-//             }
-//             File folder = new File(uploadPath);
-//             if (!folder.exists())
-//                 folder.mkdirs();
-
-//             String originalName = itemFile.getOriginalFilename();
-//             String newName = UUID.randomUUID() + "_" + originalName;
-
-//             try {
-//                 itemFile.transferTo(new File(uploadPath + newName));
-//             } catch (Exception e) {
-//                 throw new RuntimeException("파일 저장 실패", e);
-//             }
-
-//             // 새 이미지 저장
-//             itemImgRepository.save(
-//                     ItemImgEntity.builder()
-//                             .itemEntity(existingItem)
-//                             .oldName(originalName)
-//                             .newName(newName)
-//                             .build());
-
-//             ItemEntity updatedEntity = ItemEntity.builder()
-//                     .id(existingItem.getId())
-//                     .itemTitle(updatedDto.getItemTitle())
-//                     .itemDetail(updatedDto.getItemDetail())
-//                     .itemPrice(updatedDto.getItemPrice())
-//                     .itemSize(updatedDto.getItemSize())
-//                     .attachFile(1)
-//                     .build();
-
-//             return ItemDto.toItemDto(itemRepository.save(updatedEntity));
-//         }
-
-//         ItemEntity updatedEntity = ItemEntity.builder()
-//                 .id(existingItem.getId())
-//                 .itemTitle(updatedDto.getItemTitle())
-//                 .itemDetail(updatedDto.getItemDetail())
-//                 .itemPrice(updatedDto.getItemPrice())
-//                 .itemSize(updatedDto.getItemSize())
-//                 .attachFile(existingItem.getAttachFile()) // 그대로 유지
-//                 .build();
-
-//         return ItemDto.toItemDto(itemRepository.save(updatedEntity));
-
-//     }
-
-//     @Override
-//     public void deleteItem(Long id) {
-//         ItemEntity item = itemRepository.findById(id)
-//                 .orElseThrow(() -> new EntityNotFoundException("해당 상품이 존재하지 않습니다"));
-//         itemRepository.delete(item);
-//     }
-
-//     @Override
-//     public PagedResponse<ItemDto> findAllItems(String keyword, int page, int size) {
-//         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-//         Page<ItemDto> itemPage;
-
-//         if (keyword == null || keyword.trim().isEmpty()) {
-//             itemPage = itemRepository.findAll(pageable)
-//                     .map(ItemDto::toItemDto);
-//         } else {
-//             itemPage = adminItemRepository
-//                     .findByItemTitleContainingIgnoreCaseOrItemDetailContainingIgnoreCase(keyword, keyword, pageable)
-//                     .map(ItemDto::toItemDto);
-//         }
-
-//         return PagedResponse.of(itemPage);
-//     }
+// @Override
+// public ItemDto findById(Long id) {
+// return itemRepository.findById(id)
+// .map(entity -> ItemDto.toItemDto(entity))
+// .orElseThrow(() -> new EntityNotFoundException("해당 상품이 존재하지 않습니다"));
 // }
 
+// @Override
+// public void insertItem(ItemDto itemDto, MultipartFile itemFile, Long
+// memberId) {
+
+// MemberEntity member = memberRepository.findById(memberId)
+// .orElseThrow(() -> new RuntimeException("멤버 없음"));
+
+// ItemEntity item = ItemEntity.toItemEntity(itemDto);
+
+// item.setAttachFile(0); // 기본값 파일 이미지 없음
+
+// item.setMemberEntity(member);
+
+// if (itemFile == null || itemFile.isEmpty()) {
+// return;
+// }
+
+// String uploadPath = "E:\\uploadImg\\";
+// File folder = new File(uploadPath);
+
+// if (!folder.exists()) {
+// folder.mkdirs(); // 폴더가 없으면 자동 생성
+// }
+
+// String originalName = itemFile.getOriginalFilename();
+// String newName = UUID.randomUUID() + "_" + originalName;
+
+// try {
+// itemFile.transferTo(new File(uploadPath + newName));
+// } catch (IOException e) {
+// throw new RuntimeException("파일 저장 실패", e);
+// }
+
+// // 6) 이미지 엔티티 저장
+// ItemImgEntity img = ItemImgEntity.builder()
+// .itemEntity(item)
+// .oldName(originalName)
+// .newName(newName)
+// .build();
+
+// itemRepository.save(item);
+
+// item.setAttachFile(1);
+
+// itemImgRepository.save(img);
+
+// // 7) 첨부파일 상태 업데이트
+
+// }
+
+// @Override
+// public ItemDto updateItem(Long id, ItemDto updatedDto, MultipartFile
+// itemFile, Long memberId) {
+// ItemEntity existingItem = itemRepository.findById(id)
+// .orElseThrow(() -> new EntityNotFoundException("해당 상품이 존재하지 않습니다"));
+// // 업데이트 필드 설정
+// MemberEntity member = memberRepository.findById(memberId)
+// .orElseThrow(() -> new RuntimeException("멤버 없음"));
+
+// existingItem.setMemberEntity(member);
+
+// ItemImgEntity oldImg = itemImgRepository.findByItemEntity(existingItem);
+// String uploadPath = "E:\\uploadImg\\";
+
+// if (updatedDto.getAttachFile() == 0) {
+// // 기존 이미지 파일 삭제
+// if (oldImg != null) {
+// new File(uploadPath + oldImg.getNewName()).delete();
+// itemImgRepository.delete(oldImg);
+// }
+
+// ItemEntity updatedEntity = ItemEntity.builder()
+// .id(existingItem.getId())
+// .itemTitle(updatedDto.getItemTitle())
+// .itemDetail(updatedDto.getItemDetail())
+// .itemPrice(updatedDto.getItemPrice())
+// .itemSize(updatedDto.getItemSize())
+// .attachFile(updatedDto.getAttachFile())
+// .build();
+
+// return ItemDto.toItemDto(itemRepository.save(updatedEntity));
+// }
+// // 이미지 파일이 있는 경우
+// if (itemFile != null && !itemFile.isEmpty()) {
+// // 기존 이미지 파일 삭제
+// if (oldImg != null) {
+// new File(uploadPath + oldImg.getNewName()).delete();
+// itemImgRepository.delete(oldImg);
+// }
+// File folder = new File(uploadPath);
+// if (!folder.exists())
+// folder.mkdirs();
+
+// String originalName = itemFile.getOriginalFilename();
+// String newName = UUID.randomUUID() + "_" + originalName;
+
+// try {
+// itemFile.transferTo(new File(uploadPath + newName));
+// } catch (Exception e) {
+// throw new RuntimeException("파일 저장 실패", e);
+// }
+
+// // 새 이미지 저장
+// itemImgRepository.save(
+// ItemImgEntity.builder()
+// .itemEntity(existingItem)
+// .oldName(originalName)
+// .newName(newName)
+// .build());
+
+// ItemEntity updatedEntity = ItemEntity.builder()
+// .id(existingItem.getId())
+// .itemTitle(updatedDto.getItemTitle())
+// .itemDetail(updatedDto.getItemDetail())
+// .itemPrice(updatedDto.getItemPrice())
+// .itemSize(updatedDto.getItemSize())
+// .attachFile(1)
+// .build();
+
+// return ItemDto.toItemDto(itemRepository.save(updatedEntity));
+// }
+
+// ItemEntity updatedEntity = ItemEntity.builder()
+// .id(existingItem.getId())
+// .itemTitle(updatedDto.getItemTitle())
+// .itemDetail(updatedDto.getItemDetail())
+// .itemPrice(updatedDto.getItemPrice())
+// .itemSize(updatedDto.getItemSize())
+// .attachFile(existingItem.getAttachFile()) // 그대로 유지
+// .build();
+
+// return ItemDto.toItemDto(itemRepository.save(updatedEntity));
+
+// }
+
+// @Override
+// public void deleteItem(Long id) {
+// ItemEntity item = itemRepository.findById(id)
+// .orElseThrow(() -> new EntityNotFoundException("해당 상품이 존재하지 않습니다"));
+// itemRepository.delete(item);
+// }
+
+// @Override
+// public PagedResponse<ItemDto> findAllItems(String keyword, int page, int
+// size) {
+// Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+// Page<ItemDto> itemPage;
+
+// if (keyword == null || keyword.trim().isEmpty()) {
+// itemPage = itemRepository.findAll(pageable)
+// .map(ItemDto::toItemDto);
+// } else {
+// itemPage = adminItemRepository
+// .findByItemTitleContainingIgnoreCaseOrItemDetailContainingIgnoreCase(keyword,
+// keyword, pageable)
+// .map(ItemDto::toItemDto);
+// }
+
+// return PagedResponse.of(itemPage);
+// }
+// }

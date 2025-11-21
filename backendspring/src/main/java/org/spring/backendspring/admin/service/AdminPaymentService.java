@@ -12,6 +12,6 @@ public interface AdminPaymentService {
 
     List<PaymentItemDto> getPaymentItemsByPaymentId(Long paymentId);
 
-    
-    
+    public PaymentDto getPayment(Long paymentId);
+
 }

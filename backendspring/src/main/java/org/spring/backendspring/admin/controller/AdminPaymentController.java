@@ -31,12 +31,11 @@ public class AdminPaymentController {
     }
 
     @GetMapping("/{paymentId}")
-    public ResponseEntity<List<PaymentItemDto>> getPaymentItem(
-            @PathVariable Long paymentId) {
-
+    public ResponseEntity<PaymentDto> getPaymentDetail(@PathVariable Long paymentId) {
         return ResponseEntity.ok(
-                adminPaymentService.getPaymentItemsByPaymentId(paymentId)
+                adminPaymentService.getPayment(paymentId)
         );
     }
+
 
 }

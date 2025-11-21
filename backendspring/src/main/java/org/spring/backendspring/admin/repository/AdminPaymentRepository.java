@@ -17,5 +17,5 @@ public interface AdminPaymentRepository extends JpaRepository<PaymentEntity, Lon
             Pageable pageable);
 
     // paymentId로 결제 상품들 조회        
-    List<PaymentItemEntity> findPaymentItemsByPaymentId(Long paymentId);
+    // List<PaymentItemEntity> findPaymentItemsByPaymentId(Long paymentId);
 }

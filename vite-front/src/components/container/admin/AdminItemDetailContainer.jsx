@@ -17,6 +17,7 @@ const AdminItemDetailContainer = () => {
     itemDetail: "",
     itemSize: "",
     itemImage: "", // 🔥 기존 이미지 URL 받기
+    category: ""
   });
 
 
@@ -103,7 +104,7 @@ const AdminItemDetailContainer = () => {
           <div className="detail-img">
             {item.itemImgDtos && item.itemImgDtos.length > 0 && (
               <img
-                src={`${BACK_BASIC_URL}/uploadImg/${item.itemImgDtos[0].newName}`}
+                src={`${BACK_BASIC_URL}/upload/${item.itemImgDtos[0].newName}`}
                 alt="상품 이미지"
                 width="250"
                 height="350"
@@ -145,7 +146,9 @@ const AdminItemDetailContainer = () => {
             />
 
             <select
-              onChange={(e) => setItemDto({ ...itemDto, category: e.target.value })}>
+              value={item.category}
+              onChange={(e) => setItem({ ...item, category: e.target.value })}
+            >
               <option value="">카테고리 선택 (필수)</option>
               <option value="ACCESSORY">악세사리</option>
               <option value="CLOTHES">의류</option>
@@ -155,6 +158,7 @@ const AdminItemDetailContainer = () => {
               <option value="SALES">세일품목</option>
               <option value="ETC">기타</option>
             </select>
+
 
             <label>상품 이미지 변경</label>
             <input

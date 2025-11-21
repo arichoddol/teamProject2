@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import jwtAxios from '../../../apis/util/jwtUtil';
 import { useNavigate } from 'react-router-dom';
+import { BACK_BASIC_URL } from "../../../apis/commonApis";
 
 import "../../../css/admin/container/AdminPaymentListContainer.css";
+import { useSelector } from 'react-redux';
 
 
 const AdminPaymentListContainer = () => {
   const [payments, setPayments] = useState([]);
   const navigate = useNavigate();
+  const accessToken = useSelector((state) => state.jwtSlice.accessToken);
 
   const fetchData = async () => {
-    const res = await jwtAxios.get(`/api/admin/payments`);
+    const res = await jwtAxios.get(`${BACK_BASIC_URL}/api/admin/payments`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
     setPayments(res.data.content);
   };
 

@@ -19,6 +19,7 @@ const AdminPaymentDetailContainer = () => {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setPayment(res.data);
+      console.log(res.data);
     } catch (error) {
       console.log("결제상세페이지 조회 실패", error),
         alert("결제 상세정보 조회 실패")
@@ -28,6 +29,8 @@ const AdminPaymentDetailContainer = () => {
   useEffect(() => {
     fetchDetail();
   }, [paymentId]);
+
+  
 
   if (!payment) return <p>로딩중...</p>;
 
@@ -52,11 +55,11 @@ const AdminPaymentDetailContainer = () => {
             <th>수량</th>
             <th>합계</th> </tr>
         </thead>
-        <tbody> {payment.items?.map((item, index) => (<tr key={index}>
-          <td>{item.productName}</td>
-          <td>{item.itemPrice.toLocaleString()} 원</td>
-          <td>{item.itemSize}</td>
-          <td>{(item.itemPrice * item.itemSize).toLocaleString()} 원</td>
+        <tbody> {payment.paymentItems?.map((item, index) => (<tr key={index}>
+          <td>{item.title}</td>
+          <td>{item.price.toLocaleString()} 원</td>
+          <td>{item.size}</td>
+          <td>{(item.price * item.size).toLocaleString()} 원</td>
         </tr>))} </tbody>
       </table>
       <button onClick={() =>
