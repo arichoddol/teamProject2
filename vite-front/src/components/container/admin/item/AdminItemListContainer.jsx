@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import jwtAxios from '../../../apis/util/jwtUtil';
-import { useSelector } from 'react-redux';
-import { BACK_BASIC_URL } from '../../../apis/commonApis';
-
-import "../../../css/admin/container/AdminItemListContainer.css";
-
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import jwtAxios from "../../../../apis/util/jwtUtil";
+import { useSelector } from "react-redux";
+import { BACK_BASIC_URL } from "../../../../apis/commonApis";
+import "../../../../css/admin/container/AdminItemListContainer.css";
 
 const AdminItemListContainer = () => {
-
   const accessToken = useSelector((state) => state.jwtSlice.accessToken);
 
   const location = useLocation();
@@ -26,7 +23,7 @@ const AdminItemListContainer = () => {
   // 검색 기능
   const handleSearch = () => {
     if (!searchText.trim()) {
-      alert("검색어를 입력하세요")
+      alert("검색어를 입력하세요");
       return;
     }
     navigate(`/admin/itemList?keyword=${searchText}`);
@@ -39,27 +36,27 @@ const AdminItemListContainer = () => {
   useEffect(() => {
     fetchItems();
   }, [page]);
-  
+
   //  목록 가져오기
   const fetchItems = async (keyword) => {
     try {
-      const res = await jwtAxios.get(`${BACK_BASIC_URL}/api/admin/item/itemList`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-        params: { page: page, size: 10, keyword: keyword },
+      const res = await jwtAxios.get(
+        `${BACK_BASIC_URL}/api/admin/item/itemList`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          params: { page: page, size: 10, keyword: keyword },
 
-        withCredentials: true,
-      });
+          withCredentials: true,
+        }
+      );
 
       setItems(res.data.content);
       setTotalPages(res.data.totalPages);
-
     } catch (err) {
       console.error(err);
-      alert('상품 목록 불러오기 실패');
+      alert("상품 목록 불러오기 실패");
     }
   };
-
-
 
   // 수정 이동
   const handleUpdate = (itemId) => {
@@ -68,22 +65,20 @@ const AdminItemListContainer = () => {
 
   //  삭제
   const handleDelete = async (itemId) => {
-    if (!window.confirm('정말 이 상품을 삭제하시겠습니까?')) return;
+    if (!window.confirm("정말 이 상품을 삭제하시겠습니까?")) return;
 
     try {
       await jwtAxios.delete(`/api/admin/item/delete/${itemId}`);
-      alert('상품이 삭제되었습니다.');
+      alert("상품이 삭제되었습니다.");
       fetchItems();
     } catch (err) {
       console.error(err);
-      alert('삭제 실패');
+      alert("삭제 실패");
     }
   };
 
-
   return (
     <div className="admin-itemList-container">
-
       <h2>상품 목록</h2>
       <div className="item-search-box">
         <input
@@ -107,7 +102,7 @@ const AdminItemListContainer = () => {
 
         <tbody>
           {items.length > 0 ? (
-            items.map(item => (
+            items.map((item) => (
               <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.itemTitle}</td>

@@ -37,6 +37,12 @@ public class AdminCrewController {
         return ResponseEntity.ok(crewList);
     }
 
+    @GetMapping("/detail/{crewId}")
+    public ResponseEntity<?> getCrewDetail(@PathVariable("crewId") Long crewId) {
+        CrewDto crewDto = adminCrewService.findByDetailCrew(crewId);
+        return ResponseEntity.ok(crewDto);
+    }
+
     @GetMapping("/create/requestList")
     public ResponseEntity<?> getCreateRequestList(@RequestParam(name = "keyword", required = false) String keyword,
                                                   @RequestParam(name = "page", defaultValue = "0") int page,

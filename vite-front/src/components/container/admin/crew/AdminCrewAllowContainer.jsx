@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import jwtAxios from "../../../apis/util/jwtUtil";
-import { BACK_BASIC_URL } from "../../../apis/commonApis";
-import AdminPagingComponent from "../../common/AdminPagingComponent";
-import { formatDate } from "../../../js/formatDate";
-import CrewRequestModal from "./modal/CrewRequestModal";
-import { hasRequestStatus } from "../../../slices/adminSlice";
+
+import AdminPagingComponent from "../../../common/AdminPagingComponent";
+import { formatDate } from "../../../../js/formatDate";
+import CrewRequestModal from "../modal/CrewRequestModal";
+import { hasRequestStatus } from "../../../../slices/adminSlice";
+import jwtAxios from "../../../../apis/util/jwtUtil";
+import { BACK_BASIC_URL } from "../../../../apis/commonApis";
+import { useOutletContext } from "react-router";
 
 const AdminCrewAllowContainer = () => {
   const accessToken = useSelector((state) => state.jwtSlice.accessToken);
@@ -16,6 +18,8 @@ const AdminCrewAllowContainer = () => {
   const [search, setSearch] = useState();
   const [isModal, setIsModal] = useState(false);
   const dispatch = useDispatch();
+
+  console.log(crewRequest);
 
   const statusText = {
     PENDING: "대기중",
@@ -34,13 +38,7 @@ const AdminCrewAllowContainer = () => {
           withCredentials: true,
         }
       );
-
-      const crewRequestData = res.data.content;
-      const pendingRs = crewRequestData.some((el) =>
-        el.status.includes("PENDING")
-      );
-      dispatch(hasRequestStatus(pendingRs));
-      setCrewRequest(crewRequestData);
+      setCrewRequest(res.data.content);
       setPageData(res.data);
     } catch (err) {
       console.log("크루 신청 목록 불러오기 실패 " + err);
@@ -54,6 +52,7 @@ const AdminCrewAllowContainer = () => {
         `${BACK_BASIC_URL}/api/admin/crew/create/requestList`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
+          params: { page: currentPage - 1, size: 10 },
           withCredentials: true,
         }
       );
@@ -82,6 +81,10 @@ const AdminCrewAllowContainer = () => {
     crewReqeustFn();
   }, [currentPage, isModal]);
 
+  useEffect(() => {
+    newCrewReqeustFn();
+  }, [currentPage]);
+
   return (
     <>
       <div className="admin-crewRequestList">
@@ -99,6 +102,11 @@ const AdminCrewAllowContainer = () => {
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key == "Enter") {
+                    crewReqeustFn();
+                  }
+                }}
                 type="text"
                 placeholder="검색어를 입력하세요"
               />

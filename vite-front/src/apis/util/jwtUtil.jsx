@@ -3,6 +3,7 @@ import { BACK_BASIC_URL } from "../commonApis";
 import { setCookie } from "./cookieUtil";
 import store from "../../store/store";
 import { setAccessToken } from "../../slices/jwtSlice";
+import { logoutFn } from "../auth/logout";
 
 const jwtAxios = axios.create();
 
@@ -47,6 +48,7 @@ const beforeRes = async (res) => {
   return res;
 };
 
+let isLoggingOut = false;
 // ----------- response fail -----------
 const responseFail = async (err) => {
   console.log("response fail error....");
@@ -71,6 +73,12 @@ const responseFail = async (err) => {
       // setCookie("member", memberValue, 1);
     } catch (err) {
       console.log("리프레시 토큰 갱신 실패 ", +err);
+      if (!isLoggingOut) {
+        isLoggingOut = true;
+        logoutFn();
+        alert("재로그인이 필요합니다.");
+        window.location.href = "/auth/login/";
+      }
       return Promise.reject(err);
     }
 

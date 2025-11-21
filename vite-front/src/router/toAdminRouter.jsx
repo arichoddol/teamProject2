@@ -8,54 +8,54 @@ const AdminIndex = lazy(() =>
 );
 
 const AdminMember = lazy(() =>
-  import("../components/container/admin/AdminMemberListContainer")
+  import("../components/container/admin/member/AdminMemberListContainer")
 );
 const AdminMemberDetail = lazy(() =>
-  import("../components/container/admin/AdminMemberDetailContainer")
+  import("../components/container/admin/member/AdminMemberDetailContainer")
 );
 
 const AdminCrew = lazy(() =>
-  import("../components/container/admin/AdminCrewListContainer")
+  import("../components/container/admin/crew/AdminCrewListContainer")
 );
 const AdminCrewAllow = lazy(() =>
-  import("../components/container/admin/AdminCrewAllowContainer")
+  import("../components/container/admin/crew/AdminCrewAllowContainer")
 );
 const AdminCrewDetail = lazy(() =>
-  import("../components/container/admin/AdminCrewDetailContainer")
+  import("../components/container/admin/crew/AdminCrewDetailContainer")
 );
 
 const AdminPayment = lazy(() =>
-  import("../components/container/admin/AdminPaymentListContainer")
+  import("../components/container/admin/payment/AdminPaymentListContainer")
 );
 const AdminPaymentDetail = lazy(() =>
-  import("../components/container/admin/AdminPaymentDetailContainer")
+  import("../components/container/admin/payment/AdminPaymentDetailContainer")
 );
 
 const AdminAddItem = lazy(() =>
-  import("../components/container/admin/AdminAddItemContainer")
+  import("../components/container/admin/item/AdminAddItemContainer")
 );
 const AdminItem = lazy(() =>
-  import("../components/container/admin/AdminItemListContainer")
+  import("../components/container/admin/item/AdminItemListContainer")
 );
 const AdminItemDetail = lazy(() =>
-  import("../components/container/admin/AdminItemDetailContainer")
+  import("../components/container/admin/item/AdminItemDetailContainer")
 );
 
 const AdminBoard = lazy(() =>
-  import("../components/container/admin/AdminBoardListContainer")
+  import("../components/container/admin/board/AdminBoardListContainer")
 );
 const AdminBoardDetail = lazy(() =>
-  import("../components/container/admin/AdminBoardDetailContainer")
+  import("../components/container/admin/board/AdminBoardDetailContainer")
 );
 
 const AdminAddEvent = lazy(() =>
-  import("../components/container/admin/AdminAddEventContainer")
+  import("../components/container/admin/event/AdminAddEventContainer")
 );
 const AdminEvent = lazy(() =>
-  import("../components/container/admin/AdminEventListContainer")
+  import("../components/container/admin/event/AdminEventListContainer")
 );
 const AdminEventDetail = lazy(() =>
-  import("../components/container/admin/AdminEventDetailContainer")
+  import("../components/container/admin/event/AdminEventDetailContainer")
 );
 
 const toAdminRouter = () => {

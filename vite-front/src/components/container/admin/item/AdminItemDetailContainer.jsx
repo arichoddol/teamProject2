@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import jwtAxios from "../../../apis/util/jwtUtil";
+import jwtAxios from "../../../../apis/util/jwtUtil";
 import { useSelector } from "react-redux";
-import { BACK_BASIC_URL } from "../../../apis/commonApis";
+import { BACK_BASIC_URL } from "../../../../apis/commonApis";
 
-import "../../../css/admin/container/AdminItemDetailContainer.css";
+import "../../../../css/admin/container/AdminItemDetailContainer.css";
 
 const AdminItemDetailContainer = () => {
   const { itemId } = useParams();
@@ -19,16 +19,17 @@ const AdminItemDetailContainer = () => {
     itemImage: "", // 🔥 기존 이미지 URL 받기
   });
 
-
   const [file, setFile] = useState(null);
-
 
   // 상세 불러오기
   const fetchItemDetail = async () => {
     try {
-      const res = await jwtAxios.get(`${BACK_BASIC_URL}/api/admin/item/detail/${itemId}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      const res = await jwtAxios.get(
+        `${BACK_BASIC_URL}/api/admin/item/detail/${itemId}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      );
       setItem(res.data);
     } catch (err) {
       console.error(err);
@@ -45,7 +46,10 @@ const AdminItemDetailContainer = () => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("dto", new Blob([JSON.stringify(item)], { type: "application/json" }));
+    formData.append(
+      "dto",
+      new Blob([JSON.stringify(item)], { type: "application/json" })
+    );
 
     if (file) {
       formData.append("itemFile", file);
@@ -74,25 +78,22 @@ const AdminItemDetailContainer = () => {
   console.log("TOKEN", accessToken);
 
   const handleDeleteImage = async () => {
-    if (!window.confirm('정말 상품 이미지를 삭제하시겠습니까?')) return;
+    if (!window.confirm("정말 상품 이미지를 삭제하시겠습니까?")) return;
     try {
       await jwtAxios.delete(
-        `${BACK_BASIC_URL}/api/admin/item/image/delete/${itemId}`
-        ,
+        `${BACK_BASIC_URL}/api/admin/item/image/delete/${itemId}`,
         {
-          headers: { Authorization: `Bearer ${accessToken}` }
+          headers: { Authorization: `Bearer ${accessToken}` },
         }
       );
 
       setItem({ ...item, attachFile: 0, itemImage: null });
       alert("이미지 삭제 완료");
-
     } catch (err) {
       console.error(err);
       alert("이미지 삭제 실패");
     }
   };
-
 
   return (
     <div className="admin-item-detail">
@@ -116,7 +117,6 @@ const AdminItemDetailContainer = () => {
         </div>
         <div className="detail-right">
           <form onSubmit={handleUpdate} encType="multipart/form-data">
-
             <label>상품명</label>
             <input
               type="text"
@@ -153,12 +153,9 @@ const AdminItemDetailContainer = () => {
               }}
             />
 
-
             <button type="submit">수정하기</button>
-
           </form>
         </div>
-
       </div>
     </div>
   );

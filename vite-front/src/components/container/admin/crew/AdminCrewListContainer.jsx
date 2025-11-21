@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
-import jwtAxios from "../../../apis/util/jwtUtil";
-import { BACK_BASIC_URL } from "../../../apis/commonApis";
+
 import { useSelector } from "react-redux";
-import { formatDate } from "../../../js/formatDate";
-import AdminPagingComponent from "../../common/AdminPagingComponent";
+import { formatDate } from "../../../../js/formatDate";
+import AdminPagingComponent from "../../../common/AdminPagingComponent";
+import jwtAxios from "../../../../apis/util/jwtUtil";
+import { BACK_BASIC_URL } from "../../../../apis/commonApis";
+import CrewDetailModal from "../modal/CrewDetailModal";
 
 const AdminCrewListContainer = () => {
   const accessToken = useSelector((state) => state.jwtSlice.accessToken);
+  const [ademinCrewDetailId, setAdeminCrewDetailId] = useState();
+  const [isModal, setIsModal] = useState(false);
   const [adminCrewList, setAdminCrewList] = useState([]);
   const [pageData, setPageData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,6 +22,7 @@ const AdminCrewListContainer = () => {
         `${BACK_BASIC_URL}/api/admin/crew/crewList`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
+          params: { page: currentPage - 1, size: 10, keyword: search },
           withCredentials: true,
         }
       );
@@ -29,8 +34,15 @@ const AdminCrewListContainer = () => {
     }
   };
 
+  console.log(search);
+
   const hadlePageChange = (page) => {
     setCurrentPage(page);
+  };
+
+  const modalClick = (id) => {
+    setIsModal(true);
+    setAdeminCrewDetailId(id);
   };
 
   useEffect(() => {
@@ -47,6 +59,11 @@ const AdminCrewListContainer = () => {
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key == "Enter") {
+                    adminCrewListFn();
+                  }
+                }}
                 type="text"
                 placeholder="검색어를 입력하세요"
               />
@@ -78,7 +95,13 @@ const AdminCrewListContainer = () => {
                       <td>{el.district}</td>
                       <td>{formatDate(el.createTime)}</td>
                       <td>
-                        <button>보기</button>
+                        <button
+                          onClick={() => {
+                            modalClick(el.id);
+                          }}
+                        >
+                          보기
+                        </button>
                       </td>
                     </tr>
                   );
@@ -93,6 +116,13 @@ const AdminCrewListContainer = () => {
           />
         </div>
       </div>
+      {isModal == true ? (
+        <CrewDetailModal
+          isModal={isModal}
+          setIsModal={setIsModal}
+          ademinCrewDetailId={ademinCrewDetailId}
+        />
+      ) : null}
     </>
   );
 };

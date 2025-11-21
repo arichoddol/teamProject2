@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
 public class JWTUtil {
 
     // 만료시간
-    public static final long ACCESS_EXPIRATION_TIME = 1000 * 60 * 20;
+    public static final long ACCESS_EXPIRATION_TIME = 1000 * 60 * 30;
     public static final long REFRESH_EXPIRATION_TIME = 14 * 24 * 60 * 60 * 1000;
 
     // 임시 관리자 비밀키

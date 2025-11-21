@@ -1,13 +1,18 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../../../css/payment/PaymentPage.css";
+import { useDispatch } from "react-redux";
+import { removeCart } from "../../../slices/CartSlice";
 
 const PaymentSuccessPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const goToPaymentList = () => {
     navigate("/payment/list"); // PaymentListPage 라우트 경로에 맞게 수정
   };
+
+  dispatch(removeCart());
 
   return (
     <div className="paymentSuccess">

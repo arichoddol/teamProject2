@@ -27,7 +27,7 @@ const CrewRequestModal = ({ isModal, setIsModal, crewRequestId }) => {
       setCrewRequestDetail(res.data);
       setCrewStatus(res.data.status);
     } catch (err) {
-      console.log("크루 상세 조회를 실패하였습니다. " + err);
+      console.log("크루 요청 조회를 실패하였습니다. " + err);
     }
   };
 
