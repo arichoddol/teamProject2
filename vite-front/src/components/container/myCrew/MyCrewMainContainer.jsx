@@ -40,7 +40,11 @@ const MyCrewMainContainer = () => {
         <div style={{height: "200vh"}}>MyCrewMainContainer {crewId}
           {myCrew.newFileName && myCrew.newFileName.length > 0 && (
             <div className="myCrewMainImage">
-              {myCrew.newFileName.get(0)}
+              <img
+                src={myCrew.newFileName[0]}
+                alt={`${myCrew.name} 이미지`}
+                className='crewImage'
+              /> 
             </div>
           )}
           {/* DTO List<??Entity> 를 그대로 toDto로 받는걸 고쳐야함 

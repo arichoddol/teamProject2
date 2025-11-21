@@ -2,6 +2,7 @@ package org.spring.backendspring.crew.crew.service.impl;
 
 import lombok.RequiredArgsConstructor;
 
+import org.spring.backendspring.common.role.CrewRole;
 import org.spring.backendspring.common.role.MemberRole;
 import org.spring.backendspring.crew.CrewRoleCheck;
 import org.spring.backendspring.crew.crew.dto.CrewDto;
@@ -50,7 +51,7 @@ public class CrewServiceImpl implements CrewService {
 
         String crewRole = CrewRoleCheck.crewRoleCheckFn(loginUserId, crewId, crewRepository);
 
-        if (!crewRole.equals("LEADER") || !member.getRole().equals(MemberRole.ADMIN)) {
+        if (!crewRole.equals(CrewRole.LEADER.toString()) && !member.getRole().equals(MemberRole.ADMIN)) {
             throw new IllegalArgumentException("크루 수정 권한 없음");    
         }
 

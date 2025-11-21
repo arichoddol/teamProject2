@@ -36,6 +36,8 @@ const MyCrewBoardContainer = () => {
       })
       const data = res.data.crewBoardList
         setCrewBoardList(data.content || []);
+        console.log(data)
+        console.log(data.content)
         setTotalPages(data.totalPages || 0);
         setStartPage(data.startPage)
         setEndPage(data.endPage)
@@ -67,9 +69,10 @@ const MyCrewBoardContainer = () => {
     <>
     <div className="crewBoardList">
         <div className="crewBoardList-con">
-            <h1>{crewBoardList.crewName} 게시판</h1>
+            {/* <h1 className='crewBoard'>{crewBoardList[0].crewName} 게시판</h1> */}
+            <h1 className='crewBoard'>게시판</h1>
 
-            <form onSubmit={search}>
+            <form className='crewBoardSearch' onSubmit={search}>
               <select name="crewBoard" id="crewBoard" value={subject} onChange={(e) => setSubject(e.target.value)}>
                 <option value="전체">전체</option>
                 <option value="제목">제목</option>
@@ -82,7 +85,7 @@ const MyCrewBoardContainer = () => {
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
               />
-              <button type='submit'>검색</button>
+              <button className='crewBoardSearch' type='submit'>검색</button>
             </form>
 
             <button className='createCrewBoard' onClick={create}>게시글 작성</button>
@@ -98,8 +101,10 @@ const MyCrewBoardContainer = () => {
                                 <div className="crewBoard">
                                   {board.memberNickName}
                                 </div>
-                                <div className="crewBoard">
+                                <div className="crewBoardTitle">
                                   {board.title}
+                                </div>
+                                <div className='crewBoardCreateTime'>
                                   {formattedDate(board.createTime)}
                                 </div>
                                 <div className="crewBoardContet">

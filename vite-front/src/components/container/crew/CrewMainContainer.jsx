@@ -28,7 +28,7 @@ const CrewMainContainer = () => {
 
   // 본인이 가입한 크루 조회
   useEffect(() => {
-    jwtAxios.get(`/api/mycrew/list`, {
+    axios.get(`/api/mycrew/list`, {
       headers: { Authorization: `Bearer ${accessToken}` },
       withCredentials: true
     }).then((res) => {
@@ -50,15 +50,16 @@ const CrewMainContainer = () => {
           <h1>내 크루 목록</h1>
           <ul>
             {myCrewList.map((crew) => {
-              const images = crew.crewImageEntities || [];
+              console.log(crew)
+              const images = crew.crewImages || [];
               return (
                 <li key={crew.id}>
                   <Link to={`/mycrew/${crew.crewId}`}>
                     <div className="crewListLeft">
                       {images.length > 0 ? (
                         <img
-                          src={images[0].newName}
-                          alt={`${crew.name} 이미지`}
+                          src={images[0]}
+                          alt={`${crew.crewName} 이미지`}
                           className='crewImage'
                         />
                       ) : (
@@ -78,15 +79,14 @@ const CrewMainContainer = () => {
           <h1>크루 목록</h1>
           <ul>
             {crewList.map((crew) => {
-              console.log(crew.id);
-              const images = crew.crewImageEntities || [];
+              const images = crew.newFileName || [];
               return (
                 <li key={crew.id}>
                   <Link to={`/crew/detail/${crew.id}`}>
                     <div className="crewListLeft">
                       {images.length > 0 ? (
                         <img
-                          src={images[0].newName}
+                          src={images[0]}
                           alt={`${crew.name} 이미지`}
                           className='crewImage'
                         />

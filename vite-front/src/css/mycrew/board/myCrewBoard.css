@@ -1,0 +1,153 @@
+/* MyCrewBoardContainer.css */
+
+.crewBoardList {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+    background-color: #f0f4f8; /* 연한 푸른 배경 */
+  }
+  
+.crewBoardList .crewBoardList-con {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px;
+    gap: 20px;
+  }
+  
+.crewBoardList .crewBoardList-con h1.crewBoard {
+    font-size: 2rem;
+    color: #1e3a8a;
+    text-align: center;
+    padding-bottom: 10px;
+  }
+  
+  /* 검색 영역 */
+.crewBoardList .crewBoardList-con .crewBoardSearch {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+form.crewBoardSearch>select,
+.crewBoardSearch>input {
+    padding: 8px 12px;
+    border: 1px solid #a5b4fc;
+    border-radius: 6px;
+    outline: none;
+    font-size: 1rem;
+  }
+  
+form.crewBoardSearch>input:focus,
+form.crewBoardSearch>select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+  }
+
+form.crewBoardSearch>button.crewBoardSearch {
+    padding: 8px 16px;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.crewBoardSearch>button.crewBoardSearch:hover {
+    background-color: #2563eb;
+}
+
+/* 게시글 작성 버튼 */
+.crewBoardList-con button.createCrewBoard {
+align-self: flex-end;
+padding: 8px 16px;
+background-color: #60a5fa;
+color: white;
+border: none;
+border-radius: 6px;
+cursor: pointer;
+transition: background-color 0.2s;
+}
+.crewBoardList-con button.createCrewBoard:hover {
+background-color: #3b82f6;
+}
+
+/* 게시글 카드 */
+.crewBoardList .crewBoardList-con>ul {
+list-style: none;
+padding: 0;
+display: flex;
+flex-direction: column;
+gap: 15px;
+}
+
+.crewBoardList .crewBoardList-con>ul>li {
+background-color: white;
+border-radius: 12px; /* 둥근 카드 모양 */
+box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.crewBoardList .crewBoardList-con>ul>li:hover {
+transform: translateY(-3px);
+box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 카드 내부 */
+.crewBoardList .crewBoardList-con>ul>li .boardContent {
+display: flex;
+flex-direction: column;
+padding: 15px 20px;
+gap: 5px;
+}
+
+/* 작성자, 제목 */
+.boardContent .crewBoard {
+font-size: 1rem;
+color: #1e40af;
+font-weight: 500;
+}
+
+/* 게시글 제목 아래 시간 표시 */
+.boardContent .time {
+font-size: 0.8rem; /* 작게 */
+color: #6b7280; /* 흐린 회색 */
+}
+
+/* 내용 */
+.boardContent .crewBoardContet {
+font-size: 0.9rem;
+color: #374151;
+}
+
+/* 페이지네이션 */
+.crewBoardPagination {
+display: flex;
+justify-content: center;
+gap: 5px;
+flex-wrap: wrap;
+padding-top: 10px;
+}
+
+.crewBoardPagination button {
+padding: 6px 12px;
+border: 1px solid #93c5fd;
+border-radius: 6px;
+background-color: white;
+color: #1e3a8a;
+cursor: pointer;
+transition: background-color 0.2s, color 0.2s;
+}
+
+.crewBoardPagination button:hover:not(:disabled) {
+background-color: #3b82f6;
+color: white;
+}
+
+.crewBoardPagination button:disabled {
+cursor: default;
+opacity: 0.5;
+}

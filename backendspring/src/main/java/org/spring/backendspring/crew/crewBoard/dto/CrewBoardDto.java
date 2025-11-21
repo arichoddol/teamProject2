@@ -1,7 +1,6 @@
 package org.spring.backendspring.crew.crewBoard.dto;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.spring.backendspring.common.role.CrewRole;
@@ -9,7 +8,6 @@ import org.spring.backendspring.crew.crew.entity.CrewEntity;
 import org.spring.backendspring.crew.crewBoard.entity.CrewBoardCommentEntity;
 import org.spring.backendspring.crew.crewBoard.entity.CrewBoardEntity;
 import org.spring.backendspring.crew.crewBoard.entity.CrewBoardImageEntity;
-import org.spring.backendspring.member.entity.MemberEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;

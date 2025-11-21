@@ -10,7 +10,17 @@ const MyCrewBoardDetailContainer = () => {
   const { userEmail } = useSelector((state) => state.loginSlice);
   const loginMemberId = useSelector((state) => state.loginSlice.id)
 
+  const [page, setPage] = useState(0);
+  const [size] = useState(20);
+  const [totalPages, setTotalPages] = useState(0);
+  const [startPage, setStartPage] = useState(0)
+  const [endPage, setEndPage] = useState(0)
+  const [hasNext, setHasNext] = useState(false)
+  const [hasPrevious, setHasPrevious] = useState(false)
+  
+
   const [board, setBoard] = useState({});
+  const [totalComments, setTotalComments] = useState(0);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
 
@@ -45,8 +55,17 @@ const MyCrewBoardDetailContainer = () => {
   // 댓글 목록
   const fetchComments = async () => {
     try {
-      const res = await axios.get(`/api/mycrew/${crewId}/board/${boardId}/comment/list`);
-      setComments(res.data.commentList);
+      const res = await axios.get(`/api/mycrew/${crewId}/board/${boardId}/comment/list`,{
+        params: {page, size}
+      });
+      const data = res.data.commentList
+      setComments(data.content || []);
+      setTotalPages(data.totalPage || 0)
+      setStartPage(data.startPage)
+      setEndPage(data.endPage)
+      setHasNext(data.hasNext)
+      setHasPrevious(data.hasPrevious)
+      setTotalComments(data.totalElements || 0)
     } catch (err) {
       console.error("댓글 목록 실패", err)
     }
@@ -55,7 +74,11 @@ const MyCrewBoardDetailContainer = () => {
   useEffect(() => {
     fetchBoard();
     fetchComments();
-  }, [boardId, crewId])
+  }, [boardId, crewId, page])
+
+  useEffect(() => {
+    setPage(0)
+  }, [crewId])
 
   const deleteBoard = async () => {
     if (!window.confirm('게시글을 삭제하시겠습니까?')) return;
@@ -124,10 +147,34 @@ const MyCrewBoardDetailContainer = () => {
   return (
     <div className="crewBoardDetail">
       <div className="crewBoardDetail-con">
-        <ul>
-          <li className="image">
+        <div className="crewBoardHeader">
+          <div className="crewBoardTitle">
+            <h3 className="crewBoardTitle">{board.title}</h3>
+          </div>
+          <div className="crewBoardInfo">
+            <div className="crewBoardWriter">
+              {/* <label className='crewBoardWriter2'>작성자</label> */}
+              <span className="crewBoardWriter2">{board.memberNickName}</span>
+            </div>
+            <div className="crewBoardTime">
+              <span className="crewBoardCreatedTime">│</span>
+              <span className="crewBoardCreatedTime">{board.createTime && formattedDate(board.createTime)}</span>
+              {board.updateTime &&
+              <>
+              <div className="crewBoardUpdatedTime">
+                <span className='crewBoardUpdatedTime2'>수정</span>
+                <span className="crewBoardUpdatedTime2">{formattedDate(board.updateTime)}</span> 
+              </div>
+              </>
+              }
+            </div>
+          </div>
+        </div>
+        <div className="crewBoardContent">
+          <p className="crewBoardContent2">{board.content}</p>
+          <div className="crewBoardImage">
             {board.newFileName && board.newFileName.length > 0 && (
-              <div className="images">
+              <div className="crewBoardImages">
                 {board.newFileName.map((fileName, index) => (
                   <img
                     key={index} 
@@ -138,44 +185,24 @@ const MyCrewBoardDetailContainer = () => {
                 ))}
               </div>
             )}
-          </li>
-          <li className="s1">
-            <span>제목</span>
-            <span className="s2">{board.title}</span>
-          </li>
-          <li className="s1">
-            <span className="s2">{board.createTime && formattedDate(board.createTime)}</span>
-            {board.updateTime &&
-            <>
-            <span>수정</span>
-            <span className="s2">{formattedDate(board.updateTime)}</span> 
-            </>
-            }
-          </li>
-          <li className="s1">
-            <span>내용</span>
-            <span className="s2">{board.content}</span>
-          </li>
-          <li className="s1">
-            <span>글작성자</span>
-            <span className="s2">{board.memberNickName}</span>
-          </li>
-          <li className="s1">
-            <button onClick={() => navigate(`/mycrew/${crewId}/board/create`)}>글작성</button>
-            <button onClick={() => navigate(`/mycrew/${crewId}/board/list`)}>글목록</button>
-          </li>
+          </div>
+        </div>
+        <div className="crewBoardBtn">
+          <button onClick={() => navigate(`/mycrew/${crewId}/board/create`)}>글작성</button>
+          <button onClick={() => navigate(`/mycrew/${crewId}/board/list`)}>글목록</button>
           {board.memberId === loginMemberId && (
-            <li>
+            <li color='crewBoardBtn'>
               <button onClick={() => navigate(`/mycrew/${crewId}/board/update/${boardId}`)}>수정</button>
-              <button onClick={deleteBoard}>삭제</button>
+              <button onClick={deleteBoard}>x</button>
             </li>
           )}
-        </ul>
+        </div>
       </div>
+
       <div className="crewBoardComment">
         <div className="crewBoardComment-con">
           <div className="writeComment">
-            <h2 className='crewComment'>댓글</h2>
+            <h3 className='crewComment'>댓글({totalComments})</h3>
               <textarea 
                 name="comment"
                 id='comment'
@@ -189,19 +216,35 @@ const MyCrewBoardDetailContainer = () => {
           <div className="commentList">
             {comments.length > 0 ? comments.map((comment) => (
               <div key={comment.id} className="aComment">
-                <strong>{comment.memberNickName}</strong>
+                <span className='commentWriter'>{comment.memberNickName}</span>
                 <span className="commentTime">{comment.createTime && formattedDateForComment(comment.createTime)}</span>
                 <div className="commentContent">
-                  {comment.content}
+                  <p>{comment.content}</p>
                 </div>
                 {comment.memberId === loginMemberId && (
-                <div className="commentBtn">
-                  {/* <button onClick={}>수정</button> */}
-                  <button onClick={() => deleteComment(comment.id, comment.memberId)}>삭제</button>
-                </div>
+                  <div className="commentBtn">
+                    {/* <button onClick={}>수정</button> */}
+                    <button onClick={() => deleteComment(comment.id, comment.memberId)}>x</button>
+                  </div>
                 )}
               </div>
             )) : <span>댓글이 없습니다.</span>}
+
+            <div className="commentListPagination">
+              {/* <button onClick={() => setPage(0)} disabled={page === 0}>처음</button> */}
+              <button onClick={() => setPage(page - 1)} disabled={!hasPrevious}>이전</button>
+              {Array.from({length: endPage - startPage + 1}, (_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setPage(startPage + idx - 1)}
+                  disabled={startPage + idx - 1 === page}
+                >
+                  {startPage + idx}
+                </button>
+              ))}
+              <button onClick={() => setPage(page + 1)} disabled={!hasNext}>다음</button>
+              {/* <button onClick={() => setPage(totalPages - 1)} disabled={page === totalPages - 1}>마지막</button> */}
+            </div>
           </div>
         </div>
       </div>

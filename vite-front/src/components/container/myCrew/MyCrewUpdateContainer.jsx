@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
+import jwtAxios from '../../../apis/util/jwtUtil';
 
 const MyCrewUpdateContainer = () => {
     const { crewId } = useParams();
@@ -20,7 +21,7 @@ const MyCrewUpdateContainer = () => {
     useEffect(() => {
       const fetchCrewDetail = async () => {
         try {
-          const res = await axios.get(`http://localhost:8088/api/crew/detail/${crewId}`,
+          const res = await jwtAxios.get(`/api/crew/detail/${crewId}`,
             {
                 headers: { Authorization: `Bearer ${accessToken} `}
             }
@@ -30,10 +31,10 @@ const MyCrewUpdateContainer = () => {
           setDescription(res.data.crewDetail.description)
           setDistrict(res.data.crewDetail.district)
           console.log(res.data.crewDetail);
-          if (res.data.crewDetail.crewImageEntities && res.data.crewDetail.crewImageEntities.length > 0) {
+          if (res.data.crewDetail.newFileName && res.data.crewDetail.newFileName.length > 0) {
             setExFiles(
-                res.data.crewDetail.newFileName.map(img => ({
-                    newFileName: newFileName
+                res.data.crewDetail.newFileName.map(name => ({
+                    newFileName: name
                 }))
             );
           };
@@ -63,7 +64,7 @@ const MyCrewUpdateContainer = () => {
             newImages.forEach(image => formData.append('newImages', image))
             deleteImageName.forEach(name => formData.append('deleteImageName[]', name));
 
-            const response = await axios.put(`http://localhost:8088/api/crew/update/${crewId}`,
+            const response = await axios.put(`http://localhost:8088/api/mycrew/${crewId}/update`,
                 formData,
                 {
                     headers: {
@@ -72,7 +73,7 @@ const MyCrewUpdateContainer = () => {
                 }
             );
             alert('크루 수정 완료')
-            navigate(`/crew/detail/${crewId}`)
+            navigate(`/mycrew/${crewId}`)
         } catch (err) {
             console.log(err);
             alert('크루 수정 실패')
@@ -89,7 +90,7 @@ const MyCrewUpdateContainer = () => {
                     {exFiles.length > 0 ? (
                         exFiles.map((img, idx) => (
                             <li key={idx}>
-                                <img src={img.newName} alt={img.newFileName} />
+                                <img src={img.newFileName} alt={img.newFileName} />
                                 <button type='button' onClick={() => deleteImage(img.newFileName)}>X</button>
                             </li>
                         ))

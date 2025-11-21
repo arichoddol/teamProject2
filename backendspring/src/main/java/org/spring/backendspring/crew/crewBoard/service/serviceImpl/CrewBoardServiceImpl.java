@@ -78,16 +78,18 @@ public class CrewBoardServiceImpl implements CrewBoardService {
         crewBoardDto.setMemberId(memberEntity.getId());
         crewBoardDto.setCrewId(crewId);
 
+        
         CrewBoardEntity crewBoardEntity = CrewBoardEntity.toCrewBoardEntity(crewBoardDto);
+        crewBoardEntity.setTitle(crewBoardDto.getTitle());
+        crewBoardEntity.setContent(crewBoardDto.getContent());
         
         CrewBoardEntity savedBoard = null;
 
         crewBoardFile = crewBoardDto.getCrewBoardFile();
         
-        if (crewBoardFile == null || crewBoardFile.isEmpty() || crewBoardFile.get(0).isEmpty()) {
-            savedBoard = crewBoardRepository.save(crewBoardEntity);            
-        } else {
-            List<CrewBoardImageEntity> savedImages = new ArrayList<>();
+        List<CrewBoardImageEntity> savedImages = new ArrayList<>();
+
+        if  (crewBoardFile == null || crewBoardFile.isEmpty() || crewBoardFile.get(0).isEmpty()) {
             // for (MultipartFile file : crewBoardDto.getCrewBoardFile()) {
                 //     if (file != null && !file.isEmpty()) {
                     //         String originalFileName = file.getOriginalFilename();
@@ -116,10 +118,11 @@ public class CrewBoardServiceImpl implements CrewBoardService {
                     savedImages.add(savedImage);
                 }
             }
-            crewBoardEntity.setCrewBoardImageEntities(savedImages);
-            savedBoard = crewBoardRepository.save(crewBoardEntity);            
-
+            
         }
+        crewBoardEntity.setCrewBoardImageEntities(savedImages);
+        savedBoard = crewBoardRepository.save(crewBoardEntity);            
+
         return CrewBoardDto.toDto(savedBoard);
     }
 

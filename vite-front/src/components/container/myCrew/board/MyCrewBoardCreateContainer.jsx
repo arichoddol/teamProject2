@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux'
 import axios from 'axios';
+import jwtAxios from '../../../../apis/util/jwtUtil';
 
 const MyCrewBoardCreateContainer = () => {
   const { crewId } = useParams();
@@ -35,10 +36,10 @@ const MyCrewBoardCreateContainer = () => {
             for (let i = 0; i < files.length; i ++) {
                 formData.append('crewBoardFile', files[i]);
             }
-        } else if (!files) {
+        } else if (!files || files.length == 0) {
             formData.append("crewBoardFile", new Blob([]), "");
         }
-        const response = await axios.post(`/api/mycrew/${crewId}/board/create`, 
+        const response = await jwtAxios.post(`/api/mycrew/${crewId}/board/create`, 
             formData,
             {
                 headers: {
