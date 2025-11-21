@@ -1,7 +1,10 @@
 package org.spring.backendspring.config.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.Arrays;
+
 import lombok.RequiredArgsConstructor;
 import org.spring.backendspring.config.security.filter.CustomLoginFilter;
 import org.spring.backendspring.config.security.filter.CustomLogoutFilter;
@@ -54,6 +57,7 @@ public class SecurityConfigClass {
                     .requestMatchers(
                             "/api/crew/create/approved",
                             "/api/crew/create/rejected").hasRole("ADMIN")
+                //     .requestMatchers("/api/member/detail/**").authenticated()
                     .requestMatchers(
                             "/api/board/newPost",
                             "/api/board/write",
@@ -72,7 +76,11 @@ public class SecurityConfigClass {
 
         http.exceptionHandling(ex -> ex
                 .authenticationEntryPoint((req, res, excep) -> {
-                    res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "로그인이 필요합니다.");
+                    if (excep.getCause() instanceof ExpiredJwtException) {
+                        res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "ACCESS_TOKEN_EXPIRED");
+                    } else {
+                        res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "로그인이 필요합니다.");
+                    }
                 }));
 
         // jwt는 세션 사용 X
@@ -115,14 +123,15 @@ public class SecurityConfigClass {
         CorsConfiguration configuration = new CorsConfiguration();
         // 프론트(리액트) 임시 허용
         configuration.setAllowedOriginPatterns(Arrays.asList(
-                "http://localhost:3000",
                 "http://localhost:8088",
+                "http://localhost:3000",
+                "http://localhost:3001",
                 "https://online-payment.kakaopay.com/**",
                 "https://kapi.kakao.com/v1/payment/ready/**",
                 "https://kapi.kakao.com/v1/payment/approve/**"
 
         ));
-        
+
         configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE"));
         // 임시로 모든 헤더 요청 허용
         configuration.setAllowedHeaders(Arrays.asList("*"));

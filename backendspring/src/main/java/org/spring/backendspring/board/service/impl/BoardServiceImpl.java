@@ -2,7 +2,6 @@ package org.spring.backendspring.board.service.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -12,22 +11,15 @@ import org.spring.backendspring.board.entity.BoardEntity;
 import org.spring.backendspring.board.entity.BoardImgEntity;
 import org.spring.backendspring.board.repository.BoardImgRepository;
 import org.spring.backendspring.board.repository.BoardRepository;
-
 import org.spring.backendspring.board.service.BoardService;
-import org.spring.backendspring.item.entity.ItemImgEntity;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
-import org.spring.backendspring.s3.AwsS3Service;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -58,7 +50,7 @@ public class BoardServiceImpl implements BoardService {
 
 
         // if file is Empty..
-        if(boardDto.getBoardFile().isEmpty()){
+        if(boardDto.getBoardFile() == null || boardDto.getBoardFile().isEmpty()){
            
             boardDto.setAttachFile(0);
             boardDto.setMemberentity(memberEntity);
@@ -128,8 +120,11 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardDto boardDetail(Long boardId) {
-       BoardEntity boardEntity = boardRepository.findById(boardId)
+        boardRepository.updateHit(boardId);
+        BoardEntity boardEntity = boardRepository.findById(boardId)
                 .orElseThrow(()-> new IllegalArgumentException("게시글 아이디가 존재하지 않음" + boardId));
+        
+         
         return BoardDto.toBoardDto(boardEntity);        
     }
 
@@ -211,19 +206,17 @@ public class BoardServiceImpl implements BoardService {
             }
             // DB delete
             boardImgRepository.delete(boardImgEntity);
+            
+            //  for (BoardImgEntity boardImgEntity1 : boardEntity.getBoardImgEntities()) {
+            // File realDelete1 = new File(FILE_PATH + boardImgEntity1.getNewName());
+            // if(realDelete.exists()){
+            // realDelete1.delete();
+            // 파일 삭제 실패 시 로그 처리만 합니다.
         }
         // Board Entity Delete 
         boardRepository.delete(boardEntity);
 
     }
 
-    // 조회수
-    @Override
-    @Transactional
-    public void upHitDo(Long id) {
-      boardRepository.updateHit(id);
-    }
-
-   
     
 }

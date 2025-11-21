@@ -100,25 +100,14 @@ public class PaymentServiceImpl implements PaymentService {
             throw new RuntimeException("pgToken이 존재하지 않습니다.");
 
         // 1. 카카오페이 최종 승인 요청 및 isSucceeded 업데이트
-        // ⭐️ 수정: isSucceeded 값을 반환받아 변수에 저장
         int isSucceeded = paymentApproveKakao(paymentDto, paymentId, productPrice, productName, memberId);
 
         // 2. 결제 성공 확인 후 장바구니 전체 삭제
-        // ⭐️ 수정: DB 재조회 없이, 방금 얻은 isSucceeded 값을 바로 사용
         if (isSucceeded == 1) {
             // memberId를 사용하여 해당 회원의 장바구니 전체 삭제
             removeCartByMemberId(memberId);
         }
         
-        // *************************************************************************
-        // 기존의 아래 코드는 삭제되었습니다.
-        /* PaymentEntity approvedPayment = paymentRepository.findByIdWithItems(paymentId)
-        .orElseThrow(() -> new RuntimeException("결제 정보를 찾을 수 없습니다."));
-        if (approvedPayment.getIsSucceeded() == 1) { 
-            removeCartByMemberId(approvedPayment.getMemberId());
-        }
-        */
-        // *************************************************************************
     }
 
     private PaymentDto jsonToObject(PaymentDto dto) {
