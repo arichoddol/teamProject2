@@ -1,9 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import LogoutBtn from "../../apis/auth/LogoutBtn";
-import { removeCookie } from "../../apis/util/cookieUtil";
-import { logoutAction } from "../../slices/loginSlice";
-import { deleteAccessToken } from "../../slices/jwtSlice";
 import HeaderStore from "../common/HeaderModal/HeaderStore";
 import { Link } from "react-router-dom";
 
@@ -30,7 +27,10 @@ const Header = () => {
                   <LogoutBtn />
                 </li>
                 <li>
-                  <Link to={`/cart`}>CART</Link>
+                  <Link to="/cart">CART</Link>
+                </li>
+                <li>
+                  <Link to="/store">SHOP</Link>
                 </li>
 
                 <li>
@@ -60,7 +60,6 @@ const Header = () => {
                 <Link to="/store">STORE</Link>
               </li>
             </HeaderStore>
-
             {/* <li>
               <Link to="/store">STORE</Link>
             </li> */}
@@ -69,6 +68,9 @@ const Header = () => {
             </li>
             <li>
               <Link to={"/event"}>EVENT</Link>
+            </li>
+            <li>
+              <Link to="/api/marathon">MARATHON</Link>
             </li>
           </ul>
         </div>

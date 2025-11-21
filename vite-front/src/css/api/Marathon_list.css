@@ -1,0 +1,59 @@
+/* MarathonTable.css 업그레이드 버전 */
+.table-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+}
+
+.table-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.marathon-table {
+  width: 100%;
+  border-collapse: collapse; /* 테이블 기본 방식 유지 */
+  text-align: center;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.marathon-table thead {
+  background: linear-gradient(90deg, #ff7e5f, #feb47b);
+  color: white;
+  font-weight: bold;
+}
+
+.marathon-table th,
+.marathon-table td {
+  padding: 14px 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.marathon-table tbody tr {
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+.marathon-table tbody tr:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #ffe3c5;
+}
+
+@media screen and (max-width: 768px) {
+  .marathon-table th,
+  .marathon-table td {
+    padding: 10px;
+  }
+
+  .table-container {
+    padding: 10px;
+  }
+}

@@ -11,6 +11,7 @@ import toCartRouter from "./toCartRouter";
 import toPaymentRouter from "./toPaymentRouter";
 import toMyCrewRouter from "./toMyCrewRouter";
 import { toMyPageRouter } from "./toMyPageRouter";
+import toApiRouter from "./toApiRouter";
 
 const Loading = <div className="loading">Loading..</div>;
 
@@ -27,6 +28,7 @@ const CartLayout = lazy(() => import(`../layout/CartLayout`));
 const PaymentLayout = lazy(() => import(`../layout/PaymentLayout`));
 
 const MyCrewLayout = lazy(() => import("../layout/MyCrewLayout"));
+const ApiLayout = lazy(() => import("../layout/ApiLayout"));
 
 // Page
 const IndexPage = lazy(() => import(`../pages/IndexPage`));
@@ -139,6 +141,16 @@ const root = createBrowserRouter([
       </Suspense>
     ),
     children: toMyCrewRouter(),
+  },
+  {
+    // api
+    path: "api",
+    element: (
+      <Suspense fallback={Loading}>
+        <ApiLayout />
+      </Suspense>
+    ),
+    children: toApiRouter(),
   },
 ]);
 
