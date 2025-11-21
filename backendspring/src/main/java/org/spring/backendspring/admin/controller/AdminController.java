@@ -2,10 +2,12 @@ package org.spring.backendspring.admin.controller;
 
 import java.util.List;
 
+import org.spring.backendspring.admin.dto.AdminMemberDto;
 import org.spring.backendspring.admin.service.AdminMemberService;
 import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.member.dto.MemberDto;
 import org.spring.backendspring.member.service.MemberService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,11 +57,11 @@ public class AdminController {
         return ResponseEntity.ok(memberList);
     }
 
-    @PutMapping("/member/update/{id}")
     // 권한수정, 닉네임수정 정도만
-    public ResponseEntity<MemberDto> updateMember(@PathVariable("id") Long id, @RequestBody MemberDto updatedDto) {
-        MemberDto updated = memberService.updateMember(id, updatedDto);
-        return ResponseEntity.ok(updated);
+    @PutMapping(value = "/member/update/{id}")
+    public ResponseEntity<?> updateMember(@PathVariable("id") Long id, @RequestBody AdminMemberDto updatedDto) {
+        adminMemberService.updateMemberByAdmin(id, updatedDto);
+        return ResponseEntity.ok("수정이 완료되었습니다.");
     }
 
     @DeleteMapping("/member/delete/{id}")

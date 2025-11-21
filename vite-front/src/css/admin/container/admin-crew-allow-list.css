@@ -1,11 +1,11 @@
-.admin-memberList {
+.admin-crewRequestList {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px;
 }
 
-.admin-memberList-con {
+.admin-crewRequestList-con {
   width: 100%;
   background: #ffffff;
   border-radius: 12px;
@@ -14,7 +14,7 @@
 }
 
 /* 헤더 영역 */
-.admin-memberList-header {
+.admin-crewRequestList-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -22,22 +22,33 @@
   gap: 20px;
 }
 
-.admin-memberList-header h1 {
+.admin-crewRequestList-header h1 {
+  display: flex;
+  align-items: center;
+  gap: 5px;
   font-size: 24px;
   font-weight: 700;
   color: #1f2937;
   margin: 0;
   white-space: nowrap;
+  cursor: pointer;
+}
+
+.admin-crewRequestList-header h1 img {
+  display: block;
+  width: 25px;
+  height: 25px;
+  margin-top: 2px;
 }
 
 /* 검색 영역 */
-.admin-memberList-search {
+.admin-crewRequestList-search {
   display: flex;
   gap: 8px;
   align-items: center;
 }
 
-.admin-memberList-search select {
+.admin-crewRequestList-search select {
   padding: 9px 12px;
   border: 1px solid #d1d5db;
   border-radius: 6px;
@@ -49,17 +60,17 @@
   min-width: 100px;
 }
 
-.admin-memberList-search select:hover {
+.admin-crewRequestList-search select:hover {
   border-color: #9ca3af;
 }
 
-.admin-memberList-search select:focus {
+.admin-crewRequestList-search select:focus {
   outline: none;
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.admin-memberList-search input[type="text"] {
+.admin-crewRequestList-search input[type="text"] {
   width: 200px;
   padding: 9px 12px;
   border: 1px solid #d1d5db;
@@ -69,21 +80,21 @@
   transition: all 0.2s ease;
 }
 
-.admin-memberList-search input[type="text"]::placeholder {
+.admin-crewRequestList-search input[type="text"]::placeholder {
   color: #9ca3af;
 }
 
-.admin-memberList-search input[type="text"]:hover {
+.admin-crewRequestList-search input[type="text"]:hover {
   border-color: #9ca3af;
 }
 
-.admin-memberList-search input[type="text"]:focus {
+.admin-crewRequestList-search input[type="text"]:focus {
   outline: none;
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.admin-memberList-search button {
+.admin-crewRequestList-search button {
   padding: 9px 20px;
   background: #3b82f6;
   color: white;
@@ -96,36 +107,36 @@
   white-space: nowrap;
 }
 
-.admin-memberList-search button:hover {
+.admin-crewRequestList-search button:hover {
   background: #2563eb;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
 
-.admin-memberList-search button:active {
+.admin-crewRequestList-search button:active {
   transform: translateY(0);
 }
 
 /* 테이블 래퍼 */
-.admin-memberList-table-wrapper {
+.admin-crewRequestList-table-wrapper {
   width: 100%;
   overflow-x: auto;
   margin-bottom: 24px;
 }
 
 /* 테이블 */
-.admin-memberList-table {
+.admin-crewRequestList-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.admin-memberList-table thead {
+.admin-crewRequestList-table thead {
   background: #f3f4f6;
   border-top: 2px solid #e5e7eb;
   border-bottom: 2px solid #e5e7eb;
 }
 
-.admin-memberList-table thead tr th {
+.admin-crewRequestList-table thead tr th {
   padding: 12px 8px;
   font-size: 13px;
   font-weight: 600;
@@ -134,20 +145,20 @@
   white-space: nowrap;
 }
 
-.admin-memberList-table tbody tr {
+.admin-crewRequestList-table tbody tr {
   border-bottom: 1px solid #e5e7eb;
   transition: background 0.2s ease;
 }
 
-.admin-memberList-table tbody tr:nth-child(even) {
+.admin-crewRequestList-table tbody tr:nth-child(even) {
   background: #f9fafb;
 }
 
-.admin-memberList-table tbody tr:hover {
+.admin-crewRequestList-table tbody tr:hover {
   background: #f3f4f6;
 }
 
-.admin-memberList-table tbody tr td {
+.admin-crewRequestList-table tbody tr td {
   padding: 14px 8px;
   font-size: 14px;
   color: #1f2937;
@@ -155,16 +166,16 @@
 }
 
 /* 번호 컬럼 */
-.admin-memberList-table tbody tr td:nth-child(1) {
+.admin-crewRequestList-table tbody tr td:nth-child(1) {
   width: 60px;
   font-weight: 500;
   color: #6b7280;
 }
 
 /* 이메일 컬럼 */
-.admin-memberList-table tbody tr td:nth-child(2) {
+.admin-crewRequestList-table tbody tr td:nth-child(2) {
   color: #6b7280;
-  font-size: 13px;
+  font-size: 14px;
   max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -172,37 +183,35 @@
 }
 
 /* 이름 컬럼 */
-.admin-memberList-table tbody tr td:nth-child(3) {
+.admin-crewRequestList-table tbody tr td:nth-child(3) {
   width: 150px;
-}
-
-.admin-memberList-table tbody tr td:nth-child(4) {
-  width: 150px;
-}
-
-/* 권한 컬럼 */
-.admin-memberList-table tbody tr td:nth-child(5) {
-  width: 150px;
-  font-weight: 600;
-  color: #3b82f6;
 }
 
 /* 가입일 컬럼 */
-.admin-memberList-table tbody tr td:nth-child(6) {
+.admin-crewRequestList-table tbody tr td:nth-child(4) {
   width: 200px;
   font-size: 13px;
   color: #6b7280;
 }
 
+/* 권한 컬럼 */
+.admin-crewRequestList-table tbody tr td:nth-child(5) {
+  width: 150px;
+  font-weight: 600;
+  color: #3b82f6;
+}
+
 /* 관리 컬럼 */
-.admin-memberList-table tbody tr td:nth-child(7) {
+.admin-crewRequestList-table tbody tr td:nth-child(6) {
   width: 80px;
 }
 
-.admin-memberList-table tbody tr td:last-child a {
+.admin-crewRequestList-table tbody tr td:last-child button {
   display: inline-block;
   padding: 4px 10px;
   background: #3b82f6;
+  border: 0;
+  cursor: pointer;
   color: white;
   text-decoration: none;
   border-radius: 5px;
@@ -211,7 +220,7 @@
   transition: all 0.3s ease;
 }
 
-.admin-memberList-table tbody tr td:last-child a:hover {
+.admin-crewRequestList-table tbody tr td:last-child button:hover {
   background: #2563eb;
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
@@ -219,76 +228,76 @@
 
 /* 반응형 디자인 */
 @media (max-width: 1200px) {
-  .admin-memberList {
+  .admin-crewRequestList {
     padding: 32px 16px;
   }
 
-  .admin-memberList-con {
+  .admin-crewRequestList-con {
     padding: 24px;
   }
 }
 
 @media (max-width: 768px) {
-  .admin-memberList {
+  .admin-crewRequestList {
     padding: 24px 12px;
   }
 
-  .admin-memberList-con {
+  .admin-crewRequestList-con {
     padding: 20px 16px;
   }
 
-  .admin-memberList-header {
+  .admin-crewRequestList-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
   }
 
-  .admin-memberList-header h1 {
+  .admin-crewRequestList-header h1 {
     font-size: 20px;
   }
 
-  .admin-memberList-search {
+  .admin-crewRequestList-search {
     width: 100%;
     flex-wrap: wrap;
   }
 
-  .admin-memberList-search select {
+  .admin-crewRequestList-search select {
     flex: 1;
     min-width: 90px;
   }
 
-  .admin-memberList-search input[type="text"] {
+  .admin-crewRequestList-search input[type="text"] {
     flex: 2;
     min-width: 150px;
   }
 
-  .admin-memberList-search button {
+  .admin-crewRequestList-search button {
     flex: 0;
   }
 }
 
 @media (max-width: 480px) {
-  .admin-memberList-header h1 {
+  .admin-crewRequestList-header h1 {
     font-size: 18px;
   }
 
-  .admin-memberList-search {
+  .admin-crewRequestList-search {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .admin-memberList-search select,
-  .admin-memberList-search input[type="text"],
-  .admin-memberList-search button {
+  .admin-crewRequestList-search select,
+  .admin-crewRequestList-search input[type="text"],
+  .admin-crewRequestList-search button {
     width: 100%;
   }
 
-  .admin-memberList-table {
+  .admin-crewRequestList-table {
     font-size: 12px;
   }
 
-  .admin-memberList-table thead tr th,
-  .admin-memberList-table tbody tr td {
+  .admin-crewRequestList-table thead tr th,
+  .admin-crewRequestList-table tbody tr td {
     padding: 8px 4px;
     font-size: 12px;
   }

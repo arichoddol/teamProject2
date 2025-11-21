@@ -2,6 +2,7 @@ package org.spring.backendspring.admin.service.impl;
 
 import java.util.List;
 
+import org.spring.backendspring.admin.dto.AdminMemberDto;
 import org.spring.backendspring.admin.repository.AdminMemberRepository;
 import org.spring.backendspring.admin.service.AdminMemberService;
 import org.spring.backendspring.common.dto.PagedResponse;
@@ -44,12 +45,16 @@ public class AdminMemberServiceImpl implements AdminMemberService {
             memberEntities = adminMemberRepository.findByNickNameContaining(pageable, search);
         } else {
             memberEntities = memberRepository.findAll(pageable);
-            // 검색어 있을 때 → 이메일 or 닉네임 검색
-//            memberPage = adminMemberRepository
-//                    .findByUserEmailContainingIgnoreCaseOrNickNameContainingIgnoreCase(keyword, keyword, pageable)
-//                    .map(MemberMapper::toDtoList);
         }
         return PagedResponse.of(memberEntities.map(MemberMapper::toDtoList));
+    }
+
+    @Override
+    public MemberDto updateMemberByAdmin(Long id, AdminMemberDto memberDto) {
+        MemberEntity memberEntity = memberRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하는 회원이 아닙니다."));
+        MemberEntity member = memberRepository.save(MemberMapper.toAdminMemberUpdate(memberDto, memberEntity));
+        return MemberMapper.toDto(member);
     }
 
     @Override

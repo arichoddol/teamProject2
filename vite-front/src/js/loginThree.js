@@ -1,11 +1,10 @@
-import * as THREE from 'three';
+import * as THREE from "three";
 
 const vertexShader = `
     void main() {
         gl_Position = vec4( position, 1.0 );
     }
 `;
-
 
 const fragmentShader = `
     #ifdef GL_ES
@@ -87,87 +86,86 @@ void main() {
 `;
 
 export const initializeThreeScene = (container) => {
+  if (!container) return;
+
+  let camera, scene, renderer;
+  let uniforms;
+  let animationId;
+
+  // 1. Scene & Camera Setup
+  scene = new THREE.Scene();
+  // OrthographicCamera를 사용하여 2D 쉐이더 캔버스에 적합하게 설정
+  camera = new THREE.OrthographicCamera(1, 1, 1, -1, 0, 1);
+  camera.position.z = 1;
+
+  // 2. Geometry & Uniforms
+  const geometry = new THREE.PlaneGeometry(2, 2);
+
+  uniforms = {
+    time: { type: "f", value: 1.0 },
+    resolution: { type: "v2", value: new THREE.Vector2() },
+  };
+
+  // 3. Material (Shader)
+  const material = new THREE.ShaderMaterial({
+    uniforms: uniforms,
+    vertexShader: vertexShader,
+    fragmentShader: fragmentShader,
+  });
+
+  // 4. Mesh
+  const mesh = new THREE.Mesh(geometry, material);
+  scene.add(mesh);
+
+  // 5. Renderer
+  renderer = new THREE.WebGLRenderer({ alpha: true }); // 투명도 지원
+  renderer.setPixelRatio(window.devicePixelRatio);
+
+  const width = container.clientWidth || window.innerWidth;
+  const height = container.clientHeight || window.innerHeight;
+  // 컨테이너의 크기에 맞게 설정
+  renderer.setSize(width, height);
+
+  // 초기 유니폼 설정
+  uniforms.resolution.value.x = width;
+  uniforms.resolution.value.y = height;
+
+  container.appendChild(renderer.domElement);
+
+  // 6. Resize Handler
+  const onWindowResize = () => {
     if (!container) return;
+    const newWidth = container.clientWidth;
+    const newHeight = container.clientHeight;
 
-    let camera, scene, renderer;
-    let uniforms;
-    let animationId;
+    renderer.setSize(newWidth, newHeight);
+    uniforms.resolution.value.x = newWidth;
+    uniforms.resolution.value.y = newHeight;
+  };
 
-    // 1. Scene & Camera Setup
-    scene = new THREE.Scene();
-    // OrthographicCamera를 사용하여 2D 쉐이더 캔버스에 적합하게 설정
-    camera = new THREE.OrthographicCamera(1, 1, 1, -1, 0, 1);
-    camera.position.z = 1;
+  window.addEventListener("resize", onWindowResize);
 
-    // 2. Geometry & Uniforms
-    const geometry = new THREE.PlaneGeometry(2, 2);
+  // 7. Animation Loop
+  const animate = () => {
+    animationId = requestAnimationFrame(animate);
+    uniforms.time.value += 0.02;
+    renderer.render(scene, camera);
+  };
 
-    uniforms = {
-        time: { type: "f", value: 1.0 },
-        resolution: { type: "v2", value: new THREE.Vector2() }
-    };
+  animate();
 
-    // 3. Material (Shader)
-    const material = new THREE.ShaderMaterial({
-        uniforms: uniforms,
-        vertexShader: vertexShader,
-        fragmentShader: fragmentShader
-    });
+  // 8. Clean Up Function (React useEffect의 return 함수로 사용)
+  return () => {
+    window.removeEventListener("resize", onWindowResize);
+    cancelAnimationFrame(animationId);
 
-    // 4. Mesh
-    const mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
+    if (container && renderer.domElement) {
+      container.removeChild(renderer.domElement);
+    }
 
-    // 5. Renderer
-    renderer = new THREE.WebGLRenderer({ alpha: true }); // 투명도 지원
-    renderer.setPixelRatio(window.devicePixelRatio);
-
-    const width = container.clientWidth || window.innerWidth;
-    const height = container.clientHeight || window.innerHeight;
-    // 컨테이너의 크기에 맞게 설정
-    renderer.setSize(width, height);
-
-
-    // 초기 유니폼 설정
-    uniforms.resolution.value.x = width;
-    uniforms.resolution.value.y = height;
-
-    container.appendChild(renderer.domElement);
-
-    // 6. Resize Handler
-    const onWindowResize = () => {
-        if (!container) return;
-        const newWidth = container.clientWidth;
-        const newHeight = container.clientHeight;
-
-        renderer.setSize(newWidth, newHeight);
-        uniforms.resolution.value.x = newWidth;
-        uniforms.resolution.value.y = newHeight;
-    };
-
-    window.addEventListener('resize', onWindowResize);
-
-    // 7. Animation Loop
-    const animate = () => {
-        animationId = requestAnimationFrame(animate);
-        uniforms.time.value += 0.02;
-        renderer.render(scene, camera);
-    };
-
-    animate();
-
-    // 8. Clean Up Function (React useEffect의 return 함수로 사용)
-    return () => {
-        window.removeEventListener('resize', onWindowResize);
-        cancelAnimationFrame(animationId);
-
-        if (container && renderer.domElement) {
-            container.removeChild(renderer.domElement);
-        }
-
-        // 메모리 해제
-        geometry.dispose();
-        material.dispose();
-        renderer.dispose();
-    };
+    // 메모리 해제
+    geometry.dispose();
+    material.dispose();
+    renderer.dispose();
+  };
 };
