@@ -3,6 +3,8 @@ package org.spring.backendspring.payment.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 import org.spring.backendspring.cart.entity.CartEntity;
@@ -39,6 +41,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentResultRepository paymentResultRepository;
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
+    private final EntityManager entityManager;
 
     // --- CRUD 메서드 (생략하지 않고 포함) ---
 
@@ -107,7 +110,7 @@ public class PaymentServiceImpl implements PaymentService {
             // memberId를 사용하여 해당 회원의 장바구니 전체 삭제
             removeCartByMemberId(memberId);
         }
-        
+
     }
 
     private PaymentDto jsonToObject(PaymentDto dto) {
@@ -154,6 +157,8 @@ public class PaymentServiceImpl implements PaymentService {
         }
     }
 
+    // PaymentServiceImpl.java
+
     // ⭐️ 수정: 장바구니 아이템을 벌크 삭제로 변경
     @Transactional
     private void removeCartByMemberId(Long memberId) {
@@ -161,15 +166,20 @@ public class PaymentServiceImpl implements PaymentService {
         CartEntity cart = cartRepository.findByMemberId(memberId).orElse(null);
 
         if (cart != null) {
-            Long cartId = cart.getId(); // CartEntity의 PK getter를 사용 (getId() 또는 getCartId())
-            
-            // 2. CartItem 전체 삭제 (벌크 DELETE 쿼리 호출)
-            // cartItemRepository에 deleteByCartId(Long cartId) 메서드가 정의되어 있어야 합니다.
-            cartItemRepository.deleteByCartId(cartId); 
+            Long cartId = cart.getId();
+
+            // 2. CartItem 전체 삭제 (벌크 DELETE 쿼리)
+            cartItemRepository.deleteByCartId(cartId);
+
+            // cart_item_tb 삭제 쿼리를 DB에 즉시 전송하여 외래 키 제약 조건을 해제합니다.
+            entityManager.flush();
 
             // 3. CartEntity 자체 삭제
-            cartRepository.delete(cart); 
-            
+            cartRepository.deleteByMemberId(memberId);
+
+            // 벌크 삭제 후 JPA 영속성 컨텍스트(캐시)를 초기화합니다.
+            entityManager.clear();
+
             System.out.println("결제 완료 후 회원 ID(" + memberId + ")의 장바구니 전체(ID: " + cartId + ")를 삭제했습니다.");
         }
     }
@@ -244,7 +254,7 @@ public class PaymentServiceImpl implements PaymentService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException("카카오 결제 요청 변환 오류", e);
         }
-        
+
         // 6. 리다이렉트 URL 반환
         return result.getBody().getNext_redirect_pc_url();
     }
