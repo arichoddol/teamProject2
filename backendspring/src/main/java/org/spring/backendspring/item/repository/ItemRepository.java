@@ -12,5 +12,9 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
     Page<ItemEntity> findByItemDetailContaining(Pageable pageable, String search);
 
     Page<ItemEntity> findByItemPriceContaining(Pageable pageable, String search);
-    
+
+    Page<ItemEntity> findByCategory(Pageable pageable, String search);
+
+    public Page<ItemEntity> findByCategoryAndItemTitleContaining(Pageable pageable, String search, String subject, String search1);
+
 }
