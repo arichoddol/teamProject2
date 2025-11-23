@@ -9,15 +9,19 @@ const jwtAxios = axios.create();
 
 // ----------- 리프레시 토큰을 불러와서 액세스 토큰 갱신 -----------
 const refreshTokenFn = async () => {
-  const res = await axios.post(
-    `${BACK_BASIC_URL}/api/refresh/token`,
-    {},
-    { withCredentials: true }
-  );
-  const accessToken = res.data.accessToken;
-  store.dispatch(setAccessToken(accessToken));
-  localStorage.setItem("accessToken");
-  return res;
+  try {
+    const res = await axios.post(
+      `${BACK_BASIC_URL}/api/refresh/token`,
+      {},
+      { withCredentials: true }
+    );
+    const accessToken = res.data.accessToken;
+    store.dispatch(setAccessToken(accessToken));
+    localStorage.setItem("accessToken", accessToken);
+    return res;
+  } catch (err) {
+    console.log("어떤 오류임? ", err);
+  }
 };
 
 // ----------- before request 요청 인터셉터 -----------

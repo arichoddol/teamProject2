@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import jwtAxios from "../../../../apis/util/jwtUtil";
 import { useSelector } from "react-redux";
 import { BACK_BASIC_URL } from "../../../../apis/commonApis";
 
 import "../../../../css/admin/container/AdminItemDetailContainer.css";
+import jwtAxios from "../../../../apis/util/jwtUtil";
 
 const AdminItemDetailContainer = () => {
   const { itemId } = useParams();
@@ -17,7 +17,7 @@ const AdminItemDetailContainer = () => {
     itemDetail: "",
     itemSize: "",
     itemImage: "", // 🔥 기존 이미지 URL 받기
-    category: ""
+    category: "",
   });
 
   const [file, setFile] = useState(null);
@@ -158,7 +158,6 @@ const AdminItemDetailContainer = () => {
               <option value="SALES">세일품목</option>
               <option value="ETC">기타</option>
             </select>
-
 
             <label>상품 이미지 변경</label>
             <input

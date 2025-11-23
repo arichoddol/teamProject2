@@ -2,16 +2,16 @@ import axios from "axios";
 import { BACK_BASIC_URL } from "../commonApis";
 import store from "../../store/store";
 import jwtAxios from "../util/jwtUtil";
+import { deleteAccessToken } from "../../slices/jwtSlice";
 
-export const authDetailFn = async () => {
-  const accessToken = store.getState().jwtSlice.accessToken;
-  const memberId = store.getState().loginSlice.id;
-
+// 회원조회
+export const authDetailFn = async (memberId) => {
+  const ACCESS_TOKEN_KEY = localStorage.getItem("accessToken");
   try {
     const res = await jwtAxios.get(
       `${BACK_BASIC_URL}/api/member/detail/${memberId}`,
       {
-        headers: { Authorization: `Bearer ${accessToken}` },
+        headers: { Authorization: `Bearer ${ACCESS_TOKEN_KEY}` },
         withCredentials: true,
       }
     );
@@ -19,6 +19,61 @@ export const authDetailFn = async () => {
     return res;
   } catch (err) {
     console.log("회원 조회를 실패했습니다.");
+  }
+};
+
+// 회원수정
+export const authUpdateFn = async (memberId, memberDto, imgFile) => {
+  const ACCESS_TOKEN_KEY = localStorage.getItem("accessToken");
+  const formData = new FormData();
+  formData.append(
+    "memberDto",
+    new Blob([JSON.stringify(memberDto)], { type: "application/json" })
+  );
+  formData.append("memberFile", imgFile);
+
+  try {
+    await jwtAxios.put(
+      `${BACK_BASIC_URL}/api/member/update/${memberId}`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${ACCESS_TOKEN_KEY}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+  } catch (err) {
+    console.log("업데이트 오류: " + err);
+  }
+};
+
+// 회원삭제
+export const authDeleteFn = async (memberId) => {
+  const ACCESS_TOKEN_KEY = localStorage.getItem("accessToken");
+  const rs = window.confirm("정말 탈퇴하시겠습니까?");
+  if (rs) {
+    try {
+      await jwtAxios.delete(`${BACK_BASIC_URL}/api/member/delete/${memberId}`, {
+        headers: { Authorization: `Bearer ${ACCESS_TOKEN_KEY}` },
+      });
+
+      await axios.post(
+        `${BACK_BASIC_URL}/api/member/logout`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${ACCESS_TOKEN_KEY}`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      localStorage.removeItem(ACCESS_TOKEN_KEY);
+      store.dispatch(deleteAccessToken());
+    } catch (err) {
+      console.log("탈퇴 실패 " + err);
+    }
   }
 };
 

@@ -1,12 +1,11 @@
+.upper-boardDetail {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-.upper-boardDetail{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  background-color: rgb(212, 224, 230);
 
-    background-color: rgb(212, 224, 230);
-
-    padding: 20px;
+  padding: 20px;
 }
 /* 메인 카드 */
 .boardDetail {
@@ -38,7 +37,6 @@
 /* 게시글 정보 (작성자, 날짜 등) */
 
 .boardDetail-con-info {
-
 }
 
 /* 본문 내용 */
@@ -98,17 +96,17 @@
 
 /* 버튼 기본 스타일 */
 button {
-  cursor: pointer;
+  /* cursor: pointer;
   padding: 10px 14px;
   border-radius: 10px;
   border: none;
   font-weight: 600;
   font-size: 14px;
-  transition: 0.18s;
+  transition: 0.18s; */
 }
 
 button:active {
-  transform: translateY(1px);
+  /* transform: translateY(1px); */
 }
 
 /* 댓글 등록 버튼 */
@@ -201,7 +199,7 @@ button:active {
   body {
     padding: 22px 12px;
   }
-  
+
   .boardDetail {
     padding: 20px;
   }

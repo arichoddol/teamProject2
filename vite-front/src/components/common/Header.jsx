@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import LogoutBtn from "../../apis/auth/LogoutBtn";
+import LogoutBtn from "./LogoutBtn";
 import HeaderStore from "../common/HeaderModal/HeaderStore";
 import { Link } from "react-router-dom";
 
@@ -23,9 +23,7 @@ const Header = () => {
             {isLogin ? (
               // **로그인 상태일 때 메뉴**
               <>
-                <li>
-                  <LogoutBtn />
-                </li>
+                <LogoutBtn />
                 <li>
                   <Link to="/cart">CART</Link>
                 </li>

@@ -1,40 +1,26 @@
 import React, { useEffect, useState } from "react";
 
-import { useSelector } from "react-redux";
 import { formatDate } from "../../../../js/formatDate";
 import AdminPagingComponent from "../../../common/AdminPagingComponent";
-import jwtAxios from "../../../../apis/util/jwtUtil";
-import { BACK_BASIC_URL } from "../../../../apis/commonApis";
 import CrewDetailModal from "../modal/CrewDetailModal";
+import { useDebouncee } from "../../../../js/admin/useDebounce";
+import { adminCrewListFn } from "../../../../apis/admin/adminCrewList";
 
 const AdminCrewListContainer = () => {
-  const accessToken = useSelector((state) => state.jwtSlice.accessToken);
   const [ademinCrewDetailId, setAdeminCrewDetailId] = useState();
   const [isModal, setIsModal] = useState(false);
   const [adminCrewList, setAdminCrewList] = useState([]);
   const [pageData, setPageData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState();
+  const [search, setSearch] = useState("");
 
-  const adminCrewListFn = async () => {
-    try {
-      const res = await jwtAxios.get(
-        `${BACK_BASIC_URL}/api/admin/crew/crewList`,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-          params: { page: currentPage - 1, size: 10, keyword: search },
-          withCredentials: true,
-        }
-      );
-      setAdminCrewList(res.data.content);
-      setPageData(res.data);
-      console.log(res.data.content);
-    } catch (err) {
-      console.log("크루 목록 조회를 실패했습니다. " + err);
-    }
+  const debouncedSearch = useDebouncee(search, 300);
+
+  const adminCrewListPage = async () => {
+    const res = await adminCrewListFn(currentPage, search);
+    setAdminCrewList(res.data.content);
+    setPageData(res.data);
   };
-
-  console.log(search);
 
   const hadlePageChange = (page) => {
     setCurrentPage(page);
@@ -46,8 +32,8 @@ const AdminCrewListContainer = () => {
   };
 
   useEffect(() => {
-    adminCrewListFn();
-  }, [currentPage]);
+    adminCrewListPage();
+  }, [currentPage, debouncedSearch]);
 
   return (
     <>
@@ -61,7 +47,7 @@ const AdminCrewListContainer = () => {
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key == "Enter") {
-                    adminCrewListFn();
+                    adminCrewListPage();
                   }
                 }}
                 type="text"

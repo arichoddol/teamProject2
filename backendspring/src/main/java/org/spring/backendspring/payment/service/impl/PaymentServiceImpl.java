@@ -279,7 +279,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PagedResponse<PaymentDto> findMyPaymentList(Long memberId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("paymentId").descending());
         Page<PaymentEntity> paymentEntities = paymentRepository.findByMemberId(pageable, memberId);
         if (paymentEntities.isEmpty()) {
             throw new IllegalArgumentException("회원의 결제가 존재하지 않습니다.");

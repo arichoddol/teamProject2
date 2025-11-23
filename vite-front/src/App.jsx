@@ -6,14 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, setInitialized } from "./slices/loginSlice";
 import { setAccessToken } from "./slices/jwtSlice";
 import { indexUserDetailFn } from "./apis/auth/authDetail";
-import { logoutFn } from "./apis/auth/logout";
 
 function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
-
     let payload;
 
     if (token) {
