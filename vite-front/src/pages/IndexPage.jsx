@@ -57,6 +57,17 @@ const IndexPage = () => {
 
     return (
         <div className="title-container" style={{ backgroundImage: `url(${bgImage})` }}>
+            <div className="title-video-container">
+                <video autoPlay loop muted playsInline className='background-video'>
+                    <source src='/videos/bg.mp4' type='video/mp4'/>
+                    Your browser does not support the video tag.
+                </video>
+                <div className="video-overlay"></div>
+                <div className="second-colorLayer">
+                    <img src={bgImage} alt="bgcolor"/>
+                </div>
+
+            </div>
 
             <img
                 src={part1}
@@ -80,17 +91,6 @@ const IndexPage = () => {
                 <p>Mouse over to see the Parallax Effect</p>
             </div>
         </div >
-
-        // <div className="index">
-
-        //     <div className="index-title">
-        //         <h1> 러닝크루 project</h1>
-        //     </div>
-        //     <div className="index-con">
-        //         <Link to={'/store'} className="text-draw"
-        //             data-text="S H O P">:: ENTER ::</Link>
-        //     </div>
-        // </div>
     )
 }
 
