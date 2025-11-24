@@ -78,8 +78,9 @@ const BoardListContainer = () => {
 
   return (
     <div className="boardList">
-
-
+      <div className="boardList-banner">
+        <br /><br />
+      </div>
 
       <div className="boardList-con">
 

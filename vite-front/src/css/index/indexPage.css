@@ -36,6 +36,25 @@
   background-color: #333;
   /* bg.png가 보이지 않을 경우 대비 */
 }
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; 
+
+    background: linear-gradient(to top, #1f00a88c, #00415a73);   
+}
+.second-colorLayer img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 75%; /* 오른쪽 35%를 비워두기 위해 65% 설정 */
+    height: 100%;
+    z-index: 2; /* 비디오 오버레이(1) 위에, 텍스트(10) 아래에 위치 */
+}
+
 
 .parallax-layer,
 .title-text {
@@ -49,8 +68,8 @@
 .layer-1 {
   opacity: 0.6;
   z-index: 10;
-  max-width: 80%;
-  left: 50%;
+  /* width: 200px; */
+  left: 0%;
   transform: translateX(-50%);
   /* 중앙 정렬 */
 }
