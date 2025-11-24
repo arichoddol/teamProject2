@@ -5,12 +5,12 @@ import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 import { formatDate } from "../../../../js/formatDate";
 
-const CrewRequestModal = ({ isModal, setIsModal, crewRequestId }) => {
-  const accessToken = useSelector((state) => state.jwtSlice.accessToken);
+const CrewRequestModal = ({ setIsModal, crewRequestId, setRefreshCount }) => {
   const [crewRequestDetail, setCrewRequestDetail] = useState({});
   const [crewStatus, setCrewStatus] = useState();
 
-  console.log(crewStatus);
+  const accessToken = useSelector((state) => state.jwtSlice.accessToken);
+
   const modalClick = () => {
     setIsModal(false);
   };
@@ -27,7 +27,7 @@ const CrewRequestModal = ({ isModal, setIsModal, crewRequestId }) => {
       setCrewRequestDetail(res.data);
       setCrewStatus(res.data.status);
     } catch (err) {
-      console.log("크루 상세 조회를 실패하였습니다. " + err);
+      console.log("크루 요청 조회를 실패하였습니다. " + err);
     }
   };
 
@@ -43,6 +43,7 @@ const CrewRequestModal = ({ isModal, setIsModal, crewRequestId }) => {
       );
       alert("크루 승인 완료!");
       setIsModal(false);
+      setRefreshCount((prev) => prev + 1);
     } catch (err) {
       console.log("수락 요청을 실패했습니다. " + err);
     }
@@ -60,6 +61,7 @@ const CrewRequestModal = ({ isModal, setIsModal, crewRequestId }) => {
       );
       alert("크루 거절 완료!");
       setIsModal(false);
+      setRefreshCount((prev) => prev + 1);
     } catch (err) {
       console.log("거절 요청을 실패했습니다. " + err);
     }

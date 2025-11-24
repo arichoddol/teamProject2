@@ -1,16 +1,19 @@
-import { createSlice } from '@reduxjs/toolkit'
-import React from 'react'
+import { createSlice } from "@reduxjs/toolkit";
+import React, { act } from "react";
 
 const initState = {
   id: "",
   userEmail: "",
   role: "",
   nickName: "",
-  isLogin: false
-}
+  isLogin: false,
+  isInitialized: false,
+};
+
+// setInitialized -> (새로고침 후 로그인 정보가 들어와야 페이지를 로드해줍니다.)
 
 const loginSlice = createSlice({
-  name: 'LoginSlice',
+  name: "LoginSlice",
   initialState: initState,
   reducers: {
     login: (state, action) => {
@@ -18,24 +21,26 @@ const loginSlice = createSlice({
       const data = action.payload;
 
       console.log(data);
-      return { 
+      return {
         ...state,
         id: data.id,
         userEmail: data.userEmail,
         role: data.role,
         nickName: data.nickName,
-        isLogin: data.isLogin
+        isLogin: data.isLogin,
       };
     },
     logoutAction: (state, action) => {
       console.log("logout...");
       state.isLogin = false;
       state.userEmail = "";
-      state.role= "",
-      state.id = "";
-    }
-  }
-})
+      nickName: "", (state.role = ""), (state.id = "");
+    },
+    setInitialized: (state, action) => {
+      state.isInitialized = action.payload;
+    },
+  },
+});
 
-export const { login, logoutAction } = loginSlice.actions
-export default loginSlice.reducer
+export const { login, logoutAction, setInitialized } = loginSlice.actions;
+export default loginSlice.reducer;

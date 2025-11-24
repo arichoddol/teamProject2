@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import jwtAxios from "../../../apis/util/jwtUtil";
-import { BACK_BASIC_URL } from "../../../apis/commonApis";
+import jwtAxios from "../../../../apis/util/jwtUtil";
+import { BACK_BASIC_URL } from "../../../../apis/commonApis";
 import { useSelector } from "react-redux";
-import AdminPagingComponent from "../../common/AdminPagingComponent";
+import AdminPagingComponent from "../../../common/AdminPagingComponent";
 import { Link } from "react-router";
 
 // 1. member api 뽑아오기 (따로 그냥 컴포넌트 안에서 직접 뽑아오자)
@@ -79,6 +79,11 @@ const AdminMemberListContainer = () => {
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key == "Enter") {
+                    adminMemberListFn();
+                  }
+                }}
                 type="text"
                 placeholder="검색어를 입력하세요"
               />

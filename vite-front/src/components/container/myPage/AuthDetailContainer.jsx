@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { authDetailFn } from "../../../apis/auth/authDetail";
+import { authDeleteFn, authDetailFn } from "../../../apis/auth/authDetail";
 import { useSelector } from "react-redux";
 import { BACK_BASIC_URL } from "../../../apis/commonApis";
 import { useNavigate } from "react-router";
-import jwtAxios from "../../../apis/util/jwtUtil";
 
 const AuthDetailContainer = () => {
-  const navigate = useNavigate();
-  const accessToken = useSelector((state) => state.jwtSlice.accessToken);
   const [memberDetail, setMemberDetail] = useState({});
   const [gender, setGender] = useState("남성");
+
+  const accessToken = useSelector((state) => state.jwtSlice.accessToken);
+  const memberId = useSelector((state) => state.loginSlice.id);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (accessToken == null) {
@@ -17,9 +18,8 @@ const AuthDetailContainer = () => {
       navigate("/auth/login");
     }
     const myPageDetailFn = async () => {
-      const res = await authDetailFn();
+      const res = await authDetailFn(memberId);
       const authDetail = res.data;
-      console.log(authDetail);
 
       if (res.status === 200) {
         setMemberDetail({ ...authDetail });
@@ -31,37 +31,16 @@ const AuthDetailContainer = () => {
     myPageDetailFn();
   }, []);
 
-  const memberDelefeFn = async () => {
-    const rs = window.confirm("정말 탈퇴하시겠습니까?");
-    if (rs) {
-      try {
-        await jwtAxios.delete(
-          `${BACK_BASIC_URL}/api/member/delete/${memberDetail.id}`,
-          { headers: { Authorization: `Bearer ${accessToken}` } }
-        );
-
-        await axios.post(
-          `${BACK_BASIC_URL}/api/member/logout`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-            withCredentials: true,
-          }
-        );
-
-        localStorage.removeItem(ACCESS_TOKEN_KEY);
-        alert("탈퇴 완료되었습니다. 안녕히가세요.");
-        navigate("/store/index");
-      } catch (err) {
-        console.log("탈퇴 실패 " + err);
-      }
+  const myPageDeleteFn = async () => {
+    const res = await authDeleteFn(memberId);
+    if (res.status === 200) {
+      alert("탈퇴 완료되었습니다. 안녕히가세요.");
+      navigate("/store/index");
     }
   };
 
   const updatePage = () => {
-    navigate("/auth/myPage/update");
+    navigate("/myPage/update");
   };
 
   return (
@@ -125,7 +104,9 @@ const AuthDetailContainer = () => {
         <button className="btn-edit" onClick={updatePage}>
           수정
         </button>
-        <button className="btn-delete">탈퇴</button>
+        <button className="btn-delete" onClick={myPageDeleteFn}>
+          탈퇴
+        </button>
       </div>
     </main>
   );
