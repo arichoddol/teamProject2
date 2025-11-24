@@ -40,7 +40,8 @@ const toBoardRouter = () => {
     {
         path:'calender',
         element: <Suspense fallback={Loading}><BoardCalen/></Suspense>
-    }
+    },
+   
    ]
   )
 }

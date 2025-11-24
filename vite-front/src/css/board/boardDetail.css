@@ -97,7 +97,7 @@
 }
 
 /* 버튼 기본 스타일 */
-button {
+/* button {
   cursor: pointer;
   padding: 10px 14px;
   border-radius: 10px;
@@ -109,7 +109,7 @@ button {
 
 button:active {
   transform: translateY(1px);
-}
+} */
 
 /* 댓글 등록 버튼 */
 .boardDetail-reply form button[type="submit"] {

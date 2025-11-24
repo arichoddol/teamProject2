@@ -9,6 +9,11 @@ import {
 } from "../../../apis/cart/cartApi";
 import "../../../css/cart/CartPage.css";
 
+// ⭐️ [수정] 이미지 로딩을 위한 백엔드 기본 URL 정의
+// ShopDetailContainer와 경로를 통일했습니다. (http://localhost:8088/upload/)
+const BASE_IMAGE_URL = "http://localhost:8088/upload/"; 
+const NO_IMAGE_URL = "/images/noimage.jpg"; // 이미지 없음 파일 경로 추가
+
 export default function CartPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -25,7 +30,7 @@ export default function CartPage() {
   // 체크된 아이템 ID 목록
   const [checkedItems, setCheckedItems] = useState(new Set());
 
-  //  선택된 모든 아이템의 {id, price, quantity}를 저장할 Map (페이지 이동 시 유지)
+  // 선택된 모든 아이템의 {id, price, quantity}를 저장할 Map (페이지 이동 시 유지)
   const [selectedItemsData, setSelectedItemsData] = useState(new Map());
 
   // JWT 기반 장바구니 조회
@@ -59,7 +64,7 @@ export default function CartPage() {
       );
       const fetchedItems = data.content || [];
 
-      // 페이지 이동/검색 시 체크 목록 초기화
+      // 페이지 이동/검색 시 체크 목록 초기화 (필요에 따라 주석 처리)
       // setCheckedItems(new Set());
       setItems(fetchedItems);
       setPageInfo({
@@ -89,7 +94,9 @@ export default function CartPage() {
     const addItem = async () => {
       try {
         // 백엔드에서 itemSize를 quantity로 사용합니다.
-        await addItemToCart(cart.cartId, itemToAdd.id, 1);
+        // ShopDetailContainer에서 수량을 넘기지 않았으므로 기본 수량 1로 가정
+        const quantity = itemToAdd.quantity || 1; // itemToAdd에 quantity가 있으면 사용, 없으면 1
+        await addItemToCart(cart.cartId, itemToAdd.id, quantity);
         fetchItems();
         navigate("/cart", { replace: true });
       } catch (e) {
@@ -277,83 +284,95 @@ export default function CartPage() {
               </tr>
             </thead>
             <tbody>
-              {items.map((item) => (
-                <tr key={item.cartItemId}>
-                  {/* ⭐️ 개별 아이템 체크박스 */}
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={checkedItems.has(item.cartItemId)}
-                      onChange={(e) =>
-                        handleCheckItem(item.cartItemId, e.target.checked)
-                      }
-                    />
-                  </td>
+              {items.map((item) => {
+                // ⭐️ [적용] itemImage 필드(파일명)를 사용하여 이미지 URL 생성
+                const imageUrl = item.itemImage 
+                    ? `${BASE_IMAGE_URL}${item.itemImage}` 
+                    : null;
 
-                  {/* ⭐️ [추가] 상품 이미지 열 */}
-                  <td>
-                    {item.attachFile ? (
-                      <img
-                        src={imageUrl}
-                        alt={item.itemTitle || "상품 이미지"}
-                        className="cart-item-thumbnail"
-                      />
-                    ) : (
-                      <div className="no-image">이미지 없음</div>
-                    )}
-                  </td>
-
-                  <td>{item.itemTitle || "상품명 없음"}</td>
-                  {/* 가격: itemPrice만 표시 */}
-                  <td className="price-column">
-                    <span>{item.itemPrice.toLocaleString()}원</span>
-                  </td>
-                  {/* ⭐️ 수량 변경 UI */}
-                  <td>
-                    <div className="quantity-control">
-                      <button
-                        onClick={() =>
-                          handleQuantityChange(
-                            item.cartItemId,
-                            (item.itemSize || 1) - 1
-                          )
-                        }
-                        disabled={(item.itemSize || 1) <= 1}
-                      >
-                        -
-                      </button>
+                return (
+                  <tr key={item.cartItemId}>
+                    {/* ⭐️ 개별 아이템 체크박스 */}
+                    <td>
                       <input
-                        type="number"
-                        min="1"
-                        value={item.itemSize || 1}
+                        type="checkbox"
+                        checked={checkedItems.has(item.cartItemId)}
                         onChange={(e) =>
-                          handleQuantityChange(
-                            item.cartItemId,
-                            parseInt(e.target.value)
-                          )
+                          handleCheckItem(item.cartItemId, e.target.checked)
                         }
                       />
-                      <button
-                        onClick={() =>
-                          handleQuantityChange(
-                            item.cartItemId,
-                            (item.itemSize || 1) + 1
-                          )
-                        }
-                      >
-                        +
+                    </td>
+
+                    {/* ⭐️ [수정] 상품 이미지 열: itemImage를 사용하여 렌더링 */}
+                    <td>
+                      {imageUrl ? (
+                        <img
+                          src={imageUrl}
+                          alt={item.itemTitle || "상품 이미지"}
+                          className="cart-item-thumbnail"
+                        />
+                      ) : (
+                         // 이미지가 없을 때 NO_IMAGE_URL 사용
+                        <img
+                            src={NO_IMAGE_URL} 
+                            alt="이미지 없음"
+                            className="cart-item-thumbnail no-image"
+                        />
+                      )}
+                    </td>
+
+                    <td>{item.itemTitle || "상품명 없음"}</td>
+                    {/* 가격: itemPrice만 표시 */}
+                    <td className="price-column">
+                      <span>{item.itemPrice.toLocaleString()}원</span>
+                    </td>
+                    {/* ⭐️ 수량 변경 UI */}
+                    <td>
+                      <div className="quantity-control">
+                        <button
+                          onClick={() =>
+                            handleQuantityChange(
+                              item.cartItemId,
+                              (item.itemSize || 1) - 1
+                            )
+                          }
+                          disabled={(item.itemSize || 1) <= 1}
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          min="1"
+                          value={item.itemSize || 1}
+                          onChange={(e) =>
+                            handleQuantityChange(
+                              item.cartItemId,
+                              parseInt(e.target.value)
+                            )
+                          }
+                        />
+                        <button
+                          onClick={() =>
+                            handleQuantityChange(
+                              item.cartItemId,
+                              (item.itemSize || 1) + 1
+                            )
+                          }
+                        >
+                          +
+                        </button>
+                      </div>
+                    </td>
+                    {/* ⭐️ 합계 */}
+                    <td>{getItemTotal(item).toLocaleString()}원</td>
+                    <td>
+                      <button onClick={() => handleRemoveItem(item.cartItemId)}>
+                        삭제
                       </button>
-                    </div>
-                  </td>
-                  {/* ⭐️ 합계 */}
-                  <td>{getItemTotal(item).toLocaleString()}원</td>
-                  <td>
-                    <button onClick={() => handleRemoveItem(item.cartItemId)}>
-                      삭제
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
 

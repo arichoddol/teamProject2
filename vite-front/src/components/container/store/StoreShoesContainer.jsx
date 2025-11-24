@@ -6,30 +6,30 @@ import "../../../css/store/storeShoes.css"
 
 const ShopShoesContainer = () => {
 
-    const NO_IMAGE_URL = "/images/noimage.jpg";
-  
-  
-    const [items, setItems] = useState([]);
-    const [currentPage, setCurrentPage] = useState(0);
-    const [pageInfo, setPageInfo] = useState({
-      totalPages: 0,
-      startPage: 0,
-      endPage: 0,
-      currentPage: 0
-    })
-      const displayPageNum = 5; // 화면에 표시할 페이지 버튼 개수
+  const NO_IMAGE_URL = "/images/noimage.jpg";
 
-      const fetchData = async (page) => {
+
+  const [items, setItems] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageInfo, setPageInfo] = useState({
+    totalPages: 0,
+    startPage: 0,
+    endPage: 0,
+    currentPage: 0
+  })
+  const displayPageNum = 5; // 화면에 표시할 페이지 버튼 개수
+
+  const fetchData = async (page) => {
 
     // const response = await axios.get("http://localhost:8088/api/shop");
-    const response = await axios.get(`http://localhost:8088/api/shop?page=${page}`);
+    const response = await axios.get(`http://localhost:8088/api/shop/shoes?page=${page}`);
     const data = response.data;
     console.log(`[LOG] 페이지 ${page + 1}의 데이터를 요청합니다.`);
 
     try {
       if (data && data.content) {
 
-        setItems(data.content || []) ;
+        setItems(data.content || []);
 
         // 페이지 정보 계산 및 업데이트
         const totalPages = data.totalPages;
@@ -55,18 +55,18 @@ const ShopShoesContainer = () => {
   };
 
   useEffect(() => {
-      fetchData(currentPage);
-    }, [currentPage]);
-  
-    const pageNumbers = [];
-    for (let i = pageInfo.startPage; i <= pageInfo.endPage; i++) {
-      pageNumbers.push(i);
-    }
-    const handlePageClick = (page) => {
-      // 페이지 변경 요청 시 스크롤을 맨 위로 이동 (사용자 경험 개선)
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      setCurrentPage(page);
-    }
+    fetchData(currentPage);
+  }, [currentPage]);
+
+  const pageNumbers = [];
+  for (let i = pageInfo.startPage; i <= pageInfo.endPage; i++) {
+    pageNumbers.push(i);
+  }
+  const handlePageClick = (page) => {
+    // 페이지 변경 요청 시 스크롤을 맨 위로 이동 (사용자 경험 개선)
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setCurrentPage(page);
+  }
 
 
 
@@ -78,7 +78,7 @@ const ShopShoesContainer = () => {
       <br />
 
       <div className="itemList-banner">
-      
+
       </div>
       {/* i guess i can insert later => here Pagingnation Effect... */}
       <div className="itemList-con">

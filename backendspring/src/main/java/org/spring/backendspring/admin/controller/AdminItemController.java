@@ -54,7 +54,7 @@ public class AdminItemController {
         return ResponseEntity.ok(itemList);
     }
 
-    @PostMapping("/insert")
+    @PostMapping("/insert") 
     public ResponseEntity<?> insertItem(
             @RequestPart("itemDto") ItemDto itemDto,
             @RequestPart("itemFile") MultipartFile itemFile,
@@ -88,7 +88,7 @@ public class AdminItemController {
 
     // @DeleteMapping("/delete/{itemId}/image")
     // public ResponseEntity<String> deleteImage(@PathVariable("itemId") Long id) {
-    //     adminItemService.deleteImage(id);
-    //     return ResponseEntity.ok("이미지 삭제 완료");
+    // adminItemService.deleteImage(id);
+    // return ResponseEntity.ok("이미지 삭제 완료");
     // }
 }
