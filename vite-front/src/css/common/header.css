@@ -37,3 +37,8 @@
     display: flex;
     gap: 20px;
 }
+
+.gnb ul>li a:hover {
+    color: #0080bb;
+    background-color: aquamarine;
+}
