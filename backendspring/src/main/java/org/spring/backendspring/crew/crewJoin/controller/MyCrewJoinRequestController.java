@@ -5,6 +5,9 @@ import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.config.security.MyUserDetails;
 import org.spring.backendspring.crew.crewJoin.dto.CrewJoinRequestDto;
 import org.spring.backendspring.crew.crewJoin.service.CrewJoinRequestService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,24 +26,38 @@ public class MyCrewJoinRequestController {
 
 
     //해당 크루 가입신청한 멤버
+    // @GetMapping({"", "/"})
+    // public ResponseEntity<?> myCrewJoinRequestList(@PathVariable("crewId") Long crewId) {
+    //     List<CrewJoinRequestDto> myCrewJoinRequestDtoList = crewJoinRequestService.myCrewJoinList(crewId);
+    //     Map<String, Object> myCrewjoinRequestMap = new HashMap<>();
+    //     myCrewjoinRequestMap.put("myCrewJoinList", myCrewJoinRequestDtoList);
+    //     return ResponseEntity.status(HttpStatus.OK).body(myCrewjoinRequestMap);
+    // }
+    
     @GetMapping({"", "/"})
-    public ResponseEntity<?> myCrewJoinRequestList(@PathVariable("crewId") Long crewId) {
-        List<CrewJoinRequestDto> myCrewJoinRequestDtoList = crewJoinRequestService.myCrewJoinList(crewId);
+    public ResponseEntity<?> myCrewJoinRequestList(@PathVariable("crewId") Long crewId,
+                                    @PageableDefault(page = 0, size = 8, sort = "id")Pageable pageable,
+                                    @RequestParam(name = "subject", required = false) String subject,
+                                    @RequestParam(name = "search", required = false) String search
+) {
+        Page<CrewJoinRequestDto> page = crewJoinRequestService.myCrewJoinList(crewId, pageable, subject, search);
+        int blockNum = 3;
+        int nowPage = page.getNumber() + 1;
+        int totalPages = page.getTotalPages();
+
+        int startPage = ((nowPage - 1) / blockNum) * blockNum + 1;
+        int endPage = Math.min(startPage + blockNum - 1, totalPages);
+
         Map<String, Object> myCrewjoinRequestMap = new HashMap<>();
-        myCrewjoinRequestMap.put("myCrewJoinList", myCrewJoinRequestDtoList);
+        myCrewjoinRequestMap.put("myCrewJoinList", page);
+        myCrewjoinRequestMap.put("nowPage", nowPage);
+        myCrewjoinRequestMap.put("totalPages", totalPages);
+        myCrewjoinRequestMap.put("startPage", startPage);
+        myCrewjoinRequestMap.put("endPage", endPage);
+        myCrewjoinRequestMap.put("pageSize", page.getSize());
+        myCrewjoinRequestMap.put("totalElements", page.getTotalElements());
         return ResponseEntity.status(HttpStatus.OK).body(myCrewjoinRequestMap);
     }
-    // @GetMapping({"","/"})
-    // public ResponseEntity<PagedResponse<CrewJoinRequestDto>> myCrewJoinRequestList(
-    //     @PathVariable("crewId") Long crewId,
-    //     @RequestParam(name = "keyword", required = false) String keyword,
-    //     @RequestParam(name = "page", defaultValue = "0") int page,
-    //     @RequestParam(name = "size", defaultValue = "10") int size){
-        
-    //     PagedResponse<CrewJoinRequestDto> joinRequestList 
-    //     = crewJoinRequestService.pagingJoinReqList(crewId, keyword, page, size);
-    //     return ResponseEntity.ok(joinRequestList);
-    // }
 
     //크루 가입 승인
     @PostMapping("/approved")

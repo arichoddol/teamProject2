@@ -14,7 +14,7 @@
     /* 부드럽게 나타나도록 애니메이션 추가 */
 
     position: absolute;
-    top: 2400%;
+    top: 2100%;
 
     transform: translateX(-50%) translateY(-100%);
 

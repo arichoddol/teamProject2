@@ -40,7 +40,7 @@ public class CrewBoardCommentDto {
                 .id(entity.getId())
                 .crewId(entity.getCrewBoardEntity().getCrewEntity().getId())
                 .memberId(entity.getMemberEntity().getId())
-                .boardId(entity.getId())
+                .boardId(entity.getCrewBoardEntity().getId())
                 .memberNickName(entity.getMemberEntity().getNickName())
                 .content(entity.getContent())
                 .createTime(entity.getCreateTime())

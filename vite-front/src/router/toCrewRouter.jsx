@@ -8,7 +8,6 @@ const Loading = <div className='loading'>Loading...</div>
 const CrewMain = lazy(()=> import('../components/container/crew/CrewMainContainer'))
 const CrewDetail = lazy(() => import('../components/container/crew/CrewDetailContainer'))
 const CrewCreateRequest = lazy(() => import('../components/container/crew/CrewCreateRequestContainer'))
-const CrewUpdate = lazy(() => import('../components/container/crew/CrewUpdateContainer'))
 
 const toCrewRouter = () => {
   return (
@@ -29,10 +28,6 @@ const toCrewRouter = () => {
         {
             path: 'detail/:crewId',
             element: <Suspense fallback={Loading}><CrewDetail/></Suspense>
-        },
-        {
-            path: 'update/:crewId',
-            element: <Suspense fallback={Loading}><CrewUpdate/></Suspense>
         },
         {
             path: 'createRequest',

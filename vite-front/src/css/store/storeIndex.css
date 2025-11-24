@@ -20,6 +20,9 @@
     font-weight: bold;
 
 }
+.itemList-banner{
+    overflow: hidden;
+}
 
 .itemList-banner.slider-container {
     position: relative;

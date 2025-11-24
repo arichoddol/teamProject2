@@ -1,73 +1,234 @@
-/* PaymentPage.css */
+/* PaymentPage.css - 세련된 디자인으로 개선 */
 
-.payment {
-  max-width: 600px;
-  margin: 50px auto;
-  padding: 30px;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #333333;
+:root {
+    --primary-color: #4A90E2; /* 주 색상 (예: 파란색 계열) */
+    --kakao-color: #FFEB00; /* 카카오페이 색상 */
+    --background-light: #f7f9fc;
+    --border-color: #e0e0e0;
+    --text-dark: #333333;
+    --text-medium: #666666;
+    --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.payment h1 {
-  text-align: center;
-  margin-bottom: 30px;
-  font-size: 1.8rem;
-  color: #222222;
+.paymentPage {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--text-dark);
 }
 
-.payment div {
-  margin-bottom: 15px;
-  line-height: 1.6;
+.paymentPage h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2.2rem;
+    color: #222222;
 }
 
-.payment .cart-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 12px 15px;
-  border-bottom: 1px solid #f0f0f0;
-  border-radius: 8px;
-  background-color: #fafafa;
-  margin-bottom: 8px;
+.payment-container {
+    display: flex;
+    gap: 30px;
 }
 
-.payment .cart-item:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
+/* --- 섹션 스타일링 --- */
+.payment-section {
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    background-color: var(--background-light);
+    border: 1px solid var(--border-color);
 }
 
-.payment select {
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-  margin-left: 10px;
+.payment-section h2 {
+    font-size: 1.4rem;
+    color: var(--primary-color);
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
 }
 
-.payment button {
-  display: block;
-  width: 100%;
-  padding: 12px;
-  margin-top: 20px;
-  background-color: #ffeb00;
-  color: #333;
-  font-size: 1.1rem;
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
+/* 결제 목록 (좌측) */
+.payment-items {
+    flex: 2; /* 더 많은 공간 할당 */
 }
 
-.payment button:hover {
-  background-color: #ffd700;
-  transform: translateY(-2px);
+/* 정보 및 요약 (우측) */
+.payment-info-box {
+    flex: 1; /* 고정된 공간 할당 */
+    display: flex;
+    flex-direction: column;
 }
 
-.payment p {
-  text-align: center;
-  font-size: 1rem;
-  color: #666;
+
+/* --- 테이블 스타일링 --- */
+.payment-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.payment-table th, .payment-table td {
+    padding: 12px 0;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+.payment-table th {
+    background-color: #f0f3f6;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.payment-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.item-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-align: left;
+    padding-left: 15px !important;
+}
+
+.item-thumbnail {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.item-total {
+    font-weight: 600;
+}
+
+
+/* --- 폼 스타일링 --- */
+.shipping-info, .payment-method {
+    background-color: #ffffff; /* 흰색 배경으로 명확히 구분 */
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-medium);
+    margin-bottom: 5px;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus, .form-group select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+
+/* --- 최종 결제 요약 스타일링 --- */
+.payment-summary {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    margin-top: auto; /* info-box 내에서 아래로 붙도록 */
+}
+
+.payment-summary h3 {
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 10px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.summary-row.total-price {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 2px dashed rgba(255, 255, 255, 0.5);
+}
+
+
+/* --- 결제 버튼 스타일링 --- */
+.payment-button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 25px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.kakao-pay-button {
+    background-color: var(--kakao-color);
+    color: var(--text-dark);
+}
+
+.kakao-pay-button:hover {
+    background-color: #fbe000;
+    transform: translateY(-1px);
+}
+
+.default-button {
+    background-color: #555;
+    color: #fff;
+}
+
+.default-button:hover {
+    background-color: #444;
+}
+
+
+/* --- 모바일 반응형 --- */
+@media (max-width: 850px) {
+    .payment-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .paymentPage {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .payment-section {
+        padding: 15px;
+    }
+
+    .item-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        padding-left: 0 !important;
+    }
 }

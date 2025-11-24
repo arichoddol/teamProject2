@@ -5,11 +5,12 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.config.security.MyUserDetails;
 import org.spring.backendspring.crew.crewBoard.dto.CrewBoardCommentDto;
 import org.spring.backendspring.crew.crewBoard.service.CrewBoardCommentService;
@@ -43,9 +44,11 @@ public class CrewBoardCommentController {
 
     @GetMapping("/list")
     public ResponseEntity<?> commentList(@PathVariable("crewId") Long crewId,
-                                         @PathVariable("boardId") Long boardId) {
+                                         @PathVariable("boardId") Long boardId,
+                                         @RequestParam(name = "page", defaultValue = "0") int page,
+                                         @RequestParam(name = "size", defaultValue = "20") int size) {
         
-        List<CrewBoardCommentDto> crewBoardCommentList = crewBoardCommentService.commentList(crewId, boardId);
+        PagedResponse<CrewBoardCommentDto> crewBoardCommentList = crewBoardCommentService.commentList(crewId, boardId, page, size);
 
         Map<String, Object> commentList = new HashMap<>();
 

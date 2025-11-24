@@ -13,7 +13,7 @@ const MyCrewRunContainer = () => {
   const {crewId} = useParams()
 
   //useSelector으로 불러와야하는데 임시
-  const loginMemberId = 1
+  const loginMemberId = 2
   // const loginMemberId = useSelector((state) => state.login.id)
 
   //크루런닝일정 생성 데이터
@@ -59,6 +59,13 @@ const MyCrewRunContainer = () => {
   const [myCrewRunMember , setMyCrewRunMember] = useState([])
   const [myCrewRunMemberModal, setMyCrewRunMemberModal] = useState(false)
   
+  //페이징
+  const [nowPage, setNowPage] = useState()
+  const [startPage, setStartPage] = useState()
+  const [endPage, setEndPage] = useState()
+  const [totalPages, setTotalPages] = useState()
+
+
   // 크루런닝 일정 리스트
   const myCrewRun = async () => {
     try {
@@ -111,10 +118,11 @@ const MyCrewRunContainer = () => {
   
   //크루런닝 스케줄 만들기
   const onMyCrewRunCreate = async () =>{
+    
     try {
       const res = await axios.post(`/api/mycrew/${crewId}/run/create`,
            createRunData ,
-          { headers: { "Content-Type": "application/json" } }
+          { headers: { "Content-Type" : "application/json" } }
           
         )
         console.log(res.data.crewRun)
@@ -124,6 +132,8 @@ const MyCrewRunContainer = () => {
         alert("내 크루런닝 스케줄 만들기 post 실패")
         console.log("data:", error.response?.data);
       }
+      setAddRunBtnModal(false)
+      setCreateRunData(crewRunCreateData)
       myCrewRun();
   }
     //크루런닝 스케줄 수정
@@ -132,7 +142,7 @@ const MyCrewRunContainer = () => {
     try {
       const res = await axios.post(`/api/mycrew/${crewId}/run/update`,
          updateRunData,
-          { headers: { "Content-Type": "application/json" } }
+          { headers: { "Content-Type" : "application/json" } }
 
       )
       console.log(res.data)
@@ -143,6 +153,8 @@ const MyCrewRunContainer = () => {
       console.log("status:", error.response?.status);
     console.log("data:", error.response?.data);
     }
+    setMyCrewRunDetailModal(false)
+    setUpdateRunData(crewRunUpdateeData)
     myCrewRun();   
   }
 
@@ -189,18 +201,28 @@ const MyCrewRunContainer = () => {
   }
 
   // 크루런닝 스케줄 참가자 리스트
-  const onMyCrewRunMember = async (runId) => {
-    
+  const onMyCrewRunMember = async (runId,pageParam) => {
+    console.log(" onMyCrewRunMember 호출", { runId, pageParam });
     try {
-      const res = await axios.get(`/api/mycrew/${crewId}/run/${runId}/member`)
+      const res = await axios.get(`/api/mycrew/${crewId}/run/${runId}/member`,
+        {
+          params: {
+            page: pageParam
+          }
+        })
       console.log(res.data)
-      setMyCrewRunMember(res.data.crewRunMember)
+      setMyCrewRunMember(res.data.crewRunMember.content)
+      setNowPage(res.data.nowPage)
+      setStartPage(res.data.startPage)
+      setEndPage(res.data.endPage)
+      setTotalPages(res.data.totalPages)
     } catch (error) {
       console.log("내 크루런닝 스케줄 참가자 get 실패")
       alert("크루 런닝 스케줄 참가자 get 실패")
     }
     setMyCrewRunMemberModal(true)
   }
+
   //크루런닝 스케줄 참가
   const onMyCrewRunMemberYes = async (runId,memberId) => {
     
@@ -215,6 +237,7 @@ const MyCrewRunContainer = () => {
     onMyCrewRunMember(runId);
     
   }
+
    //크루런닝 스케줄 참가취소
   const onMyCrewRunMemberNo = async (runId,memberId) => {
     
@@ -232,10 +255,12 @@ const MyCrewRunContainer = () => {
   
   
   return (
-    <div className='myCrewRun'>
-        <div className='myCrewRun-con'>
-          <div className="calendar">
-            <h2>크루런닝스케줄</h2>
+    <div className='myCrew'>
+        <div className='myCrew-con'>
+            <div>
+              <h2>크루런닝스케줄</h2>
+              </div>
+          <div className="myCrew-calendar">
             <FullCalendar
               locale={"kr"}
               plugins={[dayGridPlugin, interactionPlugin]} //npm 으로 다운받은거
@@ -278,6 +303,7 @@ const MyCrewRunContainer = () => {
           input={updateRunData}
           onClose={()=> {
             setMyCrewRunDetailModal(false)
+            setMyCrewRunMemberModal(false)
               myCrewRun()}}
           loginId={loginMemberId}
           onChange={onInputUpdateChange}
@@ -286,6 +312,7 @@ const MyCrewRunContainer = () => {
           onMember={onMyCrewRunMember}
           onRunYes={onMyCrewRunMemberYes}
           onRunNo={onMyCrewRunMemberNo}
+          nowPage={0}
              
         
               />
@@ -297,8 +324,15 @@ const MyCrewRunContainer = () => {
           <MyCrewRunMemberModal
           input={myCrewRunMember}
           onClose={()=>setMyCrewRunMemberModal(false)}
+          runId={updateRunData.id}
+          onMember={onMyCrewRunMember}
+          nowPage={nowPage}
+          startPage={startPage}
+          endPage={endPage}
+          totalPages={totalPages}
           />
         )}
+
         {/* 얘는 일단 안함... 할지말지 고민 */}
         {/* 날짜클릭 런닝스케줄 추가 모달 */}
         {/* 모르겠는거는 ??={안에이거} 컨트롤 클릭으로 뭐하는 애인지 보삼 */}

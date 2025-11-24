@@ -2,20 +2,25 @@ import React, { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux'
 import axios from 'axios';
+import jwtAxios from '../../../../apis/util/jwtUtil';
 
 const MyCrewBoardCreateContainer = () => {
   const { crewId } = useParams();
   const navigate = useNavigate();
   const { accessToken } = useSelector((state) => state.jwtSlice);
-  const { userEmail } = useSelector((state) => state.loginSlice);  // 닉네임이 슬라이스에 있으면 좋겠당
-  //   const { nickName } = useSelector((state) => state.loginSlice);
+  const { userEmail, nickName } = useSelector((state) => state.loginSlice);
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [files, setFiles] = useState([]);
 
   const fileChange = (e) => {
-    setFiles(e.target.files);
+    const selectedFiles = Array.from(e.target.files)
+    setFiles(exFiles => [...exFiles, ...selectedFiles])
+  }
+
+  const removeFile = (idx) => {
+    setFiles(exFiles => exFiles.filter((_, i) => i != idx))
   }
 
   const create = async (el) => {
@@ -27,23 +32,27 @@ const MyCrewBoardCreateContainer = () => {
         formData.append('title', title);
         formData.append('content', content);
 
-        for (let i = 0; i < files.length; i ++) {
-            formData.append('crewBoardFile', files[i]);
+        if (files.length > 0) {
+            for (let i = 0; i < files.length; i ++) {
+                formData.append('crewBoardFile', files[i]);
+            }
+        } else if (!files || files.length == 0) {
+            formData.append("crewBoardFile", new Blob([]), "");
         }
-        const response = await axios.post(`/api/mycrew/${crewId}/board/create`, 
+        const response = await jwtAxios.post(`/api/mycrew/${crewId}/board/create`, 
             formData,
             {
                 headers: {
                     "Authorization": `Bearer ${accessToken}`,
-                    "Content-Type": "multipart/form-data"
-                },                
+                },      
+                withCredentials: true,        
             }
         );
         alert('게시글 작성 완료');
         navigate(`/mycrew/${crewId}/board/detail/${response.data.id}`);
         } catch (err) {
         console.log(err);
-        alert("오류 발생: " + err.message);
+        alert("error: " + err.message);
     }
   }
 
@@ -52,7 +61,7 @@ const MyCrewBoardCreateContainer = () => {
         <div className="boardCreate-con">
             <form onSubmit={create}>
                 <div className="boardTitle">
-                    <label className="title">제목</label>
+                    <label className="crewBoardLabel">제목</label>
                     <input 
                         type="text"
                         value={title}
@@ -60,26 +69,38 @@ const MyCrewBoardCreateContainer = () => {
                         required
                         placeholder='제목'
                     />
-                    <div className="boardContent">
-                        <label className="content">내용</label>
-                        <textarea 
-                            name="content" 
-                            id="content"
-                            value={content}
-                            onChange={(el) => setContent(el.target.value)}
-                            required
-                            placeholder='내용'
-                        />
-                    </div>
-                    <div className="boardFile">
-                        <span>파일</span>
-                        <input type="file" name='crewBoardfile' onChange={fileChange} multiple/>
-                    </div>
-                    <div className="boardCreater">
-                        <label className="memberNickName">작성자</label>
-                        <input type="text" value={userEmail} readOnly/>
-                    </div>
-                    <button className="boardCreate" type="submit">작성완료</button>
+                </div>
+                <div className="boardContent">
+                    <label className="crewBoardLabel">내용</label>
+                    <textarea 
+                        name="content" 
+                        id="content"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        required
+                        placeholder='내용'
+                    />
+                </div>
+                <div className="boardFile">
+                    <span>파일</span>
+                    <input type="file" name='crewBoardFile' onChange={fileChange} multiple/>
+                    {files.length > 0 && (
+                        <ul>
+                            {files.map((file, idx) => (
+                                <li key={idx}>
+                                    {file.name}
+                                    <button type='button' onClick={() => removeFile(idx)}>x</button>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+                <div className="boardCreater">
+                    <label className="crewBoardLabel">작성자</label>
+                    <input type="text" value={nickName} readOnly/>
+                </div>
+                <div className="crewBoardCreateBtn">
+                    <button className="crewBoardCreate" type="submit">작성완료</button>
                 </div>
             </form>
         </div>

@@ -18,9 +18,9 @@ const HeaderStore = ({ children }) => {
                          <li>
                               <Link to="/store/index">스토어메인</Link>
                          </li>
-                         <li>
+                         {/* <li>
                               <Link to="/store/salezone">특가세일</Link>
-                         </li>
+                         </li> */}
                          <li>
                               <Link to="/store/shoes">슈즈</Link>
                          </li>

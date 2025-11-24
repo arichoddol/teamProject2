@@ -1,14 +1,14 @@
 package org.spring.backendspring.crew.crewBoard.service;
 
-import java.util.List;
 
+import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.crew.crewBoard.dto.CrewBoardCommentDto;
 
 public interface CrewBoardCommentService {
 
     CrewBoardCommentDto createComment(CrewBoardCommentDto commentDto, Long boardId, Long loginUserId);
 
-    List<CrewBoardCommentDto> commentList(Long crewId, Long boardId);
+    PagedResponse<CrewBoardCommentDto> commentList(Long crewId, Long boardId, int page, int size);
 
     CrewBoardCommentDto commentDetail(Long boardId, Long id);
 

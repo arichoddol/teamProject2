@@ -54,7 +54,7 @@ public class ItemController {
             @RequestParam(value = "search", required = false) String search
     ) {
 
-        final String category = "shoe";
+        final String category = "shoes";
         Page<ItemDto> itemList = itemService.getItemsByCategory(pageable, category, subject, search);
 
         return ResponseEntity.ok(itemList);
