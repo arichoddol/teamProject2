@@ -37,6 +37,8 @@ public class BoardDto {
   
     private String content;
 
+    private String category;
+
 
     private Long memberId; 
 
@@ -91,6 +93,7 @@ public class BoardDto {
                     .id(boardEntity.getId())
                     .title(boardEntity.getTitle())
                     .content(boardEntity.getContent())
+                    .category(boardEntity.getCategory())
                     .hit(boardEntity.getHit())
                     .boardImgDtos(boardImgDtos)
                     .memberId(boardEntity.getMemberEntity().getId())
