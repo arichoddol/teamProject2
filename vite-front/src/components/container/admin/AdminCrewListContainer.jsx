@@ -1,9 +1,100 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
+import jwtAxios from "../../../apis/util/jwtUtil";
+import { BACK_BASIC_URL } from "../../../apis/commonApis";
+import { useSelector } from "react-redux";
+import { formatDate } from "../../../js/formatDate";
+import AdminPagingComponent from "../../common/AdminPagingComponent";
 
 const AdminCrewListContainer = () => {
-  return (
-    <div>AdminCrewListContainer</div>
-  )
-}
+  const accessToken = useSelector((state) => state.jwtSlice.accessToken);
+  const [adminCrewList, setAdminCrewList] = useState([]);
+  const [pageData, setPageData] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [search, setSearch] = useState();
 
-export default AdminCrewListContainer
+  const adminCrewListFn = async () => {
+    try {
+      const res = await jwtAxios.get(
+        `${BACK_BASIC_URL}/api/admin/crew/crewList`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          withCredentials: true,
+        }
+      );
+      setAdminCrewList(res.data.content);
+      setPageData(res.data);
+      console.log(res.data.content);
+    } catch (err) {
+      console.log("크루 목록 조회를 실패했습니다. " + err);
+    }
+  };
+
+  const hadlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  useEffect(() => {
+    adminCrewListFn();
+  }, [currentPage]);
+
+  return (
+    <>
+      <div className="admin-crewList">
+        <div className="admin-crewList-con">
+          <div className="admin-crewList-header">
+            <h1 onClick={adminCrewListFn}>크루 리스트</h1>
+            <div className="admin-crewList-search">
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                type="text"
+                placeholder="검색어를 입력하세요"
+              />
+              <button onClick={adminCrewListFn}>검색</button>
+            </div>
+          </div>
+
+          <div className="admin-crewList-table-wrapper">
+            <table className="admin-crewList-table">
+              <thead>
+                <tr>
+                  <th>번호</th>
+                  <th>크루명</th>
+                  <th>리더</th>
+                  <th>크루인원</th>
+                  <th>지역</th>
+                  <th>생성시간</th>
+                  <th>상세보기</th>
+                </tr>
+              </thead>
+              <tbody>
+                {adminCrewList.map((el) => {
+                  return (
+                    <tr key={el.id}>
+                      <td>{el.id}</td>
+                      <td>{el.name}</td>
+                      <td>{el.memberNickName}</td>
+                      <td>{el.crewMemberEntities.length}명</td>
+                      <td>{el.district}</td>
+                      <td>{formatDate(el.createTime)}</td>
+                      <td>
+                        <button>보기</button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          <AdminPagingComponent
+            pageData={pageData}
+            onPageChange={hadlePageChange}
+          />
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default AdminCrewListContainer;

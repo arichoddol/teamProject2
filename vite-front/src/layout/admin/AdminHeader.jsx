@@ -1,32 +1,33 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { logoutAction } from '../../slices/loginSlice';
-import { deleteAccessToken } from '../../slices/jwtSlice';
-import { removeCookie } from '../../apis/util/cookieUtil';
+import React from "react";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutAction } from "../../slices/loginSlice";
+import { deleteAccessToken } from "../../slices/jwtSlice";
+import { removeCookie } from "../../apis/util/cookieUtil";
+import LogoutBtn from "../../apis/auth/LogoutBtn";
 
 const AdminHeader = () => {
-
   const dispatch = useDispatch();
-
-  const onAdminLogout = () => {
-    removeCookie("member");
-    removeCookie("refreshToken");
-    dispatch(logoutAction());
-    dispatch(deleteAccessToken());
-    alert("관리자 로그아웃 완료");
-    window.location.href = "/auth/login";
-  }
+  const userEmail = useSelector((state) => state.loginSlice.userEmail);
 
   return (
     <header className="admin-header">
       <div className="admin-header-left">
-        <Link to="/admin/index" className="logo">ADMIN</Link>
+        <Link to="/admin/index" className="logo">
+          ADMIN
+        </Link>
       </div>
 
       <div className="admin-header-right">
-        <span className="admin-info">관리자 페이지</span>
-        <button onClick={onAdminLogout} className="logout-btn">로그아웃</button>
+        <ul>
+          <li>{userEmail}</li>
+          <li>
+            <Link to="/">SHOP</Link>
+          </li>
+          <li>
+            <LogoutBtn />
+          </li>
+        </ul>
       </div>
     </header>
   );

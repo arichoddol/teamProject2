@@ -4,6 +4,8 @@ import org.spring.backendspring.admin.service.AdminCrewService;
 import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.crew.crew.dto.CrewDto;
 import org.spring.backendspring.crew.crew.service.CrewService;
+import org.spring.backendspring.crew.crewCreate.dto.CrewCreateRequestDto;
+import org.spring.backendspring.crew.crewCreate.entity.CrewCreateRequestEntity;
 import org.spring.backendspring.member.dto.MemberDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,8 +24,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/admin/crew")
 public class AdminCrewController {
 
-
-
     private final CrewService crewService;
     private final AdminCrewService adminCrewService;
 
@@ -35,6 +35,21 @@ public class AdminCrewController {
 
         PagedResponse<CrewDto> crewList = adminCrewService.findAllCrews(keyword, page, size);
         return ResponseEntity.ok(crewList);
+    }
+
+    @GetMapping("/create/requestList")
+    public ResponseEntity<?> getCreateRequestList(@RequestParam(name = "keyword", required = false) String keyword,
+                                                  @RequestParam(name = "page", defaultValue = "0") int page,
+                                                  @RequestParam(name = "size", defaultValue = "10") int size) {
+        PagedResponse<CrewCreateRequestDto> crewCreateRequest =
+                adminCrewService.findAllCrewCreateRequest(keyword, page, size);
+        return ResponseEntity.ok(crewCreateRequest);
+    }
+
+    @GetMapping("/create/detail/{crewRequestId}")
+    public ResponseEntity<?> getCreateRequestDetail(@PathVariable("crewRequestId") Long crewRequestId) {
+        CrewCreateRequestDto crewDto = adminCrewService.crewRequestDetail(crewRequestId);
+        return ResponseEntity.ok(crewDto);
     }
 
     @DeleteMapping("/delete/{crewId}")
