@@ -25,14 +25,14 @@ const ShopAccessoryContainer = () => {
   const fetchData = async (page) => {
 
     // const response = await axios.get("http://localhost:8088/api/shop");
-    const response = await axios.get(`http://localhost:8088/api/shop?page=${page}`);
+    const response = await axios.get(`http://localhost:8088/api/shop/accessory?page=${page}`);
     const data = response.data;
     console.log(`[LOG] 페이지 ${page + 1}의 데이터를 요청합니다.`);
 
     try {
       if (data && data.content) {
 
-        setItems(data.content || []) ;
+        setItems(data.content || []);
 
         // 페이지 정보 계산 및 업데이트
         const totalPages = data.totalPages;

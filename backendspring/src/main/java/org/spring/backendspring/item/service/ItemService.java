@@ -11,8 +11,9 @@ public interface ItemService {
 
     ItemDto itemDetail(Long itemId);
 
+    // category Paging
+    public Page<ItemDto> getItemsByCategory(Pageable pageable, String category, String subject, String search);
 
     // C U D -> Admin function 
     // CheckOut Admin Dir...
-    
 }
