@@ -7,7 +7,6 @@ import org.spring.backendspring.payment.dto.PaymentDto;
 import org.spring.backendspring.payment.dto.PaymentItemDto;
 import org.spring.backendspring.payment.dto.PaymentResultDto;
 import org.spring.backendspring.payment.entity.PaymentEntity;
-// import org.spring.backendspring.payment.entity.PaymentItemEntity; // 더 이상 필요 없음
 import org.spring.backendspring.payment.service.PaymentService;
 import org.spring.backendspring.payment.service.PaymentResultService;
 import org.springframework.data.domain.Page;
@@ -161,4 +160,15 @@ public class PaymentController {
         return PagedResponse.of(dtoPage);
     }
 
+
+//     회원의 결제 목록을 가져옵니다.
+    @GetMapping("/myPayment/{memberId}")
+    public ResponseEntity<?> getMemberPaymentList(@PathVariable("memberId") Long memberId,
+                                                  @RequestParam(name = "page", defaultValue = "0") int page,
+                                                  @RequestParam(name = "size", defaultValue = "10") int size) {
+        PagedResponse<PaymentDto> myPaymentList = paymentService.findMyPaymentList(memberId, page, size);
+        return ResponseEntity.ok(myPaymentList);
+    }
+
 }
+

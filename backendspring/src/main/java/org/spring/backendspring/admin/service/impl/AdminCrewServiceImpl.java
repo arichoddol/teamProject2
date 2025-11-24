@@ -86,6 +86,13 @@ public class AdminCrewServiceImpl implements AdminCrewService {
     }
 
     @Override
+    public CrewDto findByDetailCrew(Long crewId) {
+        CrewEntity crewEntity = crewRepository.findById(crewId)
+                .orElseThrow(() -> new IllegalArgumentException("없는 크루입니다."));
+        return CrewDto.toCrewDto(crewEntity);
+    }
+
+    @Override
     public void deleteCrewByAdmin(Long id) {
         CrewEntity crew = crewRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("크루를 찾을 수 없습니다."));

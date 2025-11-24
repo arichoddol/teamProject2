@@ -1,6 +1,5 @@
 package org.spring.backendspring.config.security.util;
 
-import com.google.gson.Gson;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.InvalidClaimException;
 import io.jsonwebtoken.JwtException;
@@ -8,7 +7,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.Keys;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -16,10 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.crypto.SecretKey;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
-import org.spring.backendspring.common.exception.CustomException;
-import org.spring.backendspring.common.exception.ErrorCode;
 import org.spring.backendspring.member.dto.MemberDto;
 import org.spring.backendspring.config.security.exception.CustomJWTException;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +25,7 @@ import org.springframework.stereotype.Component;
 public class JWTUtil {
 
     // 만료시간
-    public static final long ACCESS_EXPIRATION_TIME = 1000 * 60 * 20;
+    public static final long ACCESS_EXPIRATION_TIME = 1000 * 60 * 30;
     public static final long REFRESH_EXPIRATION_TIME = 14 * 24 * 60 * 60 * 1000;
 
     // 임시 관리자 비밀키
@@ -119,13 +114,13 @@ public class JWTUtil {
     }
 
     // error 응답 json 변환
-    private void sendErrorResponse(HttpServletResponse response,
-                                   int status,
-                                   Map<String, String> body) throws IOException {
-        response.setStatus(status);
-        response.setContentType("application/json;charset=UTF-8");
-        String msg = new Gson().toJson(body);
-        response.getWriter().write(msg);
-    }
+    // private void sendErrorResponse(HttpServletResponse response,
+    //                                int status,
+    //                                Map<String, String> body) throws IOException {
+    //     response.setStatus(status);
+    //     response.setContentType("application/json;charset=UTF-8");
+    //     String msg = new Gson().toJson(body);
+    //     response.getWriter().write(msg);
+    // }
 
 }
