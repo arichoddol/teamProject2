@@ -1,10 +1,14 @@
 package org.spring.backendspring.crew.crewMember.service.impl;
 
 import lombok.RequiredArgsConstructor;
+
+import org.spring.backendspring.common.role.CrewRole;
 import org.spring.backendspring.crew.crewMember.dto.CrewMemberDto;
 import org.spring.backendspring.crew.crewMember.entity.CrewMemberEntity;
 import org.spring.backendspring.crew.crewMember.repository.CrewMemberRepository;
 import org.spring.backendspring.crew.crewMember.service.CrewMemberService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +22,25 @@ public class CrewMemberServiceImpl implements CrewMemberService {
 
     private final CrewMemberRepository crewMemberRepository;
     @Override
-    public List<CrewMemberDto> findCrewMemberList(Long crewId) {
-
-        return crewMemberRepository.findAllByCrewEntityId(crewId).stream().map(CrewMemberDto::toCrewMember).collect(Collectors.toList());
+    public Page<CrewMemberDto> findCrewMemberList(Long crewId, Pageable pageable, String subject, String search) {
+        Page<CrewMemberEntity> crewMemberList = null;
+        if( subject==null || search==null || search.equals("")){
+           crewMemberList = crewMemberRepository.findAllByCrewEntityId(crewId, pageable);
+        } else if ("id".equals(subject)) {
+            Long searchId = Long.parseLong(search);
+            crewMemberList = crewMemberRepository.findAllByCrewEntityIdAndId(crewId, pageable, searchId);
+        } else if ("memberId".equals(subject)) {
+            Long searchId = Long.parseLong(search);
+            crewMemberList = crewMemberRepository.findAllByCrewEntityIdAndMemberEntityId(crewId, pageable, searchId);
+        } else if ("status".equals(subject)) {
+            CrewRole crewRole;
+            crewRole = CrewRole.valueOf(search);
+            // roleInCrew
+            crewMemberList = crewMemberRepository.findAllByCrewEntityIdAndRoleInCrew(crewId, pageable, crewRole);
+        } else {
+            crewMemberList = crewMemberRepository.findAllByCrewEntityId(crewId, pageable);
+        }
+        return crewMemberList.map(CrewMemberDto::toCrewMember);
     }
 
     @Override

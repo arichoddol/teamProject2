@@ -1,0 +1,262 @@
+/* === 화면 전체 덮는 오버레이 === */
+.myCrewModal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at top, rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.8));
+    z-index: 1000;
+  }
+  
+  /* === 모달 박스 === */
+  .myCrewModal .myCrewModal-con {
+    background: #f9fafb;
+    width: 520px;
+    max-width: 92vw;
+    max-height: 82vh;
+    border-radius: 10px;
+    padding: 18px 22px 20px;
+    box-shadow: 0 14px 40px rgba(15, 23, 42, 0.35);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e5e7eb;
+  }
+  
+  /* 상단에 포인트 라인 하나 */
+  .myCrewModal .myCrewModal-con::before {
+    content: "";
+    display: block;
+    height: 3px;
+    width: 60px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #3b82f6, #22c55e);
+    margin-bottom: 12px;
+  }
+  
+  /* === 헤더 === */
+  .myCrewModal .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .myCrewModal .modal-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+  }
+  
+  .myCrewModal .modal-header > button {
+    border: none;
+    background: #e5e7eb;
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4b5563;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  
+  .myCrewModal .modal-header > button:hover {
+    background: #d1d5db;
+    transform: translateY(-1px);
+  }
+  
+  /* === 바디 === */
+  .myCrewModal .modal-body {
+    overflow-y: auto;
+    padding-right: 4px; /* 스크롤바 때문에 살짝 여유 */
+  }
+  
+  /* 스크롤 조금만 보이게 */
+  .myCrewModal .modal-body::-webkit-scrollbar {
+    width: 6px;
+  }
+  .myCrewModal .modal-body::-webkit-scrollbar-thumb {
+    background: #cbd5f5;
+    border-radius: 999px;
+  }
+  
+  /* === 리스트/폼 정렬 === */
+  .myCrewModal .modal-body ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .myCrewModal .modal-body li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  
+  /* 라벨 스타일 */
+  .myCrewModal .modal-body label {
+    min-width: 110px;
+    font-size: 13px;
+    color: #374151;
+  }
+  
+  /* 인풋 공통 */
+  .myCrewModal .modal-body input[type="text"],
+  .myCrewModal .modal-body input[type="datetime-local"] {
+    flex: 1;
+    padding: 6px 8px;
+    font-size: 13px;
+    border-radius: 5px;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+  
+  .myCrewModal .modal-body input[type="text"]:read-only {
+    background: #f3f4f6;
+    color: #6b7280;
+  }
+  
+  .myCrewModal .modal-body input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.5);
+  }
+  
+  /* === 버튼 줄 정리 === */
+  /* 버튼이 들어가는 li는 세로 말고 가로 정렬 */
+  .myCrewModal .modal-body li.buttons-row {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  /* 기본 버튼 스타일 */
+  .myCrewModal .modal-body button {
+    padding: 6px 12px;
+    font-size: 13px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: #f3f4f6;
+    color: #374151;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  }
+  
+  .myCrewModal .modal-body button:hover {
+    background: #e5e7eb;
+    border-color: #9ca3af;
+    transform: translateY(-1px);
+  }
+  
+  /* 주요 버튼 (일정 수정, 일정 참가) */
+  .myCrewModal .modal-body button.primary {
+    background: #3b82f6;
+    border-color: #2563eb;
+    color: #ffffff;
+  }
+  .myCrewModal .modal-body button.primary:hover {
+    background: #2563eb;
+  }
+  
+  /* 보조 버튼 (참가원 보기 등) */
+  .myCrewModal .modal-body button.outline {
+    background: #ffffff;
+    border-color: #d1d5db;
+    color: #374151;
+  }
+  
+  /* 위험 버튼 (삭제) */
+  .myCrewModal .modal-body button.danger {
+    background: #fee2e2;
+    border-color: #f97373;
+    color: #b91c1c;
+  }
+  .myCrewModal .modal-body button.danger:hover {
+    background: #fecaca;
+  }
+  
+  /* 참가 / 참가취소 정도 구분용 */
+  .myCrewModal .modal-body button.success {
+    background: #22c55e;
+    border-color: #16a34a;
+    color: #ffffff;
+  }
+  .myCrewModal .modal-body button.success:hover {
+    background: #16a34a;
+  }
+  
+  .myCrewModal .modal-body button.neutral {
+    background: #e5e7eb;
+    border-color: #d1d5db;
+  }
+
+
+  /* ===========================
+     페이징 영역
+     =========================== */
+  
+     .myCrewModal .myCrew-paging {
+        margin-top: 16px;
+        display: flex;
+        justify-content: center;
+      }
+      
+      .myCrewModal .myCrew-paging-con ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      
+      .myCrewModal .myCrew-paging-con li {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 13px;
+        color: #4b5563;
+      }
+      
+      /* 페이징 버튼 공통 */
+      .myCrewModal .myCrew-paging-con button {
+        min-width: 32px;
+        height: 32px;
+        padding: 0 10px;
+        border-radius: 999px;
+        border: 1px solid #d1d5db;
+        background: #ffffff;
+        cursor: pointer;
+        font-size: 12px;
+        transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease, color 0.15s ease;
+      }
+      
+      /* 현재 페이지(now) */
+      .myCrewModal .myCrew-paging-con button.now {
+        background: #3b82f6;
+        border-color: #2563eb;
+        color: #ffffff;
+      }
+      
+      /* 페이지 버튼 hover */
+      .myCrewModal .myCrew-paging-con button:hover:not(:disabled) {
+        background: #e5e7eb;
+        border-color: #9ca3af;
+        transform: translateY(-1px);
+      }
+      
+      /* disabled 상태 */
+      .myCrewModal .myCrew-paging-con button:disabled {
+        cursor: default;
+        background: #f9fafb;
+        color: #9ca3af;
+        border-color: #e5e7eb;
+      }
+  

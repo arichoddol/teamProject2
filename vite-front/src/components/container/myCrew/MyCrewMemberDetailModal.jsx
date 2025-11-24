@@ -5,8 +5,8 @@ const MyCrewMemberDetailModal = ({detail, onClose, onDelete}) => {
     if (!detail) return <div>왜 데이터가 없지?</div>
     
   return (
-    <div className='MyCrewMemberDetailModal'>
-        <div className='MyCrewMemberDetailModal-con'>
+    <div className='myCrewModal'>
+        <div className='myCrewModal-con'>
             <div className="modal-header">
                 <h2>{detail.memberId}님의 상세정보</h2>
                 <button type='button' onClick={onClose}>X</button>
