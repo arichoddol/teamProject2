@@ -1,13 +1,14 @@
 /* === MyCrew 전체 레이아웃 === */
 .myCrew {
+    width: 100%;
     padding: 24px;
     background: radial-gradient(circle at top, #e5e7eb, #cbd5f5);
     min-height: 100vh;
     box-sizing: border-box;
-  }
-  
-  .myCrew .myCrew-con {
-    max-width: 960px;
+}
+
+.myCrew .myCrew-con {
+    width: 100%;
     margin: 0 auto;
     background: #f9fafb;
     border-radius: 12px;

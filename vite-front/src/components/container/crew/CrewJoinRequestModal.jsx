@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 
 // loginMemberId jwt isLogin로그인 아이디. 이미 있다면 크루가입데이터에
 // memberRequestId: 여기 해당 jwt isLogin로그인 아이디 받는 변수로 바꿔주세요
-// const loginMemberId = useSelector((state) => state.login.id) *--*
+// const loginMemberId = useSelector((state) => state.loginSlice.id) *--*
 
 //  크루가입데이터
 // const crewJoinRequestData = {

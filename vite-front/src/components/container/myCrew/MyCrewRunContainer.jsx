@@ -7,14 +7,16 @@ import interactionPlugin from "@fullcalendar/interaction";
 import MyCrewRunAddBtnModal from './MyCrewRunAddBtnModal';
 import MyCrewRunDetailModal from './MyCrewRunDetailModal';
 import MyCrewRunMemberModal from './MyCrewRunMemberModal';
+import { useSelector } from 'react-redux';
 
 const MyCrewRunContainer = () => {
 
   const {crewId} = useParams()
 
   //useSelector으로 불러와야하는데 임시
-  const loginMemberId = 2
-  // const loginMemberId = useSelector((state) => state.login.id)
+  // const loginMemberId = 2
+
+  const loginMemberId = useSelector((state) => state.loginSlice.id)
 
   //크루런닝일정 생성 데이터
   const crewRunCreateData = {
@@ -132,6 +134,7 @@ const MyCrewRunContainer = () => {
         alert("내 크루런닝 스케줄 만들기 post 실패")
         console.log("data:", error.response?.data);
       }
+      alert('런닝스케줄 만들기 성공')
       setAddRunBtnModal(false)
       setCreateRunData(crewRunCreateData)
       myCrewRun();
@@ -153,6 +156,7 @@ const MyCrewRunContainer = () => {
       console.log("status:", error.response?.status);
     console.log("data:", error.response?.data);
     }
+    alert('런닝스케줄 수정 성공')
     setMyCrewRunDetailModal(false)
     setUpdateRunData(crewRunUpdateeData)
     myCrewRun();   
@@ -196,6 +200,7 @@ const MyCrewRunContainer = () => {
       alert("런닝스케줄 삭제 실패")
       
     }
+    alert("런닝스케줄 삭제 성공")
     setMyCrewRunDetailModal(false)
     myCrewRun();  
   }
@@ -234,6 +239,7 @@ const MyCrewRunContainer = () => {
       console.log("크루런닝 스케줄 참가 실패")
       alert("크루런닝 스케줄 참가 실패")
     }
+    alert("크루런닝 스케줄 참가 성공")
     onMyCrewRunMember(runId);
     
   }
@@ -249,6 +255,7 @@ const MyCrewRunContainer = () => {
       console.log("크루런닝 스케줄 참가 취소 실패")
       alert("크루런닝 스케줄 참가 취소 실패")
     }
+    alert("크루런닝 스케줄 참가 취소 성공")
     onMyCrewRunMember(runId);
     
   }
