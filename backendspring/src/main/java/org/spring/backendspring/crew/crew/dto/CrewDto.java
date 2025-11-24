@@ -3,6 +3,7 @@ package org.spring.backendspring.crew.crew.dto;
 import lombok.*;
 import org.spring.backendspring.common.BasicTime;
 import org.spring.backendspring.crew.crewBoard.entity.CrewBoardEntity;
+import org.spring.backendspring.crew.crewBoard.entity.CrewBoardImageEntity;
 import org.spring.backendspring.crew.crewJoin.entity.CrewJoinRequestEntity;
 import org.spring.backendspring.crew.crewMember.entity.CrewMemberEntity;
 import org.spring.backendspring.crew.crew.entity.CrewEntity;
@@ -54,6 +55,13 @@ public class CrewDto extends BasicTime {
     private String memberNickName;
 
     public static CrewDto toCrewDto(CrewEntity crewEntity) {
+        List<String> newFileName = crewEntity.getCrewImageEntities().stream()
+                    .map(CrewImageEntity::getNewName)
+                    .toList();
+        List<String> originalFileName = crewEntity.getCrewImageEntities().stream()
+                    .map(CrewImageEntity::getOldName)
+                    .toList();
+
         return CrewDto.builder()
                 .id(crewEntity.getId())
                 .name(crewEntity.getName())
@@ -61,28 +69,14 @@ public class CrewDto extends BasicTime {
                 .district(crewEntity.getDistrict())
                 .isCrewImg(crewEntity.getIsCrewImg())
                 .memberId(crewEntity.getMemberEntity().getId())
-                .crewImageEntities(crewEntity.getCrewImageEntities())
+                // .crewImageEntities(crewEntity.getCrewImageEntities())
                 .crewMemberEntities(crewEntity.getCrewMemberEntities())
 //                .crewJoinRequestEntities(crewEntity.getCrewJoinRequestEntities())
                 .createTime(crewEntity.getCreateTime())
                 .upDateTime(crewEntity.getUpdateTime())
+                .oldFileName(originalFileName)
+                .newFileName(newFileName)
                 .memberNickName(crewEntity.getMemberEntity().getNickName())
-                .build();
-    }
-
-    public static CrewDto toCrewDtoImg(CrewEntity crewEntity) {
-        return CrewDto.builder()
-                .id(crewEntity.getId())
-                .name(crewEntity.getName())
-                .description(crewEntity.getDescription())
-                .district(crewEntity.getDistrict())
-                .isCrewImg(1)
-                .memberId(crewEntity.getMemberEntity().getId())
-                .crewImageEntities(crewEntity.getCrewImageEntities())
-                // .crewMemberEntities(crewEntity.getCrewMemberEntities())
-//                .crewJoinRequestEntities(crewEntity.getCrewJoinRequestEntities())
-                .createTime(crewEntity.getCreateTime())
-                .upDateTime(crewEntity.getUpdateTime())
                 .build();
     }
 }

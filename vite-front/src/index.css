@@ -20,6 +20,9 @@
 @import url(css/mycrew/mycrew-modal.css);
 @import url(css/mycrew/mycrew-content.css);
 @import url(css/mycrew/mycrew-calendar.css);
+@import url(css/mycrew/board/myCrewBoardCreate.css);
+@import url(css/mycrew/board/myCrewBoard.css);
+@import url(css/mycrew/board/myCrewBoardDetail.css);
 
 /* 관리자 */
 @import url(css/admin/container/admin-member-list.css);

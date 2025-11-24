@@ -1,9 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import CrewDetailLayout from '../../../layout/CrewDetailLayout';
 import CrewJoinRequestModal from './CrewJoinRequestModal';
 import { useSelector } from 'react-redux';
+import jwtAxios from '../../../apis/util/jwtUtil';
 
 const CrewDetailContainer = () => {
   const { crewId } = useParams();
@@ -46,8 +46,11 @@ const CrewDetailContainer = () => {
 
   // 가입 함수
   const onJoinRequest = async () => {
+    if (!loginMemberId) {
+      alert("로그인이 필요합니다.")
+    }
     try {
-      const res = await axios.post(`/api/crew/joinRequest`,
+      const res = await jwtAxios.post(`/api/crew/joinRequest`,
         joinRequestData,
         { headers: { "Content-Type": "application/json" }}
       )      
@@ -62,9 +65,9 @@ const CrewDetailContainer = () => {
       <div className="crewDetailHome">
         <div className="crewDetailHome-con">
           <div className="image">
-          {crew.crewImageEntities?.length > 0 ? (
+          {crew.newFileName?.length > 0 ? (
               <img
-                src={crew.crewImageEntities[0].newName}
+                src={crew.newFileName[0]}
                 alt={`${crew.name} 이미지`}
                 className='crewImage'
               />

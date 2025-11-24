@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -38,13 +39,20 @@ public class CrewController {
 
     @PutMapping("/update/{crewId}")
     public ResponseEntity<?> update(@PathVariable("crewId") Long crewId,
-                                    @ModelAttribute CrewDto crewDto,
+                                    @RequestPart("crewName") String crewName,
+                                    @RequestPart("description") String description,
+                                    @RequestPart("district") String district,
                                     @RequestParam(value = "newImages", required = false) List<MultipartFile> newImages,
-                                    @RequestParam(value = "deleteImageId", required = false) List<Long> deleteImageId,
+                                    @RequestParam(value = "deleteImageName", required = false) List<String> deleteImageName,
                                     @AuthenticationPrincipal MyUserDetails userDetails) throws IOException {
     
         Long loginUserId = userDetails.getMemberId();
-        CrewDto updated = crewService.updateCrew(loginUserId, crewId, crewDto, newImages, deleteImageId);
+        CrewDto crewDto = new CrewDto();
+        crewDto.setName(crewName);
+        crewDto.setDescription(description);
+        crewDto.setDistrict(district);
+
+        CrewDto updated = crewService.updateCrew(loginUserId, crewId, crewDto, newImages, deleteImageName);
 
         Map<String, CrewDto> response = new HashMap<>();
 
@@ -96,20 +104,6 @@ public class CrewController {
         joinMap.put("joinRequest", crewJoinRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(joinMap);
     }
-
-     @GetMapping("mycrewList/{memberId}")
-     public ResponseEntity<?> mycrewList(@PathVariable("memberId") Long memberId,
-                                         @AuthenticationPrincipal MyUserDetails userDetails) {
-        
-          Long loginUserId = userDetails.getMemberId();
-          if (!loginUserId.equals(memberId)) {
-              throw new IllegalArgumentException("본인 크루 리스트는 본인만 조회 가능");
-          }
-
-         List<CrewDto> mycrewList = crewService.mycrewList(memberId);
-        
-         return ResponseEntity.ok(mycrewList);
-     }
     
     
 }

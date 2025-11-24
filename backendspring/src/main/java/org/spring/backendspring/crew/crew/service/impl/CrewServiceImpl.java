@@ -2,6 +2,7 @@ package org.spring.backendspring.crew.crew.service.impl;
 
 import lombok.RequiredArgsConstructor;
 
+import org.spring.backendspring.common.role.CrewRole;
 import org.spring.backendspring.common.role.MemberRole;
 import org.spring.backendspring.crew.CrewRoleCheck;
 import org.spring.backendspring.crew.crew.dto.CrewDto;
@@ -19,8 +20,11 @@ import org.spring.backendspring.s3.AwsS3Service;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,7 +40,7 @@ public class CrewServiceImpl implements CrewService {
     @Override
     public CrewDto updateCrew(Long loginUserId, Long crewId, CrewDto crewDto,
                               List<MultipartFile> newImages,
-                              List<Long> deleteImageId) throws IOException {
+                              List<String> deleteImageName) throws IOException {
 
         
         CrewEntity crew = crewRepository.findById(crewId)
@@ -47,36 +51,57 @@ public class CrewServiceImpl implements CrewService {
 
         String crewRole = CrewRoleCheck.crewRoleCheckFn(loginUserId, crewId, crewRepository);
 
-        if (!crewRole.equals("LEADER") || !member.getRole().equals(MemberRole.ADMIN)) {
+        if (!crewRole.equals(CrewRole.LEADER.toString()) && !member.getRole().equals(MemberRole.ADMIN)) {
             throw new IllegalArgumentException("크루 수정 권한 없음");    
         }
 
+        crewDto.setMemberId(member.getId());
+
         // 크루 기본 정보 수정
         crew.setName(crewDto.getName());
+        crew.setDescription(crewDto.getDescription());
+        crew.setDistrict(crewDto.getDistrict());
+
+        List<CrewImageEntity> updatedImages = new ArrayList<>();
+
+        List<CrewImageEntity> currentImages = crewImageRepository.findByCrewEntity(crew);
 
         // 삭제할 이미지
-        if (deleteImageId != null && !deleteImageId.isEmpty()) {
-            for (Long imageId : deleteImageId) {
-                CrewImageEntity imageEntity = crewImageRepository.findById(imageId)
+        if (deleteImageName != null && !deleteImageName.isEmpty()) {
+            for (String imageName : deleteImageName) {
+                CrewImageEntity imageEntity = crewImageRepository.findByNewName(imageName)
                         .orElseThrow(() -> new IllegalArgumentException("이미지가 존재하지 않음"));
                 awsS3Service.deleteFile(imageEntity.getNewName());
                 crewImageRepository.delete(imageEntity);
             }
         }
 
+        updatedImages = crewImageRepository.findByCrewEntity(crew);
+
         // 새로운 이미지
         if (newImages != null && !newImages.isEmpty()) {
             for (MultipartFile image : newImages) {
                 if (!image.isEmpty()) {
-                    String originalImageName = image.getOriginalFilename();
-                    String newImageName = awsS3Service.uploadFile(image);
+                    // String originalImageName = image.getOriginalFilename();
+                    // String newImageName = awsS3Service.uploadFile(image);
+                    // CrewImageEntity imageEntity = CrewImageEntity.toEntity(crew, originalImageName, newImageName);
+                    // crewImageRepository.save(imageEntity);
 
-                    CrewImageEntity imageEntity = CrewImageEntity.toEntity(crew, originalImageName, newImageName);
-                    crewImageRepository.save(imageEntity);
+                    UUID uuid = UUID.randomUUID();
+                    String originalFileName = image.getOriginalFilename();
+                    String newFileName = uuid + "_" + originalFileName;
+
+                    String filePath = "E:/full/upload/" + newFileName;
+                    File file = new File(filePath);
+                    image.transferTo(file);
+                    
+                    CrewImageEntity imageEntity = CrewImageEntity.toEntity(crew, originalFileName, newFileName);
+                    CrewImageEntity savedImage = crewImageRepository.save(imageEntity);
+                    updatedImages.add(savedImage);
                 }
             }
         }
-
+        crew.setCrewImageEntities(updatedImages);
         CrewEntity updated = crewRepository.save(crew);
         return CrewDto.toCrewDto(updated);
     }
@@ -154,17 +179,5 @@ public class CrewServiceImpl implements CrewService {
                 .orElseThrow(() -> new IllegalArgumentException("이 크루의 멤버가 아닙니다."));
 
         return CrewDto.toCrewDto(crewEntity);
-    }
-
-    @Override
-    public List<CrewDto> mycrewList(Long memberId) {
-        MemberEntity member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원"));
-        
-        List<CrewEntity> mycrewList = member.getCrewEntityList();
-
-        return mycrewList.stream()
-                    .map(CrewDto::toCrewDto)
-                    .toList();
     }
 }
