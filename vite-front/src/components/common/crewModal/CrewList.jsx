@@ -41,37 +41,52 @@ const CrewList = ({children}) => {
   return (
     <div className="modal-container">
         {children}
-
-        <div className="modal-box-crew">
-            
+       
+        <div className="modal-box-crew-empty">
             {console.log(crewList)}
-            <li>
-                <Link to="/crew/index">CREW MAIN</Link>
-            </li>
-            {crewList.length > 4 ? (
+        </div>
+        <div className="modal-box-crew">
+            <ul>
+                {crewList.length === 0 ? (
+                <li 
+                    key="no-crew" 
+                    style={{ 
+                        textAlign: 'center', 
+                        opacity: 1, 
+                        visibility: 'visible',
+                        // .modal-box-crew의 위치 지정 속성을 무력화
+                        position: 'static', 
+                        transform: 'none',
+                        color: '#333' // 배경색에 따라 글자색 조정
+                    }}
+                >
+                    <Link to="/crew/index">
+                        현재 가입된 크루가 없습니다. 새로운 크루를 만나보세요!
+                    </Link>
+                </li>
+
+            ) : crewList.length > 4 ? (
                 <>
                 {crewList.slice(0, 4).map((list) => (
-                    <li key={list.id}> 
+                    <li className="yes-crew" key={list.id}>
                         <Link to={`/crew/detail/${list.id}`}>{list.name}</Link>
+                            {console.log(crewList)}
                     </li>
                 ))}
-
                 <li key="more">
                     <Link to="/crew/list" className="more-link">
                         더보기 ({crewList.length - 4}개 더 보기)
                     </Link>
                 </li>
             </>
-        ) : (
-            crewList.map((list) => (
-                <li key={list.id}>
-                    <Link to={`/crew/detail/${list.id}`}>{list.name}</Link>
-                </li>
-            ))
-        )}
-            
-           
-            
+            ) : (
+                crewList.map((list) => (
+                    <li key={list.id}>
+                        <Link to={`/crew/detail/${list.id}`}>{list.name}</Link>
+                    </li>
+                ))
+            )}
+            </ul>
         </div>
     </div>
   )

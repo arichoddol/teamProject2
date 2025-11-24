@@ -58,15 +58,14 @@ const Header = () => {
               </>
               
             )}
-            <li>
-              <Link to="/board">BOARD</Link>
-            </li>
             <HeaderStore>
               <li>
                 <Link to="/store">STORE</Link>
               </li>
             </HeaderStore>
-       
+              <li>
+              <Link to="/board">BOARD</Link>
+            </li>
             <li>
               <Link to="/api/marathon">MARATHON</Link>
             </li>

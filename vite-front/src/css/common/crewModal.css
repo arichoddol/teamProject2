@@ -1,44 +1,47 @@
+
 .modal-container {
     position: relative;
     display: inline-block;
     cursor: pointer;
 }
+.modal-container a:hover{
+    background-color: aquamarine;
+    color: #0080bb;
+}
 
 .modal-box-crew {
-
-    opacity: 0;
-    /* 투명하게 숨기기 */
-    visibility: hidden;
-    /* 영역을 차지하지 않게 숨기기 */
-    transition: opacity 0.3s ease;
-    /* 부드럽게 나타나도록 애니메이션 추가 */
-
+    /* 모달 기본 위치: 숨김 상태 */
     position: absolute;
-    top: 1270%;
-    /* top: 2100%; */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
 
-    transform: translateX(-50%) translateY(-100%);
+    /* 위치 조정 (modal-container 기준) */
+    top: 100%; /* 부모 요소 바로 아래 */
+    left: 50%;
+    transform: translateX(-50%); /* 중앙 정렬 */
 
-
-    background-image: linear-gradient(to bottom, aliceblue, silver);
-    /* background-color: aliceblue; */
-    color: white;
-    padding: 8px 12px;
-    border-radius: 4px;
+    /* 디자인 */
+    background-image: linear-gradient(to bottom, aliceblue, #ffffff);
+    color: #333; /* 배경이 밝아졌으므로 텍스트는 어둡게 */
+    padding: 8px 0; /* 내부 ul이 패딩을 갖도록 0으로 설정 */
+    border-radius: 8px;
     font-size: 14px;
-
-
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 
+    
     z-index: 10;
-
     white-space: nowrap;
+    min-width: 200px; /* 최소 너비 */
 }
+
 
 .modal-container:hover .modal-box-crew {
     opacity: 1;
     visibility: visible;
 }
 
-.modal-box-crew  ul {
+
+.modal-box-crew ul {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -46,19 +49,48 @@
     flex-direction: column;
 }
 
-.modal-box-crew  li {
+.modal-box-crew ul li {
     display: block;
-    /* <li>는 기본적으로 블록이지만 명시 */
     padding: 5px 15px;
-    /* 항목별 상하/좌우 패딩 */
     line-height: 1.5;
+    transition: background-color 0.2s;
 }
 
-.modal-box-crew  li a {
+.modal-box-crew ul li:hover {
+    /* background-color: silver;  */
+}
+
+.modal-box-crew ul li a {
     text-decoration: none;
-    /* 밑줄 제거 */
     color: #c50000;
-    /* 링크 색상 */
     display: block;
-    /* 링크가 <li> 영역 전체를 클릭 가능하게 함 */
-} 
+}
+
+/* ---------------------------------------------------- */
+/* 4. 크루 없을 때 메시지 (핵심 오버라이드!) */
+/* ---------------------------------------------------- */
+/* crewList.length === 0 일 때 이 클래스가 적용됩니다. */
+.no-crew-message {
+    /* override option */
+    position: static !important; 
+    top: auto !important;       
+    transform: none !important;  
+    opacity: 1 !important;       
+    visibility: visible !important; 
+    
+
+    list-style: none; 
+    text-align: center;
+    color: #555 !important; 
+    padding: 15px 10px; 
+    width: 100%;
+    
+   
+    background: none !important;
+}
+
+.no-crew-message a {
+    text-decoration: none; 
+    color: inherit !important;
+    font-weight: 500;
+}
