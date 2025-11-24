@@ -1,11 +1,14 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import jwtAxios from '../../../../apis/util/jwtUtil';
+import { useSelector } from 'react-redux';
 
 const MyCrewBoardContainer = () => {
   const { crewId } = useParams();
   const navigate = useNavigate();
   const [crewBoardList, setCrewBoardList] = useState([]);
+  const accessToken = useSelector((state) => state.jwtSlice.accessToken);
 
   const [size] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
@@ -41,9 +44,13 @@ const MyCrewBoardContainer = () => {
   
   const boardList = async () => {
     try {
-      const res = await axios.get(`/api/mycrew/${crewId}/board/list`, {
-        params: { page, size, keyword, subject },
-      })
+      const res = await jwtAxios.get(`/api/mycrew/${crewId}/board/list`, {
+        params: { page, size, keyword, subject }},
+        { headers: {
+          Authorization: `Bearer ${accessToken}`
+          },
+          withCredentials: true,
+        })
       const data = res.data.crewBoardList
         setCrewBoardList(data.content || []);
         console.log(data)
@@ -101,32 +108,32 @@ const MyCrewBoardContainer = () => {
               <p>등록된 게시글이 없습니다.</p>
             ) : (
               <ul>
-                {crewBoardList.map((board) => { 
-                  console.log(board.newFileName);
-                    return (
+                {crewBoardList.map((board) => (
                       <li key={board.id}>
                           <Link to={`/mycrew/${crewId}/board/detail/${board.id}`}>
                               <div className="boardContent">
                                   <div className="crewBoard">
-                                    {board.memberNickName}
+                                    <span className="crewBoardWriter">
+                                      {board.memberNickName}
+                                    </span>
+                                    <span className="crewBoardCreateTime">
+                                      {formattedDate(board.createTime)}
+                                    </span>
                                   </div>
-                                  <div className="crewBoardTitle">
-                                    {board.title}
-                                  </div>
-                                  <div className='crewBoardCreateTime'>
-                                    {formattedDate(board.createTime)}
-                                  </div>
-                                  <div className="crewBoardContent">
-                                    {board.newFileName.length>0 && 
-                                      <img src="/images/fileIcon.png" alt="file" />
-                                    }
+                                  <div className="crewBoardBottom">
+                                    <div className="crewBoardTitle">
+                                      {board.title}
+                                    </div>
+                                    <div className="crewBoardContent">
+                                      {board.newFileName.length>0 && 
+                                        <img src="/images/fileIcon.png" alt="file" />
+                                      }
+                                    </div>
                                   </div>
                               </div>
                           </Link>
-                      </li>                    
-
-                    )          
-})}
+                      </li>                          
+                ))}
             </ul>
             )}
 

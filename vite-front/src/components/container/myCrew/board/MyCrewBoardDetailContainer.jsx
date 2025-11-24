@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
+import jwtAxios from '../../../../apis/util/jwtUtil';
 
 const MyCrewBoardDetailContainer = () => {
   const { boardId, crewId } = useParams();
@@ -98,11 +99,13 @@ const MyCrewBoardDetailContainer = () => {
   const submitComment = async () => {
     if (!comment.trim()) return;
     try {
-      const res = await axios.post(`/api/mycrew/${crewId}/board/${boardId}/comment/write`,
+      const res = await jwtAxios.post(`/api/mycrew/${crewId}/board/${boardId}/comment/write`,
         { content: comment },
         { headers: {
             Authorization: `Bearer ${accessToken}`
-        }}
+            },
+            withCredentials: true
+        }
       );
       console.log(res.data);
       setComment(""); 

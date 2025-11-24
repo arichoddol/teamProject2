@@ -41,7 +41,7 @@ const MyCrewMainContainer = () => {
           {myCrew.newFileName && myCrew.newFileName.length > 0 && (
             <div className="myCrewMainImage">
               <img
-                src={myCrew.newFileName[0]}
+                src={`http://localhost:8088/upload/${myCrew.newFileName[0]}`}
                 alt={`${myCrew.name} 이미지`}
                 className='crewImage'
               /> 

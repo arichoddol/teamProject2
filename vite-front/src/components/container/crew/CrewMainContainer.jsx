@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import jwtAxios from "../../../apis/util/jwtUtil";
 import { useSelector } from "react-redux";
@@ -11,6 +11,7 @@ const CrewMainContainer = () => {
   const accessToken = useSelector((state) => state.jwtSlice.accessToken);
   const [crewList, setCrewList] = useState([]);
   const [myCrewList, setMyCrewList] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (accessToken == null) {
@@ -63,7 +64,7 @@ const CrewMainContainer = () => {
                         <div className="crewListLeft">
                           {images.length > 0 ? (
                             <img
-                              src={images[0]}
+                              src={`http://localhost:8088/upload/${images[0]}`}
                               alt={`${crew.crewName} 이미지`}
                               className="crewImage"
                             />
@@ -94,7 +95,7 @@ const CrewMainContainer = () => {
                     <div className="crewListLeft">
                       {images.length > 0 ? (
                         <img
-                          src={images[0]}
+                          src={`http://localhost:8088/upload/${images[0]}`}
                           alt={`${crew.name} 이미지`}
                           className="crewImage"
                         />
@@ -112,6 +113,7 @@ const CrewMainContainer = () => {
               );
             })}
           </ul>
+          <button onClick={() => navigate(`/crew/createRequest`)}>크루만들기</button>
         </div>
       </div>
     </>

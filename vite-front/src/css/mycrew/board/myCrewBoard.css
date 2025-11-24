@@ -18,37 +18,37 @@
   
 .crewBoardList .crewBoardList-con h1.crewBoard {
     font-size: 2rem;
-    color: #1e3a8a;
+    color: #000208;
     text-align: center;
-    padding-bottom: 10px;
+    padding: 10px 0;
   }
   
   /* 검색 영역 */
 .crewBoardList .crewBoardList-con .crewBoardSearch {
     display: flex;
     gap: 10px;
-    justify-content: center;
+    justify-content: flex-end;
     flex-wrap: wrap;
   }
   
 form.crewBoardSearch>select,
 .crewBoardSearch>input {
-    padding: 8px 12px;
-    border: 1px solid #a5b4fc;
-    border-radius: 6px;
+    padding: 5px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
     outline: none;
-    font-size: 1rem;
+    font-size: 0.8rem;
   }
   
 form.crewBoardSearch>input:focus,
 form.crewBoardSearch>select:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+    border-color: #8ba8ce;
+    /* box-shadow: 0 0 5px rgba(195, 198, 199, 0.5); */
   }
 
 form.crewBoardSearch>button.crewBoardSearch {
     padding: 8px 16px;
-    background-color: #3b82f6;
+    background-color: #538ed1;
     color: white;
     border: none;
     border-radius: 6px;
@@ -57,7 +57,7 @@ form.crewBoardSearch>button.crewBoardSearch {
 }
 
 .crewBoardSearch>button.crewBoardSearch:hover {
-    background-color: #2563eb;
+    background-color: #3378bd;
 }
 
 /* 게시글 작성 버튼 */
@@ -72,7 +72,7 @@ cursor: pointer;
 transition: background-color 0.2s;
 }
 .crewBoardList-con button.createCrewBoard:hover {
-background-color: #3b82f6;
+background-color: #3875d6;
 }
 
 /* 게시글 카드 */
@@ -86,8 +86,8 @@ gap: 15px;
 
 .crewBoardList .crewBoardList-con>ul>li {
 background-color: white;
-border-radius: 12px; /* 둥근 카드 모양 */
-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+border-radius: 6px; /* 둥근 카드 모양 */
+box-shadow: 0 2px 6px rgba(168, 168, 168, 0.05);
 transition: transform 0.15s, box-shadow 0.15s;
 }
 
@@ -100,27 +100,49 @@ box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 .crewBoardList .crewBoardList-con>ul>li .boardContent {
 display: flex;
 flex-direction: column;
-padding: 15px 20px;
+padding: 8px 13px;
 gap: 5px;
 }
 
-/* 작성자, 제목 */
+/* 작성자, 시각 */
 .boardContent .crewBoard {
-font-size: 1rem;
-color: #1e40af;
-font-weight: 500;
+  display: flex;
+  flex-direction: column;
 }
 
-/* 게시글 제목 아래 시간 표시 */
-.boardContent .time {
-font-size: 0.8rem; /* 작게 */
-color: #6b7280; /* 흐린 회색 */
+.boardContent .crewBoard>span.crewBoardWriter {
+  color: black;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* 게시글 작성자 아래 시간 표시 */
+.boardContent .crewBoard>span.crewBoardCreateTime {
+  font-size: 0.55rem; /* 작게 */
+  font-weight: 400;
+  color: #a7a4a4; /* 흐린 회색 */
+}
+
+.boardContent .crewBoardBottom {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+/* 제목 */
+.boardContent .crewBoardBottom .crewBoardTitle {
+  font-size: 0.9rem;
+  color: black;
 }
 
 /* 내용 */
-.boardContent .crewBoardContet {
+.boardContent .crewBoardBottom  .crewBoardContent {
 font-size: 0.9rem;
 color: #374151;
+}
+
+.boardContent .crewBoardBottom  .crewBoardContent>img {
+  width: 90%;
 }
 
 /* 페이지네이션 */
@@ -133,21 +155,28 @@ padding-top: 10px;
 }
 
 .crewBoardPagination>button {
-padding: 6px 12px;
-border: 1px solid #93c5fd;
+padding: 4px 10px;
+border: 1px solid #adc1e2;
 border-radius: 6px;
 background-color: white;
-color: #1e3a8a;
+font-size: 0.7rem;
+color: black;
 cursor: pointer;
 transition: background-color 0.2s, color 0.2s;
 }
 
 .crewBoardPagination>button:hover:not(:disabled) {
-background-color: #3b82f6;
+background-color: #adc1e2;
 color: white;
 }
 
 .crewBoardPagination>button:disabled {
 cursor: default;
 opacity: 0.5;
+}
+
+
+/* 수정 */
+.boardFile>ul.exFile {
+  font-size: 0.7rem;
 }
