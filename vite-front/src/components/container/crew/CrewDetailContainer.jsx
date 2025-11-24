@@ -55,9 +55,11 @@ const CrewDetailContainer = () => {
         { headers: { "Content-Type": "application/json" }}
       )      
       console.log(res.data)
+      setJoinRequestModal(false)
     } catch (error) {
       alert('크루 가입 요청 보내기 실패')
     }
+    alert('크루 가입 요청 보내기 성공')
   }  
 
   return (

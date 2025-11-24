@@ -12,6 +12,7 @@ const MyCrewJoinRequestContainer = () => {
   const [subject, setSubject] = useState('')
   //검색어
   const [search, setSearch] = useState('') 
+
   const [nowPage, setNowPage] = useState()
   const [startPage, setStartPage] = useState()
   const [endPage, setEndPage] = useState()
@@ -72,6 +73,7 @@ const MyCrewJoinRequestContainer = () => {
         console.log("내 크루 가입승인 실패")
         alert("내 크루 가입승인 실패")
       }
+      alert("내 크루 가입승인 성공")
       MyCrewjoinRequest(0);
   }
   //크루가입거절
@@ -95,6 +97,7 @@ const MyCrewJoinRequestContainer = () => {
         console.log("내 크루 가입거절 실패")
         alert("내 크루 가입거절 실패")
       }
+      alert("내 크루 가입거절 성공")
       MyCrewjoinRequest(0)     
   }
   
