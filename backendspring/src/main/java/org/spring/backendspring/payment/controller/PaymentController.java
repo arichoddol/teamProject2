@@ -7,7 +7,7 @@ import org.spring.backendspring.payment.dto.PaymentDto;
 import org.spring.backendspring.payment.dto.PaymentItemDto;
 import org.spring.backendspring.payment.dto.PaymentResultDto;
 import org.spring.backendspring.payment.entity.PaymentEntity;
-import org.spring.backendspring.payment.entity.PaymentItemEntity;
+// import org.spring.backendspring.payment.entity.PaymentItemEntity; // 더 이상 필요 없음
 import org.spring.backendspring.payment.service.PaymentService;
 import org.spring.backendspring.payment.service.PaymentResultService;
 import org.springframework.data.domain.Page;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class PaymentController {
 
     private final PaymentService paymentService;
-    private final PaymentResultService paymentResultService; // 대문자로 수정
+    private final PaymentResultService paymentResultService;
 
     // -----------------
     // CRUD 기본 메서드
@@ -99,22 +99,15 @@ public class PaymentController {
     @PostMapping("/pg/{pg}") // GET 대신 POST로 변경하는 것이 RESTful 설계에 더 적합합니다.
     public Map<String, Object> pgRequest(
             @PathVariable String pg,
-            @RequestBody PaymentDto paymentDto) { // ⭐️ @RequestBody로 PaymentDto 전체를 받음
+            @RequestBody PaymentDto paymentDto) { // PaymentDto 전체를 받음
 
-        // 1. PaymentItemDto 리스트 추출 및 유효성 검사
-        List<PaymentItemDto> itemDtos = paymentDto.getPaymentItems();
-
-        if (itemDtos == null || itemDtos.isEmpty()) {
-            throw new IllegalArgumentException("결제할 상품 목록이 요청에 포함되어야 합니다.");
-        }
-
-        // 2. DTO 리스트를 Entity 리스트로 변환
-        List<PaymentItemEntity> itemsToPay = itemDtos.stream()
-                .map(PaymentItemDto::toEntity)
-                .collect(Collectors.toList());
-        // 3. Service 호출 (memberId와 itemsToPay 리스트 전달)
+        // 1. Service 호출: PaymentDto 전체를 넘기도록 수정
+        // Service 내부에서 필요한 정보(items, memberId 등)를 추출하여 사용합니다.
         Map<String, Object> map = new HashMap<>();
-        String approvalUrl = paymentService.pgRequest(pg, paymentDto.getMemberId(), itemsToPay);
+        
+        // ⭐️ [수정된 부분] Service 시그니처에 맞게 PaymentDto 전체를 전달
+        String approvalUrl = paymentService.pgRequest(pg, paymentDto); 
+        
         map.put("approvalUrl", approvalUrl);
         return map;
     }

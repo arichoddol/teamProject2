@@ -46,6 +46,9 @@ public class BoardEntity extends BasicTime {
     private String content;
 
 
+    private String category;
+
+
     private int attachFile;
     private int hit;
 
@@ -80,6 +83,7 @@ public class BoardEntity extends BasicTime {
                         .id(boardDto.getId())
                         .title(boardDto.getTitle())
                         .content(boardDto.getContent())
+                        .category(boardDto.getCategory())
                         .hit(boardDto.getHit())
                         .memberEntity(boardDto.getMemberentity())
                         .attachFile(attachFileValue)

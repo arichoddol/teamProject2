@@ -1,32 +1,45 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 
 const MyCrewLeftContainer = () => {
+
   return (
-    <div className='MyCrewLeftContainer'>
-      <div className='MyCrewLeftContainer-con'>
+    <div className='myCrewLeftContainer'>
+      <div className='myCrewLeftContainer-con'>
         <ul>
           <li>
-            <Link to={""}>CREW HOME</Link>
+            <NavLink to={"index"} 
+             className={({ isActive }) => (isActive ? "left-now" : "")}>
+            CREW HOME</NavLink>
+          </li>
+          <li>
+            <NavLink to={"join"}
+            className={({ isActive }) => (isActive ? "left-now" : "")}>
+            가입신청명단</NavLink>
+
           </li>
 
           <li>
-            <Link to={"join"}>가입신청명단</Link>
+            <NavLink to={"member"} 
+            className={({ isActive }) => (isActive ? "left-now" : "")}>
+            크루원</NavLink>
           </li>
 
           <li>
-            <Link to={"member"}>크루원</Link>
+            <NavLink to={"run"} 
+            className={({ isActive }) => (isActive ? "left-now" : "")}>
+            런닝스케줄</NavLink>
           </li>
 
           <li>
-            <Link to={"run"}>런닝스케줄</Link>
+            <NavLink to={"board"} 
+            className={({ isActive }) => (isActive ? "left-now" : "")}>
+            크루게시글</NavLink>
           </li>
-
           <li>
-            <Link to={"board"}>크루게시글</Link>
-          </li>
-            <Link to={"chat"}>크루채팅</Link>
-          <li>
+            <NavLink to={"chat"} 
+            className={({ isActive }) => (isActive ? "left-now" : "")}>
+            크루채팅</NavLink>
 
           </li>
         </ul>

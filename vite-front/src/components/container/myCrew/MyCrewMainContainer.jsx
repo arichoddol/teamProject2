@@ -35,8 +35,8 @@ const MyCrewMainContainer = () => {
 
   console.log(myCrew.memberId)
   return (
-    <div className="myCrewMain">
-      <div className="myCrewMain-con">
+    <div className="myCrew">
+      <div className="myCrew-con">
         <div style={{height: "200vh"}}>MyCrewMainContainer {crewId}
           {myCrew.newFileName && myCrew.newFileName.length > 0 && (
             <div className="myCrewMainImage">

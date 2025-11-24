@@ -65,6 +65,7 @@
   padding: 12px 15px;
   text-align: center;
   border-bottom: 1px solid #eee;
+  vertical-align: middle; /* 이미지와 텍스트를 세로 중앙 정렬 */
 }
 
 .cartTable th {
@@ -91,6 +92,63 @@
 .cartTable button:hover {
   background-color: #c0392b;
 }
+
+/* ⭐️ [추가] 장바구니 아이템 썸네일 이미지 스타일 */
+.cart-item-thumbnail {
+  width: 80px; /* 이미지 너비 고정 */
+  height: 80px; /* 이미지 높이 고정 */
+  object-fit: cover; /* 이미지가 잘리더라도 비율 유지하며 채움 */
+  border-radius: 8px; /* 부드러운 모서리 */
+  border: 1px solid #eee; /* 테두리 추가 */
+}
+
+/* ⭐️ [추가] 수량 조절 UI 스타일 */
+.quantity-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.quantity-control button {
+  width: 30px;
+  height: 30px;
+  font-size: 1.2rem;
+  padding: 0;
+  background-color: #f0f0f0;
+  color: #555;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.quantity-control button:hover {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.quantity-control input {
+  width: 40px;
+  padding: 5px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  -moz-appearance: textfield; /* Firefox에서 input type="number" 화살표 제거 */
+}
+
+/* Chrome, Safari, Edge, Opera에서 input type="number" 화살표 제거 */
+.quantity-control input::-webkit-outer-spin-button,
+.quantity-control input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+/* 가격 열의 정렬을 위한 스타일 */
+.price-column {
+    text-align: right; /* 가격은 오른쪽 정렬 */
+}
+
 
 /* 페이징 */
 .pagination {
@@ -126,11 +184,39 @@
   color: #333;
 }
 
+/* ⭐️ [추가] 장바구니 요약 정보 스타일 */
+.cartSummary {
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin-top: 20px;
+  text-align: right;
+  line-height: 1.8;
+}
+
+.cartSummary p {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.cartSummary .finalTotal {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #333;
+  margin-top: 10px;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+
 /* 하단 링크 버튼 */
 .bottomLinks {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
+  gap: 10px; /* 버튼 사이 간격 추가 */
 }
 
 .bottomLinks button {
@@ -142,11 +228,18 @@
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.2s;
+  flex-grow: 1; /* 버튼들이 공간을 균등하게 차지하도록 */
 }
 
 .bottomLinks button:hover {
   background-color: #357ab8;
 }
+
+.bottomLinks button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
 
 /* 모바일 반응형 */
 @media (max-width: 768px) {
@@ -160,6 +253,12 @@
     font-size: 0.9rem;
   }
 
+  /* 모바일에서 이미지 크기 조절 */
+  .cart-item-thumbnail {
+    width: 60px;
+    height: 60px;
+  }
+
   .bottomLinks {
     flex-direction: column;
     gap: 10px;
@@ -167,5 +266,9 @@
 
   .bottomLinks button {
     width: 100%;
+  }
+
+  .cartSummary {
+    text-align: center; /* 모바일에서 요약 정보 중앙 정렬 */
   }
 }
