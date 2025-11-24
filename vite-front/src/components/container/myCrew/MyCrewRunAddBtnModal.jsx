@@ -3,8 +3,8 @@ import React from 'react'
 const MyCrewRunAddBtnModal = ({input, onClose, onChange, onSubmit}) => {
     
   return (
-    <div className='myCrewRunAddBtnModal'>
-        <div className='myCrewRunAddBtnModal-con'>
+    <div className='myCrewModal'>
+        <div className='myCrewModal-con'>
             <div className="modal-header">
                 <h2>크루런닝 일정추가</h2>
                 <button type='button' onClick={onClose}>X</button>

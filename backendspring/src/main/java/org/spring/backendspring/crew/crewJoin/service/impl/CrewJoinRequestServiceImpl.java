@@ -75,28 +75,33 @@ public class CrewJoinRequestServiceImpl implements CrewJoinRequestService {
     }
 
     @Override
-    public List<CrewJoinRequestDto> myCrewJoinList(Long crewId) {
-        // 크루아이디 확인 후 리스트 쫘라락
-        return crewJoinRequestRepository.findAllByCrewEntityId(crewId).stream()
-                .map(CrewJoinRequestDto::crewJoinRequestDto).collect(Collectors.toList());
+    public Page<CrewJoinRequestDto> myCrewJoinList(Long crewId, Pageable pageable, String subject, String search) {
+        Page<CrewJoinRequestEntity> crewJoinRequestList = null;
+        if( subject==null || search==null || search.equals("")){
+            crewJoinRequestList = crewJoinRequestRepository.findAllByCrewEntityId(crewId, pageable);
+           } else if ("status".equals(subject)) {
+            RequestStatus status;
+            status = RequestStatus.valueOf(search);
+            crewJoinRequestList = crewJoinRequestRepository.findAllByCrewEntityIdAndStatus(crewId, pageable, status);
+
+           } else if ("id".equals(subject)) {
+            Long searchId = Long.parseLong(search);
+            crewJoinRequestList = crewJoinRequestRepository.findAllByCrewEntityIdAndId(crewId, pageable, searchId);
+
+           } else if ("memberRequestId".equals(subject)) {
+            Long searchId = Long.parseLong(search);
+            crewJoinRequestList = crewJoinRequestRepository.findAllByCrewEntityIdAndMemberEntityId(crewId, pageable, searchId);
+
+           } else if ("message".equals(subject)) {
+            crewJoinRequestList = crewJoinRequestRepository.findAllByCrewEntityIdAndMessageContaining(crewId, pageable, search);
+
+           } else {
+            crewJoinRequestList = crewJoinRequestRepository.findAllByCrewEntityId(crewId, pageable);
+           }
+        return crewJoinRequestList.map(CrewJoinRequestDto::crewJoinRequestDto);
 
     }
 
-    // @Override
-    // public PagedResponse<CrewJoinRequestDto> pagingJoinReqList(Long crewId, String keyword, int page, int size) {
-    //     Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-    //     Page<CrewJoinRequestDto> crewReqPage;
-
-    //     if (keyword == null || keyword.trim().isEmpty()) {
-    //         crewReqPage = crewJoinRequestRepository.findAllByCrewEntityId(crewId, pageable)
-    //                 .map(CrewJoinRequestDto::crewJoinRequestDto);
-    //     } else {
-    //         // crewReqPage = crewJoinRequestRepository
-    //         // .findByMemberEntityIdContainingAndStatus()
-    //         return null;
-    //     }
-    //     return PagedResponse.of(crewReqPage);
-    // }
 
     //가입 승인
 //     @Override

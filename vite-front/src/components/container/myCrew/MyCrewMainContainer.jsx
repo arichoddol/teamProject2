@@ -1,13 +1,16 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import jwtAxios from '../../../apis/util/jwtUtil';
 import { useSelector } from 'react-redux';
 
 const MyCrewMainContainer = () => {
   const accessToken = useSelector(state => state.jwtSlice.accessToken);
   const {crewId} = useParams()
-  const [myCrew , setMyCrew] = useState()
+  const [myCrew , setMyCrew] = useState({})
+
+  const navigate = useNavigate()
+  const loginMemberId = useSelector((state) => state.loginSlice.id)  
 
   useEffect(()=> {
     const myCrewMain = async () => {
@@ -30,20 +33,38 @@ const MyCrewMainContainer = () => {
     myCrewMain();
   }, [])
 
+  console.log(myCrew.memberId)
   return (
-    <div className="myCrewMain">
-      <div className="myCrewMain-con">
+    <div className="myCrew">
+      <div className="myCrew-con">
         <div style={{height: "200vh"}}>MyCrewMainContainer {crewId}
+          {myCrew.newFileName && myCrew.newFileName.length > 0 && (
+            <div className="myCrewMainImage">
+              <img
+                src={myCrew.newFileName[0]}
+                alt={`${myCrew.name} 이미지`}
+                className='crewImage'
+              /> 
+            </div>
+          )}
           {/* DTO List<??Entity> 를 그대로 toDto로 받는걸 고쳐야함 
           무한참조나서 데이터를 못가져와요 */}
-          {/* <ul>
-            {myCrew.map((myCrew)=>(
+          <ul>
+            {/* {myCrew.map((myCrew)=>( */}
               <li key={myCrew.id}>
 
               <span>{myCrew.id}</span>
             </li>
-              ))}
-          </ul> */}
+              {/* ))} */}
+            <li>{myCrew.name}</li>
+            <li>{myCrew.description}</li>
+            <li>{myCrew.district}</li>
+            {myCrew.memberId === loginMemberId && (
+              <li>
+                <button onClick={() => navigate(`/mycrew/${crewId}/update`)}>수정</button>
+              </li>              
+            )}
+          </ul>
         </div>
       </div>
     </div>

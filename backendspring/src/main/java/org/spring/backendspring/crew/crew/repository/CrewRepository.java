@@ -1,6 +1,5 @@
 package org.spring.backendspring.crew.crew.repository;
 
-import java.util.List;
 import java.util.Optional;
 import org.spring.backendspring.crew.crew.entity.CrewEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

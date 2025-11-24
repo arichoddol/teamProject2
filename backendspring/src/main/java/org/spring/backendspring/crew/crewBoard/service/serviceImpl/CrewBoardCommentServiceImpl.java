@@ -3,6 +3,7 @@ package org.spring.backendspring.crew.crewBoard.service.serviceImpl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.crew.crewBoard.dto.CrewBoardCommentDto;
 import org.spring.backendspring.crew.crewBoard.entity.CrewBoardCommentEntity;
 import org.spring.backendspring.crew.crewBoard.entity.CrewBoardEntity;
@@ -11,6 +12,8 @@ import org.spring.backendspring.crew.crewBoard.repository.CrewBoardRepository;
 import org.spring.backendspring.crew.crewBoard.service.CrewBoardCommentService;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,16 +46,20 @@ public class CrewBoardCommentServiceImpl implements CrewBoardCommentService {
     }
 
     @Override
-    public List<CrewBoardCommentDto> commentList(Long crewId, Long boardId) {
+    public PagedResponse<CrewBoardCommentDto> commentList(Long crewId, Long boardId, int page, int size) {
         
         CrewBoardEntity boardEntity = crewBoardRepository.findByCrewEntity_IdAndId(crewId, boardId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글"));
         
-        List<CrewBoardCommentEntity> commentEntityList = crewBoardCommentRepository.findAllByCrewBoardEntityOrderByIdDesc(boardEntity);
+        PageRequest pageRequest = PageRequest.of(page, size);
 
-        return commentEntityList.stream()
-            .map(CrewBoardCommentDto::toDto)
-            .collect(Collectors.toList());
+        Page<CrewBoardCommentEntity> crewBoardCommentPage;
+
+        crewBoardCommentPage = crewBoardCommentRepository.findAllByCrewBoardEntityOrderByIdDesc(boardEntity, pageRequest);
+
+        Page<CrewBoardCommentDto> myCrewBoardComment = crewBoardCommentPage.map(CrewBoardCommentDto::toDto);
+
+        return PagedResponse.of(myCrewBoardComment);
     }
 
     @Override

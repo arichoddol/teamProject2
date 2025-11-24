@@ -10,15 +10,42 @@ const MyCrewBoardDetailContainer = () => {
   const { userEmail } = useSelector((state) => state.loginSlice);
   const loginMemberId = useSelector((state) => state.loginSlice.id)
 
+  const [page, setPage] = useState(0);
+  const [size] = useState(20);
+  const [totalPages, setTotalPages] = useState(0);
+  const [startPage, setStartPage] = useState(0)
+  const [endPage, setEndPage] = useState(0)
+  const [hasNext, setHasNext] = useState(false)
+  const [hasPrevious, setHasPrevious] = useState(false)
+  
+
   const [board, setBoard] = useState({});
+  const [totalComments, setTotalComments] = useState(0);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
+
+  const formattedDate = (el) => new Date(el).toLocaleString('ko-KR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  });
+  const formattedDateForComment = (el) => new Date(el).toLocaleString('ko-KR', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: false
+  });
 
   // 상세 게시글
   const fetchBoard = async () => {
     try {
       const res = await axios.get(`/api/mycrew/${crewId}/board/detail/${boardId}`);
-      setBoard(res.data.boardDetail);
+      setBoard(res.data.boardDetail || {});
       console.log(res.data.boardDetail);
     } catch (err) {
       console.error("크루 게시글 상세 실패", err)
@@ -28,8 +55,17 @@ const MyCrewBoardDetailContainer = () => {
   // 댓글 목록
   const fetchComments = async () => {
     try {
-      const res = await axios.get(`/api/mycrew/${crewId}/board/${boardId}/comment/list`);
-      setComments(res.data.commentList);
+      const res = await axios.get(`/api/mycrew/${crewId}/board/${boardId}/comment/list`,{
+        params: {page, size}
+      });
+      const data = res.data.commentList
+      setComments(data.content || []);
+      setTotalPages(data.totalPage || 0)
+      setStartPage(data.startPage)
+      setEndPage(data.endPage)
+      setHasNext(data.hasNext)
+      setHasPrevious(data.hasPrevious)
+      setTotalComments(data.totalElements || 0)
     } catch (err) {
       console.error("댓글 목록 실패", err)
     }
@@ -38,13 +74,21 @@ const MyCrewBoardDetailContainer = () => {
   useEffect(() => {
     fetchBoard();
     fetchComments();
-  }, [boardId, crewId])
+  }, [boardId, crewId, page])
+
+  useEffect(() => {
+    setPage(0)
+  }, [crewId])
 
   const deleteBoard = async () => {
     if (!window.confirm('게시글을 삭제하시겠습니까?')) return;
 
     try {
-      await axios.delete(`/api/mycrew/${crewId}/board/delete/${boardId}`);
+      await axios.delete(`/api/mycrew/${crewId}/board/delete/${boardId}`,
+        { headers: {
+            Authorization: `Bearer ${accessToken}`
+        }}
+      );
       navigate(`/mycrew/${crewId}/board/list`)
     } catch (err) {
       console.error("게시글 삭제 실패", err);
@@ -55,9 +99,10 @@ const MyCrewBoardDetailContainer = () => {
     if (!comment.trim()) return;
     try {
       const res = await axios.post(`/api/mycrew/${crewId}/board/${boardId}/comment/write`,
-        {
-          content: comment,
-        }
+        { content: comment },
+        { headers: {
+            Authorization: `Bearer ${accessToken}`
+        }}
       );
       console.log(res.data);
       setComment(""); 
@@ -73,8 +118,13 @@ const MyCrewBoardDetailContainer = () => {
       return;
     }
     try {
-      await axios.delete(`/api/mycrew/${crewId}/board/${boardId}/comment/delete/${commentId}`);
+      await axios.delete(`/api/mycrew/${crewId}/board/${boardId}/comment/delete/${commentId}`,
+        { headers: {
+            Authorization: `Bearer ${accessToken}`
+        }}
+      );
       fetchComments();
+      fetchBoard();
     } catch (err) {
       console.error("댓글 삭제 실패", err)
     }
@@ -92,80 +142,116 @@ const MyCrewBoardDetailContainer = () => {
 
   console.log(loginMemberId)
   console.log(board.memberId)
+  console.log(accessToken)
 
   return (
     <div className="crewBoardDetail">
       <div className="crewBoardDetail-con">
-        <ul>
-          <li className="image">
-            {board.crewBoardImageEntities && board.crewBoardImageEntities.length > 0 && (
-              <div className="images">
-                {board.crewBoardImageEntities.map((img, index) => (
+        <div className="crewBoardHeader">
+          <div className="crewBoardTitle">
+            <h3 className="crewBoardTitle">{board.title}</h3>
+          </div>
+          <div className="crewBoardInfo">
+            <div className="crewBoardWriter">
+              {/* <label className='crewBoardWriter2'>작성자</label> */}
+              <span className="crewBoardWriter2">{board.memberNickName}</span>
+            </div>
+            <div className="crewBoardTime">
+              <span className="crewBoardCreatedTime">│</span>
+              <span className="crewBoardCreatedTime">{board.createTime && formattedDate(board.createTime)}</span>
+              {board.updateTime &&
+              <>
+              <div className="crewBoardUpdatedTime">
+                <span className='crewBoardUpdatedTime2'>수정</span>
+                <span className="crewBoardUpdatedTime2">{formattedDate(board.updateTime)}</span> 
+              </div>
+              </>
+              }
+            </div>
+          </div>
+        </div>
+        <div className="crewBoardContent">
+          <p className="crewBoardContent2">{board.content}</p>
+          <div className="crewBoardImage">
+            {board.newFileName && board.newFileName.length > 0 && (
+              <div className="crewBoardImages">
+                {board.newFileName.map((fileName, index) => (
                   <img
                     key={index} 
-                    src={img.newName} 
+                    src={`http://localhost:8088/upload/${fileName}`} 
                     alt={`${board.title} 이미지 ${index + 1}`}
                     className='crewBoardImg'
                   />
                 ))}
               </div>
             )}
-          </li>
-          <li className="s1">
-            <span>제목</span>
-            <span className="s2">{board.title}</span>
-          </li>
-          <li className="s1">
-            <span>내용</span>
-            <span className="s2">{board.content}</span>
-          </li>
-          <li className="s1">
-            <span>글작성자</span>
-            <span className="s2">{board.memberNickName}</span>
-          </li>
-          <li className="s1">
-            <button onClick={() => navigate(`/mycrew/${crewId}/board/create`)}>글작성</button>
-            <button onClick={() => navigate(`/mycrew/${crewId}/board/list`)}>글목록</button>
-          </li>
-          {board.memberId === loginMemberId && (
-            <li>
-              <button onClick={() => navigate(`/mycrew/${crewId}/board/update/${boardId}`)}>수정</button>
-              <button onClick={deleteBoard}>삭제</button>
-            </li>
-          )}
-        </ul>
+          </div>
+        </div>
       </div>
+
       <div className="crewBoardComment">
         <div className="crewBoardComment-con">
           <div className="writeComment">
-            <h2>댓글</h2>
+            <h3 className='crewComment'>댓글({totalComments})</h3>
+            <div className="writeComment-con">
               <textarea 
                 name="comment"
                 id='comment'
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 required
-                placeholder='내용입력' 
+                placeholder='타인을 배려하는 마음으로 댓글을 달아주세요.' 
               />
-              <button type="button" onClick={submitComment}>댓글 작성</button>
+              <button type="button" onClick={submitComment}>등록</button>
+            </div>
           </div>
           <div className="commentList">
             {comments.length > 0 ? comments.map((comment) => (
               <div key={comment.id} className="aComment">
-                <strong>{comment.memberNickName}</strong>
-                <span className="commentTime">{comment.createTime}</span>
+                <span className='commentWriter'>{comment.memberNickName}</span>
+                <span className="commentTime">{comment.createTime && formattedDateForComment(comment.createTime)}</span>
                 <div className="commentContent">
-                  {comment.content}
+                  <p>{comment.content}</p>
                 </div>
                 {comment.memberId === loginMemberId && (
-                <div className="commentBtn">
-                  {/* <button onClick={}>수정</button> */}
-                  <button onClick={() => deleteComment(comment.id, comment.memberId)}>삭제</button>
-                </div>
+                  <div className="commentBtn">
+                    {/* <button onClick={}>수정</button> */}
+                    <button onClick={() => deleteComment(comment.id, comment.memberId)}>x</button>
+                  </div>
                 )}
               </div>
             )) : <span>댓글이 없습니다.</span>}
+
+            <div className="commentListPagination">
+              {/* <button onClick={() => setPage(0)} disabled={page === 0}>처음</button> */}
+              <button onClick={() => setPage(page - 1)} disabled={!hasPrevious}>이전</button>
+              {Array.from({length: endPage - startPage + 1}, (_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setPage(startPage + idx - 1)}
+                  disabled={startPage + idx - 1 === page}
+                >
+                  {startPage + idx}
+                </button>
+              ))}
+              <button onClick={() => setPage(page + 1)} disabled={!hasNext}>다음</button>
+              {/* <button onClick={() => setPage(totalPages - 1)} disabled={page === totalPages - 1}>마지막</button> */}
+            </div>
           </div>
+        </div>
+      </div>
+      <div className="crewBoardBtn">
+        <div className="crewBoardListBtn">
+          <button className='crewBoardBtnBtn' onClick={() => navigate(`/mycrew/${crewId}/board/list`)}>글목록</button>
+        </div>
+        <div className="crewBoardWrite">
+          <button className='crewBoardBtnBtn' onClick={() => navigate(`/mycrew/${crewId}/board/create`)}>글작성</button>
+          {board.memberId === loginMemberId && (
+            <>
+              <button className='crewBoardBtnBtn' onClick={() => navigate(`/mycrew/${crewId}/board/update/${boardId}`)}>수정</button>
+              <button className='crewBoardBtnBtn' onClick={deleteBoard}>삭제</button>
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -63,6 +63,8 @@ dependencies {
     implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.769')
 	implementation 'com.amazonaws:aws-java-sdk-s3'
 	implementation 'org.modelmapper:modelmapper:3.1.0'
+
+	implementation 'org.json:json:20240303'
 }
 
 tasks.named('test') {

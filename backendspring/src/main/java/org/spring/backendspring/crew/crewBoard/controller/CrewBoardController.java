@@ -1,8 +1,6 @@
 package org.spring.backendspring.crew.crewBoard.controller;
 
-import org.spring.backendspring.board.service.BoardService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,12 +8,14 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.config.security.MyUserDetails;
 import org.spring.backendspring.crew.crewBoard.dto.CrewBoardDto;
 import org.spring.backendspring.crew.crewBoard.service.CrewBoardService;
@@ -23,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -36,9 +35,14 @@ public class CrewBoardController {
     private final CrewBoardService crewBoardService;
 
     @GetMapping({"", "/", "/list"})
-    public ResponseEntity<?> boardListByCrew(@PathVariable("crewId") Long crewId) {
+    public ResponseEntity<?> boardListByCrew
+                    (@PathVariable("crewId") Long crewId,
+                     @RequestParam(name = "subject", required = false) String subject,
+                     @RequestParam(name = "keyword", required = false) String keyword,
+                     @RequestParam(name = "page", defaultValue = "0") int page,
+                     @RequestParam(name = "size", defaultValue = "10") int size) {
 
-        List<CrewBoardDto> crewBoardDtoList = crewBoardService.boardListByCrew(crewId);
+        PagedResponse<CrewBoardDto> crewBoardDtoList = crewBoardService.boardListByCrew(crewId, subject, keyword, page, size);
 
         Map<String, Object> crewBoardList = new HashMap<>();
 
@@ -48,18 +52,26 @@ public class CrewBoardController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createBoard(@PathVariable("crewId") Long crewId,
-                                         @ModelAttribute CrewBoardDto crewBoardDto,
-                                         @AuthenticationPrincipal MyUserDetails userDetails
-                                         ) throws IOException {
+    public ResponseEntity<?> createBoard(
+                @PathVariable("crewId") Long crewId,
+                @RequestPart("title") String title,
+                @RequestPart("content") String content,
+                @RequestPart(value = "crewBoardFile", required = false) List<MultipartFile> crewBoardFile,
+                @AuthenticationPrincipal MyUserDetails userDetails
+    ) throws IOException {
+        CrewBoardDto crewBoardDto = new CrewBoardDto();
+        crewBoardDto.setTitle(title);
+        crewBoardDto.setContent(content);
+        crewBoardDto.setCrewBoardFile(crewBoardFile);
+
         Long loginUserId = userDetails.getMemberId();
-        CrewBoardDto createBoard = crewBoardService.createBoard(crewId, crewBoardDto, loginUserId);
+        CrewBoardDto createBoard = crewBoardService.createBoard(crewId, crewBoardDto, loginUserId, crewBoardFile);
 
         return ResponseEntity.ok(createBoard);
     }
 
-    @GetMapping("/detail/{crewBoardId}")
-    public ResponseEntity<?> boardDetail(@PathVariable("crewBoardId") Long id,
+    @GetMapping("/detail/{boardId}")
+    public ResponseEntity<?> boardDetail(@PathVariable("boardId") Long id,
                                          @PathVariable("crewId") Long crewId) {
 
         CrewBoardDto crewBoardDto = crewBoardService.boardDetail(crewId, id);
@@ -72,21 +84,28 @@ public class CrewBoardController {
     }
 
     @PutMapping("/update/{crewBoardId}")
-    public ResponseEntity<?> updateBoard(@PathVariable("crewBoardId") Long id,
-                                         @PathVariable("crewId") Long crewId,
-                                         @ModelAttribute CrewBoardDto crewBoardDto,
-                                         @RequestParam(value = "newImages", required = false) List<MultipartFile> newImages,
-                                         @RequestParam(value = "deleteImageId", required = false) List<Long> deleteImageId,
-                                         @AuthenticationPrincipal MyUserDetails userDetails) throws IOException {
+    public ResponseEntity<?> updateBoard(
+                @PathVariable("crewBoardId") Long id,
+                @PathVariable("crewId") Long crewId,
+                @RequestPart("title") String title,
+                @RequestPart("content") String content,
+                @RequestParam(value = "newImages", required = false) List<MultipartFile> newImages,
+                @RequestParam(value = "deleteImageName", required = false) List<String> deleteImageName,
+                @AuthenticationPrincipal MyUserDetails userDetails) throws IOException {
+        
+        CrewBoardDto crewBoardDto = new CrewBoardDto();
+        crewBoardDto.setTitle(title);
+        crewBoardDto.setContent(content);
+
         Long loginUserId = userDetails.getMemberId();
 
-        if (!loginUserId.equals(crewBoardDto.getMemberId())) {
+        
+        CrewBoardDto updateBoardDto = crewBoardService.updateBoard(id, crewId, crewBoardDto, loginUserId, newImages,
+        deleteImageName);
+        
+        if (!loginUserId.equals(updateBoardDto.getMemberId())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 권한이 없습니다.");
         }
-
-        CrewBoardDto updateBoardDto = crewBoardService.updateBoard(id, crewId, crewBoardDto, loginUserId, newImages,
-                deleteImageId);
-
         Map<String, CrewBoardDto> response = new HashMap<>();
 
         response.put("updatedBoard", updateBoardDto);
