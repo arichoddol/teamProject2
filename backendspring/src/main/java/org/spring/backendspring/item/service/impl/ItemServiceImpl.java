@@ -23,12 +23,12 @@ public class ItemServiceImpl implements ItemService {
     private final ItemImgRepository imgRepository;
 
     @Override
-    public Page<ItemDto> pagingSearchItemList(Pageable pageable, String subject,  String search) {
-       
+    public Page<ItemDto> pagingSearchItemList(Pageable pageable, String subject, String search) {
+
         // init 
         Page<ItemEntity> itemEntities = null;
 
-        if(subject==null || search==null || search.equals("")){
+        if (subject == null || search == null || search.equals("")) {
             itemEntities = itemRepository.findAll(pageable);
         } else {
             if (subject.equals("itemTitle")) {
@@ -44,6 +44,19 @@ public class ItemServiceImpl implements ItemService {
         return itemEntities.map(ItemDto::toItemDto);
     }
 
+    // category Paging
+    @Override
+    public Page<ItemDto> getItemsByCategory(Pageable pageable, String category, String subject, String search) {
+
+        Page<ItemEntity> itemEntities = null;
+        if (search != null && !search.isEmpty() && "itemTitle".equals(subject)) {
+            itemEntities = itemRepository.findByCategoryAndItemTitleContaining(pageable, category, subject, search);
+        } else {
+            itemEntities = itemRepository.findByCategory(pageable, category);
+        }
+        return itemEntities.map(ItemDto::toItemDto);
+    }
+
     @Override
     public ItemDto itemDetail(Long itemId) {
         //  BoardEntity boardEntity = boardRepository.findById(boardId)
@@ -51,12 +64,7 @@ public class ItemServiceImpl implements ItemService {
         // return BoardDto.toBoardDto(boardEntity);        
 
         ItemEntity itemEntity = itemRepository.findById(itemId)
-                .orElseThrow(()-> new IllegalArgumentException("상품에 해당하는 아이디가 존재하지 않음"));
+                .orElseThrow(() -> new IllegalArgumentException("상품에 해당하는 아이디가 존재하지 않음"));
         return ItemDto.toItemDto(itemEntity);
     }
-
-    // description ServiceImpl funtion 
-    // escapcially AWS S3 bucket function must be Implement
-
-    
 }

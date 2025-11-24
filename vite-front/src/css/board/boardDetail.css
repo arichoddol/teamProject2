@@ -95,19 +95,19 @@
 }
 
 /* 버튼 기본 스타일 */
-button {
-  /* cursor: pointer;
+/* button {
+  cursor: pointer;
   padding: 10px 14px;
   border-radius: 10px;
   border: none;
   font-weight: 600;
   font-size: 14px;
-  transition: 0.18s; */
-}
+  transition: 0.18s; 
+} 
 
 button:active {
-  /* transform: translateY(1px); */
-}
+  transform: translateY(1px);
+} */
 
 /* 댓글 등록 버튼 */
 .boardDetail-reply form button[type="submit"] {

@@ -6,7 +6,7 @@ import '../css/index/indexPage.css';
 
 import bgImage from '../../public/images/INDEX/bg.png';
 import part1 from '../../public/images/INDEX/part_w1.png';
-import part3 from '../../public/images/INDEX/part_w2.png';
+import part2 from '../../public/images/INDEX/part_w2.png';
 import { useEffect, useState } from 'react';
 
 
@@ -38,7 +38,7 @@ const IndexPage = () => {
 
     const depthConfig = {
         part1: 5,   // 배경 (덜 움직임)
-        part3: 20,  // 전경 (더 많이 움직임)
+        part2: 20,  // 전경 (더 많이 움직임)
         title: 35,  // 텍스트 (가장 많이 움직임)
     };
 
@@ -65,10 +65,10 @@ const IndexPage = () => {
                 style={getTransformStyle(depthConfig.part1)}
             />
             <img
-                src={part3}
+                src={part2}
                 alt="Couple running"
                 className="parallax-layer layer-2"
-                style={getTransformStyle(depthConfig.part3)}
+                style={getTransformStyle(depthConfig.part2)}
             />
             <div
                 className="title-text layer-3"

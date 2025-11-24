@@ -1,10 +1,18 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 
 import "../../../css/store/storeIndex.css";
 
+// const images = [
+//   { src: "/images/store/swiper/header1.jpg", alt: 'header1' },
+//   { src: "/images/store/swiper/header2.jpg", alt: 'header2' },
+//   { src: "/images/store/swiper/header3.jpg", alt: 'header3' },
+//   { src: "/images/store/swiper/header4.jpg", alt: 'header4' },
+// ]
+
 const ShopMainContainer = () => {
+  const sliderWrapperRef = useRef(null);
   const NO_IMAGE_URL = "/images/noimage.jpg";
 
   const [items, setItems] = useState([]);
@@ -54,7 +62,38 @@ const ShopMainContainer = () => {
   };
 
   useEffect(() => {
+    /*Slicer Section*/
+    const wrapper = sliderWrapperRef.current;
+    if (!wrapper) return;
+    // const wrapper = document.querySelector('.slider-wrapper');
+    const slides = document.querySelectorAll(".slide");
+    const totalSlides = slides.length;
+    const realSlides = 4;
+    let currentIndex = 0;
+    const slideInterval = 3000;
+    const slideWidthPercentage = 100 / realSlides; // 25%
+    /*Slicer Section*/
+
+    const updateSlider = () => {
+      const offset = -currentIndex * (100 / totalSlides); // 5개 중 하나씩 이동 (20%씩)
+      wrapper.style.transform = `translateX(${offset}%)`;
+      wrapper.style.transition = "transform 0.5s ease-in-out";
+    };
+    const nextSlide = () => {
+      currentIndex++;
+      updateSlider();
+      if (currentIndex === realSlides) {
+        setTimeout(() => {
+          wrapper.style.transition = "none";
+          currentIndex = 0; // 인덱스 0으로 리셋
+          wrapper.style.transform = "translateX(0)"; // 위치 0%로 즉시 이동
+        }, 500); // CSS transition 시간과 동일하게 설정
+      }
+    };
+    let autoSlide = setInterval(nextSlide, slideInterval);
+
     fetchData(currentPage);
+    return () => clearInterval(autoSlide);
   }, [currentPage]);
 
   const pageNumbers = [];
@@ -70,12 +109,38 @@ const ShopMainContainer = () => {
   return (
     <div className="itemList">
       <br />
-
-      <div className="itemList-banner">
-        {/* <img src="/images/tmpBanner.png" alt="banner" /> */}
-      </div>
-      {/* i guess i can insert later => here Pagingnation Effect... */}
       <div className="itemList-con">
+        <div className="itemList-banner">
+          {/* image Header slice here.....*/}
+          <div className="slider-wrapper" ref={sliderWrapperRef}>
+            <img
+              src="/images/store/swiper/header1.jpg"
+              alt="layer1"
+              className="slide"
+            ></img>
+            <img
+              src="/images/store/swiper/header2.jpg"
+              alt="layer2"
+              className="slide"
+            ></img>
+            <img
+              src="/images/store/swiper/header3.jpg"
+              alt="layer3"
+              className="slide"
+            ></img>
+            <img
+              src="/images/store/swiper/header4.jpg"
+              alt="layer4"
+              className="slide"
+            ></img>
+            {/* this for slide */}
+            <img
+              src="/images/store/swiper/header1.jpg"
+              alt="s1"
+              className="slide"
+            />
+          </div>
+        </div>
         <h2> :: 상품목록 :: </h2>
         <br />
         <div className="item-grid-container">

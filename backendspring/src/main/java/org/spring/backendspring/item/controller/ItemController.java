@@ -1,6 +1,5 @@
 package org.spring.backendspring.item.controller;
-import org.spring.backendspring.board.controller.BoardController;
-import org.spring.backendspring.board.dto.BoardDto;
+
 import org.spring.backendspring.item.dto.ItemDto;
 import org.spring.backendspring.item.service.ItemService;
 import org.springframework.data.domain.Page;
@@ -20,20 +19,19 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/shop")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000" )
+@CrossOrigin(origins = "http://localhost:3000")
 public class ItemController {
 
     private final ItemService itemService;
-    
 
     @GetMapping("")
     public ResponseEntity<Page<ItemDto>> itemSearchList(
-        @PageableDefault(size = 9, direction = Sort.Direction.DESC, sort = "createTime") Pageable pageable,
-        @RequestParam(value = "subject", required = false) String subject, 
-        @RequestParam(value = "search", required =  false) String search) {
+            @PageableDefault(size = 9, direction = Sort.Direction.DESC, sort = "createTime") Pageable pageable,
+            @RequestParam(value = "subject", required = false) String subject,
+            @RequestParam(value = "search", required = false) String search) {
 
-            Page<ItemDto> itemList = itemService.pagingSearchItemList(pageable, subject, search);
-            return ResponseEntity.ok(itemList);
+        Page<ItemDto> itemList = itemService.pagingSearchItemList(pageable, subject, search);
+        return ResponseEntity.ok(itemList);
     }
 
     // URL: http://localhost:8088/api/shop/detail/{id}
@@ -47,5 +45,77 @@ public class ItemController {
         return ResponseEntity.ok(itemDto);
     }
 
+    // item for Category
+
+    @GetMapping("/shoes")
+    public ResponseEntity<Page<ItemDto>> itemShoesList(
+            @PageableDefault(size = 9, direction = Sort.Direction.DESC, sort = "createTime") Pageable pageable,
+            @RequestParam(value = "subject", required = false) String subject,
+            @RequestParam(value = "search", required = false) String search
+    ) {
+
+        final String category = "shoe";
+        Page<ItemDto> itemList = itemService.getItemsByCategory(pageable, category, subject, search);
+
+        return ResponseEntity.ok(itemList);
+
+    }
     
+    @GetMapping("/equipment")
+    public ResponseEntity<Page<ItemDto>> itemEquipmentList(
+            @PageableDefault(size = 9, direction = Sort.Direction.DESC, sort = "createTime") Pageable pageable,
+            @RequestParam(value = "subject", required = false) String subject,
+            @RequestParam(value = "search", required = false) String search
+    ) {
+
+        final String category = "equipment";
+        Page<ItemDto> itemList = itemService.getItemsByCategory(pageable, category, subject, search);
+
+        return ResponseEntity.ok(itemList);
+
+    }
+    
+    @GetMapping("/accessory")
+    public ResponseEntity<Page<ItemDto>> itemAccessoryList(
+            @PageableDefault(size = 9, direction = Sort.Direction.DESC, sort = "createTime") Pageable pageable,
+            @RequestParam(value = "subject", required = false) String subject,
+            @RequestParam(value = "search", required = false) String search
+    ) {
+
+        final String category = "accessory";
+        Page<ItemDto> itemList = itemService.getItemsByCategory(pageable, category, subject, search);
+
+        return ResponseEntity.ok(itemList);
+
+    }
+    
+    @GetMapping("/cloth")
+    public ResponseEntity<Page<ItemDto>> itemClothList(
+            @PageableDefault(size = 9, direction = Sort.Direction.DESC, sort = "createTime") Pageable pageable,
+            @RequestParam(value = "subject", required = false) String subject,
+            @RequestParam(value = "search", required = false) String search
+    ) {
+
+        final String category = "cloth";
+        Page<ItemDto> itemList = itemService.getItemsByCategory(pageable, category, subject, search);
+
+        return ResponseEntity.ok(itemList);
+
+    }
+    
+    @GetMapping("/nutrition")
+    public ResponseEntity<Page<ItemDto>> itemNutritionList(
+            @PageableDefault(size = 9, direction = Sort.Direction.DESC, sort = "createTime") Pageable pageable,
+            @RequestParam(value = "subject", required = false) String subject,
+            @RequestParam(value = "search", required = false) String search
+    ) {
+
+        final String category = "nutrition";
+        Page<ItemDto> itemList
+                = itemService.getItemsByCategory(pageable, category, subject, search);
+
+        return ResponseEntity.ok(itemList);
+
+    }
+
 }
