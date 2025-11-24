@@ -9,8 +9,10 @@ import {
 } from "../../../apis/cart/cartApi";
 import "../../../css/cart/CartPage.css";
 
-// ⭐️ [추가] 이미지 로딩을 위한 백엔드 기본 URL 정의 (yml 설정 기반)
-const BASE_IMAGE_URL = "http://localhost:8088/api/images/"; 
+// ⭐️ [수정] 이미지 로딩을 위한 백엔드 기본 URL 정의
+// ShopDetailContainer와 경로를 통일했습니다. (http://localhost:8088/upload/)
+const BASE_IMAGE_URL = "http://localhost:8088/upload/"; 
+const NO_IMAGE_URL = "/images/noimage.jpg"; // 이미지 없음 파일 경로 추가
 
 export default function CartPage() {
   const navigate = useNavigate();
@@ -92,7 +94,9 @@ export default function CartPage() {
     const addItem = async () => {
       try {
         // 백엔드에서 itemSize를 quantity로 사용합니다.
-        await addItemToCart(cart.cartId, itemToAdd.id, 1);
+        // ShopDetailContainer에서 수량을 넘기지 않았으므로 기본 수량 1로 가정
+        const quantity = itemToAdd.quantity || 1; // itemToAdd에 quantity가 있으면 사용, 없으면 1
+        await addItemToCart(cart.cartId, itemToAdd.id, quantity);
         fetchItems();
         navigate("/cart", { replace: true });
       } catch (e) {
@@ -308,7 +312,12 @@ export default function CartPage() {
                           className="cart-item-thumbnail"
                         />
                       ) : (
-                        <div className="no-image">이미지 없음</div>
+                         // 이미지가 없을 때 NO_IMAGE_URL 사용
+                        <img
+                            src={NO_IMAGE_URL} 
+                            alt="이미지 없음"
+                            className="cart-item-thumbnail no-image"
+                        />
                       )}
                     </td>
 

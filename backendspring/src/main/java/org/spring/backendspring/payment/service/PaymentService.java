@@ -1,7 +1,8 @@
 package org.spring.backendspring.payment.service;
 
+import org.spring.backendspring.payment.dto.PaymentDto; // ⭐️ 추가: PaymentDto 임포트
 import org.spring.backendspring.payment.entity.PaymentEntity;
-import org.spring.backendspring.payment.entity.PaymentItemEntity; // ⭐️ 임포트 추가
+import org.spring.backendspring.payment.entity.PaymentItemEntity;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -19,12 +20,11 @@ public interface PaymentService {
 
     void paymentApproval(String pgToken, Long paymentId, Long productPrice, String productName, Long memberId);
 
-    // ⭐️ [수정된 부분] 단일 상품 정보 대신 List<PaymentItemEntity>를 받도록 변경
-    String pgRequest(String pg, Long memberId, List<PaymentItemEntity> itemsToPay);
+    // ⭐️ [수정된 부분] PaymentServiceImpl과 시그니처를 일치시킵니다.
+    String pgRequest(String pg, PaymentDto paymentDto); 
 
     String getJsonDb();
 
-    // PaymentService.java
     Page<PaymentEntity> getPayments(int page, int size, String keyword);
 
 }
