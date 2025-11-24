@@ -40,6 +40,7 @@ function App() {
         dispatch(setAccessToken(token));
         dispatch(setInitialized(true));
       } catch (err) {
+        dispatch(setInitialized(true));
         console.log("새로고침 로그인 오류 발생 >> ", err);
       }
     };

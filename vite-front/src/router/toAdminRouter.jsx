@@ -48,14 +48,18 @@ const AdminBoardDetail = lazy(() =>
   import("../components/container/admin/board/AdminBoardDetailContainer")
 );
 
-const AdminAddEvent = lazy(() =>
-  import("../components/container/admin/event/AdminAddEventContainer")
+const AdminAddNotice = lazy(() =>
+  import("../components/container/admin/notice/AdminAddNoticeContainer")
 );
-const AdminEvent = lazy(() =>
-  import("../components/container/admin/event/AdminEventListContainer")
+const AdminNoticeList = lazy(() =>
+  import("../components/container/admin/notice/AdminNoticeListContainer")
 );
-const AdminEventDetail = lazy(() =>
-  import("../components/container/admin/event/AdminEventDetailContainer")
+const AdminNoticeDetail = lazy(() =>
+  import("../components/container/admin/notice/AdminNoticeDetailContainer")
+);
+
+const AdminNoticeUpdate = lazy(() =>
+  import("../components/container/admin/notice/AdminNoticeUpdateContainer")
 );
 
 const toAdminRouter = () => {
@@ -181,26 +185,34 @@ const toAdminRouter = () => {
 
     // Event
     {
-      path: "addEvent",
+      path: "addNotice",
       element: (
         <Suspense fallback={Loading}>
-          <AdminAddEvent />
+          <AdminAddNotice />
         </Suspense>
       ),
     },
     {
-      path: "eventlist",
+      path: "noticeList",
       element: (
         <Suspense fallback={Loading}>
-          <AdminEvent />
+          <AdminNoticeList />
         </Suspense>
       ),
     },
     {
-      path: "eventDetail/:eventId",
+      path: "notice/detail/:noticeId",
       element: (
         <Suspense fallback={Loading}>
-          <AdminEventDetail />
+          <AdminNoticeDetail />
+        </Suspense>
+      ),
+    },
+    {
+      path: "notice/update/:noticeId",
+      element: (
+        <Suspense fallback={Loading}>
+          <AdminNoticeUpdate />
         </Suspense>
       ),
     },

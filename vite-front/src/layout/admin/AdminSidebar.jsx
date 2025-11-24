@@ -30,10 +30,10 @@ const AdminSidebar = () => {
         </li>
 
         <li>
-          <NavLink to="/admin/eventList">🎉 이벤트목록 관리</NavLink>
+          <NavLink to="/admin/noticeList">🎉 공지목록 관리</NavLink>
         </li>
         <li>
-          <NavLink to="/admin/addEvent">➕ 이벤트 등록</NavLink>
+          <NavLink to="/admin/addNotice">➕ 공지등록</NavLink>
         </li>
 
         <li>

@@ -1,10 +1,9 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import LogoutBtn from "./LogoutBtn";
 import HeaderStore from "../common/HeaderModal/HeaderStore";
-import LogoutBtn from "../../apis/auth/LogoutBtn";
 import HeaderCrewList from "../common/crewModal/CrewList";
 import { Link } from "react-router-dom";
+import LogoutBtn from "./LogoutBtn";
 
 // CSS
 import "../../css/common/header.css";
@@ -64,6 +63,9 @@ const Header = () => {
             </HeaderStore>
             <li>
               <Link to="/board">BOARD</Link>
+            </li>
+            <li>
+              <Link to="/notice">NOTICE</Link>
             </li>
             <li>
               <Link to="/api/marathon">MARATHON</Link>

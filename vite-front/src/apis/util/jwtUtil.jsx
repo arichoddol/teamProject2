@@ -6,6 +6,7 @@ import { setAccessToken } from "../../slices/jwtSlice";
 import { logoutFn } from "../auth/logout";
 
 const jwtAxios = axios.create();
+let isLoggingOut = false;
 
 // ----------- 리프레시 토큰을 불러와서 액세스 토큰 갱신 -----------
 const refreshTokenFn = async () => {
@@ -20,6 +21,12 @@ const refreshTokenFn = async () => {
     localStorage.setItem("accessToken", accessToken);
     return res;
   } catch (err) {
+    if (!isLoggingOut) {
+      isLoggingOut = true;
+      logoutFn();
+      alert("재로그인이 필요합니다.");
+      window.location.href = "/auth/login/";
+    }
     console.log("어떤 오류임? ", err);
   }
 };
@@ -53,7 +60,6 @@ const beforeRes = async (res) => {
   return res;
 };
 
-let isLoggingOut = false;
 // ----------- response fail -----------
 const responseFail = async (err) => {
   console.log("response fail error....");
