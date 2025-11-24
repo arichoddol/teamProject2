@@ -41,21 +41,29 @@ export const getPaymentsByPage = async (page = 0, size = 5, keyword = "") => {
 };
 
 // -----------------------------
-// KakaoPay 연동
+// KakaoPay 및 현금/카드 연동 (PG 요청)
 // -----------------------------
 
-// ⭐️ [수정된 부분] GET에서 POST로 변경, 단일 상품 파라미터 대신 paymentDto 객체 하나를 받음
+// ⭐️ [수정] pgRequest: 'kakao', 'CARD', 'CASH' 타입을 모두 허용하고 백엔드로 전달합니다.
 export const pgRequest = async (pg, paymentDto) => {
-  if (pg !== "kakao") throw new Error("지원되지 않는 PG사입니다.");
+    // 1. 허용되는 PG 타입 목록을 정의합니다.
+    const allowedPgs = ["kakao", "CARD", "CASH"]; 
 
-  // ⭐️ [415 해결] POST 요청 시, 세 번째 인자에 Content-Type 헤더를 명시
-  const res = await jwtAxios.post(`${PAYMENT_API}/pg/${pg}`, paymentDto, {
-      headers: {
-          'Content-Type': 'application/json' 
-      }
-  });
+    if (!allowedPgs.includes(pg)) {
+        // 'kakao', 'CARD', 'CASH'가 아닌 경우 오류 발생
+        throw new Error("지원되지 않는 결제 타입입니다."); 
+    }
 
-  return res.data.approvalUrl;
+    // 2. 모든 결제 타입은 동일한 엔드포인트로 paymentDto를 전송합니다.
+    const res = await jwtAxios.post(`${PAYMENT_API}/pg/${pg}`, paymentDto, {
+        headers: {
+            'Content-Type': 'application/json' 
+        }
+    });
+
+    // 백엔드는 카카오페이('kakao') 요청 시에만 리다이렉션 URL을 반환하고,
+    // CARD/CASH 요청 시에는 성공 URL을 approvalUrl 필드에 담아 반환합니다.
+    return res.data.approvalUrl; 
 };
 
 // -----------------------------
