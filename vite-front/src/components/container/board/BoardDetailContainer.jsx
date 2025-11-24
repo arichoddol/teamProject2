@@ -39,7 +39,7 @@ const BoardDetailContainer = () => {
 
     const REPLY_BASE_URL = 'http://localhost:8088/api/reply';
     const API_BASE_URL = 'http://localhost:8088/api/board';
-    const IMAGE_BASE_URL = 'http://localhost:8088/upload/';
+    const IMAGE_BASE_URL = 'http://localhost:8088/uploadImg/';
 
 
     const formatDate = (dateString) => {

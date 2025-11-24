@@ -1,0 +1,80 @@
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router';
+import jwtAxios from '../../../apis/util/jwtUtil';
+
+import "../../../css/common/crewModal.css"
+import { useSelector } from 'react-redux';
+
+
+const CrewList = ({children}) => {
+
+    const [crewList, setCrewList] = useState([]);
+
+    const API_BASE_URL = 'http://localhost:8088/api/crew';
+
+     // JWT
+    const accessToken = useSelector(state => state.jwtSlice.accessToken);
+    const memberId = useSelector(state => state.loginSlice.id);
+    const nickName = useSelector(state => state.loginSlice.nickName);
+
+    const fetchData = async () => {
+        const response = await jwtAxios.get(`${API_BASE_URL}/mycrewList/${memberId}`,
+     {
+                headers: { Authorization: `Bearer ${accessToken}` },
+                withCredentials: true,
+    });
+        console.log(response.data);
+
+    if(response.data){
+        setCrewList(response.data);
+
+    } else {
+        console.log("게시물 데이터가 존재하지 않음.");
+    }
+};
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+
+  return (
+    <div className="modal-container">
+        {children}
+
+        <div className="modal-box-crew">
+            
+            {console.log(crewList)}
+            <li>
+                <Link to="/crew/index">CREW MAIN</Link>
+            </li>
+            {crewList.length > 4 ? (
+                <>
+                {crewList.slice(0, 4).map((list) => (
+                    <li key={list.id}> 
+                        <Link to={`/crew/detail/${list.id}`}>{list.name}</Link>
+                    </li>
+                ))}
+
+                <li key="more">
+                    <Link to="/crew/list" className="more-link">
+                        더보기 ({crewList.length - 4}개 더 보기)
+                    </Link>
+                </li>
+            </>
+        ) : (
+            crewList.map((list) => (
+                <li key={list.id}>
+                    <Link to={`/crew/detail/${list.id}`}>{list.name}</Link>
+                </li>
+            ))
+        )}
+            
+           
+            
+        </div>
+    </div>
+  )
+}
+
+export default CrewList

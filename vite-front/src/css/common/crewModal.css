@@ -4,7 +4,7 @@
     cursor: pointer;
 }
 
-.modal-box {
+.modal-box-crew {
 
     opacity: 0;
     /* 투명하게 숨기기 */
@@ -14,12 +14,13 @@
     /* 부드럽게 나타나도록 애니메이션 추가 */
 
     position: absolute;
-    top: 2100%;
+    top: 1270%;
+    /* top: 2100%; */
 
     transform: translateX(-50%) translateY(-100%);
 
 
-    background-image: linear-gradient(to bottom, aliceblue, #ffffff);
+    background-image: linear-gradient(to bottom, aliceblue, silver);
     /* background-color: aliceblue; */
     color: white;
     padding: 8px 12px;
@@ -32,13 +33,12 @@
     white-space: nowrap;
 }
 
-.modal-container:hover .modal-box {
+.modal-container:hover .modal-box-crew {
     opacity: 1;
-    /* 보이게 만들기 */
     visibility: visible;
 }
 
-.modal-box ul {
+.modal-box-crew  ul {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -46,7 +46,7 @@
     flex-direction: column;
 }
 
-.modal-box li {
+.modal-box-crew  li {
     display: block;
     /* <li>는 기본적으로 블록이지만 명시 */
     padding: 5px 15px;
@@ -54,11 +54,11 @@
     line-height: 1.5;
 }
 
-.modal-box li a {
+.modal-box-crew  li a {
     text-decoration: none;
     /* 밑줄 제거 */
     color: #c50000;
     /* 링크 색상 */
     display: block;
     /* 링크가 <li> 영역 전체를 클릭 가능하게 함 */
-}
+} 

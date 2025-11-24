@@ -23,7 +23,7 @@ const ShopClothContainer = () => {
 
   const fetchData = async (page) => {
 
-    // const response = await axios.get("http://localhost:8088/api/shop");
+
     // const response = await axios.get(`http://localhost:8088/api/shop?page=${page}`);
     const response = await axios.get(`http://localhost:8088/api/shop/cloth?page=${page}`);
     const data = response.data;
