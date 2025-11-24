@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.spring.backendspring.board.dto.BoardDto;
+import org.spring.backendspring.board.dto.NoticeBoardDto;
 import org.spring.backendspring.common.BasicTime;
 import org.spring.backendspring.member.entity.MemberEntity;
 
@@ -42,18 +43,13 @@ public class BoardEntity extends BasicTime {
     private Long id;
     @Column(nullable = false)
     private String title;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 4000)
     private String content;
-
 
     private String category;
 
-
     private int attachFile;
     private int hit;
-
-    // createTime
-    // updateTime 
 
     // N:1
     @ManyToOne
@@ -88,6 +84,28 @@ public class BoardEntity extends BasicTime {
                         .memberEntity(boardDto.getMemberentity())
                         .attachFile(attachFileValue)
                         .build();
+    }
+
+    // noticeDto -> BoardEntity
+    public static BoardEntity toNoticeEntity(NoticeBoardDto noticeBoardDto) {
+        return BoardEntity.builder()
+                .id(noticeBoardDto.getId())
+                .title(noticeBoardDto.getTitle())
+                .content(noticeBoardDto.getContent())
+                .category(noticeBoardDto.getCategory())
+                .hit(noticeBoardDto.getHit())
+                .memberEntity(MemberEntity.builder()
+                        .id(noticeBoardDto.getMemberId())
+                        .build())
+                .build();
+    }
+
+    // notice 수정 (제목, 내용만)
+    public static BoardEntity toUpdateNoticeEntity(NoticeBoardDto noticeBoardDto,
+                                                   BoardEntity boardEntity) {
+        boardEntity.setTitle(noticeBoardDto.getTitle());
+        boardEntity.setContent(noticeBoardDto.getContent());
+        return boardEntity;
     }
     
 }

@@ -1,44 +1,34 @@
-import axios from 'axios';
-import React, { useEffect, useState, useRef } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { loginFn } from '../../../apis/auth/login';
-import { useDispatch } from 'react-redux';
-import { login } from '../../../slices/loginSlice';
-import { setCookie } from '../../../apis/util/cookieUtil';
-import { setAccessToken } from '../../../slices/jwtSlice';
-import { BACK_BASIC_URL } from '../../../apis/commonApis';
+import axios from "axios";
+import React, { useEffect, useState, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { loginFn } from "../../../apis/auth/login";
+import { useDispatch } from "react-redux";
+import { login } from "../../../slices/loginSlice";
+import { setAccessToken } from "../../../slices/jwtSlice";
 
-import { initializeThreeScene } from '../../../js/loginThree';
-import "../../../css/auth/auth_login.css"
+import { initializeThreeScene } from "../../../js/loginThree";
+import "../../../css/auth/auth_login.css";
 
 const AuthLoginContainer = () => {
-
-  // 로그인 상태 & 사용자 정보
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
 
   const mountRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
 
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // 입력한 값 감지 후 변경
   const onUsernameChange = (e) => {
     setUsername(e.target.value);
-  }
+  };
 
   const onPasswordChange = (e) => {
     setPassword(e.target.value);
-  }
+  };
 
   const onLoginFn = async () => {
     const rs = await loginFn(username, password);
-
-    // 응답코드
-    console.log(rs);
 
     if (rs.status === 200) {
       const id = rs.data.id;
@@ -48,13 +38,12 @@ const AuthLoginContainer = () => {
       const access = rs.data.accessToken;
 
       localStorage.setItem("accessToken", access);
-
       dispatch(login({ userEmail, id, role, nickName, isLogin: true }));
       dispatch(setAccessToken(access));
 
       navigate("/store/index");
-    };
-  }
+    }
+  };
 
   useEffect(() => {
     const container = mountRef.current;
@@ -64,9 +53,8 @@ const AuthLoginContainer = () => {
 
     try {
       cleanupFunction = initializeThreeScene(container);
-      // if success init 
+      // if success init
       setIsLoading(false);
-
     } catch (error) {
       console.error("Three.js init ERROR", error);
       setIsLoading(false);
@@ -77,16 +65,14 @@ const AuthLoginContainer = () => {
         cleanupFunction();
       }
     };
-
   }, []);
 
   return (
-
     <div className="login">
-      <div ref={mountRef} className='canvas'>
+      <div ref={mountRef} className="canvas">
         {isLoading && (
           <div className="3dloading">
-            <span className='span-3d'> 3D Loading... </span>
+            <span className="span-3d"> 3D Loading... </span>
           </div>
         )}
       </div>
@@ -94,18 +80,22 @@ const AuthLoginContainer = () => {
         <h1>로그인</h1>
         <ul>
           <li>
-            <input type="text"
-              name='username'
-              placeholder='email'
+            <input
+              type="text"
+              name="username"
+              placeholder="email"
               value={username}
-              onChange={onUsernameChange} />
+              onChange={onUsernameChange}
+            />
           </li>
           <li>
-            <input type="password"
-              name='password'
-              placeholder='password'
+            <input
+              type="password"
+              name="password"
+              placeholder="password"
               value={password}
-              onChange={onPasswordChange} />
+              onChange={onPasswordChange}
+            />
           </li>
           <li>
             <button onClick={onLoginFn}>로그인</button>
@@ -134,8 +124,7 @@ const AuthLoginContainer = () => {
         </ul>
       </div>
     </div>
+  );
+};
 
-  )
-}
-
-export default AuthLoginContainer
+export default AuthLoginContainer;

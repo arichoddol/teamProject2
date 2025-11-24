@@ -1,8 +1,9 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import LogoutBtn from "../../apis/auth/LogoutBtn";
 import HeaderStore from "../common/HeaderModal/HeaderStore";
+import HeaderCrewList from "../common/crewModal/CrewList";
 import { Link } from "react-router-dom";
+import LogoutBtn from "./LogoutBtn";
 
 // CSS
 import "../../css/common/header.css";
@@ -23,19 +24,19 @@ const Header = () => {
             {isLogin ? (
               // **로그인 상태일 때 메뉴**
               <>
-                <li>
-                  <LogoutBtn />
-                </li>
+                <LogoutBtn />
                 <li>
                   <Link to="/cart">CART</Link>
-                </li>
-                <li>
-                  <Link to="/store">SHOP</Link>
                 </li>
 
                 <li>
                   <Link to="/myPage">myPage</Link>
                 </li>
+                <HeaderCrewList>
+                  <li>
+                    <Link to="/crew/list">CREW</Link>
+                  </li>
+                </HeaderCrewList>
                 {role === "ADMIN" ? (
                   <li>
                     <Link to="/admin/index">ADMIN</Link>
@@ -50,24 +51,21 @@ const Header = () => {
                 <li>
                   <Link to="/auth/join">JOIN</Link>
                 </li>
+                <li>
+                  <Link to="/crew/list">CREW</Link>
+                </li>
               </>
             )}
-            <li>
-              <Link to="/board">BOARD</Link>
-            </li>
             <HeaderStore>
               <li>
                 <Link to="/store">STORE</Link>
               </li>
             </HeaderStore>
-            {/* <li>
-              <Link to="/store">STORE</Link>
-            </li> */}
             <li>
-              <Link to="/crew/list">CREW</Link>
+              <Link to="/board">BOARD</Link>
             </li>
             <li>
-              <Link to={"/event"}>EVENT</Link>
+              <Link to="/notice">NOTICE</Link>
             </li>
             <li>
               <Link to="/api/marathon">MARATHON</Link>

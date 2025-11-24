@@ -3,28 +3,40 @@ import { BACK_BASIC_URL } from "../commonApis";
 import { setCookie } from "./cookieUtil";
 import store from "../../store/store";
 import { setAccessToken } from "../../slices/jwtSlice";
+import { logoutFn } from "../auth/logout";
 
 const jwtAxios = axios.create();
+let isLoggingOut = false;
 
 // ----------- 리프레시 토큰을 불러와서 액세스 토큰 갱신 -----------
 const refreshTokenFn = async () => {
-  const res = await axios.post(
-    `${BACK_BASIC_URL}/api/refresh/token`,
-    {},
-    { withCredentials: true }
-  );
-  const accessToken = res.data.accessToken;
-  store.dispatch(setAccessToken(accessToken));
-  return res;
+  try {
+    const res = await axios.post(
+      `${BACK_BASIC_URL}/api/refresh/token`,
+      {},
+      { withCredentials: true }
+    );
+    const accessToken = res.data.accessToken;
+    store.dispatch(setAccessToken(accessToken));
+    localStorage.setItem("accessToken", accessToken);
+    return res;
+  } catch (err) {
+    if (!isLoggingOut) {
+      isLoggingOut = true;
+      logoutFn();
+      alert("재로그인이 필요합니다.");
+      window.location.href = "/auth/login/";
+    }
+    console.log("어떤 오류임? ", err);
+  }
 };
 
 // ----------- before request 요청 인터셉터 -----------
 const beforeReq = (config) => {
   console.log("before request....");
-  const accessToken = store.getState().jwtSlice.accessToken;
-  // const memberInfo = getCookie("member");
-  // header에 access 토큰이 없으면 로그인 안되어있는걸로 간주
+  const accessToken = localStorage.getItem("accessToken");
 
+  // header에 access 토큰이 없으면 로그인 안되어있는걸로 간주
   if (!accessToken) {
     console.log("Member Not Found");
 
@@ -32,8 +44,6 @@ const beforeReq = (config) => {
       response: { data: { error: "REQUIRE_LOGIN" } },
     });
   }
-
-  
 
   return config;
 };
@@ -60,20 +70,14 @@ const responseFail = async (err) => {
 
     try {
       rs = await refreshTokenFn();
-      const id = store.getState().loginSlice.id;
-      const isLogin = store.getState().loginSlice.isLogin;
-
-      // 쿠키 빼고 최대한 상태로 관리할거임
-      // const memberData = {
-      //   id: id,
-      //   status: isLogin,
-      // };
-
-      // const memberValue = JSON.stringify(memberData);
-      // // 만료정보 재발급
-      // setCookie("member", memberValue, 1);
     } catch (err) {
       console.log("리프레시 토큰 갱신 실패 ", +err);
+      if (!isLoggingOut) {
+        isLoggingOut = true;
+        logoutFn();
+        alert("재로그인이 필요합니다.");
+        window.location.href = "/auth/login/";
+      }
       return Promise.reject(err);
     }
 

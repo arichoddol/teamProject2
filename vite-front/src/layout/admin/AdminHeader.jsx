@@ -1,13 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutAction } from "../../slices/loginSlice";
-import { deleteAccessToken } from "../../slices/jwtSlice";
-import { removeCookie } from "../../apis/util/cookieUtil";
-import LogoutBtn from "../../apis/auth/LogoutBtn";
+import LogoutBtn from "../../components/common/LogoutBtn";
 
 const AdminHeader = () => {
-  const dispatch = useDispatch();
   const userEmail = useSelector((state) => state.loginSlice.userEmail);
 
   return (
@@ -24,9 +20,7 @@ const AdminHeader = () => {
           <li>
             <Link to="/">SHOP</Link>
           </li>
-          <li>
-            <LogoutBtn />
-          </li>
+          <LogoutBtn />
         </ul>
       </div>
     </header>

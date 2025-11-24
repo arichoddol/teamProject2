@@ -1,8 +1,10 @@
 package org.spring.backendspring.member.controller;
 
 import jakarta.validation.Valid;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import lombok.RequiredArgsConstructor;
 import org.spring.backendspring.config.security.MyUserDetails;
 import org.spring.backendspring.member.dto.MemberDto;
@@ -49,20 +51,19 @@ public class MemberController {
     }
 
     @GetMapping("/detail/{id}")
-    @PreAuthorize("#id == authentication.principal.memberEntity.id")
-    public ResponseEntity<?> getMember(@PathVariable("id") Long id) {
+    @PreAuthorize("isAuthenticated() and #id.toString() == authentication.principal.memberEntity.id.toString()")
+    public ResponseEntity<?> getMember(@PathVariable("id") Long id,
+                                       @AuthenticationPrincipal MyUserDetails myUserDetails) {
         MemberDto memberDetail = memberService.findById(id);
         return ResponseEntity.ok(memberDetail);
     }
 
     @PutMapping("/update/{id}")
+    @PreAuthorize("isAuthenticated() and #id.toString() == authentication.principal.memberEntity.id.toString()")
     public ResponseEntity<?> updateMember(@PathVariable("id") Long id,
                                           @RequestPart("memberDto") MemberDto memberDto,
                                           @RequestPart(value = "memberFile", required = false) MultipartFile memberFile,
                                           @AuthenticationPrincipal MyUserDetails myUserDetails) {
-        if (!id.equals(myUserDetails.getMemberId())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 권한이 없습니다: 로그인 정보가 일치하지 않습니다.");
-        }
         MemberDto updated = memberService.updateMember(id, memberDto, memberFile);
         return ResponseEntity.ok(updated);
     }
@@ -71,7 +72,7 @@ public class MemberController {
     public ResponseEntity<String> deleteMember(@PathVariable Long id,
                                                @AuthenticationPrincipal MyUserDetails myUserDetails) {
         if (!id.equals(myUserDetails.getMemberId())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 권한이 없습니다: 로그인 정보가 일치하지 않습니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("삭제 권한이 없습니다: 로그인 정보가 일치하지 않습니다.");
         }
         memberService.deleteMember(id);
         return ResponseEntity.ok("회원 탈퇴 성공");

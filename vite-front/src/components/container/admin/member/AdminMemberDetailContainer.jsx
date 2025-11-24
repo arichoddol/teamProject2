@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
-import jwtAxios from "../../../apis/util/jwtUtil";
-import { BACK_BASIC_URL } from "../../../apis/commonApis";
+import jwtAxios from "../../../../apis/util/jwtUtil";
+import { BACK_BASIC_URL } from "../../../../apis/commonApis";
 import { useSelector } from "react-redux";
 
 const AdminMemberDetailContainer = () => {
