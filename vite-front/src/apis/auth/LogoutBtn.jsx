@@ -1,24 +1,25 @@
-import store from '../../store/store'
-import axios from 'axios';
-import { BACK_BASIC_URL } from '../commonApis';
-import { useDispatch } from 'react-redux';
-import { logoutAction } from '../../slices/loginSlice';
-import { useNavigate } from 'react-router';
+import store from "../../store/store";
+import axios from "axios";
+import { BACK_BASIC_URL } from "../commonApis";
+import { useDispatch } from "react-redux";
+import { logoutAction } from "../../slices/loginSlice";
+import { useNavigate } from "react-router";
+import { deleteAccessToken } from "../../slices/jwtSlice";
 
 const LogoutBtn = () => {
-
-  const ACCESS_TOKEN_KEY = 'accessToken';
+  const ACCESS_TOKEN_KEY = "accessToken";
   const accessToken = store.getState().jwtSlice.accessToken;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const logoutFn = async () => {
-    
-      try {
-      const res = await axios.post(`${BACK_BASIC_URL}/api/member/logout`,
-        {}, {
+    try {
+      const res = await axios.post(
+        `${BACK_BASIC_URL}/api/member/logout`,
+        {},
+        {
           headers: {
-            Authorization: `Bearer ${accessToken}`
+            Authorization: `Bearer ${accessToken}`,
           },
           withCredentials: true,
         }
@@ -26,24 +27,25 @@ const LogoutBtn = () => {
 
       localStorage.removeItem(ACCESS_TOKEN_KEY);
       dispatch(logoutAction());
+      dispatch(deleteAccessToken());
       alert("로그아웃 처리되었습니다!");
       navigate("/store/index");
 
       return res.status;
-      
-    } catch(err) {
+    } catch (err) {
       localStorage.removeItem(ACCESS_TOKEN_KEY);
       dispatch(logoutAction());
       alert("로그아웃 처리되었습니다!");
       navigate("/store/index");
       console.log("로그아웃 처리 중 오류 발생:", err);
     }
-  }
+  };
 
   return (
-  <button onClick={logoutFn}>로그아웃</button>
-  )
-}
+    <li onClick={logoutFn} className="logout-button">
+      LOGOUT
+    </li>
+  );
+};
 
-export default LogoutBtn
-
+export default LogoutBtn;

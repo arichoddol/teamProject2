@@ -10,12 +10,15 @@ import toEventRouter from "./toEventRouter";
 import toCartRouter from "./toCartRouter";
 import toPaymentRouter from "./toPaymentRouter";
 import toMyCrewRouter from "./toMyCrewRouter";
+import { toMyPageRouter } from "./toMyPageRouter";
+import toApiRouter from "./toApiRouter";
 
 const Loading = <div className="loading">Loading..</div>;
 
 // Layout
 const StoreLayout = lazy(() => import(`../layout/StoreLayout`));
 const LoginLayout = lazy(() => import(`../layout/LoginLayout`));
+const MyPageLayout = lazy(() => import(`../layout/MyPageLayout`));
 const AdminLayout = lazy(() => import(`../layout/admin/AdminLayout`));
 const BoardLayout = lazy(() => import(`../layout/BoardLayout`));
 const EventLayout = lazy(() => import(`../layout/EventLayout`));
@@ -25,6 +28,7 @@ const CartLayout = lazy(() => import(`../layout/CartLayout`));
 const PaymentLayout = lazy(() => import(`../layout/PaymentLayout`));
 
 const MyCrewLayout = lazy(() => import("../layout/MyCrewLayout"));
+const ApiLayout = lazy(() => import("../layout/ApiLayout"));
 
 // Page
 const IndexPage = lazy(() => import(`../pages/IndexPage`));
@@ -58,6 +62,15 @@ const root = createBrowserRouter([
       </Suspense>
     ),
     children: toLoginOutRouter(),
+  },
+  {
+    path: "myPage",
+    element: (
+      <Suspense fallback={Loading}>
+        <MyPageLayout />
+      </Suspense>
+    ),
+    children: toMyPageRouter(),
   },
   {
     // shop
@@ -129,7 +142,16 @@ const root = createBrowserRouter([
     ),
     children: toMyCrewRouter(),
   },
+  {
+    // api
+    path: "api",
+    element: (
+      <Suspense fallback={Loading}>
+        <ApiLayout />
+      </Suspense>
+    ),
+    children: toApiRouter(),
+  },
 ]);
 
 export default root;
-
