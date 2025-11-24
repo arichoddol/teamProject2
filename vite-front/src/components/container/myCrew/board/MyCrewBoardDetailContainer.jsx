@@ -187,31 +187,23 @@ const MyCrewBoardDetailContainer = () => {
             )}
           </div>
         </div>
-        <div className="crewBoardBtn">
-          <button onClick={() => navigate(`/mycrew/${crewId}/board/create`)}>글작성</button>
-          <button onClick={() => navigate(`/mycrew/${crewId}/board/list`)}>글목록</button>
-          {board.memberId === loginMemberId && (
-            <li color='crewBoardBtn'>
-              <button onClick={() => navigate(`/mycrew/${crewId}/board/update/${boardId}`)}>수정</button>
-              <button onClick={deleteBoard}>x</button>
-            </li>
-          )}
-        </div>
       </div>
 
       <div className="crewBoardComment">
         <div className="crewBoardComment-con">
           <div className="writeComment">
             <h3 className='crewComment'>댓글({totalComments})</h3>
+            <div className="writeComment-con">
               <textarea 
                 name="comment"
                 id='comment'
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 required
-                placeholder='내용입력' 
+                placeholder='타인을 배려하는 마음으로 댓글을 달아주세요.' 
               />
-              <button type="button" onClick={submitComment}>댓글 작성</button>
+              <button type="button" onClick={submitComment}>등록</button>
+            </div>
           </div>
           <div className="commentList">
             {comments.length > 0 ? comments.map((comment) => (
@@ -246,6 +238,20 @@ const MyCrewBoardDetailContainer = () => {
               {/* <button onClick={() => setPage(totalPages - 1)} disabled={page === totalPages - 1}>마지막</button> */}
             </div>
           </div>
+        </div>
+      </div>
+      <div className="crewBoardBtn">
+        <div className="crewBoardListBtn">
+          <button className='crewBoardBtnBtn' onClick={() => navigate(`/mycrew/${crewId}/board/list`)}>글목록</button>
+        </div>
+        <div className="crewBoardWrite">
+          <button className='crewBoardBtnBtn' onClick={() => navigate(`/mycrew/${crewId}/board/create`)}>글작성</button>
+          {board.memberId === loginMemberId && (
+            <>
+              <button className='crewBoardBtnBtn' onClick={() => navigate(`/mycrew/${crewId}/board/update/${boardId}`)}>수정</button>
+              <button className='crewBoardBtnBtn' onClick={deleteBoard}>삭제</button>
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -13,9 +13,13 @@
     align-self: center; /* 상위 flex 컨테이너 안에서 가로 중앙 */
   }
   
+.crewBoardDetail .crewBoardDetail-con {
+  padding-top: 15px;
+}
+
   /* 게시글 제목 */
 .crewBoardDetail .crewBoardDetail-con .crewBoardTitle>h3.crewBoardTitle {
-    font-size: 1.4rem;
+    font-size: 1rem;
     font-weight: 500;
     color: #111;
     line-height: 1.2;
@@ -34,25 +38,26 @@
 .crewBoardDetail .crewBoardDetail-con .crewBoardHeader .crewBoardInfo {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 5px;
 }
 
 .crewBoardHeader .crewBoardWriter {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 2px;
 }
 
 .crewBoardHeader .crewBoardWriter>span.crewBoardWriter2 {
-    font-weight: 600;
+    font-weight: 500;
+    font-size: 0.9rem;
     color: #333;
 }
 
 .crewBoardHeader .crewBoardTime {
     display: flex;
     align-items: center;
-    font-size: 0.7rem;
-    gap: 6px;
+    font-size: 0.6rem;
+    gap: 5px;
     color: #777777;
 }
 
@@ -67,57 +72,64 @@
 }
   
   /* 게시글 내용 */
-.crewBoardContent {
+.crewBoardDetail-con .crewBoardContent {
     display: flex;
     flex-direction: column;
     padding: 40px 25px;
     gap: 20px;
+    min-height: 300px;
 }
   
-.crewBoardContent>p.crewBoardContent2 {
+.crewBoardDetail-con .crewBoardContent>p.crewBoardContent2 {
     line-height: 1.6;
     color: #222;
     white-space: pre-wrap; /* 줄바꿈 유지 */
 }
   
   /* 이미지 갤러리 */
-.crewBoardImage .crewBoardImages {
+.crewBoardDetail-con .crewBoardImage .crewBoardImages {
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
     gap: 12px;
 }
   
 .crewBoardImage .crewBoardImages>img.crewBoardImg {
     width: 100%;
-    max-width: 200px;
-    border-radius: 8px;
+    max-width: 500px;
+    border-radius: 3px;
     object-fit: cover;
   }
   
   /* 게시글 버튼 그룹 중앙 정렬 */
 .crewBoardBtn {
     display: flex;
-    gap: 12px;
-    justify-content: center;
+    justify-content: space-between;
+    padding: 0 10px 10px;
 }
   
-  .crewBoardBtn button {
-    padding: 8px 16px;
+.crewBoardBtn button.crewBoardBtnBtn {
+    padding: 6px 14px;
     border: none;
     border-radius: 6px;
-    background-color: #0070f3; /* 파란색 포인트 */
+    background-color: #538ed1; /* 파란색 포인트 */
     color: #fff;
     cursor: pointer;
-    font-weight: 600;
+    font-size: 0.8rem;
+    font-weight: 500;
     transition: background-color 0.2s ease;
-  }
-  
-  .crewBoardBtn button:hover {
-    background-color: #005bb5;
+}
+
+.crewBoardBtn .crewBoardWrite {
+  display: flex;
+  gap: 5px;
+}
+  .crewBoardBtn button.crewBoardBtnBtn:hover {
+    background-color: #3378bd;
   }
   
   /* 댓글 영역 전체 */
-  .crewBoardComment-con {
+.crewBoardComment .crewBoardComment-con {
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -126,73 +138,92 @@
   }
   
   /* 댓글 작성폼 */
-  .writeComment {
+.crewBoardComment .crewBoardComment-con .writeComment {
     display: flex;
     flex-direction: column;
     gap: 8px;
     width: 100%;
-    max-width: 600px; /* 댓글 영역 폭 제한 */
+    /* max-width: 600px; 댓글 영역 폭 제한 */
   }
+
+.crewBoardComment .crewBoardComment-con .writeComment>h3.crewComment {
+  display: flex;
+  padding: 2px 5px;
+  font-size: 16px;
+}
+
+.crewBoardComment .crewBoardComment-con .writeComment .writeComment-con {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 15px;
+  border-bottom: 1px solid #cccccc;
+  border-top: 1px solid #cccccc;
+}
   
-  .writeComment textarea {
+.writeComment .writeComment-con>textarea {
     width: 100%;
-    min-height: 80px;
+    min-height: 90px;
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 8px;
-    resize: vertical;
-    font-size: 0.95rem;
+    resize: none;
+    font-size: 0.75rem;
   }
   
-  .writeComment button {
-    align-self: center; /* 작성 버튼 중앙 정렬 */
+.writeComment .writeComment-con>textarea::placeholder {
+    font-size: 0.65rem;
+  }
+  
+.writeComment .writeComment-con>button {
+    align-self: flex-end;
     padding: 6px 14px;
-    border-radius: 6px;
+    border-radius: 5px;
     border: none;
-    background-color: #0070f3;
+    background-color: hsl(212, 67%, 59%);
     color: #fff;
     cursor: pointer;
-    font-weight: 500;
   }
   
   .writeComment button:hover {
-    background-color: #005bb5;
+    background-color: #3378bd;
   }
   
   /* 댓글 리스트 */
-  .commentList {
+.crewBoardComment .crewBoardComment-con .commentList {
     display: flex;
     flex-direction: column;
     gap: 12px;
     width: 100%;
-    max-width: 600px; /* 댓글 영역 폭 제한 */
-  }
+    padding: 8px 10px;
+    /* max-width: 600px; 댓글 영역 폭 제한 */
+}
   
   /* 개별 댓글 */
-  .aComment {
+.crewBoardComment .crewBoardComment-con .commentList .aComment {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 6px;
     padding: 12px 40px 12px 12px; /* 삭제 버튼 공간 확보 */
     background-color: #f9f9f9;
-    border-radius: 8px;
+    border-radius: 6px;
     border: 1px solid #e0e0e0;
   }
   
   /* 댓글 작성자, 시간 */
-  .commentWriter {
+.crewBoardComment .crewBoardComment-con .commentList .aComment>span.commentWriter {
     font-weight: 600;
+    font-size: 0.65rem;
     color: #111;
-  }
+}
   
-  .commentTime {
-    font-size: 0.8rem;
+.aComment>span.commentTime {
+    font-size: 0.5rem;
     color: #888;
   }
   
-  .commentContent p {
-    font-size: 0.95rem;
+.aComment .commentContent>p {
+    font-size: 0.75rem;
     color: #222;
   }
   
@@ -216,3 +247,32 @@
     color: #555;
   }
   
+  /* 페이지네이션 */
+.commentListPagination {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  padding-top: 10px;
+  }
+  
+  .commentListPagination button {
+  padding: 3px 8px;
+  border: 1px solid #81addf;
+  font-size: 0.7rem;
+  border-radius: 6px;
+  background-color: white;
+  color: #1e568a;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  }
+  
+  .commentListPagination>button:hover:not(:disabled) {
+  background-color: #4a7dcf;
+  color: white;
+  }
+  
+  .commentListPagination>button:disabled {
+  cursor: default;
+  opacity: 0.5;
+  }

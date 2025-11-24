@@ -1,14 +1,12 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 const MyCrewBoardContainer = () => {
   const { crewId } = useParams();
   const navigate = useNavigate();
   const [crewBoardList, setCrewBoardList] = useState([]);
-  
 
-  const [page, setPage] = useState(0);
   const [size] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
   const [startPage, setStartPage] = useState(0)
@@ -18,6 +16,18 @@ const MyCrewBoardContainer = () => {
 
   const [keyword, setKeyword] = useState('');
   const [subject, setSubject] = useState('전체')
+
+  // 페이지 유지
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [page, setPage] = useState(() => {
+    const p = parseInt(searchParams.get('page'))
+    return isNaN(p) ? 0 : p;
+  })
+  const pageChange = (newPage) => {
+    setPage(newPage)
+    searchParams.set('page', newPage)
+    setSearchParams(searchParams)
+  }
 
   const formattedDate = (el) => new Date(el).toLocaleString('ko-KR', {
     year: 'numeric',
@@ -51,17 +61,14 @@ const MyCrewBoardContainer = () => {
   useEffect(() => {
     if (!crewId) return;
     boardList();
-  }, [crewId, page, keyword, subject])
+    window.scrollTo({top:0, behavior: 'smooth'})
+  }, [crewId, page])
 
   const search = (e) => {
     e.preventDefault();
     setPage(0);
     boardList();
   }
-
-  useEffect(() => {
-    setPage(0)
-  }, [crewId])
 
   const create = () => navigate(`/mycrew/${crewId}/board/create/`)
 
@@ -94,43 +101,49 @@ const MyCrewBoardContainer = () => {
               <p>등록된 게시글이 없습니다.</p>
             ) : (
               <ul>
-                {crewBoardList.map((board) => (                    
-                    <li key={board.id}>
-                        <Link to={`/mycrew/${crewId}/board/detail/${board.id}`}>
-                            <div className="boardContent">
-                                <div className="crewBoard">
-                                  {board.memberNickName}
-                                </div>
-                                <div className="crewBoardTitle">
-                                  {board.title}
-                                </div>
-                                <div className='crewBoardCreateTime'>
-                                  {formattedDate(board.createTime)}
-                                </div>
-                                <div className="crewBoardContet">
-                                  
-                                </div>
-                            </div>
-                        </Link>
-                    </li>                    
-                ))}
+                {crewBoardList.map((board) => { 
+                  console.log(board.newFileName);
+                    return (
+                      <li key={board.id}>
+                          <Link to={`/mycrew/${crewId}/board/detail/${board.id}`}>
+                              <div className="boardContent">
+                                  <div className="crewBoard">
+                                    {board.memberNickName}
+                                  </div>
+                                  <div className="crewBoardTitle">
+                                    {board.title}
+                                  </div>
+                                  <div className='crewBoardCreateTime'>
+                                    {formattedDate(board.createTime)}
+                                  </div>
+                                  <div className="crewBoardContent">
+                                    {board.newFileName.length>0 && 
+                                      <img src="/images/fileIcon.png" alt="file" />
+                                    }
+                                  </div>
+                              </div>
+                          </Link>
+                      </li>                    
+
+                    )          
+})}
             </ul>
             )}
 
           <div className="crewBoardPagination">
-            <button onClick={() => setPage(0)} disabled={page === 0}>처음</button>
-            <button onClick={() => setPage(page - 1)} disabled={!hasPrevious}>이전</button>
+            <button onClick={() => pageChange(0)} disabled={page === 0}>처음</button>
+            <button onClick={() => pageChange(page - 1)} disabled={!hasPrevious}>이전</button>
             {Array.from({ length: endPage - startPage + 1 }, (_, idx) => (
               <button
                 key={idx}
-                onClick={() => setPage(startPage + idx - 1)}
+                onClick={() => pageChange(startPage + idx - 1)}
                 disabled={startPage + idx - 1 === page}
               >
                 {startPage + idx}
               </button>
             ))}
-            <button onClick={() => setPage(page + 1)} disabled={!hasNext}>다음</button>
-            <button onClick={() => setPage(totalPages - 1)} disabled={page === totalPages - 1}>마지막</button>
+            <button onClick={() => pageChange(page + 1)} disabled={!hasNext}>다음</button>
+            <button onClick={() => pageChange(totalPages - 1)} disabled={page === totalPages - 1}>마지막</button>
           </div>
         </div>
     </div>

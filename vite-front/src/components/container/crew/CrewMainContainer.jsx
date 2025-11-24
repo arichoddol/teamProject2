@@ -56,15 +56,15 @@ const CrewMainContainer = () => {
               <h1>내 크루 목록</h1>
               <ul>
                 {myCrewList.map((crew) => {
-                  const images = crew.crewImageEntities || [];
+                  const images = crew.crewImages || [];
                   return (
                     <li key={crew.id}>
                       <Link to={`/mycrew/${crew.crewId}`}>
                         <div className="crewListLeft">
                           {images.length > 0 ? (
                             <img
-                              src={images[0].newName}
-                              alt={`${crew.name} 이미지`}
+                              src={images[0]}
+                              alt={`${crew.crewName} 이미지`}
                               className="crewImage"
                             />
                           ) : (

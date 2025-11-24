@@ -59,7 +59,7 @@ public class CrewBoardServiceImpl implements CrewBoardService {
             }
         }
 
-        Page<CrewBoardDto> mycrewBoardPage = crewBoardPage.map(CrewBoardDto::toDto2);
+        Page<CrewBoardDto> mycrewBoardPage = crewBoardPage.map(CrewBoardDto::toDto);
 
         return PagedResponse.of(mycrewBoardPage);
     }
