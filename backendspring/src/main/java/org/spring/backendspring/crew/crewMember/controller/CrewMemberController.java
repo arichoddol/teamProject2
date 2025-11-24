@@ -3,6 +3,9 @@ package org.spring.backendspring.crew.crewMember.controller;
 import lombok.RequiredArgsConstructor;
 import org.spring.backendspring.crew.crewMember.dto.CrewMemberDto;
 import org.spring.backendspring.crew.crewMember.service.CrewMemberService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +23,26 @@ public class CrewMemberController {
 
     //크루원 리스트
     @GetMapping({"","/"})
-    public ResponseEntity<?> CrewMemberList(@PathVariable("crewId") Long crewId){
-        List<CrewMemberDto> crewMemberDtoList = crewMemberService.findCrewMemberList(crewId);
+    public ResponseEntity<?> CrewMemberList(@PathVariable("crewId") Long crewId,
+            @PageableDefault(page = 0, size = 8, sort = "id")Pageable pageable,
+            @RequestParam(name = "subject", required = false) String subject,
+            @RequestParam(name = "search", required = false) String search){
+        Page<CrewMemberDto> page = crewMemberService.findCrewMemberList(crewId, pageable, subject, search);
+        int blockNum = 3;
+        int nowPage = page.getNumber() + 1;
+        int totalPages = page.getTotalPages();
+
+        int startPage = ((nowPage - 1) / blockNum) * blockNum + 1;
+        int endPage = Math.min(startPage + blockNum - 1, totalPages);
+        
         Map<String, Object> crewMemberListMap = new HashMap<>();
-        crewMemberListMap.put("crewMember", crewMemberDtoList);
+        crewMemberListMap.put("crewMember", page);
+        crewMemberListMap.put("nowPage", nowPage);
+        crewMemberListMap.put("totalPages", totalPages);
+        crewMemberListMap.put("startPage", startPage);
+        crewMemberListMap.put("endPage", endPage);
+        crewMemberListMap.put("pageSize", page.getSize());
+        crewMemberListMap.put("totalElements", page.getTotalElements());
         return ResponseEntity.status(HttpStatus.OK).body(crewMemberListMap);
     }
 

@@ -31,8 +31,8 @@ const MyCrewMainContainer = () => {
   }, [])
 
   return (
-    <div className="myCrewMain">
-      <div className="myCrewMain-con">
+    <div className="myCrew">
+      <div className="myCrew-con">
         <div style={{height: "200vh"}}>MyCrewMainContainer {crewId}
           {/* DTO List<??Entity> 를 그대로 toDto로 받는걸 고쳐야함 
           무한참조나서 데이터를 못가져와요 */}

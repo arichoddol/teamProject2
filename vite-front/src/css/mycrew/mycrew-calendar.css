@@ -1,0 +1,184 @@
+/* ============================
+   MyCrew 달력 전체 카드 스타일
+   ============================ */
+
+   .myCrew .myCrew-calendar {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 14px 40px rgba(15, 23, 42, 0.18);
+    padding: 20px 24px 28px;
+    box-sizing: border-box;
+    margin-top: 12px;
+  }
+  
+  /* 상단 제목 */
+  .myCrew .myCrew-calendar > h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 18px;
+  }
+  
+  
+  /* ============================
+     FullCalendar 공통
+     ============================ */
+  
+  .myCrew .myCrew-calendar .fc {
+    font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
+      sans-serif;
+    color: #374151;
+    font-size: 13px;
+  }
+  
+  /* ============================
+     ─ Toolbar (prev / next / today / add button)
+     ============================ */
+  
+  .myCrew .myCrew-calendar .fc-toolbar {
+    margin-bottom: 12px !important;
+  }
+  
+  .myCrew .myCrew-calendar .fc-toolbar-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1f2937;
+  }
+  
+  /* 공통 버튼 */
+  .myCrew .myCrew-calendar .fc .fc-button {
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background: #f3f4f6;
+    color: #374151;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    transition: background 0.15s ease, border-color 0.15s ease,
+      transform 0.1s ease;
+  }
+  
+  .myCrew .myCrew-calendar .fc .fc-button:hover {
+    background: #e5e7eb;
+    transform: translateY(-1px);
+  }
+  
+  /* today 버튼 강조 */
+  .myCrew .myCrew-calendar .fc .fc-today-button:not(:disabled) {
+    background: #3b82f6;
+    border-color: #2563eb;
+    color: #fff;
+  }
+  
+  .myCrew .myCrew-calendar .fc .fc-today-button:not(:disabled):hover {
+    background: #2563eb;
+  }
+  
+  /* 커스텀 버튼 (런닝 스케줄 추가) */
+  .myCrew .myCrew-calendar .fc-addCrewRunButton-button {
+    background: #3b82f6 !important;
+    border-color: #2563eb !important;
+    color: #ffffff !important;
+    font-weight: 600;
+  }
+  
+  .myCrew .myCrew-calendar .fc-addCrewRunButton-button:hover {
+    background: #2563eb !important;
+  }
+  
+  
+  /* ============================
+     요일 헤더 영역
+     ============================ */
+  
+  .myCrew .myCrew-calendar .fc-col-header {
+    border: none;
+  }
+  
+  .myCrew .myCrew-calendar .fc-col-header-cell {
+    background: #f3f4f6;
+    padding: 8px 0;
+    border: 1px solid #e5e7eb !important;
+    font-weight: 600;
+    color: #4b5563;
+    font-size: 12px;
+  }
+  
+  
+  /* ============================
+     날짜 셀
+     ============================ */
+  
+  .myCrew .myCrew-calendar .fc-daygrid-day {
+    background: #ffffff;
+    border: 1px solid #f3f4f6;
+    transition: background 0.15s ease;
+  }
+  
+  /* 날짜 숫자 */
+  .myCrew .myCrew-calendar .fc-daygrid-day-number {
+    font-size: 12px;
+    padding: 4px 6px;
+    color: #6b7280;
+  }
+  
+  /* hover 시 은은하게 */
+  .myCrew .myCrew-calendar .fc-daygrid-day:hover {
+    background: #f9fafb;
+  }
+  
+  /* 오늘 날짜 */
+  .myCrew .myCrew-calendar .fc-day-today {
+    background: #fef9c3 !important;
+  }
+  
+  
+  /* ============================
+     이벤트 스타일
+     ============================ */
+  
+  .myCrew .myCrew-calendar .fc-event {
+    border: none;
+    border-radius: 8px;
+    padding: 2px 6px;
+    font-size: 11px;
+    background: #3b82f6;
+    color: #ffffff;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.2);
+  }
+  
+  .myCrew .myCrew-calendar .fc-daygrid-event-dot {
+    border-color: #fef9c3;   /* 동그라미 색 */
+    border-width: 5px;       /* 점 두께 (크기 느낌) */
+    margin-right: 4px;       /* 이벤트 글자랑 거리 */
+  }
+
+  .myCrew .myCrew-calendar .fc-event:hover {
+    background: #2563eb;          /* 색 진하게 */
+    transform: translateY(-1px);  /* 살짝 떠오르는 느낌 */
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.25);
+    cursor: pointer;
+  }
+  
+  
+  /* ============================
+     반응형
+     ============================ */
+  
+  @media (max-width: 768px) {
+    .myCrew .myCrew-calendar {
+      padding: 16px 14px 20px;
+    }
+  
+    .myCrew .myCrew-calendar .fc-toolbar {
+      flex-direction: column;
+      gap: 8px;
+    }
+  
+    .myCrew .myCrew-calendar .fc-toolbar-chunk {
+      display: flex;
+      justify-content: center;
+    }
+  }
+  
