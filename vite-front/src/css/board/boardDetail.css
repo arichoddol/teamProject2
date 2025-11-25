@@ -4,8 +4,7 @@
   align-items: center;
 
   background-color: rgb(212, 224, 230);
-
-  padding: 20px;
+  
 }
 /* 메인 카드 */
 .boardDetail {
@@ -22,6 +21,8 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  
+
 }
 
 /* 게시글 제목 */
@@ -37,6 +38,8 @@
 /* 게시글 정보 (작성자, 날짜 등) */
 
 .boardDetail-con-info {
+  
+  padding: 0 20vw;
 }
 
 /* 본문 내용 */
@@ -197,7 +200,7 @@ button:active {
 /* 반응형 */
 @media (max-width: 560px) {
   body {
-    padding: 22px 12px;
+    /* padding: 22px 12px; */
   }
 
   .boardDetail {

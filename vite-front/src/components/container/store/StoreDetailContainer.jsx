@@ -271,8 +271,10 @@ const ShopDetailContainer = () => {
                     )}
                 </div>
                 <div className="itemDetail-con-info">
+                    {console.log(item)}
                     <h4>{item.itemTitle}</h4>
-                    <span>상품ID : {item.id}</span><br />
+                    <span>상품ID : {item.id}</span>
+                    <span>카테고리: {item.category}</span><br />
                     <span>상세설명 : {item.itemDetail}</span><br />
                     <span>상품가격 : {item.itemPrice}</span><br />
                     <span>itemSize(temp) : {item.itemSize}</span><br />

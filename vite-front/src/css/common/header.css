@@ -3,17 +3,18 @@
 .header {
     font-family: 'Archivo Black', sans-serif;
 
-    height: vh;
+    height: 7vh;
     z-index: 99;
 
     background-color: aliceblue;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px #00000043;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
     color: black;
+    z-index: 100;
 }
 
 .nav {
@@ -22,10 +23,17 @@
     align-items: center;
     height: 100%;
     font-size: 13px;
+    overflow: hidden;
 }
 
 .nav h1 {
-    margin: 0;
+    display: flex;
+    /* margin: 0; */
+    font-size: 12vh;
+    /* height: 100px; */
+ 
+    text-align: center;
+    justify-content: center;
 
 }
 
@@ -41,4 +49,28 @@
 .gnb ul>li a:hover {
     color: #0080bb;
     background-color: aquamarine;
+}
+
+
+@media (max-width: 640px) {
+    .header {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 12px;
+    }
+    .nav h1{
+        opacity: 0;
+        visibility: hidden;
+        display: none;
+  
+
+    }
+    .nav{
+        font-size: 11px;
+    }
+    .nav ul{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
 }

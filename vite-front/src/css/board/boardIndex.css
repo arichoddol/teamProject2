@@ -1,11 +1,58 @@
 @import url("https://fonts.googleapis.com/css2?family=Archivo+Black&family=Hahmlet:wght@100..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Gowun+Batang&display=swap");
 
+.boardList{
+  background-image: linear-gradient(to top, #28119c,#47247ebf);
+  padding: 60px;
+  gap: 10px;
+}
+
+.boardList-banner{
+  background-image: url('../../../public/images/store/swiper/header2.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  /* background-image: linear-gradient(to top,#f0f8ffdd, #ffffff); */
+  
+  height: 15vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  padding: 1px;
+  border-radius: 20px;
+  border: 4px solid #cd77ffbe;
+  
+}
+/* .boardList-banner img{
+  background-color: gray;
+  width: 90%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  object-fit: cover;
+  
+} */
+
+
+
 .boardList-con {
+
+  background-image: linear-gradient(to top,#f0f8ffc1, #ffffffee);
+  
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  padding: 5vh;
+  border-radius: 20px;
+  border: 1px solid #ff0055a9;
+}
+.boardList-con h2{
+   font-family: "Gowun Batang", serif;
+  font-weight: bold;
+  font-style: normal;
 }
 
 /* table section */
@@ -18,14 +65,6 @@
   overflow: hidden;
 }
 
-/* h2 {
-    text-align: center;
-    margin-top: 2vh;
-
-    font-family: "Hahmlet", serif;
-    font-optical-sizing: auto;
-    font-style: normal;
-} */
 
 .board-table th,
 .board-table td {
@@ -83,9 +122,24 @@
   padding: 8px 15px;
   border: 1px solid blue;
   background-color: #a8c2ff;
+
+  font-family: "Gowun Batang", serif;
+  font-weight: bold;
+  font-style: normal;
 }
 
 .boardList-post h3:hover {
   background-color: #326ad5;
   border-color: #326ad5;
+}
+
+
+@media (width > 1400px ) {
+  .boardList{
+    padding: 20px 200px;
+  }
+  .boardList-con table
+  {
+    width: 85%
+  }
 }
