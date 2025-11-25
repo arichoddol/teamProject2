@@ -28,5 +28,5 @@ public interface PaymentService {
 
     Page<PaymentEntity> getPayments(int page, int size, String keyword);
 
-    PagedResponse<PaymentDto> findMyPaymentList(Long memberId,  int page, int size);
+    PagedResponse<PaymentDto> findMyPaymentList(String keyword, Long memberId,  int page, int size);
 }

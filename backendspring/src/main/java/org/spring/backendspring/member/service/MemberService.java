@@ -15,5 +15,5 @@ public interface MemberService  {
 
     void deleteMember(Long id);
 
-   
+    int userEmailCheck(String userEmail);
 }

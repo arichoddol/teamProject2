@@ -308,11 +308,13 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public PagedResponse<PaymentDto> findMyPaymentList(Long memberId, int page, int size) {
+    public PagedResponse<PaymentDto> findMyPaymentList(String keyword, Long memberId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("paymentId").descending());
-        Page<PaymentEntity> paymentEntities = paymentRepository.findByMemberId(pageable, memberId);
-        if (paymentEntities.isEmpty()) {
-            throw new IllegalArgumentException("회원의 결제가 존재하지 않습니다.");
+        Page<PaymentEntity> paymentEntities;
+        if (keyword == null || keyword.trim().isEmpty()) {
+            paymentEntities = paymentRepository.findByMemberId(pageable, memberId);
+        } else {
+            paymentEntities = paymentRepository.findByMemberIdAndTitleContaining(pageable, keyword, memberId);
         }
         return PagedResponse.of(paymentEntities.map(PaymentDto::fromEntity));
     }
