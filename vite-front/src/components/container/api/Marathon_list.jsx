@@ -1,27 +1,172 @@
 import React, { useEffect, useState, useCallback } from "react";
 import "../../../css/api/Marathon_list.css"; 
 
-// =======================================================
-// 1. 마라톤 목록 컴포넌트 (MarathonApiPage)
-// =======================================================
+// OpenWeatherMap API 키 (참고: 보안상 백엔드에서 처리하는 것이 좋습니다.)
+const OPEN_WEATHER_KEY = "73944f2046871fdd4d3cc8a0b3405df5"; 
+const DEFAULT_CITY_WEATHER = "Seoul";
 
+// --- Kakao Maps SDK 로드 함수 ---
+const loadKakaoMapScript = (appkey) => {
+    return new Promise((resolve) => {
+        if (window.kakao && window.kakao.maps) {
+            resolve();
+            return;
+        }
+        const script = document.createElement('script');
+        script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${appkey}&autoload=false`;
+        script.onload = () => window.kakao.maps.load(resolve);
+        document.head.appendChild(script);
+    });
+};
+
+// --- WeatherAdminFragment 컴포넌트 (날씨 및 지도) ---
+const WeatherAdminFragment = ({ kakaoMapAppKey }) => {
+    const [cityData, setCityData] = useState({ 
+        name: DEFAULT_CITY_WEATHER, 
+        description: '', 
+        tempMin: null, 
+        tempMax: null, 
+        sunrise: null, 
+        sunset: null, 
+        iconUrl: '', 
+        lat: null, 
+        lon: null 
+    });
+    const [selectedCity, setSelectedCity] = useState(DEFAULT_CITY_WEATHER);
+    const [weatherLoading, setWeatherLoading] = useState(true);
+
+    const initKakaoMap = useCallback((lat, lon) => {
+        if (!lat || !lon || !window.kakao || !window.kakao.maps) return;
+
+        const mapContainer = document.getElementById('map');
+        if (!mapContainer) return;
+
+        const mapOption = {
+            center: new window.kakao.maps.LatLng(lat, lon),
+            level: 3
+        };
+        const map = new window.kakao.maps.Map(mapContainer, mapOption);
+
+        const markerPosition = new window.kakao.maps.LatLng(lat, lon);
+        const marker = new window.kakao.maps.Marker({ position: markerPosition });
+        marker.setMap(map);
+    }, []);
+
+    const fetchWeather = useCallback(async (cityName) => {
+        setWeatherLoading(true);
+        try {
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${OPEN_WEATHER_KEY}`;
+            const res = await fetch(url);
+            
+            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+            
+            const weather = await res.json();
+
+            const kToC = (k) => (k - 273.15).toFixed(2);
+            const tsToTime = (ts) => new Date(ts * 1000).toLocaleTimeString();
+
+            const newCityData = {
+                name: weather.name,
+                description: weather.weather[0].description,
+                tempMin: kToC(weather.main.temp_min),
+                tempMax: kToC(weather.main.temp_max),
+                sunrise: tsToTime(weather.sys.sunrise),
+                sunset: tsToTime(weather.sys.sunset),
+                iconUrl: `https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`,
+                lat: weather.coord.lat,
+                lon: weather.coord.lon
+            };
+
+            setCityData(newCityData);
+            initKakaoMap(newCityData.lat, newCityData.lon);
+            
+        } catch (err) {
+            console.error("날씨 조회 에러:", err);
+            alert("날씨 정보를 불러올 수 없습니다.");
+        } finally {
+            setWeatherLoading(false);
+        }
+    }, [initKakaoMap]); // initKakaoMap에 의존
+
+    useEffect(() => {
+        loadKakaoMapScript(kakaoMapAppKey)
+            .then(() => {
+                fetchWeather(selectedCity);
+            });
+    }, [selectedCity, fetchWeather, kakaoMapAppKey]); 
+    
+    const handleSearch = () => {
+        fetchWeather(selectedCity);
+    };
+
+    const handleSelectChange = (e) => {
+        setSelectedCity(e.target.value);
+    };
+    
+    const { name, description, tempMin, tempMax, sunrise, sunset, iconUrl } = cityData;
+
+    return (
+        <div className="weather-section" style={{ padding: '20px', border: '1px solid #ddd' }}>
+            <h2>☀️ 뛰기전 날씨 체크!!</h2>
+
+            <div className="weather-con" style={{ display: 'flex', gap: '20px' }}>
+
+                {/* 왼쪽: 검색 & 정보 */}
+                <div className="left" style={{ flex: 1 }}>
+                    <div className="search">
+                        <select 
+                            name="search" 
+                            id="weather-search"
+                            value={selectedCity} 
+                            onChange={handleSelectChange}
+                            style={{ marginRight: '10px', padding: '5px' }}
+                        >
+                            <option value="Seoul">서울</option>
+                            <option value="Busan">부산</option>
+                            <option value="Gwangju">광주</option>
+                            <option value="ChunCheon">춘천</option>
+                        </select>
+                        <button type="button" onClick={handleSearch} style={{ padding: '5px 10px' }}>검색</button>
+                    </div>
+
+                    {weatherLoading ? (
+                        <p style={{ marginTop: '20px' }}>날씨 정보 로딩 중...</p>
+                    ) : (
+                        <div className="info-box" style={{ marginTop: '20px' }}>
+                            <h3 style={{ marginBottom: '10px', color: '#007bff' }}>{name}의 현재 날씨</h3>
+                            <div><span className="label">날씨:</span> <span className="description con">{description}</span></div>
+                            <div><span className="label">최저온도:</span> <span className="temp_min con">{tempMin} °C</span></div>
+                            <div><span className="label">최고온도:</span> <span className="temp_max con">{tempMax} °C</span></div>
+                            <div><span className="label">해뜨는 시간:</span> <span className="sunrise con">{sunrise}</span></div>
+                            <div><span className="label">해지는 시간:</span> <span className="sunset con">{sunset}</span></div>
+                            {iconUrl && <div className="icon"><img src={iconUrl} alt="Weather Icon" style={{ width: '50px', height: '50px' }}/></div>}
+                        </div>
+                    )}
+                </div>
+
+                {/* 오른쪽: 지도 */}
+                <div className="right" style={{ flex: 1 }}>
+                    <div id="map" style={{ width: '100%', height: '400px', borderRadius: '10px', border: '1px solid #ccc' }}>
+                        {!kakaoMapAppKey && <p style={{ textAlign: 'center', paddingTop: '180px' }}>카카오 맵 API 키 오류</p>}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// --- MarathonApiPage 컴포넌트 (메인) ---
 const MarathonApiPage = () => {
-    // 마라톤 목록 (현재 페이지)
+
     const [marathons, setMarathons] = useState([]);
-    // 페이징 상태
-    const [page, setPage] = useState(0); // 현재 페이지 (0부터 시작)
-    const [size] = useState(10);        // 페이지 당 항목 수
-    const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
-    
-    // 검색 상태
+    const [page, setPage] = useState(0); 
+    const [size] = useState(10); 
+    const [totalPages, setTotalPages] = useState(0); 
     const [searchTerm, setSearchTerm] = useState("");
-    // 실제 검색에 사용될 쿼리 상태 (검색 버튼 클릭 시 업데이트)
     const [currentSearch, setCurrentSearch] = useState(""); 
-    
-    // 로딩 상태
     const [loading, setLoading] = useState(true);
 
-    // 데이터 가져오는 함수
+    // ✅ size를 의존성 배열에 추가하여 안정적으로 만듭니다.
     const fetchMarathons = useCallback((pageNumber, search) => {
         setLoading(true);
         
@@ -37,8 +182,8 @@ const MarathonApiPage = () => {
                 return res.json();
             })
             .then((data) => {
-                setMarathons(data.content);      // 현재 페이지 데이터
-                setTotalPages(data.totalPages);  // 전체 페이지 수
+                setMarathons(data.content); 
+                setTotalPages(data.totalPages); 
                 setLoading(false);
             })
             .catch((err) => {
@@ -47,7 +192,7 @@ const MarathonApiPage = () => {
                 setTotalPages(0);
                 setLoading(false);
             });
-    }, [size]);
+    }, [size]); // ⬅️ size를 의존성 배열에 포함
 
     // 검색어 입력 핸들러
     const handleSearchChange = (e) => {
@@ -56,7 +201,6 @@ const MarathonApiPage = () => {
 
     // 검색 버튼 클릭 핸들러
     const handleSearchSubmit = () => {
-        // 검색 실행 시 현재 페이지를 0으로 초기화하고 검색어 업데이트
         setPage(0);
         setCurrentSearch(searchTerm); 
     };
@@ -68,7 +212,6 @@ const MarathonApiPage = () => {
         }
     };
     
-    // 페이지, 사이즈, 검색어가 변경될 때마다 데이터를 다시 불러옵니다.
     useEffect(() => {
         fetchMarathons(page, currentSearch);
     }, [page, currentSearch, fetchMarathons]);
@@ -152,170 +295,9 @@ const MarathonApiPage = () => {
             </div>
             <hr style={{margin: '40px 0'}} />
             
-            {/* 2. 날씨 관리자 컴포넌트를 마라톤 목록 아래에 추가 */}
             <WeatherAdminFragment kakaoMapAppKey="ec3131ab336878c64b31afabbac1136a" /> 
         </div>
     );
 };
 
-// =======================================================
-// 2. 날씨 관리자 컴포넌트 (WeatherAdminFragment)
-// =======================================================
-
-// OpenWeatherMap API 키 
-const OPEN_WEATHER_KEY = "73944f2046871fdd4d3cc8a0b3405df5"; 
-const DEFAULT_CITY_WEATHER = "Seoul";
-
-// Kakao Maps SDK 로드 함수
-const loadKakaoMapScript = (appkey) => {
-    return new Promise((resolve) => {
-        if (window.kakao && window.kakao.maps) {
-            resolve();
-            return;
-        }
-        const script = document.createElement('script');
-        script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${appkey}&autoload=false`;
-        script.onload = () => window.kakao.maps.load(resolve);
-        document.head.appendChild(script);
-    });
-};
-
-const WeatherAdminFragment = ({ kakaoMapAppKey }) => {
-    const [cityData, setCityData] = useState({ 
-        name: DEFAULT_CITY_WEATHER, 
-        description: '', 
-        tempMin: null, 
-        tempMax: null, 
-        sunrise: null, 
-        sunset: null, 
-        iconUrl: '', 
-        lat: null, 
-        lon: null 
-    });
-    const [selectedCity, setSelectedCity] = useState(DEFAULT_CITY_WEATHER);
-    const [weatherLoading, setWeatherLoading] = useState(true);
-
-    const initKakaoMap = useCallback((lat, lon) => {
-        if (!lat || !lon || !window.kakao || !window.kakao.maps) return;
-
-        const mapContainer = document.getElementById('map');
-        if (!mapContainer) return;
-
-        const mapOption = {
-            center: new window.kakao.maps.LatLng(lat, lon),
-            level: 3
-        };
-        const map = new window.kakao.maps.Map(mapContainer, mapOption);
-
-        const markerPosition = new window.kakao.maps.LatLng(lat, lon);
-        const marker = new window.kakao.maps.Marker({ position: markerPosition });
-        marker.setMap(map);
-    }, []);
-
-    const fetchWeather = useCallback(async (cityName) => {
-        setWeatherLoading(true);
-        try {
-            const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${OPEN_WEATHER_KEY}`;
-            const res = await fetch(url);
-            
-            if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-            
-            const weather = await res.json();
-
-            const kToC = (k) => (k - 273.15).toFixed(2);
-            const tsToTime = (ts) => new Date(ts * 1000).toLocaleTimeString();
-
-            const newCityData = {
-                name: weather.name,
-                description: weather.weather[0].description,
-                tempMin: kToC(weather.main.temp_min),
-                tempMax: kToC(weather.main.temp_max),
-                sunrise: tsToTime(weather.sys.sunrise),
-                sunset: tsToTime(weather.sys.sunset),
-                iconUrl: `https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`,
-                lat: weather.coord.lat,
-                lon: weather.coord.lon
-            };
-
-            setCityData(newCityData);
-            initKakaoMap(newCityData.lat, newCityData.lon);
-            
-        } catch (err) {
-            console.error("날씨 조회 에러:", err);
-            alert("날씨 정보를 불러올 수 없습니다.");
-        } finally {
-            setWeatherLoading(false);
-        }
-    }, [initKakaoMap]);
-
-    useEffect(() => {
-        loadKakaoMapScript(kakaoMapAppKey)
-            .then(() => {
-                fetchWeather(selectedCity);
-            });
-    }, [selectedCity, fetchWeather, kakaoMapAppKey]); 
-    
-    const handleSearch = () => {
-        fetchWeather(selectedCity);
-    };
-
-    const handleSelectChange = (e) => {
-        setSelectedCity(e.target.value);
-    };
-    
-    const { name, description, tempMin, tempMax, sunrise, sunset, iconUrl } = cityData;
-
-    return (
-        <div className="weather-section" style={{ padding: '20px', border: '1px solid #ddd' }}>
-            <h2>☀️ 뛰기전 날씨 체크!!</h2>
-
-            <div className="weather-con" style={{ display: 'flex', gap: '20px' }}>
-
-                {/* 왼쪽: 검색 & 정보 */}
-                <div className="left" style={{ flex: 1 }}>
-                    <div className="search">
-                        <select 
-                            name="search" 
-                            id="weather-search"
-                            value={selectedCity} 
-                            onChange={handleSelectChange}
-                            style={{ marginRight: '10px', padding: '5px' }}
-                        >
-                            <option value="Seoul">서울</option>
-                            <option value="Busan">부산</option>
-                            <option value="Gwangju">광주</option>
-                            <option value="ChunCheon">춘천</option>
-                        </select>
-                        <button type="button" onClick={handleSearch} style={{ padding: '5px 10px' }}>검색</button>
-                    </div>
-
-                    {weatherLoading ? (
-                        <p style={{ marginTop: '20px' }}>날씨 정보 로딩 중...</p>
-                    ) : (
-                        <div className="info-box" style={{ marginTop: '20px' }}>
-                            <h3 style={{ marginBottom: '10px', color: '#007bff' }}>{name}의 현재 날씨</h3>
-                            <div><span className="label">날씨:</span> <span className="description con">{description}</span></div>
-                            <div><span className="label">최저온도:</span> <span className="temp_min con">{tempMin} °C</span></div>
-                            <div><span className="label">최고온도:</span> <span className="temp_max con">{tempMax} °C</span></div>
-                            <div><span className="label">해뜨는 시간:</span> <span className="sunrise con">{sunrise}</span></div>
-                            <div><span className="label">해지는 시간:</span> <span className="sunset con">{sunset}</span></div>
-                            {iconUrl && <div className="icon"><img src={iconUrl} alt="Weather Icon" style={{ width: '50px', height: '50px' }}/></div>}
-                        </div>
-                    )}
-                </div>
-
-                {/* 오른쪽: 지도 */}
-                <div className="right" style={{ flex: 1 }}>
-                    <div id="map" style={{ width: '100%', height: '400px', borderRadius: '10px', border: '1px solid #ccc' }}>
-                        {!kakaoMapAppKey && <p style={{ textAlign: 'center', paddingTop: '180px' }}>카카오 맵 API 키 오류</p>}
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-// =======================================================
-// 3. 통합 페이지 내보내기
-// =======================================================
 export default MarathonApiPage;

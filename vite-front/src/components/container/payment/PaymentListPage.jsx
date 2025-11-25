@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getPaymentsByPage } from "../../../apis/payment/paymentApi";
-import "../../../css/payment/PaymentPage.css";
+import "../../../css/payment/PaymentPage.css"; 
+import DeliveryStatusModal from "./DeliveryStatusModal"; 
 
 const PaymentListPage = () => {
   const [payments, setPayments] = useState([]);
@@ -9,13 +10,40 @@ const PaymentListPage = () => {
   const [pageInfo, setPageInfo] = useState({});
   const [keyword, setKeyword] = useState("");
   const pageSize = 8;
+  
+  //모달 상태 추가
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState(null); 
+
+  //임시 배송 상태 데이터 (실제 데이터에 'deliveryStatus' 필드가 없다고 가정)
+  const mockDeliveryStatuses = ["배송 완료", "운송 중", "출고 준비", "주문 완료", "배송 완료", "운송 중", "출고 준비", "주문 완료"];
+  
+  //모달 열기/닫기 핸들러
+  const handleOpenModal = (payment) => {
+    setSelectedPayment(payment);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedPayment(null);
+    setIsModalOpen(false);
+  };
+
 
   const fetchPayments = async (page = currentPage) => {
     setLoading(true);
     try {
       const data = await getPaymentsByPage(page, pageSize, keyword);
-      console.log("결제 조회 데이터:", data); // 서버 응답 확인용
-      setPayments(data.content || []); // content에 배열이 들어있어야 함
+      console.log("결제 조회 데이터:", data);
+
+      //서버 데이터에 임시 배송 상태 추가
+      const processedPayments = (data.content || []).map((payment, index) => ({
+        ...payment,
+        // 실제 백엔드 필드로 대체해야 합니다.
+        deliveryStatus: mockDeliveryStatuses[index % mockDeliveryStatuses.length], 
+      }));
+
+      setPayments(processedPayments);
       setPageInfo({
         totalPages: data.totalPages || 1,
         hasNext: data.hasNext || false,
@@ -47,8 +75,10 @@ const PaymentListPage = () => {
   const handleNext = () =>
     pageInfo.hasNext && setCurrentPage((prev) => prev + 1);
 
-  if (loading) return <p>로딩 중...</p>;
-  if (!payments.length) return <p>결제 내역이 없습니다.</p>;
+  if (loading) return <p className="loadingMessage">로딩 중...</p>;
+  if (!payments.length && !keyword) return <p className="emptyMessage">결제 내역이 없습니다.</p>;
+  if (!payments.length && keyword) return <p className="emptyMessage">'{keyword}'에 대한 검색 결과가 없습니다.</p>;
+
 
   return (
     <div className="paymentListPage">
@@ -62,42 +92,54 @@ const PaymentListPage = () => {
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
         />
-        <button type="submit">검색</button>
+        <button type="submit">🔍 검색</button>
       </form>
 
       {/* 결제 목록 - 그리드 */}
       <div className="paymentGrid">
         {payments.map((payment) => {
-          // ⭐️ [수정 1] payment.paymentItemEntities 대신 payment.paymentItems 사용
           const items = payment.paymentItems || [];
-
           const totalAmount = items.reduce(
             (sum, item) => sum + (item.price || 0) * (item.size || 1),
             0
           );
+          const firstItemTitle = items.length > 0 ? items[0].title : "상품 정보 없음";
+          const status = payment.deliveryStatus || "주문 완료"; // 상태 사용
 
           return (
             <div className="orderCard" key={payment.paymentId}>
               <div className="top">
-                <ul>
-                  <li>ID: {payment.paymentId}</li>
-                  <li>결제방법: {payment.paymentType}</li>
-                  <li>주문처: {payment.paymentPost}</li>
-                  <li>배송주소: {payment.paymentAddr}</li>
-                  <li>배달방식: {payment.paymentMethod}</li>
-                  <li>주문금액: {totalAmount.toLocaleString()}원</li>
+                <div className="orderHeader">
+                    <span className="orderId">주문번호: {payment.paymentId}</span>
+                    <span 
+                        className={`deliveryStatusLink status-${status.replace(/\s/g, "")}`}
+                        onClick={() => handleOpenModal(payment)} 
+                        title="클릭하여 배송 상세 조회"
+                    >
+                        {status}
+                    </span>
+                </div>
+                <div className="mainInfo">
+                    <p className="itemTitle">{firstItemTitle} {items.length > 1 ? `외 ${items.length - 1}개` : ""}</p>
+                    <p className="totalAmount">총 {totalAmount.toLocaleString()}원</p>
+                </div>
+                <ul className="orderDetailList">
+                    <li>주문처: {payment.paymentPost}</li>
+                    <li>배송주소: {payment.paymentAddr}</li>
+                    <li>결제방법: {payment.paymentType}</li>
                 </ul>
               </div>
               <div className="bottom">
-                <ul>
-                  {items.map((item) => (
-                    // ⭐️ [수정 2] item.paymentItemId 대신 item.id 사용
-                    <li key={item.id}>
-                      <span>{item.title || "-"}</span>
-                      <span>{(item.price || 0).toLocaleString()}원</span>
-                      <span>{item.size || 0}개</span>
-                    </li>
-                  ))}
+                <h4>주문 상세</h4>
+                <ul className="itemList">
+                    {items.map((item, index) => (
+                        // item.paymentItemId 대신 index 사용 (안정적인 key가 있다면 사용 권장)
+                        <li key={item.id || index}> 
+                            <span>{item.title || "-"}</span>
+                            <span className="itemPrice">{(item.price || 0).toLocaleString()}원</span>
+                            <span className="itemSize">{item.size || 0}개</span>
+                        </li>
+                    ))}
                 </ul>
               </div>
             </div>
@@ -108,15 +150,23 @@ const PaymentListPage = () => {
       {/* 페이징 */}
       <div className="pagination">
         <button onClick={handlePrev} disabled={!pageInfo.hasPrevious}>
-          이전
+          &lt; 이전
         </button>
         <span>
           페이지 {currentPage + 1} / {pageInfo.totalPages || 1}
         </span>
         <button onClick={handleNext} disabled={!pageInfo.hasNext}>
-          다음
+          다음 &gt;
         </button>
       </div>
+      
+      {/* 모달 컴포넌트 렌더링 */}
+      {isModalOpen && selectedPayment && (
+        <DeliveryStatusModal
+          payment={selectedPayment}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 };

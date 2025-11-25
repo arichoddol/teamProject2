@@ -29,7 +29,6 @@ const PaymentPage = () => {
     // paymentType의 초기값은 소문자입니다. (select option value에 따라)
     const [paymentType, setPaymentType] = useState("kakao"); 
     
-    // ⭐️ [수정] authDetailFn 호출에 필요한 memberId를 저장할 상태 추가 (handlePayment에서도 사용)
     // 장바구니 조회 후 memberId를 얻습니다.
     const [memberId, setMemberId] = useState(null); 
 
@@ -53,7 +52,7 @@ const PaymentPage = () => {
                 const cartData = await getCartByToken();
                 setCart(cartData?.items?.length ? cartData : null);
 
-                // ⭐️ [수정] 1-1. 장바구니 데이터에서 memberId 추출
+                // 1-1. 장바구니 데이터에서 memberId 추출
                 const fetchedMemberId = cartData?.memberId;
 
                 if (!fetchedMemberId) {
@@ -61,14 +60,14 @@ const PaymentPage = () => {
                     navigate("/auth/login");
                     return;
                 }
-                // ⭐️ [수정] memberId 상태 업데이트
+                // memberId 상태 업데이트
                 setMemberId(fetchedMemberId); 
 
 
-                // ⭐️ [수정] 2. 회원 상세 정보 조회 및 필드 채우기 (변경된 authDetailFn에 memberId 전달)
+                // 2. 회원 상세 정보 조회 및 필드 채우기 (변경된 authDetailFn에 memberId 전달)
                 const res = await authDetailFn(fetchedMemberId); 
                 
-                // ⭐️ [핵심 로직]
+                // [핵심 로직]
                 if (!res || !res.data || !res.data.userName) {
                     // 회원 정보 조회가 실패했거나, 데이터에 필수 필드가 없는 경우
                     alert("회원 정보를 가져오는 데 실패했습니다.");
@@ -130,7 +129,7 @@ const PaymentPage = () => {
 
         try {
             const totalPrice = calculateTotalPrice(itemsToPay);
-            // ⭐️ [기존 로직 유지] useEffect에서 memberId를 확보했으므로 cart.memberId 또는 memberId 상태 사용
+            // useEffect에서 memberId를 확보했으므로 cart.memberId 또는 memberId 상태 사용
             const currentMemberId = cart?.memberId || memberId; 
             
             if (!currentMemberId) throw new Error("회원 정보가 없습니다.");

@@ -18,11 +18,10 @@ public class MarathonController {
 
     private final MarathonService marathonService;
 
-    // ⭐️ [수정] 페이징(Pageable) 및 검색어(searchTerm)를 받아 Page 객체를 반환합니다.
-    @GetMapping("/marathons")
+    @GetMapping({ "/marathons", "/marathon" })
     public Page<Marathon> marathonList(
             @RequestParam(required = false) String searchTerm, // 검색어 (선택 사항)
-            @PageableDefault(size = 10) Pageable pageable     // 페이징 정보 (기본 10개)
+            @PageableDefault(size = 10) Pageable pageable // 페이징 정보 (기본 10개)
     ) {
         // 검색어가 있으면 검색 로직을, 없으면 전체 리스트 페이징을 호출
         return marathonService.findMarathons(searchTerm, pageable);

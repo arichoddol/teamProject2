@@ -9,7 +9,7 @@ const PaymentSuccessPage = () => {
   const dispatch = useDispatch();
 
   const goToPaymentList = () => {
-    navigate("/payment/list"); // PaymentListPage 라우트 경로에 맞게 수정
+    navigate("/payment/list"); 
   };
 
   dispatch(removeCart());
