@@ -17,6 +17,17 @@ const MyCrewUpdateContainer = () => {
     const [newImages, setNewImages] = useState([])
     const [exFiles, setExFiles] = useState([])
     const [deleteImageName, setDeleteImageName] = useState([])
+    
+    const districtsInSeoul = [
+      "강남구", "강동구", "강북구", "강서구", "관악구",
+      "광진구", "구로구", "금천구", "노원구", "도봉구",
+      "동대문구", "동작구", "마포구", "서대문구", "서초구",
+      "성동구", "성북구", "송파구", "양천구", "영등포구",
+      "용산구", "은평구", "종로구", "중구", "중랑구"
+    ];
+    const selectChange = (el) => {
+      setDistrict(el.target.value);
+    }
 
     useEffect(() => {
       const fetchCrewDetail = async () => {
@@ -84,7 +95,7 @@ const MyCrewUpdateContainer = () => {
         <div className="crewDetailHome">
           <div className="crewDetailHome-con">
             <form onSubmit={update}>
-            <div className="image">
+            <div className="crewUpdateImage">
                 <span>기존 이미지</span>
                 <ul>
                     {exFiles.length > 0 ? (
@@ -101,35 +112,44 @@ const MyCrewUpdateContainer = () => {
                 <span>새 이미지 업로드</span>
                 <input type="file" name='crewBoardImgaes' onChange={uploadNewFile} multiple />
             </div>
-            <div className="introduction">
-              <h2>
-                <input 
-                    type="text"
-                    value={crewName}
-                    onChange={(e) => setCrewName(e.target.value)}
-                    required
-                />
-              </h2>
-              <p>
-                <textarea
-                    name="description" 
-                    id="description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                />
-              </p>
-              <p>
-                <input 
-                    type="text"
-                    value={district}
-                    onChange={(e) => setDistrict(e.target.value)}
-                    required 
-                />
-              </p>
-              <p>리더 {crew.memberNickName}</p>
+            <div className="crewIntroduction">
+                <div className="crewInfo">
+                    <label className="crewName">크루 이름</label>
+                    <input 
+                        type="text" 
+                        value={crewName} 
+                        onChange={(e) => setCrewName(e.target.value)}
+                        required
+                        placeholder="크루 이름"
+                    />
+                </div>
+                <div className="description">
+                    <label className="description">크루 소개</label>
+                    <textarea 
+                        name="description" 
+                        id="messdescriptionage"
+                        value={description}
+                        onChange={(el) => setDescription(el.target.value)}
+                        required
+                        placeholder="크루 소개"
+                    />
+                </div>
+                <div className="district">
+                    <label className="crewDistrict">지역 선택</label>
+                    <select name="district" id="district" value={district} onChange={selectChange}>
+                        <option value="">지역선택</option>
+                        {districtsInSeoul.map((d, index) => (
+                            <option key={index} value={d}>
+                                {d}
+                            </option>
+                        ))}
+                    </select>
+                    {district && <p>선택한 지역: {district}</p>}                 
+                </div>
+              <p>리더: {crew.memberNickName}</p>
               <p>멤버 {crew.crewMemberEntities?.length ?? 0}명</p>
             </div>
-            <div className="crweUpdateBtn">
+            <div className="crewUpdateBtn">
               <button className='crewUpdate' type='submit'>수정완료</button>
             </div>
             </form>

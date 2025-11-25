@@ -114,21 +114,26 @@ const MyCrewBoardContainer = () => {
                               <div className="boardContent">
                                   <div className="crewBoard">
                                     <span className="crewBoardWriter">
-                                      {board.memberNickName}
+                                    🏃‍♂️{board.memberNickName}💨
                                     </span>
                                     <span className="crewBoardCreateTime">
                                       {formattedDate(board.createTime)}
                                     </span>
                                   </div>
                                   <div className="crewBoardBottom">
+                                    <div className="crewBoardContent">
+                                      {board.newFileName.length>0 ? 
+                                        <span>📷</span>
+                                        :
+                                        <span>📝</span>
+                                      }
+                                    </div>
                                     <div className="crewBoardTitle">
                                       {board.title}
                                     </div>
-                                    <div className="crewBoardContent">
-                                      {board.newFileName.length>0 && 
-                                        <img src="/images/fileIcon.png" alt="file" />
-                                      }
-                                    </div>
+                                    {board.comments > 0 &&
+                                      <span className='crewBoardComments'>[{board.comments}]</span>
+                                    }
                                   </div>
                               </div>
                           </Link>

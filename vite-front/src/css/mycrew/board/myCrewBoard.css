@@ -127,7 +127,7 @@ gap: 5px;
   display: flex;
   flex-direction: row;
   /* justify-content: space-between; */
-  gap: 15px;
+  gap: 5px;
 }
 
 /* 제목 */
@@ -135,15 +135,20 @@ gap: 5px;
   font-size: 0.9rem;
   color: black;
 }
-
-/* 내용 */
-.boardContent .crewBoardBottom  .crewBoardContent {
-font-size: 0.9rem;
-color: #374151;
+.boardContent .crewBoardBottom>span.crewBoardComments {
+  color: rgb(153, 163, 180);
+  font-size: 0.8rem;
+  font-weight: 550;
+  padding-left: 30px;
+  display: flex;
+  align-items: center;
 }
-
-.boardContent .crewBoardBottom  .crewBoardContent>img {
-  width: 80%;
+/* 이미지 여부 */
+.boardContent .crewBoardBottom  .crewBoardContent {
+  font-size: 0.75rem;
+  color: #374151;
+  display: flex;
+  align-items: center;
 }
 
 /* 페이지네이션 */

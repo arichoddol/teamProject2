@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.config.security.MyUserDetails;
 import org.spring.backendspring.crew.crew.dto.CrewDto;
 import org.spring.backendspring.crew.crew.service.CrewService;
@@ -27,7 +28,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 @RestController
 @RequestMapping("/api/crew")
@@ -72,9 +72,12 @@ public class CrewController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<?> list() {
+    public ResponseEntity<?> list(@RequestParam(name = "subject", required = false) String subject,
+                                  @RequestParam(name = "keyword", required = false) String keyword,
+                                  @RequestParam(name = "page", defaultValue = "0") int page,
+                                  @RequestParam(name = "size", defaultValue = "10") int size) {
 
-        List<CrewDto> crewList = crewService.crewList();
+        PagedResponse<CrewDto> crewList = crewService.crewList(subject, keyword, page, size);
         
         Map<String, Object> response = new HashMap<>();
 
