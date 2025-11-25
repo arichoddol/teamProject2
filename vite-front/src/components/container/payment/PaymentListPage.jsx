@@ -131,7 +131,7 @@ const PaymentListPage = () => {
               </div>
               <div className="bottom">
                 <h4>주문 상세</h4>
-                <ul className="itemList">
+                <ul className="payment_itemList">
                     {items.map((item, index) => (
                         // item.paymentItemId 대신 index 사용 (안정적인 key가 있다면 사용 권장)
                         <li key={item.id || index}> 

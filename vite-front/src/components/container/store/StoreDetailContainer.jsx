@@ -246,7 +246,8 @@ const ShopDetailContainer = () => {
             <div className="itemDetail-con">
 
                 <div className="itemDetail-con-image">
-                    {item.attachFile && item.attachFile !== 0 ? (
+                    {console.log(item)}
+                    {/* {item.attachFile && item.attachFile !== 0 ? (
                         <img
                             src={null}
                             alt={item.itemTitle || "첨부 이미지"}
@@ -256,7 +257,7 @@ const ShopDetailContainer = () => {
                             src={NO_IMAGE_URL}
                             alt="이미지 없음"
                         />
-                    )}
+                    )} */}
 
                     {item.itemImgDtos && item.itemImgDtos.length > 0 && (
                         item.itemImgDtos.map((imgDto) => (
@@ -271,8 +272,10 @@ const ShopDetailContainer = () => {
                     )}
                 </div>
                 <div className="itemDetail-con-info">
+                    {console.log(item)}
                     <h4>{item.itemTitle}</h4>
-                    <span>상품ID : {item.id}</span><br />
+                    <span>상품ID : {item.id}</span>
+                    <span>카테고리: {item.category}</span><br />
                     <span>상세설명 : {item.itemDetail}</span><br />
                     <span>상품가격 : {item.itemPrice}</span><br />
                     <span>itemSize(temp) : {item.itemSize}</span><br />

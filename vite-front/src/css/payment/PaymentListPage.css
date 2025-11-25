@@ -158,12 +158,12 @@
     border-bottom: 1px dashed #ddd;
 }
 
-.itemList {
+.payment_itemList {
     list-style: none;
     padding: 0;
 }
 
-.itemList li {
+.payment_itemList li {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -172,7 +172,7 @@
     font-size: 0.9rem;
 }
 
-.itemList li:last-child {
+.payment_itemList li:last-child {
     border-bottom: none;
 }
 
