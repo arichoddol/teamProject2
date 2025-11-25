@@ -30,6 +30,8 @@
 @import url(css/mycrew/board/myCrewBoard.css);
 @import url(css/mycrew/board/myCrewBoardDetail.css);
 @import url(css/mycrew/mycrew-main.css);
+@import url(css/mycrew/mycrew-member-modal.css);
+@import url(css/mycrew/mycrew-RunMember-modal.css);
 @import url(css/mycrew/mycrew-update.css);
 
 /* 관리자 */

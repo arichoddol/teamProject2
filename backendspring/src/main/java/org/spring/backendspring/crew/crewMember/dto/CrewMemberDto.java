@@ -8,6 +8,7 @@ import org.spring.backendspring.common.role.CrewRole;
 import org.spring.backendspring.crew.crew.entity.CrewImageEntity;
 import org.spring.backendspring.crew.crewMember.entity.CrewMemberEntity;
 import org.spring.backendspring.member.entity.MemberEntity;
+import org.spring.backendspring.member.entity.MemberProfileImageEntity;
 
 @Getter
 @Setter
@@ -36,11 +37,18 @@ public class CrewMemberDto extends BasicTime {
     // mycrew 목록 위한 이미지
     private List<String> crewImages;
 
+    private List<String> memberImages;
+    private String memberNickName;
+
     private int crewMembers;
 
     public static CrewMemberDto toCrewMember(CrewMemberEntity crewMemberEntity) {
         List<String> crewImages = crewMemberEntity.getCrewEntity().getCrewImageEntities()
                     .stream().map(CrewImageEntity::getNewName)
+                    .toList();
+        
+        List<String> memberImages = crewMemberEntity.getMemberEntity().getProfileImagesList()
+                    .stream().map(MemberProfileImageEntity::getNewName)
                     .toList();
         int members = crewMemberEntity.getCrewEntity().getCrewMemberEntities().size();
         //보이고 싶은 정보 추가
@@ -51,12 +59,12 @@ public class CrewMemberDto extends BasicTime {
                 .crewName(crewMemberEntity.getCrewEntity().getName())
                 .description(crewMemberEntity.getCrewEntity().getDescription())
                 .district(crewMemberEntity.getCrewEntity().getDistrict())
-                // .crewImageEntities(crewMemberEntity.getCrewEntity().getCrewImageEntities())
-//                .memberEntity(crewMemberEntity.getMemberEntity())
                 .roleInCrew(crewMemberEntity.getRoleInCrew())
                 .createTime(crewMemberEntity.getCreateTime())
                 .updateTime(crewMemberEntity.getUpdateTime())
                 .crewImages(crewImages)
+                .memberImages(memberImages)
+                .memberNickName(crewMemberEntity.getMemberEntity().getNickName())
                 .crewMembers(members)
                 .build();
     }
