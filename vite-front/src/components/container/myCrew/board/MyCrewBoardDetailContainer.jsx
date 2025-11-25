@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
+import jwtAxios from '../../../../apis/util/jwtUtil';
 
 const MyCrewBoardDetailContainer = () => {
   const { boardId, crewId } = useParams();
@@ -98,11 +99,13 @@ const MyCrewBoardDetailContainer = () => {
   const submitComment = async () => {
     if (!comment.trim()) return;
     try {
-      const res = await axios.post(`/api/mycrew/${crewId}/board/${boardId}/comment/write`,
+      const res = await jwtAxios.post(`/api/mycrew/${crewId}/board/${boardId}/comment/write`,
         { content: comment },
         { headers: {
             Authorization: `Bearer ${accessToken}`
-        }}
+            },
+            withCredentials: true
+        }
       );
       console.log(res.data);
       setComment(""); 
@@ -117,6 +120,7 @@ const MyCrewBoardDetailContainer = () => {
       alert("댓글 작성인만 삭제 가능");
       return;
     }
+    if (!window.confirm('댓글을 삭제하시겠습니까?')) return;
     try {
       await axios.delete(`/api/mycrew/${crewId}/board/${boardId}/comment/delete/${commentId}`,
         { headers: {
@@ -154,7 +158,7 @@ const MyCrewBoardDetailContainer = () => {
           <div className="crewBoardInfo">
             <div className="crewBoardWriter">
               {/* <label className='crewBoardWriter2'>작성자</label> */}
-              <span className="crewBoardWriter2">{board.memberNickName}</span>
+              <span className="crewBoardWriter2">🏃‍♂️{board.memberNickName}💨</span>
             </div>
             <div className="crewBoardTime">
               <span className="crewBoardCreatedTime">│</span>
@@ -208,7 +212,7 @@ const MyCrewBoardDetailContainer = () => {
           <div className="commentList">
             {comments.length > 0 ? comments.map((comment) => (
               <div key={comment.id} className="aComment">
-                <span className='commentWriter'>{comment.memberNickName}</span>
+                <span className='commentWriter'>🏃‍♀️{comment.memberNickName}</span>
                 <span className="commentTime">{comment.createTime && formattedDateForComment(comment.createTime)}</span>
                 <div className="commentContent">
                   <p>{comment.content}</p>

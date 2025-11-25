@@ -1,186 +1,193 @@
-/* 전체 컨테이너 스타일 */
+/* ------------------------------------
+   전체 컨테이너
+------------------------------------ */
 .crewList {
     display: flex;
     flex-direction: column;
-    gap: 30px;
-    padding: 40px;
-    background-color: #f8f9fa;
-    /* 밝은 배경 */
-    min-height: 100vh;
-    /* 최소 높이 설정 */
-    align-items: flex-start;
-    justify-content: center;
-    align-items: center;
-
-}
-
-/* 카카오맵 섹션 */
-.kakaomap {
-    padding: 40px;
-
-    /* 남은 공간을 채우도록 */
-    width: 80%;
-    height: 400px;
-    /* 맵 높이 */
-    border-radius: 12px;
-
-    /* 지도 경계를 깔끔하게 처리 */
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-    background-color: #e9ecef;
-
-    justify-content: center;
-}
-
-
-/* 크루 목록 컨텐츠 섹션 */
-.crewList-con {
-
-
-    /* 맵보다 더 넓은 공간 할당 */
-}
-
-/* 섹션 제목 */
-.crewList-con h1 {
-    color: #007bff;
-    /* 채도 높은 파란색 */
-    margin-bottom: 20px;
-    font-size: 28px;
-    border-left: 5px solid #007bff;
-    padding-left: 10px;
-    font-weight: 700;
-}
-
-/* 크루 목록 (ul) */
-.crewList-con ul {
+    gap: 30px;       /* 항목 간 간격 */
+    padding: 30px;   /* 전체 여백 */
     width: 100%;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-
-
-
-    /* Grid 레이아웃 설정 */
-    display: grid;
-    margin-left: auto;
-
-    /* 오른쪽 마진을 0으로 명시적으로 설정 */
-    margin-right: 0;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 25px;
-    /* Grid 항목 간의 간격 */
-    margin-bottom: 40px;
-    /* 섹션 간 구분 */
+    align-items: center;
+    background: #ffffff;
 }
 
-/* 개별 크루 항목 (li) */
-.crewList-con ul li {
-    /* width: 70%; */
-    background-color: #ffffff;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s, box-shadow 0.3s;
+/* 지도 */
+.kakaomap {
+    width: 90%;
+    height: 380px;
+    border-radius: 16px;
+    background: #e9ecef;
 }
 
-.crewList-con ul li:hover {
-    transform: translateY(-5px);
-    /* 호버 시 살짝 떠오르는 효과 */
-    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.2);
-    /* 파란색 계열 강조 그림자 */
-}
-
-/* Link 태그 내부 스타일 */
-.crewList-con ul li a {
-    text-decoration: none;
+/* 리스트 컨테이너 */
+.crewList-con {
+    width: 90%;
+    max-width: 900px;
     display: flex;
     flex-direction: column;
-    /* 이미지를 상단, 정보를 하단에 배치 */
-    height: 100%;
-    /* li 높이 전체 사용 */
-    color: #343a40;
+    gap: 50px;       /* 리스트 간 간격 */
 }
 
-/* 크루 이미지 영역 */
-.crewListLeft {
-    height: 200px;
-    /* 이미지 고정 높이 */
-    overflow: hidden;
-    background-color: #dee2e6;
+/* 제목 */
+.crewList-con h1.crewListH1 {
+    font-size: 24px;
+    color: #3d495a;
+    font-weight: 700;
+    padding-left: 4px; /* 왼쪽 여백만 */
+}
+
+.crewList-con .myCrewList {
+    padding-bottom: 50px;
+    border-bottom: 2px solid #cccccc;
+}
+
+.crewList-con .myCrewList,
+.crewList-con .allCrewList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+ /* 검색 영역 */
+ .crewList .crewList-con .allCrewList>form.crewSearch {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  
+.allCrewList>form.crewSearch>select,
+.allCrewList>form.crewSearch>input {
+    padding: 5px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    outline: none;
+    font-size: 0.8rem;
+  }
+  
+.allCrewList>form.crewSearch>input:focus,
+.allCrewList>form.crewSearch>select:focus {
+    border-color: #8ba8ce;
+    /* box-shadow: 0 0 5px rgba(195, 198, 199, 0.5); */
+  }
+
+.allCrewList>form.crewSearch>button.crewSearchBtn {
+    padding: 8px 16px;
+    background-color: #538ed1;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+form.crewSearch>button.crewSearchBtn:hover {
+    background-color: #3378bd;
+}
+
+
+/* 리스트: 한 줄 하나 + 박스 없음 */
+.crewList-con ul.crewListUl {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 26px;       /* 항목 간격 */
+}
+
+/* ------------------------------------
+   리스트 항목
+------------------------------------ */
+.crewList-con ul.crewListUl>li.crewListLi {
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    color: #6c757d;
+    gap: 24px;      /* 이미지와 텍스트 사이 간격 */
+    padding: 0;
+    background: none;
+}
+
+/* 링크 전체 적용 */
+.crewList-con ul.crewListUl>li.crewListLi>a {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    text-decoration: none;
+    width: 100%;
+    color: #222;
+    border-radius: 12px;
+    transition: background 0.15s ease;
+}
+
+/* hover 시 은은한 효과 */
+.crewList-con ul.crewListUl>li.crewListLi a:hover {
+    background: #f5f8ff;
+}
+
+/* ------------------------------------
+   이미지 (직사각형 + 둥근 모서리)
+------------------------------------ */
+.crewListLeft {
+    width: 250px;      /* 🔥 너비 증가 */
+    height: 115px;     /* 🔥 직사각형 비율 */
+    border-radius: 12px; 
+    overflow: hidden;
+    background: #f3f3f3;
 }
 
 .crewListLeft .crewImage {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* 이미지가 컨테이너를 꽉 채우도록 */
 }
 
-/* 크루 정보 영역 */
+/* ------------------------------------
+   텍스트
+------------------------------------ */
 .crewListRight {
-    padding: 15px;
-    flex-grow: 1;
-    /* 남은 공간을 채우도록 */
+    width: 80%;
     display: flex;
     flex-direction: column;
+    gap: 6px;       
+    flex: 1;
 }
 
-.crewListRight h2 {
-    font-size: 20px;
-    color: #007bff;
-    /* 제목에 채도 높은 파란색 적용 */
-    margin-top: 0;
-    margin-bottom: 8px;
+.crewListRight>h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #476591;
+    padding: 0;
+}
+
+.crewListRight>p {
+    font-size: 14px;
+    color: #555;
+    padding: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    /* 넘치는 텍스트 줄임표 */
-    font-weight: 600;
 }
 
-.crewListRight p {
+.crewListRight .crewDistrictAndMember {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    font-size: 13px;
+    color: #8b8b8b;
+}
+
+.crewList-con>button {
+    padding: 8px 14px;
+    background-color: #8faaec;
+    color: #fff;
+    border-radius: 8px;
+    border: none;
     font-size: 14px;
-    color: #6c757d;
-    margin-bottom: 5px;
-    line-height: 1.4;
-}
-
-/* 지역 정보 (가장 마지막 p 태그) */
-.crewListRight p:last-child {
-    margin-top: auto;
-    /* 하단으로 자동 푸시 */
     font-weight: 500;
-    color: #0056b3;
-    /* 더 진한 파란색으로 강조 */
+    transition: background 0.25s;
+    align-self: flex-start;
 }
 
-/* 이미지 없음 대체 텍스트 스타일 */
-.crewListLeft>div {
-    /* "이미지 없음" div 스타일 */
-}
-
-
-/* 반응형 디자인을 위한 미디어 쿼리 (선택 사항) */
-@media (max-width: 992px) {
-    .crewList {
-        flex-direction: column;
-        /* 화면이 작아지면 세로로 배치 */
-        padding: 20px;
-    }
-
-    .kakaomap {
-        max-width: 80%;
-        /* 너비 제한 해제 */
-        height: 400px;
-        /* 모바일에서 맵 높이 줄이기 */
-    }
-
-    .crewList-con ul {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        /* 항목 너비 약간 줄임 */
-    }
+.crewList-con>button:hover {
+    background-color: #5c6b97;
+    cursor: pointer;
 }

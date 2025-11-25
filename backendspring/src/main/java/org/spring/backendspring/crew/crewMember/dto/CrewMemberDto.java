@@ -40,6 +40,8 @@ public class CrewMemberDto extends BasicTime {
     private List<String> memberImages;
     private String memberNickName;
 
+    private int crewMembers;
+
     public static CrewMemberDto toCrewMember(CrewMemberEntity crewMemberEntity) {
         List<String> crewImages = crewMemberEntity.getCrewEntity().getCrewImageEntities()
                     .stream().map(CrewImageEntity::getNewName)
@@ -48,6 +50,7 @@ public class CrewMemberDto extends BasicTime {
         List<String> memberImages = crewMemberEntity.getMemberEntity().getProfileImagesList()
                     .stream().map(MemberProfileImageEntity::getNewName)
                     .toList();
+        int members = crewMemberEntity.getCrewEntity().getCrewMemberEntities().size();
         //보이고 싶은 정보 추가
         return CrewMemberDto.builder()
                 .id(crewMemberEntity.getId())
@@ -62,6 +65,7 @@ public class CrewMemberDto extends BasicTime {
                 .crewImages(crewImages)
                 .memberImages(memberImages)
                 .memberNickName(crewMemberEntity.getMemberEntity().getNickName())
+                .crewMembers(members)
                 .build();
     }
 }

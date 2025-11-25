@@ -66,10 +66,10 @@ const CrewDetailContainer = () => {
     // <CrewDetailLayout>
       <div className="crewDetailHome">
         <div className="crewDetailHome-con">
-          <div className="image">
+          <div className="crewDetailImage">
           {crew.newFileName?.length > 0 ? (
               <img
-                src={crew.newFileName[0]}
+                src={`http://localhost:8088/upload/${crew.newFileName[0]}`}
                 alt={`${crew.name} 이미지`}
                 className='crewImage'
               />
@@ -78,12 +78,24 @@ const CrewDetailContainer = () => {
             )}
           </div>
           <div className="introduction">
-            <h2>{crew.name}</h2>
-            <p>{crew.description}</p>
-            <p>{crew.district ?? "없음"}</p>
-            <p>멤버 {crew.crewMemberEntities?.length ?? 0}명</p>
+            <ul className="crewMain-list">            
+              <li className="crewMain-row crewMain-row-name">
+                <h2>{crew.name}</h2>
+              </li>  
+            <li className="crewMain-row crewMain-row-desc">
+              {crew.description}
+            </li>  
+            <li className="crewMain-row crewMain-row-district">
+              {crew.district}
+            </li>
+            <li className="crewMain-row crewMain-row-member">
+              멤버 {crew.crewMemberEntities?.length ?? 0}명
+            </li>
+            <li className="crewMain-row crewMain-row-btn">
+              <button className='crewJoin-Btn' type='button' onClick={() => setJoinRequestModal(true)}>가입신청</button>
+            </li>
+          </ul>
           </div>
-          <button type='button' onClick={() => setJoinRequestModal(true)}>가입신청</button>
         </div>
         {joinRequestModal &&
             (<CrewJoinRequestModal
