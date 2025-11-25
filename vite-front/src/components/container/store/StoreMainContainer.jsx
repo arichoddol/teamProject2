@@ -11,7 +11,7 @@ import "../../../css/store/storeIndexSlide.css";
 
 const ShopMainContainer = () => {
 
-      const IMAGE_BASE_URL = 'http://localhost:8088/upload/';
+  
 
   const NO_IMAGE_URL = "/images/noimage.jpg";
   const IMAGE_BASE_URL = 'http://localhost:8088/upload/';

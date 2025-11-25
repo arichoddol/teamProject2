@@ -29,7 +29,7 @@
 .nav h1 {
     display: flex;
     /* margin: 0; */
-    font-size: 12vh;
+    font-size: 2vh;
     /* height: 100px; */
  
     text-align: center;
@@ -52,15 +52,17 @@
 }
 
 
-@media (max-width: 640px) {
+@media (max-width: 850px) {
     .header {
     font-family: 'Archivo Black', sans-serif;
     font-size: 12px;
     }
    
     
-    .nav{
+    .nav h1{
         font-size: 11px;
+        visibility: hidden;
+        opacity: 0;
     }
     .nav ul{
         display: flex;
