@@ -14,8 +14,8 @@ public class ChatController {
     private final Sender sender;
 
     @MessageMapping("/chat.send")
-    public void sendMessage(ChatMessageDto message, Long memberId) throws Exception {
-        sender.send(message, memberId);
+    public void sendMessage(ChatMessageDto message) throws Exception {
+        sender.send(message);
     }
 
 }

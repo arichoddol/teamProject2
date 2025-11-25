@@ -2,6 +2,7 @@ package org.spring.backendspring.crew.crew.service.impl;
 
 import lombok.RequiredArgsConstructor;
 
+import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.common.role.CrewRole;
 import org.spring.backendspring.common.role.MemberRole;
 import org.spring.backendspring.crew.CrewRoleCheck;
@@ -17,6 +18,8 @@ import org.spring.backendspring.crew.crewMember.repository.CrewMemberRepository;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
 import org.spring.backendspring.s3.AwsS3Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -130,16 +133,35 @@ public class CrewServiceImpl implements CrewService {
     }
 
     @Override
-    public List<CrewDto> crewList() {
-        List<CrewEntity> crewEntities = crewRepository.findAll();
+    public PagedResponse<CrewDto> crewList(String subject, String keyword, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        
+        Page<CrewEntity> crewEntities;
 
+        
+        if (subject == null || keyword == null || keyword.trim().isEmpty()) {
+            crewEntities = crewRepository.findAll(pageRequest);
+        } else {
+            if (subject.equals("크루명")) {
+                crewEntities = crewRepository.findByNameContaining(keyword, pageRequest);
+            } else if (subject.equals("크루소개")) {
+                crewEntities = crewRepository.findByDescriptionContaining(keyword, pageRequest);
+            } else if (subject.equals("지역")) {
+                crewEntities = crewRepository.findByDistrictContaining(keyword, pageRequest);
+            } else if (subject.equals("전체")) {
+                crewEntities = crewRepository.findByNameContainingOrDescriptionContainingOrDistrictContaining(keyword, keyword, keyword, pageRequest);
+            } else {
+                crewEntities = crewRepository.findAll(pageRequest);
+            }
+        }
+        
         if (crewEntities.isEmpty()) {
             throw new NullPointerException("조회할 목록 없음");
         }
 
-        return crewEntities.stream()
-                .map(CrewDto::toCrewDto)
-                .collect(Collectors.toList());
+        Page<CrewDto> crewList = crewEntities.map(CrewDto::toCrewDto);
+
+        return PagedResponse.of(crewList);
     }
 
     @Override

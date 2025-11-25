@@ -101,7 +101,7 @@
     object-fit: cover;
   }
   
-  /* 게시글 버튼 그룹 중앙 정렬 */
+  /* 게시글 버튼 그룹 */
 .crewBoardBtn {
     display: flex;
     justify-content: space-between;

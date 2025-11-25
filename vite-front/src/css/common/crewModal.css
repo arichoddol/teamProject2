@@ -16,8 +16,8 @@
     visibility: hidden;
     transition: opacity 0.3s ease;
 
-    /* 위치 조정 (modal-container 기준) */
-    top: 100%; /* 부모 요소 바로 아래 */
+
+    top: 100%;
     left: 50%;
     transform: translateX(-50%); /* 중앙 정렬 */
 

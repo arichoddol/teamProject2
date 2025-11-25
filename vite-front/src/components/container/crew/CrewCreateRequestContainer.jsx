@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import jwtAxios from '../../../apis/util/jwtUtil';
 
 const CrewCreateRequestContainer = () => {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ const CrewCreateRequestContainer = () => {
     if (!isLogin) return;
 
     try {
-      const response = await axios.post("/api/crew/create/request", 
+      const response = await jwtAxios.post("/api/crew/create/request", 
         {
             crewName,
             message,
@@ -66,6 +67,7 @@ const CrewCreateRequestContainer = () => {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${accessToken}`,
             },
+            withCredentials: true,
         }        
       );
       setResponseMsg(response.data.message)
@@ -80,7 +82,7 @@ const CrewCreateRequestContainer = () => {
   return (
     <div className="createRequest">
         <div className="createRequest-con">
-            <h2>크루 만들기</h2>
+            <h2>크루 신청</h2>
             {isLogin ? (
                 <form onSubmit={submit}>
                     <div className="crewInfo">
@@ -116,7 +118,9 @@ const CrewCreateRequestContainer = () => {
                         </select>
                         {district && <p>선택한 지역: {district}</p>}                 
                     </div>
-                    <button className="createRequest" type="submit">신청하기</button>
+                    <div className="createRequestBtn">
+                        <button className="submitBtn" type="submit">신청하기</button>
+                    </div>
                 </form>
             ) : (
                 <p className="loginRequired">로그인이 필요합니다.</p>

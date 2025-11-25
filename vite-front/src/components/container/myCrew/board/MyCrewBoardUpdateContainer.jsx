@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux'
 import axios from 'axios';
+import jwtAxios from '../../../../apis/util/jwtUtil';
 
 const MyCrewBoardUpdateContainer = () => {
   const { crewId, boardId } = useParams();
@@ -60,12 +61,14 @@ const MyCrewBoardUpdateContainer = () => {
       newImages.forEach(image => formData.append('newImages', image))
       deleteImageName.forEach(name => formData.append('deleteImageName[]', name))
 
-      const response = await axios.put(`/api/mycrew/${crewId}/board/update/${boardId}`,
+      const response = await jwtAxios.put(`/api/mycrew/${crewId}/board/update/${boardId}`,
         formData,
         { headers: {
             "Authorization": `Bearer ${accessToken}`,
             "Content-Type": "multipart/form-data"
-        }}
+            },
+            withCredentials: true,
+        }
       )
       alert('게시글 수정 완료')
       navigate(`/mycrew/${crewId}/board/detail/${boardId}`)
@@ -102,11 +105,11 @@ const MyCrewBoardUpdateContainer = () => {
                 </div>
                 <div className="boardFile">
                     <span>기존 이미지</span>
-                    <ul>
+                    <ul className='exFile'>
                         {exFiles.length > 0 ? (
                             exFiles.map((img, idx) => (
                             <li key={idx}>
-                                <img src={img.newFileName} alt={img.newFileName} />
+                                <img src={`http://localhost:8088/upload/${img.newFileName}`} alt={img.newFileName} />
                                 <button type='button' onClick={() => deleteImage(img.newFileName)}>X</button>
                             </li>
                         ))

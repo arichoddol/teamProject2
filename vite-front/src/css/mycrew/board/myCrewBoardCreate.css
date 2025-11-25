@@ -12,12 +12,12 @@
     max-width: 700px;
     background: white;
     padding: 30px;
-    border-radius: 20px;
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
   }
   
-  .boardCreate .boardCreate-con form {
+  .boardCreate .boardCreate-con>form {
     display: flex;
     flex-direction: column;
     gap: 28px; 
@@ -26,8 +26,8 @@
   /* 공통 라벨 스타일 */
   .boardCreate label.crewBoardLabel,
   .boardFile>span {
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 1rem;
+    font-weight: 600;
     color: #141414;
   }
   
@@ -35,36 +35,44 @@
   .boardCreate .boardCreate-con .boardTitle>input[type="text"] {
     width: 100%;
     border: none;
-    border-bottom: 2px solid #3f4957;
+    border-bottom: 1px solid #3f4957;
     padding: 8px 8px;
-    background: #f2f4f5;
+    background: #fcfcfc;
     outline: none;
-    font-size: 16px;
+    font-size: 0.95rem;
     transition: 0.2s;
+}
+
+.boardCreate .boardCreate-con .boardTitle>input[type="text"]::placeholder {
+  font-size: 0.8rem;
 }
 
 .boardCreate .boardCreate-con .boardTitle>input[type="text"]:focus {
     border-color: #a4b6cc;
-    background: #f5f8fc;
+    background: #fdfeff;
   }
   
   /* 내용 */
-  .boardCreate .boardCreate-con .boardContent textarea {
+  .boardCreate .boardCreate-con .boardContent>textarea {
     width: 100%;
-    min-height: 180px;
+    min-height: 450px;
     resize: none;
     padding: 8px;
-    border-radius: 14px;
-    background: #f2f4f5;
-    border: 2px solid #3f4957;
+    border-radius: 3px;
+    background: #fcfcfc;
+    border: 0.6px solid #3f4957;
     outline: none;
     font-size: 16px;
     transition: 0.25s;
   }
   
-  .boardCreate .boardCreate-con .boardContent textarea:focus {
-    border-color: #8592a1;
-    background: #f5f8fc;
+  .boardCreate .boardCreate-con .boardContent>textarea::placeholder {
+    font-size: 0.8rem;
+  }
+
+  .boardCreate .boardCreate-con .boardContent>textarea:focus {
+    border-color: #a4b6cc;
+    background: #fdfeff;
   }
   
   /* 파일 */
@@ -74,8 +82,9 @@
     gap: 8px;
   }
   
-  .boardCreate .boardCreate-con .boardFile input[type="file"] {
-    padding: 10px 0;
+  .boardCreate .boardCreate-con .boardFile>input[type="file"] {
+    padding: 6px 0;
+    font-size: 0.7rem;
     cursor: pointer;
   }
   
@@ -86,11 +95,11 @@
     gap: 8px;
   }
   
-  .boardCreate .boardCreate-con .boardCreater input {
+  .boardCreate .boardCreate-con .boardCreater>input {
     padding: 6px;
-    border-radius: 10px;
+    border-radius: 6px;
     border: none;
-    background: #f5f8fc;
+    background: #fcfcfc;
     outline: none;
     font-size: 13px;
   }
@@ -99,26 +108,28 @@
   .crewBoardCreateBtn {
     display: flex;
     justify-content: flex-end;
+    font-size: 0.8rem;
   }
+
   .boardCreate .boardCreate-con form .crewBoardCreateBtn>button.crewBoardCreate {
     width: 15%;
     padding: 8px;
     background: #768cac;
     color: white;
     border: none;
-    border-radius: 10px;
-    font-size: 15px;
+    border-radius: 6px;
+    font-size: 0.8rem;
     cursor: pointer;
     transition: 0.2s, transform 0.15s;
   }
   
   .boardCreate .boardCreate-con form .crewBoardCreateBtn>button.crewBoardCreate:hover {
-    background: #476792;
+    background: #557197;
     transform: translateY(-2px);
   }
   
   .boardCreate .boardCreate-con form .crewBoardCreateBtn>button.crewBoardCreate:active {
-    background: #0059c7;
+    background: #6b819b;
     transform: translateY(0);
   }
   

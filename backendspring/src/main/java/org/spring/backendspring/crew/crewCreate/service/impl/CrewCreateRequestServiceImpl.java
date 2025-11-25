@@ -83,7 +83,6 @@ public class CrewCreateRequestServiceImpl implements CrewCreateRequestService {
         // String message = crewEntity.getName() + "크루 신청이 승인되었습니다.";
         // rabbitTemplate.convertAndSend(topicExchange.getName(), routingKey, message);
 
-        // crewCreateRequestRepository.delete(requestEntity);
     }
 
     @Override

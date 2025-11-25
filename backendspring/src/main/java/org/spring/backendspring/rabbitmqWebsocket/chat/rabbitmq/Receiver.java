@@ -15,13 +15,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Receiver {
 
-    private SimpMessagingTemplate messagingTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
     private final ConnectionFactory connectionFactory;
 
     public void receiveMessage(Long crewId) throws Exception {
 
-        String crewIdString = crewId.toString();
-        String queueName = "chat.queue.crew." + crewIdString;
+        String queueName = "chat.queue.crew." + crewId;
 
         Queue queue = new Queue(queueName, true);
 

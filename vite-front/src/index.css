@@ -16,6 +16,11 @@
 @import url(css/payment/PaymentListPage.css);
 @import url(css/payment/PaymentSuccess.css);
 
+/* 크루 */
+@import url(css/crew/crewCreateRequest.css);
+@import url(css/crew/crewDetail.css);
+@import url(css/crew/crewJoinRequest.css);
+
 /* 내 크루  */
 @import url(css/mycrew/mycrew.css);
 @import url(css/mycrew/mycrew-modal.css);
@@ -25,6 +30,9 @@
 @import url(css/mycrew/board/myCrewBoard.css);
 @import url(css/mycrew/board/myCrewBoardDetail.css);
 @import url(css/mycrew/mycrew-main.css);
+@import url(css/mycrew/mycrew-member-modal.css);
+@import url(css/mycrew/mycrew-RunMember-modal.css);
+@import url(css/mycrew/mycrew-update.css);
 
 /* 관리자 */
 @import url(css/admin/container/admin-member-list.css);

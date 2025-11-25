@@ -104,12 +104,13 @@ const MyCrewJoinRequestContainer = () => {
   return (
     <div className="myCrew">
       <div className="myCrew-con">
-        <div><h2>
-          크루 가입 신청 명단</h2></div>
-          <div className="myCrew-search">
-            <ul>
-              {/* 상태검색 */}
-              <li>
+        <div>
+          <h2>📥 크루 가입 신청 명단</h2>
+        </div>
+        <div className="myCrew-search">
+          <ul>
+            {/* 상태검색 */}
+            <li>
               <select
                 value={search}
                 onChange={(e) => {
@@ -122,119 +123,127 @@ const MyCrewJoinRequestContainer = () => {
                     setSearch(value); // PENDING / APPROVED / REJECTED
                   }
                 }}
-                >
-                <option value="">::상태선택::</option>
-                <option value="PENDING">대기</option>
-                <option value="APPROVED">승인</option>
-                <option value="REJECTED">거절</option>
+              >
+                <option value="">🔍 ::상태선택::</option>
+                <option value="PENDING">⏳ 대기</option>
+                <option value="APPROVED">✅ 승인</option>
+                <option value="REJECTED">❌ 거절</option>
               </select>
-              </li>
-              {/* 그냥 검색 */}
-              {subject !== "status" &&(
-                <li>
-                <select value={subject} onChange={(e) => setSubject(e.target.value)}>
-                  <option value="">::검색조건::</option>
-                  <option value="id">신청순서</option>
-                  <option value="memberRequestId">회원id</option>
-                  <option value="message">메시지</option>
+            </li>
+            {/* 그냥 검색 */}
+            {subject !== "status" && (
+              <li>
+                <select
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                >
+                  <option value="">🔎 ::검색조건::</option>
+                  <option value="id">#️⃣ 신청순서</option>
+                  <option value="memberRequestId">👤 회원id</option>
+                  <option value="message">💬 메시지</option>
                 </select>
               </li>
-
-              )}
-
-              <li>
-                <input
-                    type="text"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="검색어 입력"
-                    />
-              </li>
-              <li>
-                <button type='button' onClick={onSearchClick}>검색</button>
-              </li>
-
-            </ul>
-          </div>
-
-          <div className="myCrew-content">
-         
-            <ul>
-
-              <li>
-
-              <span>신청순서 </span>
-              <span>회원 ID </span>
-              <span>가입 메시지</span>
-              <span>상태 </span>
-              <span>가입승인</span>
-              <span>가입거절</span>  
-              </li>
-            </ul>
-            
-              {/* 리스트 */}
-            <ul>
-              {/* 넣고 싶은 정보 더 넣으면 됨 dto에 안한거임 */}
-            {myCrewJoinRequestList.map((joinReq)=>(
+            )}
+  
+            <li>
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="검색어 입력 🔍"
+              />
+            </li>
+            <li>
+              <button type="button" onClick={onSearchClick}>
+                🔍 검색
+              </button>
+            </li>
+          </ul>
+        </div>
+  
+        <div className="myCrew-content">
+          <ul>
+            <li>
+              <span>#️⃣ 신청순서 </span>
+              <span>👤 회원 ID </span>
+              <span>💬 가입 메시지</span>
+              <span>📌 상태 </span>
+              <span>✅ 가입승인</span>
+              <span>❌ 가입거절</span>
+            </li>
+          </ul>
+  
+          {/* 리스트 */}
+          <ul>
+            {/* 넣고 싶은 정보 더 넣으면 됨 dto에 안한거임 */}
+            {myCrewJoinRequestList.map((joinReq) => (
               <li key={joinReq.id}>
-
-              <span>{joinReq.id}</span>
-              <span>{joinReq.memberRequestId}</span>
-              <span>{joinReq.message}</span>
-              <span>{joinReq.status}</span>
-              <span>
-
-              <button type="button" onClick={()=>onJoinApproved(joinReq)}>가입승인</button>
-              </span>
-              <span>
-              <button type="button" onClick={()=>onJoinRejected(joinReq)}>가입거절</button>
-
-              </span>
+                <span>{joinReq.id}</span>
+                <span>{joinReq.memberRequestId}</span>
+                <span>{joinReq.message}</span>
+                <span>{joinReq.status}</span>
+                <span>
+                  <button
+                    type="button"
+                    onClick={() => onJoinApproved(joinReq)}
+                  >
+                    ✅ 가입승인
+                  </button>
+                </span>
+                <span>
+                  <button
+                    type="button"
+                    onClick={() => onJoinRejected(joinReq)}
+                  >
+                    ❌ 가입거절
+                  </button>
+                </span>
               </li>
-
             ))}
           </ul>
         </div>
-          <div className="myCrew-paging">
-            <div className="myCrew-paging-con">
-              <ul>
-                <li>총페이지 : {totalPages}</li>
-                <li>
+        <div className="myCrew-paging">
+          <div className="myCrew-paging-con">
+            <ul>
+              <li>📄 총페이지 : {totalPages}</li>
+              <li>
+                <button
+                  disabled={nowPage === 1}
+                  onClick={() => MyCrewjoinRequest(nowPage - 2)}
+                >
+                  ⬅ 이전
+                </button>
+              </li>
+  
+              <li>
+                {Array.from(
+                  { length: endPage - startPage + 1 },
+                  (_, idx) => startPage + idx
+                ).map((pageNum) => (
                   <button
-                    disabled={nowPage === 1}
-                    onClick={() => MyCrewjoinRequest(nowPage - 2)}>
-                    이전
+                    key={pageNum}
+                    onClick={() => MyCrewjoinRequest(pageNum - 1)}
+                    className={pageNum === nowPage ? "now" : ""}
+                  >
+                    {pageNum}
                   </button>
-                </li>
-
-                <li>
-                  {Array.from(
-                    { length: endPage - startPage + 1 },
-                    (_, idx) => startPage + idx
-                  ).map((pageNum) => (
-                    <button
-                      key={pageNum}
-                      onClick={() => MyCrewjoinRequest(pageNum - 1)}
-                      className={pageNum === nowPage ? "now" : ""}
-                      >
-                      {pageNum}
-                    </button>
-                  ))}
-                </li>
-                <li>
-                  <button
-                    disabled={nowPage === totalPages}
-                    onClick={() => MyCrewjoinRequest(nowPage)}>
-                    다음
-                  </button>
-                </li>
-                
-              </ul>
-            </div>
+                ))}
+              </li>
+              <li>
+                <button
+                  disabled={nowPage === totalPages}
+                  onClick={() => MyCrewjoinRequest(nowPage)}
+                >
+                  다음 ➡
+                </button>
+              </li>
+            </ul>
           </div>
+        </div>
       </div>
     </div>
-  )
+  );
+  
     
 }
 

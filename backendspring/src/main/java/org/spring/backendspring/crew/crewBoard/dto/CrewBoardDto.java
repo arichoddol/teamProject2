@@ -50,6 +50,8 @@ public class CrewBoardDto {
     private String memberNickName;
     private CrewRole role;
 
+    private int comments;
+
     public static CrewBoardDto toDto(CrewBoardEntity entity) {
         List<String> newFileName = entity.getCrewBoardImageEntities().stream()
                     .map(CrewBoardImageEntity::getNewName)
@@ -57,6 +59,8 @@ public class CrewBoardDto {
         List<String> originalFileName = entity.getCrewBoardImageEntities().stream()
                     .map(CrewBoardImageEntity::getOldName)
                     .toList();
+
+        int comments = entity.getCrewBoardCommentEntities().size();
 
         return CrewBoardDto.builder()
                 .id(entity.getId())
@@ -70,6 +74,7 @@ public class CrewBoardDto {
                 // .crewBoardCommentEntities(entity.getCrewBoardCommentEntities())
                 .originalFileName(originalFileName)
                 .newFileName(newFileName)
+                .comments(comments)
                 .createTime(entity.getCreateTime())
                 .updateTime(entity.getUpdateTime())
                 .build();

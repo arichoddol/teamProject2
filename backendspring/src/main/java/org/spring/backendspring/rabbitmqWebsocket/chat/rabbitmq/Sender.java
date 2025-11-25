@@ -14,20 +14,19 @@ import lombok.RequiredArgsConstructor;
 public class Sender {
     
     private final RabbitTemplate rabbitTemplate;
-    private final MemberRepository memberRepository;
 
     @Value("${rabbitmq.exchange.name}")
     private String exchangeName;
 
-    public void send(ChatMessageDto message, Long memberId) {
+    public void send(ChatMessageDto message) {
 
-        // Long crewId = memberRepository.findById(memberId).map(MemberEntity.getCrewMemberEntityList.g);
+        Long crewId = message.getCrewId();
 
-        // message.setCrewId(crewId);
+        message.setCrewId(crewId);
 
-        // String routingKey = "chat.key.crew" + crewId;
+        String routingKey = "chat.key.crew" + crewId;
 
-        // rabbitTemplate.convertAndSend(exchangeName, routingKey, message);
-        // System.out.println("보냄 :" + message);
+        rabbitTemplate.convertAndSend(exchangeName, routingKey, message);
+        System.out.println("보냄 :" + message);
     }
 }
