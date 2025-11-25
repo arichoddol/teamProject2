@@ -246,19 +246,9 @@ const ShopDetailContainer = () => {
             <div className="itemDetail-con">
 
                 <div className="itemDetail-con-image">
-                    {item.attachFile && item.attachFile !== 0 ? (
-                        <img
-                            src={null}
-                            alt={item.itemTitle || "첨부 이미지"}
-                        />
-                    ) : (
-                        <img
-                            src={NO_IMAGE_URL}
-                            alt="이미지 없음"
-                        />
-                    )}
-
-                    {item.itemImgDtos && item.itemImgDtos.length > 0 && (
+                    {console.log(item)}
+                    {/* {item.itemImgDtos && item.itemImgDtos.length > 0 && ( */}
+                      {item.itemImgDtos && item.itemImgDtos.length > 0 ?(
                         item.itemImgDtos.map((imgDto) => (
                             <img
                                 // bring File by NewName Field
@@ -268,6 +258,14 @@ const ShopDetailContainer = () => {
                                 style={{ maxWidth: '100%', height: 'auto', display: 'block', margin: '10px 0' }}
                             />
                         ))
+                    ):(
+                     <img
+                    src={NO_IMAGE_URL}
+                    alt="이미지 없음"
+                    width="250"
+                    height="250"
+                    className="item-image"
+                  />    
                     )}
                 </div>
                 <div className="itemDetail-con-info">
