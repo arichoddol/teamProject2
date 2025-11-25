@@ -1,18 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Hahmlet:wght@100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Batang&family=Hahmlet:wght@100..900&display=swap');
 
 .itemDetail {
     padding: 20px;
-    max-width: 1200px;
+    /* max-width: 1200px; */
     margin: 0 auto;
     font-family: Arial, sans-serif;
+    background-image: linear-gradient(to top, #28119c,#305e93bf);
+
+    
 }
 
 .itemDetail-con {
+    padding: 40px;
     display: flex;
     flex-wrap: wrap;
     gap: 30px;
+    border: 3px solid #aae4ff;
+   background-image: linear-gradient(to top, #ffffff,#f4f3ff);
+    border-radius: 40px;
 }
 
 
@@ -35,6 +42,8 @@
     margin-bottom: 10px;
     border-radius: 5px;
     object-fit: contain;
+    border: 2px solid #20aab658;
+    border-radius: 10px;
 
 }
 
@@ -52,8 +61,10 @@
     margin-top: 0;
     margin-bottom: 15px;
     color: #333;
-    border-bottom: 2px solid #f2f2f2;
+    border-bottom: 2px solid silver;
     padding-bottom: 10px;
+     font-family: "Gowun Batang", serif;
+  font-style: normal;
 }
 
 .itemDetail-con-info span {
@@ -61,11 +72,19 @@
     line-height: 1.8;
     color: #555;
     font-size: 0.95em;
+    font-family: "Gowun Batang", serif;
+    font-style:normal;
+    font-weight:bolder;
+    
 }
 
 .itemDetail-con-info span strong {
     font-weight: bold;
     color: #333;
+     font-family: "Gowun Batang", serif;
+  font-weight: 400;
+  font-style: normal;
+    
 }
 
 /* 장바구니 추가 버튼 및 수량 입력 영역 */
@@ -74,6 +93,7 @@
     align-items: center;
     margin-top: 30px;
     gap: 10px;
+    
 }
 
 .add-cart-btn {
@@ -108,8 +128,13 @@
     /* 전체 너비 사용 */
     margin-top: 30px;
     padding: 20px;
-    border: 1px solid #eee;
-    background-color: #fff;
+    border: 1px solid #4950da; 
+    border-radius: 15px;
+    background-image: linear-gradient(to top, #ffffff,#c0d5ff41);
+    font-family: "Gowun Batang", serif;
+    font-weight: bold;
+    font-style: normal;
+
 }
 
 /* 댓글 입력 폼 */
@@ -117,6 +142,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+   
 }
 
 .itemDetail-con-reply textarea {
@@ -127,22 +153,31 @@
     resize: vertical;
     box-sizing: border-box;
     font-size: 0.95em;
+    font-family: "Gowun Batang", serif;
+    font-weight: bold;
+    font-style: normal;
 }
 
 .itemDetail-con-reply button[type='submit'] {
     align-self: flex-end;
     /* 오른쪽 정렬 */
     padding: 8px 15px;
-    background-color: #28a745;
+    background-color: #4537e5;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+    font-size: 0.95em;
+    font-family: "Gowun Batang", serif;
+    /* font-weight: bold; */
+    font-style: normal;
+    
 }
 
 .itemDetail-con-reply button[type='submit']:hover {
     background-color: #1e7e34;
+    
 }
 
 /* 댓글 목록 */
@@ -207,6 +242,9 @@
     cursor: pointer;
     border-radius: 3px;
     font-size: 0.9em;
+    font-size: 0.95em;
+    font-family: "Gowun Batang", serif;
+    font-style: normal;
 }
 
 .reply-actions button:hover {
@@ -281,5 +319,9 @@
 
     .add-cart-btn {
         flex-grow: 1;
+         font-size: 0.95em;
+        font-family: "Gowun Batang", serif;
+        font-weight: bold;
+        font-style: normal;
     }
 }
