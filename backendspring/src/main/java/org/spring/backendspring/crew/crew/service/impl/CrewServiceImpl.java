@@ -180,4 +180,16 @@ public class CrewServiceImpl implements CrewService {
 
         return CrewDto.toCrewDto(crewEntity);
     }
+
+    @Override
+    public List<CrewDto> myCrewList(Long memberId) {
+        MemberEntity member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원"));
+        
+        List<CrewEntity> mycrewList = member.getCrewEntityList();
+
+        return mycrewList.stream()
+                    .map(CrewDto::toCrewDto)
+                    .toList();
+    }
 }

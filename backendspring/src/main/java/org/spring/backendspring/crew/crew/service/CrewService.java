@@ -23,4 +23,6 @@ public interface CrewService {
     List<CrewDto> findAllCrew();
 
     List<CrewMemberDto> findMyAllCrew(Long memberId);
+
+    List<CrewDto> myCrewList(Long memberId);
 }
