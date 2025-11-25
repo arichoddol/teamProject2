@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+.memberDetail-background {
+  background-color: #f8f9fa;
+}
+
 .memberDetail {
   max-width: 1200px;
   margin: 0 auto;
@@ -12,17 +16,20 @@
     sans-serif;
 }
 
-.memberDetail h1 {
+.memberDetail > h1 {
   font-size: 28px;
   font-weight: 700;
-  margin-bottom: 30px;
-  color: #222;
-  padding-left: 40px;
+  color: #fff;
+  padding: 20px 20px 23px 40px;
   text-align: left;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  background-color: #4a90e2;
 }
 
 .memberDetail-con {
   display: flex;
+  max-width: 1200px;
   gap: 30px;
   min-height: 600px;
 }
@@ -30,10 +37,12 @@
 /* 왼쪽 사이드바 */
 .memberDetail-left {
   flex: 0 0 200px;
-  background: #f8f9fa;
+  background: white;
   border-radius: 12px;
   padding: 20px 0;
   height: auto;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .memberDetail-left nav ul {

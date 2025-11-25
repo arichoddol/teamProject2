@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { authDetailFn } from "../../../apis/auth/authDetail";
+import { authDetailFn, authUpdateFn } from "../../../apis/auth/authDetail";
 import { BACK_BASIC_URL } from "../../../apis/commonApis";
 import jwtAxios from "../../../apis/util/jwtUtil";
 import { useSelector } from "react-redux";
 
 const AuthUpdateContainer = () => {
-  const accessToken = useSelector((state) => state.jwtSlice.accessToken);
   const [gender, setGender] = useState("남성");
   const [imgFile, setImgFile] = useState(null);
-  const navigate = useNavigate();
   const [memberDto, setMemberDto] = useState({
     id: "",
     userEmail: "",
@@ -21,66 +19,40 @@ const AuthUpdateContainer = () => {
     phone: "",
   });
 
+  const memberId = useSelector((state) => state.loginSlice.id);
+  const navigate = useNavigate();
+
+  const myPageDetailFn = async () => {
+    const res = await authDetailFn(memberId);
+    if (res.status === 200) {
+      setMemberDto({ ...res.data });
+      if (res.data.gender === "WOMAN") {
+        setGender("여성");
+      }
+    }
+  };
+
+  const memberUpdateFn = async (e) => {
+    e.preventDefault();
+    const res = await authUpdateFn(memberId, memberDto, imgFile);
+    if (res.status === 200) {
+      alert("수정이 완료되었습니다.");
+      navigate("/auth/myPage");
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setMemberDto((el) => ({ ...el, [name]: value }));
   };
 
   useEffect(() => {
-    const myPageDetailFn = async () => {
-      const res = await authDetailFn();
-      const authDetail = res.data;
-      console.log(authDetail);
-      if (res.status === 200) {
-        setMemberDto({ ...authDetail });
-        if (authDetail.gender === "WOMAN") {
-          setGender("여성");
-        }
-      }
-    };
     myPageDetailFn();
   }, []);
 
-  const memberUpdateFn = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append(
-      "memberDto",
-      new Blob([JSON.stringify(memberDto)], { type: "application/json" })
-    );
-
-    formData.append("memberFile", imgFile);
-
-    try {
-      await jwtAxios.put(
-        `${BACK_BASIC_URL}/api/member/update/${memberDto.id}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      alert("수정이 완료되었습니다.");
-      navigate("/auth/myPage");
-    } catch (err) {
-      console.log("업데이트 오류: " + err);
-    }
-  };
-
   return (
     <div className="memberDetail">
-      <h2>마이페이지</h2>
       <div className="memberDetail-con">
-        <aside className="memberDetail-left">
-          <nav>
-            <ul>
-              <li className="active">회원정보</li>
-              <li>결제정보</li>
-            </ul>
-          </nav>
-        </aside>
         <form onSubmit={memberUpdateFn}>
           <main className="memberDetail-right">
             <div className="profile-section">

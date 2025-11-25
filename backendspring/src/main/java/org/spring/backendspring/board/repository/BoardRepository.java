@@ -3,8 +3,10 @@ package org.spring.backendspring.board.repository;
 
 import java.util.List;
 
+import java.util.Optional;
 import org.spring.backendspring.board.entity.BoardEntity;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -28,5 +30,9 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long>
     @Query("UPDATE BoardEntity b SET b.hit = b.hit + 1 WHERE b.id = :id")
     void updateHit(@Param("id")Long id);
     
+    Page<BoardEntity> findByCategoryAndTitleContaining(PageRequest request, String category, String keyword);
 
+    Page<BoardEntity> findByCategory(PageRequest request, String category);
+
+    Optional<BoardEntity> findByCategoryAndId(String category, Long noticeId);
 }

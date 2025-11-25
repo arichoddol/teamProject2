@@ -20,4 +20,6 @@ public interface AdminCrewService {
     PagedResponse<CrewCreateRequestDto> findAllCrewCreateRequest(String keyword, int page, int size);
 
     CrewCreateRequestDto crewRequestDetail(Long crewRequestId);
+
+    CrewDto findByDetailCrew(Long crewId);
 }

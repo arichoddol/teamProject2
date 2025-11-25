@@ -1,40 +1,8 @@
-import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useLocation } from "react-router-dom";
-import { BACK_BASIC_URL } from "../../apis/commonApis";
-import jwtAxios from "../../apis/util/jwtUtil";
-import { hasRequestStatus } from "../../slices/adminSlice";
 
 const AdminSidebar = () => {
-  const location = useLocation();
-  const accessToken = useSelector((state) => state.jwtSlice.accessToken);
   const rqStatus = useSelector((state) => state.adminSlice.requestStatus);
-  const dispatch = useDispatch();
-
-  const crewReqeustFn = async () => {
-    try {
-      const res = await jwtAxios.get(
-        `${BACK_BASIC_URL}/api/admin/crew/create/requestList`,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-          withCredentials: true,
-        }
-      );
-
-      const crewRequestData = res.data.content;
-      const pendingRs = crewRequestData.some((el) =>
-        el.status.includes("PENDING")
-      );
-      dispatch(hasRequestStatus(pendingRs));
-      console.log(rqStatus);
-    } catch (err) {
-      console.log("크루 신청 목록 불러오기 실패 " + err);
-    }
-  };
-
-  useEffect(() => {
-    crewReqeustFn();
-  }, [location]);
 
   return (
     <aside className="admin-sidebar">
@@ -62,10 +30,10 @@ const AdminSidebar = () => {
         </li>
 
         <li>
-          <NavLink to="/admin/eventList">🎉 이벤트목록 관리</NavLink>
+          <NavLink to="/admin/noticeList">🎉 공지목록 관리</NavLink>
         </li>
         <li>
-          <NavLink to="/admin/addEvent">➕ 이벤트 등록</NavLink>
+          <NavLink to="/admin/addNotice">➕ 공지등록</NavLink>
         </li>
 
         <li>

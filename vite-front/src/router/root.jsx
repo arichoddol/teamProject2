@@ -6,12 +6,12 @@ import toCrewRouter from "./toCrewRouter";
 import toAdminRouter from "./toAdminRouter";
 import toBoardRouter from "./toBoardRouter";
 import toStoreRouter from "./toStoreRouter";
-import toEventRouter from "./toEventRouter";
 import toCartRouter from "./toCartRouter";
 import toPaymentRouter from "./toPaymentRouter";
 import toMyCrewRouter from "./toMyCrewRouter";
 import { toMyPageRouter } from "./toMyPageRouter";
 import toApiRouter from "./toApiRouter";
+import { toNoticeRouter } from "./toNoticeRouter";
 
 const Loading = <div className="loading">Loading..</div>;
 
@@ -21,7 +21,7 @@ const LoginLayout = lazy(() => import(`../layout/LoginLayout`));
 const MyPageLayout = lazy(() => import(`../layout/MyPageLayout`));
 const AdminLayout = lazy(() => import(`../layout/admin/AdminLayout`));
 const BoardLayout = lazy(() => import(`../layout/BoardLayout`));
-const EventLayout = lazy(() => import(`../layout/EventLayout`));
+const NoticeLayout = lazy(() => import(`../layout/NoticeLayout`));
 const CrewLayout = lazy(() => import("../layout/CrewLayout"));
 
 const CartLayout = lazy(() => import(`../layout/CartLayout`));
@@ -104,13 +104,13 @@ const root = createBrowserRouter([
   },
   {
     // event ( 대회일정 )
-    path: "event",
+    path: "notice",
     element: (
       <Suspense fallback={Loading}>
-        <EventLayout />
+        <NoticeLayout />
       </Suspense>
     ),
-    children: toEventRouter(),
+    children: toNoticeRouter(),
   },
   {
     // cart

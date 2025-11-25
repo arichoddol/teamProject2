@@ -1,7 +1,6 @@
-import axios from "axios";
 import React, { useState } from "react";
-import { BACK_BASIC_URL } from "../../../apis/commonApis";
 import { useNavigate } from "react-router";
+import { joinFn } from "../../../apis/auth/join";
 
 const AuthJoinContainer = () => {
   const navigate = useNavigate();
@@ -26,33 +25,15 @@ const AuthJoinContainer = () => {
     e.preventDefault();
     setErrors({});
 
-    const formData = new FormData();
-
-    formData.append(
-      "memberDto",
-      new Blob([JSON.stringify(memberDto)], { type: "application/json" })
-    );
-
-    formData.append("memberFile", imgFile);
-
-    let res;
-
-    try {
-      res = await axios.post(`${BACK_BASIC_URL}/api/member/join`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
+    const res = await joinFn(memberDto, imgFile);
+    if (res.response.status === 200) {
       alert("회원가입 완료!, 로그인 페이지로 이동합니다.");
       navigate("/auth/login");
-    } catch (err) {
-      setErrors(err.response.data);
-      console.log("회원가입 실패");
+    } else if (res.response.status === 400) {
+      setErrors(res.response.data);
     }
   };
 
-  // "Content-Type": "multipart/form-data"
   return (
     <div className="member-join">
       <div className="member-join-con">

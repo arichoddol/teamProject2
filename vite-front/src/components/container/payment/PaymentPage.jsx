@@ -28,6 +28,10 @@ const PaymentPage = () => {
     const [loading, setLoading] = useState(true);
     // paymentType의 초기값은 소문자입니다. (select option value에 따라)
     const [paymentType, setPaymentType] = useState("kakao"); 
+    
+    // ⭐️ [수정] authDetailFn 호출에 필요한 memberId를 저장할 상태 추가 (handlePayment에서도 사용)
+    // 장바구니 조회 후 memberId를 얻습니다.
+    const [memberId, setMemberId] = useState(null); 
 
     // 로그인한 회원 정보로 채워질 상태
     const [receiverName, setReceiverName] = useState(""); 
@@ -44,22 +48,30 @@ const PaymentPage = () => {
         const fetchAllData = async () => {
             setLoading(true);
             
-            // authDetailFn이 에러를 던지지 않으므로, 이 함수 전체를 try...catch로 감싸는 것은 
-            // 카트 API 실패 처리용으로만 작동합니다.
             try {
                 // 1. 장바구니 데이터 조회
                 const cartData = await getCartByToken();
                 setCart(cartData?.items?.length ? cartData : null);
 
-                // 2. 회원 상세 정보 조회 및 필드 채우기
-                const res = await authDetailFn(); 
+                // ⭐️ [수정] 1-1. 장바구니 데이터에서 memberId 추출
+                const fetchedMemberId = cartData?.memberId;
+
+                if (!fetchedMemberId) {
+                    alert("로그인이 필요하거나 장바구니에서 회원 정보를 가져올 수 없습니다.");
+                    navigate("/auth/login");
+                    return;
+                }
+                // ⭐️ [수정] memberId 상태 업데이트
+                setMemberId(fetchedMemberId); 
+
+
+                // ⭐️ [수정] 2. 회원 상세 정보 조회 및 필드 채우기 (변경된 authDetailFn에 memberId 전달)
+                const res = await authDetailFn(fetchedMemberId); 
                 
-                // ⭐️ [수정된 핵심 로직]
-                // authDetailFn에서 에러를 throw 하지 않고 undefined를 반환할 수 있으므로,
-                // res 또는 res.data가 유효한지 명시적으로 확인해야 합니다.
+                // ⭐️ [핵심 로직]
                 if (!res || !res.data || !res.data.userName) {
                     // 회원 정보 조회가 실패했거나, 데이터에 필수 필드가 없는 경우
-                    alert("로그인이 필요하거나 회원 정보를 가져올 수 없습니다.");
+                    alert("회원 정보를 가져오는 데 실패했습니다.");
                     navigate("/auth/login");
                     return; // 리다이렉트 후 함수 종료
                 }
@@ -69,16 +81,16 @@ const PaymentPage = () => {
                 setReceiverPhone(res.data.phone || ""); 
 
             } catch (e) {
-                // 이 catch는 주로 getCartByToken 등 다른 API의 실패를 처리합니다.
+                // 이 catch는 주로 getCartByToken 또는 authDetailFn의 네트워크 실패를 처리합니다.
                 console.error("데이터 로딩 실패:", e);
-                alert("데이터 로딩 중 치명적인 오류가 발생했습니다. (장바구니 등)");
+                alert("데이터 로딩 중 오류가 발생했습니다. (장바구니 또는 회원 조회)");
                 // navigate("/auth/login"); // 필요하다면 주석 해제하여 리다이렉트
             } finally {
                 setLoading(false);
             }
         };
         fetchAllData();
-    }, [navigate]); 
+    }, [navigate]); // navigate가 변경되어도 재실행되지 않도록 의존성 배열을 확인해주세요.
 
     // 결제 대상 아이템만 필터링하는 함수
     const getItemsToPay = () => {
@@ -118,12 +130,14 @@ const PaymentPage = () => {
 
         try {
             const totalPrice = calculateTotalPrice(itemsToPay);
-            const memberId = cart.memberId;
-            if (!memberId) throw new Error("회원 정보가 없습니다.");
+            // ⭐️ [기존 로직 유지] useEffect에서 memberId를 확보했으므로 cart.memberId 또는 memberId 상태 사용
+            const currentMemberId = cart?.memberId || memberId; 
+            
+            if (!currentMemberId) throw new Error("회원 정보가 없습니다.");
             
             // 백엔드 PaymentDto 구조에 맞게 데이터 객체 생성
             const paymentDto = {
-                memberId: memberId,
+                memberId: currentMemberId,
                 paymentReceiver: receiverName, 
                 paymentPhone: receiverPhone,
                 
@@ -140,7 +154,6 @@ const PaymentPage = () => {
                 isSucceeded: paymentType === 'kakao' ? 0 : 1, 
             };
             
-
             if (paymentType === "kakao") {
                 // 카카오페이: PG로 리다이렉트할 URL 받기
                 const approvalUrl = await pgRequest("kakao", paymentDto);

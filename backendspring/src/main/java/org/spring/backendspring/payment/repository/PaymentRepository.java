@@ -1,5 +1,6 @@
 package org.spring.backendspring.payment.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.spring.backendspring.payment.entity.PaymentEntity;
@@ -38,7 +39,9 @@ public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
   @Query(value = "SELECT p FROM PaymentEntity p JOIN FETCH p.paymentItemEntities WHERE LOWER(p.paymentType) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(p.paymentPost) LIKE LOWER(CONCAT('%', :keyword, '%'))", countQuery = "SELECT COUNT(p) FROM PaymentEntity p WHERE LOWER(p.paymentType) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(p.paymentPost) LIKE LOWER(CONCAT('%', :keyword, '%'))")
   Page<PaymentEntity> findByKeywordWithItems(@Param("keyword") String keyword, Pageable pageable);
 
-  // 기존 메서드는 삭제하거나 주석 처리하고, 위 메서드를 사용하도록 서비스 레이어에서 변경됩니다.
+  Page<PaymentEntity> findByMemberId(Pageable pageable, Long memberId);
+
+    // 기존 메서드는 삭제하거나 주석 처리하고, 위 메서드를 사용하도록 서비스 레이어에서 변경됩니다.
   // Page<PaymentEntity>
   // findByPaymentTypeContainingIgnoreCaseOrPaymentPostContainingIgnoreCase(
   //     String paymentType, String paymentPost, Pageable pageable);

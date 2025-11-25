@@ -1,4 +1,4 @@
-package org.spring.backendproject.open.weather.dto;
+package org.spring.backendspring.API.weather.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
