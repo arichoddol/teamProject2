@@ -14,9 +14,6 @@ public class WebConfig implements WebMvcConfigurer {
         // 🔥 http://localhost:8088/uploadImg/파일명 으로 접근 가능하게 하는 설정
         registry.addResourceHandler("/upload/**")
 
-                .addResourceLocations("file:///E:/full/upload/",
-                        "file:///C:/full/upload/",
-                        "file:///D:/full/upload/");
          
     }
 }
