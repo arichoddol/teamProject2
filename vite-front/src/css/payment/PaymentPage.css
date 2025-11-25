@@ -1,8 +1,6 @@
-/* PaymentPage.css - 세련된 디자인으로 개선 */
-
 :root {
-    --primary-color: #4A90E2; /* 주 색상 (예: 파란색 계열) */
-    --kakao-color: #FFEB00; /* 카카오페이 색상 */
+    --primary-color: #4A90E2; 
+    --kakao-color: #FFEB00; 
     --background-light: #f7f9fc;
     --border-color: #e0e0e0;
     --text-dark: #333333;
@@ -33,7 +31,6 @@
     gap: 30px;
 }
 
-/* --- 섹션 스타일링 --- */
 .payment-section {
     padding: 20px;
     border-radius: 8px;
@@ -51,20 +48,18 @@
     padding-bottom: 10px;
 }
 
-/* 결제 목록 (좌측) */
+
 .payment-items {
-    flex: 2; /* 더 많은 공간 할당 */
+    flex: 2; 
 }
 
-/* 정보 및 요약 (우측) */
 .payment-info-box {
-    flex: 1; /* 고정된 공간 할당 */
+    flex: 1; 
     display: flex;
     flex-direction: column;
 }
 
 
-/* --- 테이블 스타일링 --- */
 .payment-table {
     width: 100%;
     border-collapse: separate;
@@ -109,9 +104,8 @@
 }
 
 
-/* --- 폼 스타일링 --- */
 .shipping-info, .payment-method {
-    background-color: #ffffff; /* 흰색 배경으로 명확히 구분 */
+    background-color: #ffffff; 
 }
 
 .form-group {
@@ -142,14 +136,12 @@
     box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
 
-
-/* --- 최종 결제 요약 스타일링 --- */
 .payment-summary {
     background-color: var(--primary-color);
     color: #ffffff;
     padding: 25px;
     border-radius: 8px;
-    margin-top: auto; /* info-box 내에서 아래로 붙도록 */
+    margin-top: auto; 
 }
 
 .payment-summary h3 {
@@ -175,8 +167,6 @@
     border-top: 2px dashed rgba(255, 255, 255, 0.5);
 }
 
-
-/* --- 결제 버튼 스타일링 --- */
 .payment-button {
     width: 100%;
     padding: 15px;

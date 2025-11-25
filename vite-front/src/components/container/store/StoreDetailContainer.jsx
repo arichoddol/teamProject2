@@ -246,7 +246,8 @@ const ShopDetailContainer = () => {
             <div className="itemDetail-con">
 
                 <div className="itemDetail-con-image">
-                    {item.attachFile && item.attachFile !== 0 ? (
+                    {console.log(item)}
+                    {/* {item.attachFile && item.attachFile !== 0 ? (
                         <img
                             src={null}
                             alt={item.itemTitle || "첨부 이미지"}
@@ -256,7 +257,7 @@ const ShopDetailContainer = () => {
                             src={NO_IMAGE_URL}
                             alt="이미지 없음"
                         />
-                    )}
+                    )} */}
 
                     {item.itemImgDtos && item.itemImgDtos.length > 0 && (
                         item.itemImgDtos.map((imgDto) => (

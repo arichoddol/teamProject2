@@ -7,7 +7,11 @@ import "../../../css/store/storeIndex.css";
 import "../../../css/store/storeIndexSlide.css";
 
 
+
+
 const ShopMainContainer = () => {
+
+      const IMAGE_BASE_URL = 'http://localhost:8088/upload/';
 
   const NO_IMAGE_URL = "/images/noimage.jpg";
 
@@ -129,6 +133,7 @@ const ShopMainContainer = () => {
             >
               <div className="item-card">
                 {/* 상품 이미지 영역 */}
+                {console.log(items)}
                 {list.attachFile ? (
                   <div className="item-image-placeholder">
                     <img
