@@ -404,7 +404,7 @@ export default function CartPage() {
 
       {/* --- 하단 링크 --- */}
       <div className="bottomLinks">
-        <button onClick={() => navigate("/shop")}>상품 리스트</button>
+        <button onClick={() => navigate("/store")}>상품 리스트</button>
         <button
           onClick={() =>
             navigate("/payment", {
