@@ -68,7 +68,7 @@ const Header = () => {
               <Link to="/notice">NOTICE</Link>
             </li>
             <li>
-              <Link to="/api/marathon">MARATHON</Link>
+              <Link to="/api/marathon">INFORMATION</Link>
             </li>
           </ul>
         </div>
