@@ -1,3 +1,60 @@
+.auth-my-payment {
+  flex: 1;
+}
+
+.my-payment-no-show {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.my-payment-no-show-con {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  height: 700px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 40px;
+}
+
+.my-payment-no-show-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+}
+
+.my-payment-no-show-title img {
+  display: block;
+  width: 300px;
+}
+
+.my-payment-no-show-title h1 {
+  font-size: 26px;
+}
+
+.my-payment-no-show-title button {
+  background-color: #3b82f6;
+  color: #fff;
+  border: 0;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 5px;
+  /* margin-top: 10px; */
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.my-payment-no-show-title button:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
 .auth-my-payment-search {
   display: flex;
   align-items: center;
@@ -179,6 +236,10 @@
   font-weight: 600;
 }
 
+.my-payment-type-detail-bottom > span {
+  font-size: 14px;
+  font-weight: 400;
+}
 .my-payment-items-wrapper {
   max-height: 400px;
   overflow-y: auto;
@@ -292,5 +353,9 @@
 
   .my-payment-item-title h4 {
     flex-basis: calc(100% - 75px);
+  }
+
+  .my-payment-right {
+    flex: 1 0 170px;
   }
 }

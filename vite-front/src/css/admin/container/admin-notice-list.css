@@ -7,6 +7,7 @@
 
 .admin-notice-list-con {
   width: 100%;
+  min-height: 600px;
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -165,7 +166,7 @@
 }
 
 .admin-notice-list-table tbody tr td {
-  padding: 14px 8px;
+  padding: 13px 8px;
   font-size: 14px;
   color: #1f2937;
   text-align: center;

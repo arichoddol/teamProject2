@@ -32,7 +32,7 @@ public class MemberDto {
 
     private Long id;
 
-    @NotBlank(message = "이메일은 필수 입력 값입니다.")
+    @NotBlank(message = "이메일은 필수 입력 사항입니다.")
     @Email(message = "이메일 형식이 올바르지 않습니다.")
     private String userEmail;
 

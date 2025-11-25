@@ -10,6 +10,8 @@ const AdminPagingComponent = ({ pageData, onPageChange }) => {
     return onPageChange(currentPage);
   };
 
+  console.log(currentPage);
+
   return (
     <div className="admin-paging">
       <button

@@ -3,11 +3,12 @@ import jwtAxios from "../../../../apis/util/jwtUtil";
 import { BACK_BASIC_URL } from "../../../../apis/commonApis";
 import { useSelector } from "react-redux";
 import AdminPagingComponent from "../../../common/AdminPagingComponent";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { formatDate } from "../../../../js/formatDate";
 
 const AdminNoticeListContainer = () => {
   const accessToken = useSelector((state) => state.jwtSlice.accessToken);
+  const navigate = useNavigate();
   const [noticeList, setNoticeList] = useState([]);
   const [pageData, setPageData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,6 +33,10 @@ const AdminNoticeListContainer = () => {
 
   const hadlePageChange = (page) => {
     setCurrentPage(page);
+  };
+
+  const handleRowClick = (memberId) => {
+    navigate(`/admin/notice/detail/${memberId}`);
   };
 
   useEffect(() => {
@@ -66,20 +71,26 @@ const AdminNoticeListContainer = () => {
                 <th>제목</th>
                 <th>내용</th>
                 <th>작성시간</th>
-                <th>보기</th>
+                <th>조회수</th>
               </tr>
             </thead>
             <tbody>
               {noticeList.map((el) => {
                 return (
-                  <tr key={el.id}>
+                  <tr
+                    key={el.id}
+                    onClick={() => {
+                      handleRowClick(el.id);
+                    }}
+                    style={{
+                      cursor: "pointer",
+                    }}
+                  >
                     <td>{el.id}</td>
                     <td>{el.title}</td>
                     <td>{el.content}</td>
                     <td>{formatDate(el.createTime)}</td>
-                    <td>
-                      <Link to={`/admin/notice/detail/${el.id}`}>보기</Link>
-                    </td>
+                    <td>{el.hit}</td>
                   </tr>
                 );
               })}

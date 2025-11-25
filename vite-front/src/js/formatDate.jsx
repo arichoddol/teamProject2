@@ -11,3 +11,9 @@ export const formatDate = (dateStr) => {
     minute: "2-digit",
   });
 };
+
+// 12000 -> 12,000 콤마 붙여줌
+export const formattedPrice = (num) => {
+  const price = new Intl.NumberFormat("ko-KR").format(num);
+  return price;
+};
