@@ -263,55 +263,57 @@ const MyCrewRunContainer = () => {
   
   return (
     <div className='myCrew'>
-        <div className='myCrew-con'>
-            <div>
-              <h2>크루런닝스케줄</h2>
-              </div>
-          <div className="myCrew-calendar">
-            <FullCalendar
-              locale={"kr"}
-              plugins={[dayGridPlugin, interactionPlugin]} //npm 으로 다운받은거
-              initialView="dayGridMonth"  // 첫 화면: 월간 달력
-              customButtons={{
-                addCrewRunButton: {
-                  text: "런닝 스케줄 추가",
-                  click: ()=>setAddRunBtnModal(true)
-                },
-              }}           
-              headerToolbar={{
-                left: "prev,next today",
-                center: "title",
-                right: "addCrewRunButton",
-              }}
-              selectable={true}
-              dateClick={null}           // 날짜 클릭 이벤트
-              events={myCrewRunData}       // 일정 데이터
-              eventClick={onMyCrewRunDetail} //일정 클릭이벤트
-              />
-            </div>
+      <div className='myCrew-con'>
+        <div>
+          <h2>🏃‍♀️ 크루런닝스케줄</h2>
         </div>
-        {/* 추가버튼클릭 런닝스케줄 추가 모달 */}
-        {/* 모르겠는거는 ??={안에이거} <= 컨트롤 클릭으로 뭐하는 애인지 보삼 */}
-        {addRunBtnModal && (
-          <MyCrewRunAddBtnModal
+        <div className="myCrew-calendar">
+          <FullCalendar
+            locale={"kr"}
+            plugins={[dayGridPlugin, interactionPlugin]} //npm 으로 다운받은거
+            initialView="dayGridMonth"  // 첫 화면: 월간 달력
+            customButtons={{
+              addCrewRunButton: {
+                text: "🏃‍♂️ 런닝 스케줄 추가",
+                click: () => setAddRunBtnModal(true)
+              },
+            }}           
+            headerToolbar={{
+              left: "prev,next today",
+              center: "title",
+              right: "addCrewRunButton",
+            }}
+            selectable={true}
+            dateClick={null}           // 날짜 클릭 이벤트
+            events={myCrewRunData}       // 일정 데이터
+            eventClick={onMyCrewRunDetail} //일정 클릭이벤트
+          />
+        </div>
+      </div>
+      {/* 추가버튼클릭 런닝스케줄 추가 모달 */}
+      {/* 모르겠는거는 ??={안에이거} <= 컨트롤 클릭으로 뭐하는 애인지 보삼 */}
+      {addRunBtnModal && (
+        <MyCrewRunAddBtnModal
           input={createRunData}
-          onClose={()=> {
+          onClose={() => {
             setAddRunBtnModal(false)
-              myCrewRun()}}
-              onChange={onInputCreateChange}
-              onSubmit={onMyCrewRunCreate}
-              />
-            )}
-
-        {/* 크루런닝 일정 상세보기, 수정, 일정 참가, 일정 참가 취소 */}
-        {/* 모르겠는거는 ??={안에 이거} <= 컨트롤 클릭으로 뭐하는 애인지 보삼 */}
-        {myCrewRunDetailModal && (
-          <MyCrewRunDetailModal
+            myCrewRun()
+          }}
+          onChange={onInputCreateChange}
+          onSubmit={onMyCrewRunCreate}
+        />
+      )}
+  
+      {/* 크루런닝 일정 상세보기, 수정, 일정 참가, 일정 참가 취소 */}
+      {/* 모르겠는거는 ??={안에 이거} <= 컨트롤 클릭으로 뭐하는 애인지 보삼 */}
+      {myCrewRunDetailModal && (
+        <MyCrewRunDetailModal
           input={updateRunData}
-          onClose={()=> {
+          onClose={() => {
             setMyCrewRunDetailModal(false)
             setMyCrewRunMemberModal(false)
-              myCrewRun()}}
+            myCrewRun()
+          }}
           loginId={loginMemberId}
           onChange={onInputUpdateChange}
           onSubmit={onMyCrewRunUpdate}
@@ -320,42 +322,41 @@ const MyCrewRunContainer = () => {
           onRunYes={onMyCrewRunMemberYes}
           onRunNo={onMyCrewRunMemberNo}
           nowPage={0}
-             
-        
-              />
-            )}
-
-        {/* 일정 참가 크루원보기 */}
-        {/* 모르겠는거는 ??={안에이거} <= 컨트롤 클릭으로 뭐하는 애인지 보삼 */}
-        {myCrewRunMemberModal && (
-          <MyCrewRunMemberModal
+        />
+      )}
+  
+      {/* 일정 참가 크루원보기 */}
+      {/* 모르겠는거는 ??={안에이거} <= 컨트롤 클릭으로 뭐하는 애인지 보삼 */}
+      {myCrewRunMemberModal && (
+        <MyCrewRunMemberModal
           input={myCrewRunMember}
-          onClose={()=>setMyCrewRunMemberModal(false)}
+          onClose={() => setMyCrewRunMemberModal(false)}
           runId={updateRunData.id}
           onMember={onMyCrewRunMember}
           nowPage={nowPage}
           startPage={startPage}
           endPage={endPage}
           totalPages={totalPages}
-          />
-        )}
-
-        {/* 얘는 일단 안함... 할지말지 고민 */}
-        {/* 날짜클릭 런닝스케줄 추가 모달 */}
-        {/* 모르겠는거는 ??={안에이거} 컨트롤 클릭으로 뭐하는 애인지 보삼 */}
-        {/* {addRunDateModal && (
-          <MyCrewRunAddBtnModal
-          detail={detailData}
-          onClose={()=> {
-            setAddRunDateModal(false)
-            setDetailData(null)
-            myCrewRun()}}
-          onCreate={()=>onMyCrewRunCreate(crewMemberTbId)}
-          onChange={()=>onInputChange(e)}
-          />
-        )} */}
-      </div>
-    )
+        />
+      )}
+  
+      {/* 얘는 일단 안함... 할지말지 고민 */}
+      {/* 날짜클릭 런닝스케줄 추가 모달 */}
+      {/* 모르겠는거는 ??={안에이거} 컨트롤 클릭으로 뭐하는 애인지 보삼 */}
+      {/* {addRunDateModal && (
+        <MyCrewRunAddBtnModal
+        detail={detailData}
+        onClose={()=> {
+          setAddRunDateModal(false)
+          setDetailData(null)
+          myCrewRun()}}
+        onCreate={()=>onMyCrewRunCreate(crewMemberTbId)}
+        onChange={()=>onInputChange(e)}
+        />
+      )} */}
+    </div>
+  )
+  
 }
 
 export default MyCrewRunContainer
