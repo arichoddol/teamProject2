@@ -86,13 +86,13 @@ const MyCrewMemberContainer = () => {
   return (
     <div className="myCrew">
       <div className="myCrew-con">
-      <div><h2>
-        크루원 명단
-        </h2></div>
-      <div className="myCrew-search">
-            <ul>
-              {/* 상태검색 */}
-              <li>
+        <div>
+          <h2>👥 크루원 명단</h2>
+        </div>
+        <div className="myCrew-search">
+          <ul>
+            {/* 상태검색 */}
+            <li>
               <select
                 value={search}
                 onChange={(e) => {
@@ -102,128 +102,140 @@ const MyCrewMemberContainer = () => {
                     setSearch("");
                   } else {
                     setSubject("status");
-                    setSearch(value); // LEADER / MEMBER 
+                    setSearch(value); // LEADER / MEMBER
                   }
                 }}
-                >
-                <option value="">::회원권한::</option>
-                <option value="LEADER">크루장</option>
-                <option value="MEMBER">크루원</option>
+              >
+                <option value="">🛡️ ::회원권한::</option>
+                <option value="LEADER">👑 크루장</option>
+                <option value="MEMBER">🧑‍🤝‍🧑 크루원</option>
               </select>
-              </li>
-              {/* 그냥 검색 */}
-              {/* 추가할 정보 상의 후 추가 */}
-              {subject !== "status" &&(
-                <li>
-                <select value={subject} onChange={(e) => setSubject(e.target.value)}>
-                  <option value="">::검색조건::</option>
-                  <option value="id">가입순서</option>
-                  <option value="memberId">회원id</option>
+            </li>
+            {/* 그냥 검색 */}
+            {/* 추가할 정보 상의 후 추가 */}
+            {subject !== "status" && (
+              <li>
+                <select
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                >
+                  <option value="">🔎 ::검색조건::</option>
+                  <option value="id">#️⃣ 가입순서</option>
+                  <option value="memberId">👤 회원id</option>
                 </select>
               </li>
-
-              )}
-
-              <li>
-                <input
-                    type="text"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="검색어 입력"
-                    />
-              </li>
-              <li>
-                <button type='button' onClick={onSearchClick}>검색</button>
-              </li>
-
-            </ul>
-          </div>
+            )}
+  
+            <li>
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="검색어 입력 🔍"
+              />
+            </li>
+            <li>
+              <button type="button" onClick={onSearchClick}>
+                🔍 검색
+              </button>
+            </li>
+          </ul>
+        </div>
         <div className="myCrew-content">
           <ul>
             <li>
-              <span>가입순서</span>
-              <span>크루 ID</span>
-              <span>회원 ID</span>
-              <span>권한</span>
-              <span>자세히보기</span>
-              <span>탈퇴</span>
+              <span>#️⃣ 가입순서</span>
+              <span>👤 회원 ID</span>
+              <span>🛡️ 권한</span>
+              <span>🔍 자세히보기</span>
+              <span>🚪 탈퇴</span>
             </li>
           </ul>
           <ul>
-            {myCrewMemberList.map((crewMember)=>(
+            {myCrewMemberList.map((crewMember) => (
               <li key={crewMember.id}>
-              <span>{crewMember.id}</span>
-              <span>{crewMember.crewId}</span>
-              <span>{crewMember.memberId}</span>
-              <span>{crewMember.roleInCrew}</span>
-              
-              {/* 크루 리더면, 탈퇴는 로그인 아이디랑 맞으면 보이게 */}
-              {/* 팀장님이 리더아니면 못하게 백엔드 바꾸심 */}
-              {/* 더 보이고 싶은 정보 dto에 추가 ㄱㄱ */}
-              <span>
-              <button type="button" onClick={()=>onCrewMemberDetail(crewMember)}>자세히 보기</button>
-              </span>
-              <span>
-              <button type="button" onClick={()=>onCrewMemberDelete(crewMember)}>탈퇴</button>
-              </span>
-            </li>
+                <span>{crewMember.id}</span>
+                <span>{crewMember.memberId}</span>
+                <span>{crewMember.roleInCrew}</span>
+  
+                {/* 크루 리더면, 탈퇴는 로그인 아이디랑 맞으면 보이게 */}
+                {/* 팀장님이 리더아니면 못하게 백엔드 바꾸심 */}
+                {/* 더 보이고 싶은 정보 dto에 추가 ㄱㄱ */}
+                <span>
+                  <button
+                    type="button"
+                    onClick={() => onCrewMemberDetail(crewMember)}
+                  >
+                    🔍 자세히 보기
+                  </button>
+                </span>
+                <span>
+                  <button
+                    type="button"
+                    onClick={() => onCrewMemberDelete(crewMember)}
+                  >
+                    🚪 탈퇴
+                  </button>
+                </span>
+              </li>
             ))}
           </ul>
         </div>
         <div className="myCrew-paging">
-            <div className="myCrew-paging-con">
-              <ul>
-                <li>총페이지 : {totalPages}</li>
-                <li>
-
+          <div className="myCrew-paging-con">
+            <ul>
+              <li>📄 총페이지 : {totalPages}</li>
+              <li>
                 <button
                   disabled={nowPage === 1}
-                  onClick={() => onMyCrewMemberList(nowPage - 2)}>
-                  이전
+                  onClick={() => onMyCrewMemberList(nowPage - 2)}
+                >
+                  ⬅ 이전
                 </button>
-                </li>
-
-                <li>
+              </li>
+  
+              <li>
                 {Array.from(
                   { length: endPage - startPage + 1 },
                   (_, idx) => startPage + idx
                 ).map((pageNum) => (
                   <button
-                  key={pageNum}
-                  onClick={() => onMyCrewMemberList(pageNum - 1)}
-                  className={pageNum === nowPage ? "now" : ""}
+                    key={pageNum}
+                    onClick={() => onMyCrewMemberList(pageNum - 1)}
+                    className={pageNum === nowPage ? "now" : ""}
                   >
                     {pageNum}
                   </button>
                 ))}
-                </li>
-
-                <li>
+              </li>
+  
+              <li>
                 <button
                   disabled={nowPage === totalPages}
-                  onClick={() => onMyCrewMemberList(nowPage)}>
-                  다음
+                  onClick={() => onMyCrewMemberList(nowPage)}
+                >
+                  다음 ➡
                 </button>
-                </li>
-                
-              </ul>
-            </div>
+              </li>
+            </ul>
           </div>
+        </div>
       </div>
-          {/* 디테일 모달 ->  마찬가지로 더 보이고 싶은 정보 dto에 추가한거 가져다가 쓰면됨 */}
-          {detailOpen && (
-            <MyCrewMemberDetailModal
-            detail={detailData}
-            onClose={()=> {
-              setDetailOpen(false)
-              setDetailData(null)
-              onMyCrewMemberList()}}
-            onDelete={()=>onCrewMemberDelete(crewMemberTbId)}
-            />
-          )}
+      {/* 디테일 모달 ->  마찬가지로 더 보이고 싶은 정보 dto에 추가한거 가져다가 쓰면됨 */}
+      {detailOpen && (
+        <MyCrewMemberDetailModal
+          detail={detailData}
+          onClose={() => {
+            setDetailOpen(false);
+            setDetailData(null);
+            onMyCrewMemberList();
+          }}
+          onDelete={() => onCrewMemberDelete(crewMemberTbId)}
+        />
+      )}
     </div>
-
-  )
+  );
+  
 }
 
 export default MyCrewMemberContainer
