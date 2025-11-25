@@ -1,19 +1,21 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
+import SilderInner from "./SilderInner";
 
 import "../../../css/store/storeIndex.css";
+import "../../../css/store/storeIndexSlide.css";
 
-// const images = [
-//   { src: "/images/store/swiper/header1.jpg", alt: 'header1' },
-//   { src: "/images/store/swiper/header2.jpg", alt: 'header2' },
-//   { src: "/images/store/swiper/header3.jpg", alt: 'header3' },
-//   { src: "/images/store/swiper/header4.jpg", alt: 'header4' },
-// ]
+
+
 
 const ShopMainContainer = () => {
-  const sliderWrapperRef = useRef(null);
+
+      const IMAGE_BASE_URL = 'http://localhost:8088/upload/';
+
   const NO_IMAGE_URL = "/images/noimage.jpg";
+
+  const sliderRef = useRef(null);
 
   const [items, setItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -25,9 +27,9 @@ const ShopMainContainer = () => {
   });
 
   const displayPageNum = 5; // 화면에 표시할 페이지 버튼 개수
+  
 
   const fetchData = async (page) => {
-    // const response = await axios.get("http://localhost:8088/api/shop");
     const response = await axios.get(
       `http://localhost:8088/api/shop?page=${page}`
     );
@@ -61,39 +63,10 @@ const ShopMainContainer = () => {
     }
   };
 
-  useEffect(() => {
-    /*Slicer Section*/
-    const wrapper = sliderWrapperRef.current;
-    if (!wrapper) return;
-    // const wrapper = document.querySelector('.slider-wrapper');
-    const slides = document.querySelectorAll(".slide");
-    const totalSlides = slides.length;
-    const realSlides = 4;
-    let currentIndex = 0;
-    const slideInterval = 3000;
-    const slideWidthPercentage = 100 / realSlides; // 25%
-    /*Slicer Section*/
 
-    const updateSlider = () => {
-      const offset = -currentIndex * (100 / totalSlides); // 5개 중 하나씩 이동 (20%씩)
-      wrapper.style.transform = `translateX(${offset}%)`;
-      wrapper.style.transition = "transform 0.5s ease-in-out";
-    };
-    const nextSlide = () => {
-      currentIndex++;
-      updateSlider();
-      if (currentIndex === realSlides) {
-        setTimeout(() => {
-          wrapper.style.transition = "none";
-          currentIndex = 0; // 인덱스 0으로 리셋
-          wrapper.style.transform = "translateX(0)"; // 위치 0%로 즉시 이동
-        }, 500); // CSS transition 시간과 동일하게 설정
-      }
-    };
-    let autoSlide = setInterval(nextSlide, slideInterval);
+  useEffect(() => {
 
     fetchData(currentPage);
-    return () => clearInterval(autoSlide);
   }, [currentPage]);
 
   const pageNumbers = [];
@@ -101,10 +74,24 @@ const ShopMainContainer = () => {
     pageNumbers.push(i);
   }
   const handlePageClick = (page) => {
-    // 페이지 변경 요청 시 스크롤을 맨 위로 이동 (사용자 경험 개선)
+    // When PageChange -> scroll is move to Top = UI Improvment
     window.scrollTo({ top: 0, behavior: "smooth" });
     setCurrentPage(page);
   };
+
+  const handleSliderPrev = (e) => {
+        e.preventDefault();
+        if (sliderRef.current && sliderRef.current.prev) {
+            sliderRef.current.prev();
+        }
+    };
+
+    const handleSliderNext = (e) => {
+        e.preventDefault();
+        if (sliderRef.current && sliderRef.current.next) {
+            sliderRef.current.next();
+        }
+    };
 
   return (
     <div className="itemList">
@@ -112,33 +99,23 @@ const ShopMainContainer = () => {
       <div className="itemList-con">
         <div className="itemList-banner">
           {/* image Header slice here.....*/}
-          <div className="slider-wrapper" ref={sliderWrapperRef}>
-            <img
-              src="/images/store/swiper/header1.jpg"
-              alt="layer1"
-              className="slide"
-            ></img>
-            <img
-              src="/images/store/swiper/header2.jpg"
-              alt="layer2"
-              className="slide"
-            ></img>
-            <img
-              src="/images/store/swiper/header3.jpg"
-              alt="layer3"
-              className="slide"
-            ></img>
-            <img
-              src="/images/store/swiper/header4.jpg"
-              alt="layer4"
-              className="slide"
-            ></img>
-            {/* this for slide */}
-            <img
-              src="/images/store/swiper/header1.jpg"
-              alt="s1"
-              className="slide"
-            />
+          <div className="main">
+              <div className="slider__wrap">
+                  <div className="slider__img">
+                     <div className="slider__thumb"></div>  
+                      <div className="slider__btn">
+                        <a href="#" className="prev" title="이전이미지" onClick={handleSliderPrev}>«</a>
+                        <a href="#" className="next" title="다음이미지" onClick={handleSliderNext}>»</a>
+                      </div>
+                          <SilderInner ref={sliderRef} silderInterval={2000}>
+                            <div className="slider s1"><img src="/images/store/swiper/header1.jpg" alt="이미지1"/></div>
+                            <div className="slider s2"><img src="/images/store/swiper/header2.jpg" alt="이미지2"/></div>
+                            <div className="slider s3"><img src="/images/store/swiper/header3.jpg" alt="이미지3"/></div>
+                            <div className="slider s4"><img src="/images/store/swiper/header4.jpg" alt="이미지4"/></div>
+                            <div className="slider s5"><img src="/images/store/swiper/header5.jpg" alt="이미지5"/></div>
+                          </SilderInner>
+                  </div>
+              </div>
           </div>
         </div>
         <h2> :: 상품목록 :: </h2>
@@ -156,6 +133,7 @@ const ShopMainContainer = () => {
             >
               <div className="item-card">
                 {/* 상품 이미지 영역 */}
+                {console.log(items)}
                 {list.attachFile ? (
                   <div className="item-image-placeholder">
                     <img

@@ -78,14 +78,16 @@ const BoardListContainer = () => {
 
   return (
     <div className="boardList">
-      <div className="boardList-banner">
+       <div className="boardList-banner">
         <br /><br />
-      </div>
-
-      <div className="boardList-con">
-
+        {/* <img src="/images/store/swiper/header3.jpg" alt="header" /> */}
         
+      </div>
+      <br />
+      <div className="boardList-con">
+     
         <h2>:: 자유게시판 ::</h2>
+        <br /><br />
         <table className='board-table'>
           <thead>
             <tr>

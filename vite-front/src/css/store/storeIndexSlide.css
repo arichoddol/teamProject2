@@ -1,0 +1,135 @@
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.slider__wrap {
+
+    position: relative;
+    width: 800px;
+    /* height: 100%; */
+    box-shadow: 0 50px 100px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+        .slider__img {
+            /* position: relative; */
+            height: 100%;
+            overflow: hidden;
+            /* border:2px solid red; */
+            border-radius: 20px;
+            border: 2px solid rgba(89, 0, 255, 0.568);
+              
+        }
+        .slider__inner img{
+          
+        }
+    
+        .slider__img img.active {
+            opacity: 1;
+            transform: scale(1);
+            
+        }
+    
+    
+     
+        .slider__btn a {
+            position: absolute;
+            top: 40%;
+            width: 50px;
+            height: 55px;
+            border-radius: 20%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 52px;
+            color: #00aeff;
+
+            transition: all 300ms ease-in-out;
+            z-index: 99;
+        }
+
+.slider__inner {
+    display: flex;
+}
+
+.slider__inner > .slider {
+    
+    width: 800px;
+    flex-shrink: 0;
+    height: 100%;
+}
+
+.slider__inner > .slider img {
+
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+}
+.slider__btn a.next {
+    right: 0;
+}
+.slider__btn a:hover {
+    color: #ff0000;      
+}
+
+
+
+/* UI Button */
+.slider__count {
+    /* 슬라이더 이미지 컨테이너 (.slider__img) 내에서 절대 위치로 배치 */
+    position: absolute; 
+    bottom: 10px;        /* 하단에서 10px 위에 */
+    right: 45%;         /* 우측에서 10px 안쪽에 */
+    z-index: 15;         /* 버튼(z-index: 10)보다 위에 오도록 */
+    
+    padding: 5px 10px;
+    border-radius: 15px;
+
+    /* 가독성을 위한 배경/글씨색 */
+    background-color: rgba(0, 0, 0, 0.4); 
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.slider__count .current {
+    color: #ffd700; /* 현재 번호 강조 */
+}
+
+.slider__count .separator {
+    margin: 0 3px;
+    opacity: 0.8;
+}
+
+.slider__pagination {
+  
+    position: absolute;
+    bottom: 45px; 
+    left: 51%;
+    transform: translateX(-50%);
+    z-index: 15;
+    
+    display: flex;
+    gap: 10px; 
+}
+
+.slider__dot {
+    top: 12%;
+    display: block; 
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5); 
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.slider__dot.active {
+    background-color: #ffd700;
+    transform: scale(1.2);
+}
+
+.slider__dot:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+}
