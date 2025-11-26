@@ -62,13 +62,19 @@ const AdminNoticeDetailContainer = () => {
             {noticeDetail.updateTime != null ? (
               <span>수정시간: {formatDate(noticeDetail.updateTime)}</span>
             ) : null}
+            <span>조회수 {noticeDetail.hit}</span>
           </div>
         </div>
         <div className="admin-notice-detail-content">
           {noticeDetail.content}
         </div>
         <div className="admin-notice-detail-bottom">
-          <Link to="/admin/noticeList">이전으로</Link>
+          <div className="admin-notice-detail-links">
+            <Link to="/admin/noticeList">이전으로</Link>
+            <Link to={`/notice/detail/${noticeDetail.id}`}>
+              원본글 보러가기
+            </Link>
+          </div>
           <div className="admin-notice-detail-btn">
             <button
               className="admin-notice-edit-btn"

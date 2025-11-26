@@ -34,13 +34,14 @@ const NoticeDetailContainer = () => {
             {noticeDetail.updateTime != null ? (
               <span>수정시간: {formatDate(noticeDetail.updateTime)}</span>
             ) : null}
+            <span>조회수 {noticeDetail.hit + 1}</span>
           </div>
         </div>
         <div className="board-notice-detail-content">
           {noticeDetail.content}
         </div>
         <div className="board-notice-detail-bottom">
-          <Link to="/admin/noticeList">이전으로</Link>
+          <Link to="/notice">이전으로</Link>
         </div>
       </div>
     </div>

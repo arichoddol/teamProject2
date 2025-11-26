@@ -69,34 +69,42 @@ const AuthDetailContainer = () => {
         )}
       </div>
 
-      <div className="info-section">
-        <div className="info-item">
-          <span className="info-label">이메일</span>
-          <span className="info-value">{memberDetail.userEmail}</span>
+      <div className="member-detail-info-section">
+        <div className="member-detail-info-item">
+          <span className="member-detail-info-label">이메일</span>
+          <span className="member-detail-info-value">
+            {memberDetail.userEmail}
+          </span>
         </div>
-        <div className="info-item">
-          <span className="info-label">이름</span>
-          <span className="info-value">{memberDetail.userName}</span>
+        <div className="member-detail-info-item">
+          <span className="member-detail-info-label">이름</span>
+          <span className="member-detail-info-value">
+            {memberDetail.userName}
+          </span>
         </div>
-        <div className="info-item">
-          <span className="info-label">닉네임</span>
-          <span className="info-value">{memberDetail.nickName}</span>
+        <div className="member-detail-info-item">
+          <span className="member-detail-info-label">닉네임</span>
+          <span className="member-detail-info-value">
+            {memberDetail.nickName}
+          </span>
         </div>
-        <div className="info-item">
-          <span className="info-label">주소</span>
-          <span className="info-value">{memberDetail.address}</span>
+        <div className="member-detail-info-item">
+          <span className="member-detail-info-label">주소</span>
+          <span className="member-detail-info-value">
+            {memberDetail.address}
+          </span>
         </div>
-        <div className="info-item">
-          <span className="info-label">전화번호</span>
-          <span className="info-value">{memberDetail.phone}</span>
+        <div className="member-detail-info-item">
+          <span className="member-detail-info-label">전화번호</span>
+          <span className="member-detail-info-value">{memberDetail.phone}</span>
         </div>
-        <div className="info-item">
-          <span className="info-label">나이</span>
-          <span className="info-value">{memberDetail.age}세</span>
+        <div className="member-detail-info-item">
+          <span className="member-detail-info-label">나이</span>
+          <span className="member-detail-info-value">{memberDetail.age}세</span>
         </div>
-        <div className="info-item">
-          <span className="info-label">성별</span>
-          <span className="info-value">{gender}</span>
+        <div className="member-detail-info-item">
+          <span className="member-detail-info-label">성별</span>
+          <span className="member-detail-info-value">{gender}</span>
         </div>
       </div>
 

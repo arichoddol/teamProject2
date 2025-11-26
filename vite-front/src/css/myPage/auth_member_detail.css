@@ -27,7 +27,7 @@
   background-color: #4a90e2;
 }
 
-.memberDetail-con {
+.memberDetail .memberDetail-con {
   display: flex;
   max-width: 1200px;
   gap: 30px;
@@ -35,7 +35,7 @@
 }
 
 /* 왼쪽 사이드바 */
-.memberDetail-left {
+.memberDetail .memberDetail-left {
   flex: 0 0 200px;
   background: white;
   border-radius: 12px;
@@ -45,11 +45,11 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.memberDetail-left nav ul {
+.memberDetail .memberDetail-left nav ul {
   list-style: none;
 }
 
-.memberDetail-left nav ul li {
+.memberDetail .memberDetail-left nav ul li {
   padding: 15px 25px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -58,19 +58,19 @@
   font-weight: 500;
 }
 
-.memberDetail-left nav ul li:hover {
+.memberDetail .memberDetail-left nav ul li:hover {
   background: #e9ecef;
   color: #222;
 }
 
-.memberDetail-left nav ul li.active {
+.memberDetail .memberDetail-left nav ul li.active {
   background: #4a90e2;
   color: white;
   border-left: 4px solid #2563eb;
 }
 
 /* 오른쪽 메인 영역 */
-.memberDetail-right {
+.memberDetail .memberDetail-right {
   flex: 1;
   background: white;
   border: 1px solid #e5e7eb;
@@ -80,7 +80,7 @@
 }
 
 /* 프로필 이미지 섹션 */
-.profile-section {
+.memberDetail .profile-section {
   display: flex;
   justify-content: center;
   margin-bottom: 40px;
@@ -88,11 +88,11 @@
   border-bottom: 2px solid #f3f4f6;
 }
 
-.profile-image {
+.memberDetail .profile-image {
   text-align: center;
 }
 
-.profile-label {
+.memberDetail .profile-label {
   display: block;
   font-size: 14px;
   font-weight: 600;
@@ -100,7 +100,7 @@
   margin-bottom: 15px;
 }
 
-.profile-image img {
+.memberDetail .profile-image img {
   width: 150px;
   height: 150px;
   border-radius: 50%;
@@ -110,39 +110,39 @@
 }
 
 /* 정보 섹션 */
-.info-section {
+.memberDetail .member-detail-info-section {
   display: flex;
   flex-direction: column;
   gap: 20px;
   margin-bottom: 40px;
 }
 
-.info-item {
+.memberDetail .member-detail-info-item {
   display: flex;
   align-items: center;
   padding: 15px 0;
   border-bottom: 1px solid #f3f4f6;
 }
 
-.info-item:last-child {
+.memberDetail .member-detail-info-item:last-child {
   border-bottom: none;
 }
 
-.info-label {
+.memberDetail .member-detail-info-label {
   flex: 0 0 120px;
   font-weight: 600;
   color: #374151;
   font-size: 15px;
 }
 
-.info-value {
+.memberDetail .member-detail-info-value {
   flex: 1;
   color: #4b5563;
   font-size: 15px;
 }
 
 /* 버튼 그룹 */
-.button-group {
+.memberDetail .button-group {
   display: flex;
   gap: 15px;
   justify-content: center;
@@ -150,7 +150,7 @@
   border-top: 2px solid #f3f4f6;
 }
 
-.button-group button {
+.memberDetail .button-group button {
   padding: 12px 40px;
   font-size: 16px;
   font-weight: 600;
@@ -160,24 +160,24 @@
   transition: all 0.3s ease;
 }
 
-.btn-edit {
+.memberDetail .btn-edit {
   background: #4a90e2;
   color: white;
 }
 
-.btn-edit:hover {
+.memberDetail .btn-edit:hover {
   background: #2563eb;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
 }
 
-.btn-delete {
+.memberDetail .btn-delete {
   background: white;
   color: #dc2626;
   border: 2px solid #dc2626;
 }
 
-.btn-delete:hover {
+.memberDetail .btn-delete:hover {
   background: #dc2626;
   color: white;
   transform: translateY(-2px);
@@ -186,44 +186,44 @@
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
-  .memberDetail-con {
+  .memberDetail .memberDetail-con {
     flex-direction: column;
   }
 
-  .memberDetail-left {
+  .memberDetail .memberDetail-left {
     flex: 1;
   }
 
-  .memberDetail-left nav ul {
+  .memberDetail .memberDetail-left nav ul {
     display: flex;
     gap: 10px;
   }
 
-  .memberDetail-left nav ul li {
+  .memberDetail .memberDetail-left nav ul li {
     flex: 1;
     text-align: center;
     padding: 12px 15px;
   }
 
-  .memberDetail-right {
+  .memberDetail .memberDetail-right {
     padding: 25px;
   }
 
-  .info-item {
+  .memberDetail .member-detail-info-item {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
   }
 
-  .info-label {
+  .memberDetail .member-detail-info-label {
     flex: none;
   }
 
-  .button-group {
+  .memberDetail .button-group {
     flex-direction: column;
   }
 
-  .button-group button {
+  .memberDetail .button-group button {
     width: 100%;
   }
 }
