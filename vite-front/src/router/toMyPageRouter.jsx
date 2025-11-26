@@ -10,6 +10,10 @@ const AuthUpdatePage = lazy(() =>
 const AuthPaymentPage = lazy(() =>
   import("../components/container/myPage/AuthPaymentContainer")
 );
+
+const AuthPaymentDetailPage = lazy(() =>
+  import("../components/container/myPage/AuthPaymentDetailContainer")
+);
 export const toMyPageRouter = () => {
   return [
     {
@@ -34,6 +38,14 @@ export const toMyPageRouter = () => {
       element: (
         <Suspense fallback={Loading}>
           <AuthPaymentPage />
+        </Suspense>
+      ),
+    },
+    {
+      path: "payment/:paymentId",
+      element: (
+        <Suspense fallback={Loading}>
+          <AuthPaymentDetailPage />
         </Suspense>
       ),
     },

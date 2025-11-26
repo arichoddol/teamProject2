@@ -9,7 +9,7 @@ const PaymentSuccessPage = () => {
   const dispatch = useDispatch();
 
   const goToPaymentList = () => {
-    navigate("/payment/list"); 
+    navigate("/myPage/payment");
   };
 
   dispatch(removeCart());

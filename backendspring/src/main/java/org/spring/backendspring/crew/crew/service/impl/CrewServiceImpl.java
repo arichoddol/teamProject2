@@ -18,6 +18,7 @@ import org.spring.backendspring.crew.crewMember.entity.CrewMemberEntity;
 import org.spring.backendspring.crew.crewMember.repository.CrewMemberRepository;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,9 @@ public class CrewServiceImpl implements CrewService {
     private final CrewImageRepository crewImageRepository;
     private final MemberRepository memberRepository;
     private final AwsS3Service awsS3Service;
+
+    @Value("${s3file.path.crew}")
+    private String path;
 
     @Override
     public CrewDto updateCrew(Long loginUserId, Long crewId, CrewDto crewDto,
@@ -87,7 +91,7 @@ public class CrewServiceImpl implements CrewService {
                 if (!image.isEmpty()) {
                     try {
                         String originalFileName = image.getOriginalFilename();
-                        String newFileName = awsS3Service.uploadFile(image); // S3 업로드
+                        String newFileName = awsS3Service.uploadFile(image, path); // S3 업로드
                         CrewImageEntity imageEntity = CrewImageEntity.toEntity(crew, originalFileName, newFileName);
                         CrewImageEntity savedImage = crewImageRepository.save(imageEntity);
                         updatedImages.add(savedImage);

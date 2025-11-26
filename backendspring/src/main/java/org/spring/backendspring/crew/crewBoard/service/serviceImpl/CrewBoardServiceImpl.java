@@ -18,6 +18,7 @@ import org.spring.backendspring.crew.crewBoard.entity.CrewBoardImageEntity;
 import org.spring.backendspring.crew.crewBoard.repository.CrewBoardImageRepository;
 import org.spring.backendspring.crew.crewBoard.repository.CrewBoardRepository;
 import org.spring.backendspring.crew.crewBoard.service.CrewBoardService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,8 @@ public class CrewBoardServiceImpl implements CrewBoardService {
     private final MemberRepository memberRepository;
     private final AwsS3Service awsS3Service;
 
+    @Value("${s3file.path.crew}")
+    private String path;
 
     @Override
     public PagedResponse<CrewBoardDto> boardListByCrew(Long crewId, String subject, String keyword, int page, int size) {
@@ -95,7 +98,7 @@ public class CrewBoardServiceImpl implements CrewBoardService {
                 if (file != null && !file.isEmpty()) {
                     String originalFileName = file.getOriginalFilename();
             
-                    String newFileName = awsS3Service.uploadFile(file);
+                    String newFileName = awsS3Service.uploadFile(file, path);
             
                     CrewBoardImageEntity boardImageEntity = CrewBoardImageEntity.toCrewBoardImageEntity(crewBoardEntity, originalFileName, newFileName);
             
@@ -183,7 +186,7 @@ public class CrewBoardServiceImpl implements CrewBoardService {
             for (MultipartFile image : newImages) {
                 if (!image.isEmpty()) {
                     String originalImageName = image.getOriginalFilename();
-                    String newImageName = awsS3Service.uploadFile(image);
+                    String newImageName = awsS3Service.uploadFile(image, path);
                     
                     CrewBoardImageEntity boardImageEntity = CrewBoardImageEntity.toCrewBoardImageEntity(crewBoardEntity, originalImageName, newImageName);
                     CrewBoardImageEntity savedImage = crewBoardImageRepository.save(boardImageEntity);
