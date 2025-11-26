@@ -62,11 +62,8 @@ const BoardUpdateContainer = () => {
     try {
       await jwtAxios.put(`${API_BASE_URL}/updatePost`, formData,
         {
-          headers: { 
-            // 서버에서 JSON (@RequestBody)을 받도록 했으므로 Content-Type을 지정합니다.
-            // 'Authorization' 헤더는 jwtAxios 인터셉터가 자동으로 추가합니다.
-          },
-          withCredentials: true
+          headers: { Authorization: `Bearer ${accessToken}` },
+                    withCredentials: true,
         });
       alert(`${boards.id}번 게시물이 수정되었습니다`);
       navigate(`/board/detail/${boards.id}`); // 수정된 게시글 상세 페이지로 이동
@@ -156,7 +153,8 @@ const BoardUpdateContainer = () => {
                                 <img
                                     // bring File by NewName Field
                                     key={imgDto.id || imgDto.newName}
-                                    src={`${IMAGE_BASE_URL}${imgDto.newName}`}
+                                    // src={`${IMAGE_BASE_URL}${imgDto.newName}`}
+                                    src={boards.fileUrl}
                                     alt={imgDto.oldName}
                                     style={{ maxWidth: '100%', height: 'auto', display: 'block', margin: '10px 0' }}
                                 />

@@ -39,6 +39,7 @@ public class AdminItemServiceImpl implements AdminItemService {
     // private static final String uploadPath = "C:/full/upload/";
     private static final String uploadPath = "E:/full/upload/";
     
+    
 
 
     // ===========================================================

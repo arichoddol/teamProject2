@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Hahmlet:wght@100..900&display=swap');
 
 .itemList {
-    max-width: 80%;
+
 
     /* 중앙 정렬: 이 설정은 유지 */
     margin: 0 auto;
@@ -171,22 +171,29 @@
 }
 
 
+@media (max-width: 800px) {
 
+    .item-grid-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin-bottom: 20px;
+        width: 100%;
+        margin: 10px auto;
 
-@media (max-width: 830px) {
- 
-  .item-grid-container {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 20px;
-    margin-bottom: 20px;
-    width: 100%;
-    margin: 10px auto;
-    
-    
+    }
+
 }
 
+@media (width > 1400px ) {
+    .item-grid-container {
+    display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
+        margin-bottom: 20px;
+        width: 100%;
+        margin: 10px auto;
 
-
-  
+    }
+    
 }

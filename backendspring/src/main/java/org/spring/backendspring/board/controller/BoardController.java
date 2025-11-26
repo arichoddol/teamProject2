@@ -96,7 +96,7 @@ public class BoardController {
 
     // URL: http://localhost:8088/api/board/detail/{id}
     @GetMapping("/detail/{boardId}")
-    public ResponseEntity<BoardDto> getBoardDetail(@PathVariable("boardId") Long boardId) {
+    public ResponseEntity<BoardDto> getBoardDetail(@PathVariable("boardId") Long boardId) throws IOException {
 
        
         BoardDto boardDto = boardService.boardDetail(boardId);
@@ -107,7 +107,7 @@ public class BoardController {
     @GetMapping("/update/{boardId}")
     public ResponseEntity<BoardDto> updateBoard(@PathVariable("boardId") Long boardId, // PathVariable로 boardId를 받습니다.
                               @AuthenticationPrincipal MyUserDetails myUserDetails
-                              ) throws AccessDeniedException {
+                              ) throws IOException {
 
     try {
         BoardDto boardDto = boardService.boardDetail(boardId);
@@ -135,22 +135,6 @@ public class BoardController {
 
     }
 
-    // @PutMapping("/updatePost")
-    // public ResponseEntity<?> updateBoard(
-    //                                      @RequestBody BoardDto boardDto,
-    //                                      @AuthenticationPrincipal MyUserDetails myUserDetails) throws IOException {
-    //     Long memberId = myUserDetails.getMemberId();
-
-    //     if (!memberId.equals(boardDto.getMemberId())) {
-    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 권한이 없습니다.");
-    //     }
-
-    //     boardService.update(boardDto);
-    //     return ResponseEntity.ok("UPDATE DONE");
-
-    // }
-    // UPDATE
-
 
     //* DELETE 요청: /board/{boardId}
     //* @param boardId 삭제할 게시글 ID
@@ -158,7 +142,7 @@ public class BoardController {
     // DELETE
     @DeleteMapping("/detail/{boardId}")
     public ResponseEntity<String> deleteBoard(@PathVariable("boardId") Long boardId,
-            @AuthenticationPrincipal MyUserDetails myUserDetails) {
+            @AuthenticationPrincipal MyUserDetails myUserDetails) throws IOException {
                                                 
         Long authMemberId = myUserDetails.getMemberId();
         Long memberId = boardService.boardDetail(boardId).getMemberId();
