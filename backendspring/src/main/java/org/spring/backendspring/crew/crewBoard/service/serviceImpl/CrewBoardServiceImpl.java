@@ -17,7 +17,6 @@ import org.spring.backendspring.crew.crewBoard.entity.CrewBoardImageEntity;
 import org.spring.backendspring.crew.crewBoard.repository.CrewBoardImageRepository;
 import org.spring.backendspring.crew.crewBoard.repository.CrewBoardRepository;
 import org.spring.backendspring.crew.crewBoard.service.CrewBoardService;
-import org.spring.backendspring.s3.AwsS3Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -35,7 +34,7 @@ public class CrewBoardServiceImpl implements CrewBoardService {
     private final CrewBoardRepository crewBoardRepository;
     private final CrewBoardImageRepository crewBoardImageRepository;
     private final MemberRepository memberRepository;
-    private final AwsS3Service awsS3Service;
+
 
     @Override
     public PagedResponse<CrewBoardDto> boardListByCrew(Long crewId, String subject, String keyword, int page, int size) {
@@ -222,7 +221,7 @@ public class CrewBoardServiceImpl implements CrewBoardService {
         List<CrewBoardImageEntity> crewBoardImages = crewBoardImageRepository.findByCrewBoardEntity_Id(id);
         if (crewBoardImages != null) {
             for (CrewBoardImageEntity images : crewBoardImages) {
-                awsS3Service.deleteFile(images.getNewName());
+                // awsS3Service.deleteFile(images.getNewName());
             }
         }
 

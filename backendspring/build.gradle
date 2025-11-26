@@ -35,7 +35,6 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'
-	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -51,20 +50,22 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind'
 
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
 
     implementation 'com.google.code.gson:gson:2.10.1'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
     implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
-    implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.769')
-	implementation 'com.amazonaws:aws-java-sdk-s3'
+
 	implementation 'org.modelmapper:modelmapper:3.1.0'
 
 	implementation 'org.json:json:20240303'
+	// AWS S3
+	// implementation 'com.amazonaws:aws-java-sdk-s3:1.12.753'
+	implementation platform('io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1')
+	implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.0.1'
+	implementation 'org.springframework.boot:spring-boot-starter'
 }
 
 tasks.named('test') {

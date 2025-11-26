@@ -61,6 +61,9 @@ public class BoardDto {
     private String newFileName;
     private String oldFileName;
 
+    // s3 Full URL Field
+    private String fileUrl;
+
     // N:1
     private MemberEntity memberentity;
 
