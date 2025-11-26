@@ -8,6 +8,7 @@ import org.spring.backendspring.common.role.MemberRole;
 import org.spring.backendspring.member.dto.MemberDto;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.entity.MemberProfileImageEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class MemberMapper {

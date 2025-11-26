@@ -4,6 +4,7 @@ import { authMyPaymentFn } from "../../../apis/auth/authPayment";
 import { formatDate, formattedPrice } from "../../../js/formatDate";
 import { useNavigate } from "react-router";
 import AdminPagingComponent from "../../common/AdminPagingComponent";
+import DeliveryStatusModal from "../payment/DeliveryStatusModal";
 
 const AuthPaymentContainer = () => {
   const paymentStatus = {
@@ -25,6 +26,9 @@ const AuthPaymentContainer = () => {
   const [search, setSearch] = useState("");
   const [defaultSearch, setDefaultSearch] = useState("");
   const [pageData, setPageData] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState(null);
+
   const memberId = useSelector((state) => state.loginSlice.id);
   const navigate = useNavigate();
 
@@ -37,6 +41,17 @@ const AuthPaymentContainer = () => {
 
   const hadlePageChange = (page) => {
     setCurrentPage(page);
+  };
+
+  const handleOpenModal = (e, payment) => {
+    e.stopPropagation();
+    setSelectedPayment(payment);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedPayment(null);
+    setIsModalOpen(false);
   };
 
   useEffect(() => {
@@ -112,98 +127,88 @@ const AuthPaymentContainer = () => {
         )
       ) : (
         <div className="auth-my-payment-con">
-          {myPayment.map((el) => {
-            return (
-              <div className="my-payment-detail-all" key={el.paymentId}>
-                <div className="my-payment-status-con">
-                  <h2>{formatDate(el.createTime)}</h2>
-                  <div className="my-payment-status-detail">
-                    <span
-                      style={{
-                        color:
-                          el.paymentStatus === "PENDING"
-                            ? "#fc9a1bff"
-                            : el.paymentStatus === "COMPLETED"
-                            ? "#3b82f6"
-                            : el.paymentStatus === "FAILED"
-                            ? "red"
-                            : el.paymentStatus === "CANCELED"
-                            ? "#fc9a1bff"
-                            : el.paymentStatus === "REFUNDED"
-                            ? "green"
-                            : "block",
-                      }}
-                    >
-                      {paymentStatus[el.paymentStatus] || el.paymentStatus}
-                    </span>
-                  </div>
-                </div>
+          <div className="paymentGrid">
+            {myPayment.map((payment) => {
+              const items = payment.paymentItems || [];
+              const totalAmount = items.reduce(
+                (sum, item) => sum + (item.price || 0) * (item.size || 1),
+                0
+              );
+              const firstItemTitle =
+                items.length > 0 ? items[0].title : "상품 정보 없음";
+              const status =
+                paymentStatus[payment.paymentStatus] || "주문 완료"; // 상태 사용
 
-                <div className="my-payment-content">
-                  <div className="my-payment-left">
-                    <div className="my-payment-address">
-                      <h4>배송지</h4>
-                      <div className="my-payment-address-detail">
-                        <span>{el.paymentReceiver}</span>
-                        <span>{el.paymentPhone}</span>
-                        <span>{el.paymentAddr}</span>
-                      </div>
+              return (
+                <div
+                  className="orderCard"
+                  key={payment.paymentId}
+                  onClick={() => {
+                    navigate(`/myPage/payment/${payment.paymentId}`);
+                  }}
+                >
+                  <div className="top">
+                    <div className="orderHeader">
+                      <span className="orderId">
+                        {formatDate(payment.createTime)}
+                      </span>
+                      <span
+                        className={`deliveryStatusLink status-${status.replace(
+                          /\s/g,
+                          ""
+                        )}`}
+                        onClick={(e) => handleOpenModal(e, payment)}
+                        title="클릭하여 배송 상세 조회"
+                      >
+                        {status}
+                      </span>
                     </div>
-
-                    <div className="my-payment-type">
-                      <h4>결제정보</h4>
-                      <div className="my-payment-type-detail">
-                        <div className="my-payment-type-detail-top">
-                          <h5>주문금액</h5>
-                          <span>{formattedPrice(el.productPrice)}원</span>
-                        </div>
-                        <div className="my-payment-type-detail-bottom">
-                          <h5>결제방법</h5>
-                          <span>
-                            {paymentType[el.paymentType] || el.paymentType}
+                    <div className="mainInfo">
+                      <p className="itemTitle">
+                        {firstItemTitle}{" "}
+                        {items.length > 1 ? `외 ${items.length - 1}개` : ""}
+                      </p>
+                      <p className="totalAmount">
+                        총 {totalAmount.toLocaleString()}원
+                      </p>
+                    </div>
+                    <ul className="orderDetailList">
+                      <li>주문처: {payment.paymentPost}</li>
+                      <li>배송주소: {payment.paymentAddr}</li>
+                      <li>결제방법: {paymentType[payment.paymentType]}</li>
+                    </ul>
+                  </div>
+                  <div className="bottom">
+                    <h4>주문 상세</h4>
+                    <ul className="payment_itemList">
+                      {items.map((item, index) => (
+                        // item.paymentItemId 대신 index 사용 (안정적인 key가 있다면 사용 권장)
+                        <li key={item.id || index}>
+                          <span>{item.title || "-"}</span>
+                          <span className="itemPrice">
+                            {(item.price || 0).toLocaleString()}원
                           </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="my-payment-right">
-                    <h4>주문상품</h4>
-                    <div className="my-payment-items-wrapper">
-                      {el.paymentItems.map((items, idx) => {
-                        return (
-                          <div className="my-payment-item" key={idx}>
-                            <div className="my-payment-item-title">
-                              {items.s3file ? (
-                                <div className="my-payment-item-img">
-                                  <img src={items.s3file} alt="" />
-                                </div>
-                              ) : (
-                                <div className="my-payment-item-img">
-                                  <img
-                                    src="https://dummyimage.com/150x150/cccccc/000000&text=No+Image"
-                                    alt="상품 이미지"
-                                  />
-                                </div>
-                              )}
-                              <h4>{items.title}</h4>
-                              <span>{items.size}개</span>
-                              <span>{formattedPrice(items.price)}원</span>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
+                          <span className="itemSize">{item.size || 0}개</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
           <AdminPagingComponent
             pageData={pageData}
             onPageChange={hadlePageChange}
           />
         </div>
+      )}
+      {/* 모달 컴포넌트 렌더링 */}
+      {isModalOpen && selectedPayment && (
+        <DeliveryStatusModal
+          payment={selectedPayment}
+          onClose={handleCloseModal}
+        />
       )}
     </div>
   );

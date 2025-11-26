@@ -65,6 +65,8 @@ public class MemberDto {
 
     private int isProfileImg;
 
+    private String fileUrl;
+
     private List<MemberProfileImageEntity> profileImagesList;
 
     private LocalDateTime createTime;
