@@ -33,7 +33,7 @@ export const authUpdateFn = async (memberId, memberDto, imgFile) => {
   formData.append("memberFile", imgFile);
 
   try {
-    await jwtAxios.put(
+    const res = await jwtAxios.put(
       `${BACK_BASIC_URL}/api/member/update/${memberId}`,
       formData,
       {
@@ -43,6 +43,7 @@ export const authUpdateFn = async (memberId, memberDto, imgFile) => {
         },
       }
     );
+    return res;
   } catch (err) {
     console.log("업데이트 오류: " + err);
   }

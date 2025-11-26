@@ -126,8 +126,9 @@
   border-bottom: 2px solid #e5e7eb;
 }
 
-.admin-crewList-table thead tr th {
+.admin-crewList-table thead > tr > th {
   padding: 12px 8px;
+  box-sizing: border-box;
   font-size: 13px;
   font-weight: 600;
   color: #374151;
@@ -149,7 +150,7 @@
 }
 
 .admin-crewList-table tbody tr td {
-  padding: 14px 8px;
+  padding: 13px 8px;
   font-size: 14px;
   color: #1f2937;
   text-align: center;

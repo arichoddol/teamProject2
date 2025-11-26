@@ -1,5 +1,6 @@
 package org.spring.backendspring.board.service.impl;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.spring.backendspring.board.dto.NoticeBoardDto;
 import org.spring.backendspring.board.entity.BoardEntity;
@@ -34,8 +35,11 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public NoticeBoardDto findNoticeDetail(Long noticeId) {
-        return null;
+    public NoticeBoardDto findNoticeDetail(String category, Long noticeId) {
+        BoardEntity boardEntity = boardRepository.findByCategoryAndId(category, noticeId)
+                .orElseThrow(() -> new IllegalArgumentException("없는 공지입니다."));
+        boardRepository.updateHit(boardEntity.getId());
+        return NoticeBoardDto.toNoticeBoardDto(boardEntity);
     }
 
 }
