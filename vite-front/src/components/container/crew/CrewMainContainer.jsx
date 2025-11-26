@@ -108,7 +108,9 @@ const CrewMainContainer = () => {
                               className="crewImage"
                             />
                           ) : (
-                            <div>이미지 없음</div>
+                            <div className="noCrewImage">
+                              <span>🧑‍🤝‍🧑💨 {crew.crewName} 💨👟</span>
+                            </div>
                           )}
                         </div>
 
@@ -160,7 +162,7 @@ const CrewMainContainer = () => {
                             className="crewImage"
                           />
                         ) : (
-                          <div>이미지 없음</div>
+                          <div className="noCrewImage">👟💨 {crew.name} 💨🧑‍🤝‍🧑</div>
                         )}
                       </div>
                       <div className="crewListRight">

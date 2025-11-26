@@ -123,7 +123,7 @@ public class CrewBoardServiceImpl implements CrewBoardService {
         crewBoardEntity.setCrewBoardImageEntities(savedImages);
         savedBoard = crewBoardRepository.save(crewBoardEntity);            
 
-        return CrewBoardDto.toDto(savedBoard);
+        return CrewBoardDto.toDto2(savedBoard);
     }
 
     @Override
