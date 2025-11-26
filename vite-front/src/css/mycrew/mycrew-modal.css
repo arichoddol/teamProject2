@@ -98,6 +98,11 @@
     gap: 10px;
     margin-bottom: 10px;
   }
+  .myCrewModal .modal-body .detail-btn-list  {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
   
   /* 라벨 스타일 */
   .myCrewModal .modal-body label {
@@ -132,7 +137,7 @@
   /* === 버튼 줄 정리 === */
   /* 버튼이 들어가는 li는 세로 말고 가로 정렬 */
   .myCrewModal .modal-body li.buttons-row {
-    justify-content: flex-start;
+    justify-content: flex-end;
     flex-wrap: wrap;
     gap: 8px;
   }

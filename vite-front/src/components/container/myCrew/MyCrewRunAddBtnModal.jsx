@@ -61,7 +61,7 @@ const MyCrewRunAddBtnModal = ({input, onClose, onChange, onSubmit}) => {
                     onChange={onChange}
                   />
                 </li>
-                <li>
+                <li className='buttons-row'>
                   <button type='button' onClick={onSubmit}>✅ 일정추가</button>
                 </li>
               </ul>

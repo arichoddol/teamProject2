@@ -75,56 +75,61 @@ const MyCrewMainContainer = () => {
 
         {/* ===== 내부 내용 ===== */}
         <div className="myCrewMain-inner">
-          {/* 이미지 */}
-          {myCrew.newFileName && myCrew.newFileName.length > 0 && (
-            <div className="myCrewMainImage">
-              <img
-                src={`http://localhost:8088/upload/${myCrew.newFileName[0]}`}
-                alt={`${myCrew.name} 이미지`}
-                className="crewImage"
-              />
+          <div className="myCrewMain-inner-left">
+            <div className="chat-bot">
+
             </div>
-          )}
-
+          </div>
           {/* 정보 리스트 */}
-          <ul className="myCrewMain-list">
+          <div className="myCrewMain-inner-right">
             <div className="top">
+              {/* 이미지 */}
+              {myCrew.newFileName && myCrew.newFileName.length > 0 && (
+                <div className="myCrewMainImage">
+                  <img
+                    src={`http://localhost:8088/upload/${myCrew.newFileName[0]}`}
+                    alt={`${myCrew.name} 이미지`}
+                    className="crewImage"
+                  />
+                </div>
+              )}
 
-            <li className="myCrewMain-row">
-              <span className="row-label">👑 크루장</span>
-              <span className="row-value">
-                {myCrew.memberNickName || "미정"}
-              </span>
-            </li>
-
-            <li className="myCrewMain-row">
-              <span className="row-label">📍 활동 지역</span>
-              <span className="row-value">
-                {myCrew.district || "미정"}
-              </span>
-            </li>
-
-            <li className="myCrewMain-row myCrewMain-row-desc">
-              <span className="row-label">📝 소개</span>
-              <span className="row-value">
-                {myCrew.description || "아직 소개글이 없습니다."}
-              </span>
-            </li>
             </div>
             <div className="bottom">
+              <ul>
 
-            {myCrew.memberId === loginMemberId && (
-              <div className="myCrewMain-row-edit">
-                <button
-                  className="myCrewMain-editBtn"
-                  onClick={() => navigate(`/mycrew/${crewId}/update`)}
-                  >
-                  ✏️ 크루 정보 수정
-                </button>
-              </div>
-            )}
+                <li className="myCrewMain-row">
+                  <span className="row-label">👑 크루장</span>
+                  <span className="row-value">
+                    {myCrew.memberNickName || "미정"}
+                  </span>
+                </li>
+
+                <li className="myCrewMain-row">
+                  <span className="row-label">📍 활동 지역</span>
+                  <span className="row-value">
+                    {myCrew.district || "미정"}
+                  </span>
+                </li>
+
+                <li className="myCrewMain-row">
+                  <span className="row-label">📝 소개</span>
+                  <span className="row-value">
+                    {myCrew.description || "아직 소개글이 없습니다."}
+                  </span>
+                </li>
+                {myCrew.memberId === loginMemberId && (
+                  <li className="myCrewMain-row-btn">
+                    <button
+                      className="myCrewMain-editBtn"
+                      onClick={() => navigate(`/mycrew/${crewId}/update`)}>
+                      ✏️ 크루 정보 수정
+                    </button>
+                  </li>
+                )}
+              </ul>
             </div>
-          </ul>
+          </div>
         </div>
       </div>
     </div>

@@ -20,7 +20,7 @@ public class Receiver {
 
     public void receiveMessage(Long crewId) throws Exception {
 
-        String queueName = "chat.queue.crew." + crewId;
+        String queueName = "chat" + crewId;
 
         Queue queue = new Queue(queueName, true);
 

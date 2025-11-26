@@ -15,8 +15,8 @@ public class Sender {
     
     private final RabbitTemplate rabbitTemplate;
 
-    @Value("${rabbitmq.exchange.name}")
-    private String exchangeName;
+    @Value("${spring.rabbitmq.crew.exchange}")
+    private String crewExchangeYml;
 
     public void send(ChatMessageDto message) {
 
@@ -24,9 +24,9 @@ public class Sender {
 
         message.setCrewId(crewId);
 
-        String routingKey = "chat.key.crew" + crewId;
+        String routingKey = "crew." + crewId;
 
-        rabbitTemplate.convertAndSend(exchangeName, routingKey, message);
+        rabbitTemplate.convertAndSend(crewExchangeYml, routingKey, message);
         System.out.println("보냄 :" + message);
     }
 }
