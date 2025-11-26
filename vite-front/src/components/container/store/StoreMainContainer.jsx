@@ -125,7 +125,7 @@ const ShopMainContainer = () => {
           {items.length === 0 && (
             <p className="no-items-data">등록된 상품이 없습니다.</p>
           )}
-
+          
           {items.map((list) => (
             <Link
               to={`/store/detail/${list.id}`}
