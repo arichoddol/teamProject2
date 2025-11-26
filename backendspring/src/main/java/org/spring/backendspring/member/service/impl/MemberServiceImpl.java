@@ -38,13 +38,16 @@ public class MemberServiceImpl implements MemberService {
     @Value("${file.upload-dir}")
     public String filePath;
 
+    @Override
+    public int userEmailCheck(String userEmail) {
+        Optional<MemberEntity> byUserEmail = memberRepository.findByUserEmail(userEmail);
+        return byUserEmail.isPresent() ? 0 : 1;
+    }
 
     @Override
     public MemberDto findByUserEmail(String userEmail) {
         return memberRepository.findByUserEmail(userEmail)
-
                 .map(MemberMapper::toDto)
-
                 .orElse(null);
     }
 
@@ -87,10 +90,6 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new EntityNotFoundException("해당 회원이 존재하지 않습니다"));
     }
 
-    // 회원 수정 서비스
-    // 1. 회원이 있는지
-    // 2. 비밀번호 바뀐게 있는지 확인
-    // 3. 새로 들어온 이미지 파일이 존재하는지 확인
     @Override
     public MemberDto updateMember(Long id, MemberDto updatedDto, MultipartFile memberFile) {
         MemberEntity memberEntity = memberRepository.findById(id)
@@ -130,9 +129,17 @@ public class MemberServiceImpl implements MemberService {
                 memberImg.get().setNewName(newFileName);
                 memberImg.get().setMemberEntity(memberEntity);
             }
+        } else {
+            memberProfileImageRepository.findByMemberEntity_id(memberEntity.getId())
+                    .ifPresent(memberImg -> {
+                        String oldFile = memberImg.getNewName();
+                        File deleteFile = new File(filePath, oldFile);
+                        if (deleteFile.exists()) {
+                            deleteFile.delete();
+                        }
+                        memberProfileImageRepository.delete(memberImg);
+                    });
         }
-        // 업데이트할 필드 설정
-        // TODO: 비밀번호 변경은 별도 엔드포인트로 분리
         MemberEntity updateEntity = MemberMapper.toUpdateEntity(updatedDto, memberEntity);
         return MemberMapper.toDto(memberRepository.save(updateEntity));
     }

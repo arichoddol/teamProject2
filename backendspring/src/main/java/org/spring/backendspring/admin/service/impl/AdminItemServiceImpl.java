@@ -14,6 +14,7 @@ import org.spring.backendspring.item.repository.ItemImgRepository;
 import org.spring.backendspring.item.repository.ItemRepository;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +39,7 @@ public class AdminItemServiceImpl implements AdminItemService {
     // private final String uploadPath = "E:\\uploadImg\\";
     // private static final String uploadPath = "C:/full/upload/";
     private static final String uploadPath = "E:/full/upload/";
+    
     
 
 

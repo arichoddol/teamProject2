@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 const AuthUpdateContainer = () => {
   const [gender, setGender] = useState("남성");
   const [imgFile, setImgFile] = useState(null);
+  const [isImageDeleted, setIsImageDeleted] = useState(false);
   const [memberDto, setMemberDto] = useState({
     id: "",
     userEmail: "",
@@ -35,9 +36,10 @@ const AuthUpdateContainer = () => {
   const memberUpdateFn = async (e) => {
     e.preventDefault();
     const res = await authUpdateFn(memberId, memberDto, imgFile);
+    console.log(res);
     if (res.status === 200) {
       alert("수정이 완료되었습니다.");
-      navigate("/auth/myPage");
+      navigate("/myPage");
     }
   };
 
@@ -46,107 +48,205 @@ const AuthUpdateContainer = () => {
     setMemberDto((el) => ({ ...el, [name]: value }));
   };
 
+  const handleImageDelete = () => {
+    setImgFile(null);
+    setIsImageDeleted(true);
+    document.getElementById("profileImageInput").value = "";
+    document.querySelector(".profile-image").src =
+      "https://dummyimage.com/150x150/cccccc/000000&text=No+Image";
+    document.querySelector(".file-name").textContent = "";
+    document.querySelector(".file-name").style.display = "none";
+  };
+
   useEffect(() => {
     myPageDetailFn();
   }, []);
 
   return (
-    <div className="memberDetail">
-      <div className="memberDetail-con">
+    <div className="member-update">
+      <div className="member-update-con">
+        <h2>회원정보 수정</h2>
         <form onSubmit={memberUpdateFn}>
-          <main className="memberDetail-right">
+          <main className="member-update-right">
             <div className="profile-section">
-              {memberDto.profileImagesList != null ? (
-                <div className="profile-image">
-                  <span className="profile-label">프로필 이미지</span>
-                  <img
-                    src={`${BACK_BASIC_URL}/upload/${memberDto.profileImagesList[0].newName}`}
-                    alt="프로필 이미지"
-                    onError={(e) => {
-                      e.target.src =
-                        "https://dummyimage.com/150x150/cccccc/000000&text=No+Image";
+              <span className="profile-label">프로필 이미지</span>
+              <div className="profile-image-wrapper">
+                {memberDto.profileImagesList != null && !isImageDeleted ? (
+                  <div className="profile-image-container">
+                    <img
+                      className="profile-image"
+                      src={`${BACK_BASIC_URL}/upload/${memberDto.profileImagesList[0].newName}`}
+                      alt="프로필 이미지"
+                      onError={(e) => {
+                        e.target.src =
+                          "https://dummyimage.com/150x150/cccccc/000000&text=No+Image";
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="profile-image-container">
+                    <img
+                      className="profile-image"
+                      src="https://dummyimage.com/150x150/cccccc/000000&text=No+Image"
+                      alt="기본 프로필"
+                    />
+                  </div>
+                )}
+                <div className="file-input-wrapper">
+                  <input
+                    type="file"
+                    id="profileImageInput"
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      setImgFile(file);
+                      setIsImageDeleted(false);
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                          document.querySelector(".profile-image").src =
+                            event.target.result;
+                          document.querySelector(".file-name").textContent =
+                            file.name;
+                          document.querySelector(".file-name").style.display =
+                            "block";
+                        };
+                        reader.readAsDataURL(file);
+                      }
                     }}
+                    accept="image/*"
                   />
+                  <div className="file-button-group">
+                    <label
+                      htmlFor="profileImageInput"
+                      className="file-select-btn"
+                    >
+                      이미지 변경
+                    </label>
+                    <button
+                      type="button"
+                      className="file-delete-btn"
+                      onClick={handleImageDelete}
+                    >
+                      이미지 삭제
+                    </button>
+                  </div>
+
+                  <span
+                    className="file-name"
+                    style={{ display: "none" }}
+                  ></span>
                 </div>
-              ) : (
-                <div className="profile-image">
-                  <span className="profile-label">프로필 이미지</span>
-                  <img
-                    src="https://dummyimage.com/150x150/cccccc/000000&text=No+Image"
-                    alt="기본 프로필"
-                  />
-                </div>
-              )}
-              <input
-                type="file"
-                onChange={(e) => setImgFile(e.target.files[0])}
-              />
-            </div>
-            <div className="info-section">
-              <div className="info-item">
-                <span className="info-label">이메일</span>
-                <span className="info-value">{memberDto.userEmail}</span>
               </div>
+            </div>
+
+            <div className="info-section">
+              <div className="info-item readonly">
+                <label className="info-label">이메일</label>
+                <div className="info-value">{memberDto.userEmail}</div>
+              </div>
+
               <div className="info-item">
-                <span className="info-label">이름</span>
+                <label htmlFor="userName" className="info-label">
+                  이름
+                </label>
                 <input
                   type="text"
+                  id="userName"
                   name="userName"
                   value={memberDto.userName}
                   onChange={handleChange}
+                  placeholder="이름을 입력해주세요"
                 />
               </div>
+
               <div className="info-item">
-                <span className="info-label">비밀번호</span>
+                <label htmlFor="userPassword" className="info-label">
+                  비밀번호
+                </label>
                 <input
-                  type="text"
+                  type="password"
+                  id="userPassword"
                   name="userPassword"
                   onChange={handleChange}
+                  placeholder="변경할 비밀번호를 입력해주세요"
                 />
+                <p className="input-hint">
+                  * 비밀번호를 변경하지 않으려면 비워두세요
+                </p>
               </div>
+
               <div className="info-item">
-                <span className="info-label">닉네임</span>
+                <label htmlFor="nickName" className="info-label">
+                  닉네임
+                </label>
                 <input
                   type="text"
+                  id="nickName"
                   name="nickName"
                   value={memberDto.nickName}
                   onChange={handleChange}
+                  placeholder="닉네임을 입력해주세요"
                 />
               </div>
+
               <div className="info-item">
-                <span className="info-label">주소</span>
+                <label htmlFor="address" className="info-label">
+                  주소
+                </label>
                 <input
                   type="text"
+                  id="address"
                   name="address"
                   value={memberDto.address}
                   onChange={handleChange}
+                  placeholder="주소를 입력해주세요"
                 />
               </div>
+
               <div className="info-item">
-                <span className="info-label">전화번호</span>
+                <label htmlFor="phone" className="info-label">
+                  전화번호
+                </label>
                 <input
-                  type="text"
+                  type="tel"
+                  id="phone"
                   name="phone"
                   value={memberDto.phone}
                   onChange={handleChange}
+                  placeholder="전화번호를 입력해주세요"
                 />
               </div>
+
               <div className="info-item">
-                <span className="info-label">나이</span>
+                <label htmlFor="age" className="info-label">
+                  나이
+                </label>
                 <input
-                  type="text"
+                  type="number"
+                  id="age"
                   name="age"
                   value={memberDto.age}
                   onChange={handleChange}
+                  placeholder="나이를 입력해주세요"
+                  min="1"
+                  max="150"
                 />
               </div>
-              <div className="info-item">
-                <span className="info-label">성별</span>
-                <span className="info-value">{gender}</span>
+
+              <div className="info-item readonly">
+                <label className="info-label">성별</label>
+                <div className="info-value">{gender}</div>
               </div>
             </div>
 
             <div className="button-group">
+              <button
+                className="btn-cancel"
+                type="button"
+                onClick={() => window.history.back()}
+              >
+                취소
+              </button>
               <button className="btn-edit" type="submit">
                 수정하기
               </button>

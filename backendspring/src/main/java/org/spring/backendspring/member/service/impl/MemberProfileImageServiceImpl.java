@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.amazonaws.services.s3.AmazonS3;
+
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,11 +18,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberProfileImageServiceImpl implements MemberProfileImageService {
 
-    private final AmazonS3 amazonS3;
+
     private final MemberRepository memberRepository;
     private final MemberProfileImageRepository memberProfileImageRepository;
 
-    @Value("${cloud.aws.s3.bucket}")
+    @Value("${spring.cloud.aws.s3.bucket}")
     private String bucketName;
 
     @Override
@@ -45,7 +45,7 @@ public class MemberProfileImageServiceImpl implements MemberProfileImageService 
 
 
         try{
-            amazonS3.putObject(bucketName, key, file.getInputStream(), null);
+            // amazonS3.putObject(bucketName, key, file.getInputStream(), null);
 
             MemberProfileImageEntity profileImageEntity = MemberProfileImageEntity.builder()
             .oldName(originalName)

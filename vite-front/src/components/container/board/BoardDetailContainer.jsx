@@ -39,7 +39,7 @@ const BoardDetailContainer = () => {
 
     const REPLY_BASE_URL = 'http://localhost:8088/api/reply';
     const API_BASE_URL = 'http://localhost:8088/api/board';
-    const IMAGE_BASE_URL = 'http://localhost:8088/upload/';
+    // const IMAGE_BASE_URL = 'http://localhost:8088/upload/';
 
 
     const formatDate = (dateString) => {
@@ -281,24 +281,27 @@ const BoardDetailContainer = () => {
                 </div>
 
                 <div className="boardDetail-con">
-
+                    
                     {/* 게시글 본문 내용을 표시하는 부분 */}
                     <p className="boardDetail-content" style={{ whiteSpace: 'pre-wrap', marginBottom: '20px' }}>
                         {boards.content}
                     </p>
-
+                    {console.log(boards)}
                     <div className="boardDetail-con-image">
 
 
                         {boards.boardImgDtos && boards.boardImgDtos.length > 0 && (
                             boards.boardImgDtos.map((imgDto) => (
+                          
                                 <img
                                     // bring File by NewName Field
                                     key={imgDto.id || imgDto.newName}
-                                    src={`${IMAGE_BASE_URL}${imgDto.newName}`}
+                                    // src={`${IMAGE_BASE_URL}${imgDto.newName}`}
+                                    src={boards.fileUrl}
                                     alt={imgDto.oldName}
                                     style={{ maxWidth: '100%', height: 'auto', display: 'block', margin: '10px 0' }}
                                 />
+                                     
                             ))
                         )}
                     </div>

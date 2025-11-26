@@ -18,7 +18,7 @@ const AdminHeader = () => {
         <ul>
           <li>{userEmail}</li>
           <li>
-            <Link to="/">SHOP</Link>
+            <Link to="/store">SHOP</Link>
           </li>
           <LogoutBtn />
         </ul>

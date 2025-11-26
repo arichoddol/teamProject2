@@ -164,9 +164,10 @@ public class PaymentController {
 //     회원의 결제 목록을 가져옵니다.
     @GetMapping("/myPayment/{memberId}")
     public ResponseEntity<?> getMemberPaymentList(@PathVariable("memberId") Long memberId,
+                                                  @RequestParam(name = "keyword", required = false) String keyword,
                                                   @RequestParam(name = "page", defaultValue = "0") int page,
-                                                  @RequestParam(name = "size", defaultValue = "10") int size) {
-        PagedResponse<PaymentDto> myPaymentList = paymentService.findMyPaymentList(memberId, page, size);
+                                                  @RequestParam(name = "size", defaultValue = "4") int size) {
+        PagedResponse<PaymentDto> myPaymentList = paymentService.findMyPaymentList(keyword, memberId, page, size);
         return ResponseEntity.ok(myPaymentList);
     }
 

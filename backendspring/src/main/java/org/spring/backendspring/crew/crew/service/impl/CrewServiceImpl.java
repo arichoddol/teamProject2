@@ -17,7 +17,6 @@ import org.spring.backendspring.crew.crewMember.entity.CrewMemberEntity;
 import org.spring.backendspring.crew.crewMember.repository.CrewMemberRepository;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
-import org.spring.backendspring.s3.AwsS3Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -38,7 +37,7 @@ public class CrewServiceImpl implements CrewService {
     private final CrewMemberRepository crewMemberRepository;
     private final CrewImageRepository crewImageRepository;
     private final MemberRepository memberRepository;
-    private final AwsS3Service awsS3Service;
+
 
     @Override
     public CrewDto updateCrew(Long loginUserId, Long crewId, CrewDto crewDto,
@@ -74,7 +73,7 @@ public class CrewServiceImpl implements CrewService {
             for (String imageName : deleteImageName) {
                 CrewImageEntity imageEntity = crewImageRepository.findByNewName(imageName)
                         .orElseThrow(() -> new IllegalArgumentException("이미지가 존재하지 않음"));
-                awsS3Service.deleteFile(imageEntity.getNewName());
+                // awsS3Service.deleteFile(imageEntity.getNewName());
                 crewImageRepository.delete(imageEntity);
             }
         }
@@ -124,7 +123,7 @@ public class CrewServiceImpl implements CrewService {
         List<CrewImageEntity> crewImages = crewImageRepository.findByCrewEntity_Id(crewId);
         if (crewImages != null) {
             for (CrewImageEntity img : crewImages) {
-                awsS3Service.deleteFile(img.getNewName());
+                // awsS3Service.deleteFile(img.getNewName());
             }
         }
 

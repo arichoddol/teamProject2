@@ -6,5 +6,5 @@ import org.spring.backendspring.common.dto.PagedResponse;
 public interface NoticeService {
     PagedResponse<NoticeBoardDto> findAllNoticeList(String keyword, int page, int size, String category);
 
-    NoticeBoardDto findNoticeDetail(Long noticeId);
+    NoticeBoardDto findNoticeDetail(String category, Long noticeId);
 }
