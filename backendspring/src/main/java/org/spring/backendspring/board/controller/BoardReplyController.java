@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Slf4j
-@Log4j2
 @RestController
 @RequestMapping("/api/reply")
 @RequiredArgsConstructor

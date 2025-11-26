@@ -14,6 +14,7 @@ import org.spring.backendspring.board.repository.BoardImgRepository;
 import org.spring.backendspring.board.repository.BoardRepository;
 import org.spring.backendspring.board.service.BoardService;
 import org.spring.backendspring.common.dto.PagedResponse;
+import org.spring.backendspring.config.s3.AwsS3Service;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
 import org.springframework.data.domain.Page;
@@ -31,15 +32,15 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class BoardServiceImpl implements BoardService {
 
-    // S3 bucket
-    // private final AwsS3Service awsS3Service;
+
 
     private final BoardRepository boardRepository;
     private final BoardImgRepository boardImgRepository;
     private final MemberRepository memberRepository;
-    String newFileName = "";
-    // i guess AWS S3 Bucket Link?
-    private static final String FILE_PATH = "C:/full/upload/";
+    
+    // private static final String FILE_PATH = "C:/full/upload/";
+    // S3 bucket
+    private final AwsS3Service awsS3Service;
 
 
     @Override
@@ -64,13 +65,7 @@ public class BoardServiceImpl implements BoardService {
         } else {
             // there has some File..
             // Bring FILE DTO
-            File directory = new File(FILE_PATH);
-            if (!directory.exists()) {
-                if (!directory.mkdirs()) {
-                    throw new IOException("파일 저장 경로를 생성할 수 없습니다: " + FILE_PATH);
-                }
-            }
-
+    
             MultipartFile boardFile = boardDto.getBoardFile();
             String originalFileName = boardFile.getOriginalFilename();
 
@@ -79,12 +74,15 @@ public class BoardServiceImpl implements BoardService {
                 throw new IllegalArgumentException("업로드된 파일의 원본 파일명이 유효하지 않습니다.");
             }
 
-            UUID uuid = UUID.randomUUID();
-            String newFileName = uuid + "_" + originalFileName;
-            String filePath = FILE_PATH + newFileName;
+            // this methold handle S3 Service Class so remove later 
+            // UUID uuid = UUID.randomUUID();
+            // String newFileName = uuid + "_" + originalFileName;
+            // String filePath = FILE_PATH + newFileName;
 
             // Acutally FileSave..
-            boardFile.transferTo(new File(filePath)); // saveFile to Path ...
+            // boardFile.transferTo(new File(filePath)); // saveFile to Path ...
+            // upload S3 and bring Get New FileName(include UUID)
+            String newFileName = awsS3Service.uploadFile(boardFile);
             boardDto.setAttachFile(1);
 
             // Board Save After -> FileSave
@@ -121,12 +119,21 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public BoardDto boardDetail(Long boardId) {
+    public BoardDto boardDetail(Long boardId) throws IOException {
         boardRepository.updateHit(boardId);
         BoardEntity boardEntity = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글 아이디가 존재하지 않음" + boardId));
 
-        return BoardDto.toBoardDto(boardEntity);
+        BoardDto boardDto = BoardDto.toBoardDto(boardEntity);
+        
+        String saveFileName = boardDto.getNewFileName();
+        if(boardDto.getAttachFile() == 1 && saveFileName != null){
+            String fileUrl = awsS3Service.getFileUrl(saveFileName);
+            boardDto.setFileUrl(fileUrl);
+        }
+        return boardDto;
+
+
     }
 
     @Transactional
@@ -143,34 +150,26 @@ public class BoardServiceImpl implements BoardService {
         // there is NewFile?
         // File fix Logic 
         if (boardDto.getBoardFile() != null && !boardDto.getBoardFile().isEmpty()) {
-            File directory = new File(FILE_PATH);
-            if (!directory.exists()) {
-                if (!directory.mkdirs()) {
-                    throw new IOException("파일 저장 경로를 생성할 수 없습니다: " + FILE_PATH);
-                }
-            }
+          
             // there has NewFile 
             MultipartFile newFile = boardDto.getBoardFile();
-
             // Original File Check First.... then Delete 
             Optional<BoardImgEntity> existImgOptional = boardImgRepository.findByBoardEntity(boardEntity);
+
             // there has OldFile..
             if (existImgOptional.isPresent()) {
                 BoardImgEntity existFileEntity = existImgOptional.get();
                 // Psycially Image Delete ->
-                File oldFile = new File(FILE_PATH + existFileEntity.getNewName());
-                if (oldFile.exists()) {
-                    oldFile.delete();
-                }
+               
+                // Delete from S3 Oldfile..
+                awsS3Service.deleteFile(existFileEntity.getNewName());
                 // Also you Delete DB Data info(img)
                 boardImgRepository.delete(existFileEntity);
             }
             // and Replace NewFile 
             String originalFileName = newFile.getOriginalFilename();
-            UUID uuid = UUID.randomUUID();
-            String newFileName = uuid + "_" + originalFileName;
-            String filePath = FILE_PATH + newFileName;
-            newFile.transferTo(new File(filePath));
+            String newFileName =awsS3Service.uploadFile(newFile);
+ 
             // And Change AttachFile Statue...
             boardEntity.setAttachFile(1);
             // Also SAVE New IMG Data into DB...-> 
@@ -180,9 +179,7 @@ public class BoardServiceImpl implements BoardService {
                     .boardEntity(boardEntity)
                     .build());
             boardImgRepository.save(newFileEntity);
-        } else {
-            // if there has No NEWFILE... -> 
-        }
+        } 
         // Save Entity 
         // Alredy Have id, JPA run UPDATE Query.
         boardRepository.save(boardEntity);
@@ -199,19 +196,11 @@ public class BoardServiceImpl implements BoardService {
         Optional<BoardImgEntity> fileOptional = boardImgRepository.findByBoardEntity(boardEntity);
         if (fileOptional.isPresent()) {
             BoardImgEntity boardImgEntity = fileOptional.get();
-
-            File realDelete = new File(FILE_PATH + boardImgEntity.getNewName());
-            if (realDelete.exists()) {
-                realDelete.delete();
-            }
+            awsS3Service.deleteFile(boardImgEntity.getNewName());
             // DB delete
             boardImgRepository.delete(boardImgEntity);
 
-            //  for (BoardImgEntity boardImgEntity1 : boardEntity.getBoardImgEntities()) {
-            // File realDelete1 = new File(FILE_PATH + boardImgEntity1.getNewName());
-            // if(realDelete.exists()){
-            // realDelete1.delete();
-            // 파일 삭제 실패 시 로그 처리만 합니다.
+
         }
         // Board Entity Delete 
         boardRepository.delete(boardEntity);

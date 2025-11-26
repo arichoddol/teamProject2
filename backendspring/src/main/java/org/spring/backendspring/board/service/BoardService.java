@@ -14,7 +14,7 @@ public interface BoardService {
     void insertBoard (BoardDto boardDto) throws IOException;
     // R
     Page<BoardDto> boardListPage(Pageable pageable, String subject, String search);
-    BoardDto boardDetail(Long boardId);
+    BoardDto boardDetail(Long boardId) throws IOException;
 
     // U
     void update(BoardDto boardDto) throws IOException;
