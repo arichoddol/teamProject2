@@ -134,16 +134,6 @@ const MyCrewBoardDetailContainer = () => {
     }
   }
 
-  // const updateComment = async (commentId, comment) => {
-  //   try {
-  //     await axios.put(`/api/mycrew/${crewId}/board/${boardId}/comment/update/${commentId}`,
-
-  //     )
-  //   } catch (err) {
-
-  //   }
-  // }
-
   console.log(loginMemberId)
   console.log(board.memberId)
   console.log(accessToken)
@@ -182,7 +172,7 @@ const MyCrewBoardDetailContainer = () => {
                 {board.newFileName.map((fileName, index) => (
                   <img
                     key={index} 
-                    src={`http://localhost:8088/upload/${fileName}`} 
+                    src={fileName} 
                     alt={`${board.title} 이미지 ${index + 1}`}
                     className='crewBoardImg'
                   />

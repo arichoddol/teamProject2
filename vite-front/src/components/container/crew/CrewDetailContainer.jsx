@@ -68,7 +68,8 @@ const CrewDetailContainer = () => {
           <div className="crewDetailImage">
           {crew.newFileName?.length > 0 ? (
               <img
-                src={`http://localhost:8088/upload/${crew.newFileName[0]}`}
+                // src={`http://localhost:8088/upload/${crew.newFileName[0]}`}
+                src={crew.fileUrl[0]}
                 alt={`${crew.name} 이미지`}
                 className='crewImage'
               />

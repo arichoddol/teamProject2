@@ -96,14 +96,16 @@ const CrewMainContainer = () => {
               <h1 className="crewListH1">내 크루 목록</h1>
               <ul className="crewListUl">
                 {myCrewList.map((crew) => {
-                  const images = crew.crewImages || [];
+                  // const images = crew.crewImages || [];
+                  const images = crew.fileUrl || [];
+                  console.log(images)
                   return (
                     <li className="crewListLi" key={crew.id}>
                       <Link to={`/mycrew/${crew.crewId}`}>
                         <div className="crewListLeft">
                           {images.length > 0 ? (
                             <img
-                              src={`http://localhost:8088/upload/${images[0]}`}
+                              src={images[0]}
                               alt={`${crew.crewName} 이미지`}
                               className="crewImage"
                             />
@@ -150,14 +152,16 @@ const CrewMainContainer = () => {
             ) : (
             <ul className="crewListUl">
               {crewList.map((crew) => {
-                const images = crew.newFileName || [];
+                // const images = crew.newFileName || [];
+                const images = crew.fileUrl || [];
+                console.log(images)
                 return (
                   <li className="crewListLi" key={crew.id}>
                     <Link to={`/crew/detail/${crew.id}`}>
                       <div className="crewListLeft">
                         {images && images.length > 0 ? (
                           <img
-                            src={`http://localhost:8088/upload/${images[0]}`}
+                            src={images[0]}
                             alt={`${crew.name} 이미지`}
                             className="crewImage"
                           />

@@ -15,6 +15,8 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
     
     Optional<MemberEntity> findById(Long id);
 
+    boolean findByUserNameAndCrewEntityList_Id(String username, Long crewId);
+
    
 
 }
