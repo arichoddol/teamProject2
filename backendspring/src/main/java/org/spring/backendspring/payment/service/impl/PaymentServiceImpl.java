@@ -201,7 +201,7 @@ public class PaymentServiceImpl implements PaymentService {
                 paymentEntity.addPaymentItem(itemEntity); 
             }
 
-            paymentEntity.setPaymentStatus(PaymentStatus.COMPLETED);
+            paymentEntity.setPaymentStatus(PaymentStatus.PENDING);
             paymentEntity.setIsSucceeded(1);
 
             paymentRepository.save(paymentEntity);

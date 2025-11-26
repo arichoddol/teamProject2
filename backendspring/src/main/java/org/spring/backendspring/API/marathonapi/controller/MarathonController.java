@@ -18,7 +18,7 @@ public class MarathonController {
 
     private final MarathonService marathonService;
 
-    @GetMapping({ "/marathons", "/marathon" })
+    @GetMapping({ "/marathons" })
     public Page<Marathon> marathonList(
             @RequestParam(required = false) String searchTerm, // 검색어 (선택 사항)
             @PageableDefault(size = 10) Pageable pageable // 페이징 정보 (기본 10개)
