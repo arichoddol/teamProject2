@@ -86,7 +86,7 @@ const AdminMemberDetailContainer = () => {
               {memberDto.profileImagesList != null ? (
                 <img
                   className="admin-profile-image"
-                  src={`${BACK_BASIC_URL}/upload/${memberDto.profileImagesList[0].newName}`}
+                  src={memberDto.fileUrl}
                   alt="프로필 이미지"
                   onError={(e) => {
                     e.target.src =
