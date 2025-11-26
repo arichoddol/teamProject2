@@ -144,7 +144,7 @@ const root = createBrowserRouter([
   },
   {
     // api
-    path: "api",
+    path: "open",
     element: (
       <Suspense fallback={Loading}>
         <ApiLayout />

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.spring.backendspring.config.s3.AwsS3Service;
 import org.spring.backendspring.crew.crewCreate.entity.CrewCreateRequestEntity;
 import org.spring.backendspring.crew.crewCreate.repository.CrewCreateRequestRepository;
 import org.spring.backendspring.crew.crewJoin.repository.CrewJoinRequestRepository;
@@ -34,9 +35,10 @@ public class MemberServiceImpl implements MemberService {
     private final MemberProfileImageRepository memberProfileImageRepository;
     private final CrewJoinRequestRepository crewJoinRequestRepository;
     private final CrewCreateRequestRepository crewCreateRequestRepository;
+    private final AwsS3Service awsS3Service;
 
-    @Value("${file.upload-dir}")
-    public String filePath;
+    @Value("${s3file.path.member}")
+    public String path;
 
     @Override
     public int userEmailCheck(String userEmail) {
@@ -52,7 +54,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void insertMember(MemberDto memberDto, MultipartFile memberFile) {
+    public void insertMember(MemberDto memberDto, MultipartFile memberFile) throws IOException {
 
         memberRepository.findByUserEmail(memberDto.getUserEmail())
                 .ifPresent((email) -> {
@@ -64,18 +66,11 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(memberEntity);
 
         if (memberFile != null) {
-            String originalFileName = memberFile.getOriginalFilename();
-            String newFileName = UUID.randomUUID() + "_" + originalFileName;
-
-            try {
-                memberFile.transferTo(new File(filePath, newFileName));
-            } catch (IOException e) {
-                throw new RuntimeException("프로필 이미지 저장 실패 ", e);
-            }
+            String newFileName = awsS3Service.uploadFile(memberFile, path);
 
             memberProfileImageRepository.save(
                     MemberProfileImageEntity.builder()
-                            .oldName(originalFileName)
+                            .oldName(memberFile.getOriginalFilename())
                             .newName(newFileName)
                             .memberEntity(memberEntity)
                             .build());
@@ -84,14 +79,19 @@ public class MemberServiceImpl implements MemberService {
 
     // 개인(본인) 회원 조회
     @Override
-    public MemberDto findById(Long id) {
-        return memberRepository.findById(id)
+    public MemberDto findById(Long id) throws IOException {
+        MemberDto memberDto = memberRepository.findById(id)
                 .map(MemberMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("해당 회원이 존재하지 않습니다"));
+        if (memberDto.getIsProfileImg() == 1) {
+            String fileUrl = awsS3Service.getFileUrl(memberDto.getProfileImagesList().get(0).getNewName());
+            memberDto.setFileUrl(fileUrl);
+        }
+        return memberDto;
     }
 
     @Override
-    public MemberDto updateMember(Long id, MemberDto updatedDto, MultipartFile memberFile) {
+    public MemberDto updateMember(Long id, MemberDto updatedDto, MultipartFile memberFile) throws IOException {
         MemberEntity memberEntity = memberRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("해당 회원이 존재하지 않습니다"));
 
@@ -100,32 +100,25 @@ public class MemberServiceImpl implements MemberService {
         }
 
         if (memberFile != null) {
-            String originalFileName = memberFile.getOriginalFilename();
-            String newFileName = UUID.randomUUID() + "_" + originalFileName;
-
-            try {
-                memberFile.transferTo(new File(filePath, newFileName));
-            } catch (IOException e) {
-                throw new RuntimeException("프로필 이미지 저장 실패 ", e);
-            }
+            String newFileName = awsS3Service.uploadFile(memberFile, path);
 
             Optional<MemberProfileImageEntity> memberImg =
                     memberProfileImageRepository.findByMemberEntity_id(memberEntity.getId());
 
             if (memberImg.isEmpty()) {
                 memberProfileImageRepository.save(MemberProfileImageEntity.builder()
-                        .oldName(originalFileName)
+                        .oldName(memberFile.getOriginalFilename())
                         .newName(newFileName)
                         .memberEntity(memberEntity)
                         .build());
                 memberEntity.setIsProfileImg(1);
             } else {
                 String oldFile = memberImg.get().getNewName();
-                File deleteFile = new File(filePath, oldFile);
-                if (deleteFile.exists()) {
-                    deleteFile.delete();
+                if (!oldFile.isEmpty()) {
+                    awsS3Service.deleteFile(oldFile);
                 }
-                memberImg.get().setOldName(originalFileName);
+
+                memberImg.get().setOldName(memberFile.getOriginalFilename());
                 memberImg.get().setNewName(newFileName);
                 memberImg.get().setMemberEntity(memberEntity);
             }
@@ -133,9 +126,8 @@ public class MemberServiceImpl implements MemberService {
             memberProfileImageRepository.findByMemberEntity_id(memberEntity.getId())
                     .ifPresent(memberImg -> {
                         String oldFile = memberImg.getNewName();
-                        File deleteFile = new File(filePath, oldFile);
-                        if (deleteFile.exists()) {
-                            deleteFile.delete();
+                        if (!oldFile.isEmpty()) {
+                            awsS3Service.deleteFile(oldFile);
                         }
                         memberProfileImageRepository.delete(memberImg);
                     });
@@ -148,10 +140,11 @@ public class MemberServiceImpl implements MemberService {
     public void deleteMember(Long id) {
         MemberEntity member = memberRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("해당 회원이 존재하지 않습니다"));
+
         if (member.getIsProfileImg() == 1) {
-            File oldFile = new File(filePath, member.getProfileImagesList().get(0).getNewName());
-            if (oldFile.exists()) {
-                oldFile.delete();
+            String oldFile = member.getProfileImagesList().get(0).getNewName();
+            if (!oldFile.isEmpty()) {
+                awsS3Service.deleteFile(oldFile);
             }
             memberProfileImageRepository.deleteById(member.getProfileImagesList().get(0).getId());
         }

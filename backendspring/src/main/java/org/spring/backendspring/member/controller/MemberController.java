@@ -2,6 +2,7 @@ package org.spring.backendspring.member.controller;
 
 import jakarta.validation.Valid;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,7 +72,7 @@ public class MemberController {
     @GetMapping("/detail/{id}")
     @PreAuthorize("isAuthenticated() and #id.toString() == authentication.principal.memberEntity.id.toString()")
     public ResponseEntity<?> getMember(@PathVariable("id") Long id,
-                                       @AuthenticationPrincipal MyUserDetails myUserDetails) {
+                                       @AuthenticationPrincipal MyUserDetails myUserDetails) throws IOException {
         MemberDto memberDetail = memberService.findById(id);
         return ResponseEntity.ok(memberDetail);
     }
@@ -81,7 +82,7 @@ public class MemberController {
     public ResponseEntity<?> updateMember(@PathVariable("id") Long id,
                                           @RequestPart("memberDto") MemberDto memberDto,
                                           @RequestPart(value = "memberFile", required = false) MultipartFile memberFile,
-                                          @AuthenticationPrincipal MyUserDetails myUserDetails) {
+                                          @AuthenticationPrincipal MyUserDetails myUserDetails) throws IOException {
         MemberDto updated = memberService.updateMember(id, memberDto, memberFile);
         return ResponseEntity.ok(updated);
     }
