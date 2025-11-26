@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import jwtAxios from "../../../../apis/util/jwtUtil";
 import { BACK_BASIC_URL } from "../../../../apis/commonApis";
-import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 import { formatDate } from "../../../../js/formatDate";
 
@@ -137,10 +136,10 @@ const CrewRequestModal = ({ setIsModal, crewRequestId, setRefreshCount }) => {
             {/* 버튼 */}
             {crewRequestDetail.status !== "APPROVED" && (
               <div className="button-group">
-                <button className="btn btn-approve" onClick={crewApproved}>
+                <button type="button" className="btn btn-approve" onClick={crewApproved}>
                   ✓ 수락
                 </button>
-                <button className="btn btn-reject" onClick={crewRejected}>
+                <button type="button" className="btn btn-reject" onClick={crewRejected}>
                   ✕ 거절
                 </button>
               </div>

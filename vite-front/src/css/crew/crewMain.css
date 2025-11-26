@@ -132,12 +132,19 @@ form.crewSearch>button.crewSearchBtn:hover {
     border-radius: 12px; 
     overflow: hidden;
     background: #f3f3f3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .crewListLeft .crewImage {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.crewListLeft .noCrewImage {
+    font-size: 14px;
 }
 
 /* ------------------------------------

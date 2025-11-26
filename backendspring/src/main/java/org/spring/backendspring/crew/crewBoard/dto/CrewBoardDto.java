@@ -59,8 +59,12 @@ public class CrewBoardDto {
         List<String> originalFileName = entity.getCrewBoardImageEntities().stream()
                     .map(CrewBoardImageEntity::getOldName)
                     .toList();
-
-        int comments = entity.getCrewBoardCommentEntities().size();
+        int comments;
+        if (entity.getCrewBoardCommentEntities() != null || entity.getCrewBoardCommentEntities().isEmpty()) {
+            comments = entity.getCrewBoardCommentEntities().size();
+        } else {
+            comments = 0;
+        }
 
         return CrewBoardDto.builder()
                 .id(entity.getId())
@@ -81,6 +85,12 @@ public class CrewBoardDto {
     }
     public static CrewBoardDto toDto2(CrewBoardEntity entity) {
 
+        List<String> newFileName = entity.getCrewBoardImageEntities().stream()
+                .map(CrewBoardImageEntity::getNewName)
+                .toList();
+        List<String> originalFileName = entity.getCrewBoardImageEntities().stream()
+                .map(CrewBoardImageEntity::getOldName)
+                .toList();
         return CrewBoardDto.builder()
                 .id(entity.getId())
                 .title(entity.getTitle())
@@ -91,6 +101,8 @@ public class CrewBoardDto {
                 .memberNickName(entity.getMemberEntity().getNickName())
                 // .crewBoardCommentEntities(entity.getCrewBoardCommentEntities())
                 // .crewBoardImageEntities(entity.getCrewBoardImageEntities())
+                .originalFileName(originalFileName)
+                .newFileName(newFileName)
                 .createTime(entity.getCreateTime())
                 .updateTime(entity.getUpdateTime())
                 .build();
