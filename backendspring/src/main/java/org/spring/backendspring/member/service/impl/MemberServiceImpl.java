@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.spring.backendspring.crew.crewCreate.entity.CrewCreateRequestEntity;
 import org.spring.backendspring.crew.crewCreate.repository.CrewCreateRequestRepository;
 import org.spring.backendspring.crew.crewJoin.repository.CrewJoinRequestRepository;
 import org.spring.backendspring.member.MemberMapper;
@@ -18,11 +17,11 @@ import org.spring.backendspring.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -86,6 +85,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDto findById(Long id) {
         return memberRepository.findById(id)
+
+                // NPE Error so ill fix this
                 .map(MemberMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("해당 회원이 존재하지 않습니다"));
     }

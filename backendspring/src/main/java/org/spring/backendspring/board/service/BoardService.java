@@ -13,7 +13,7 @@ public interface BoardService {
     // C
     void insertBoard (BoardDto boardDto) throws IOException;
     // R
-    Page<BoardDto> boardListPage(Pageable pageable, String subject, String search);
+    Page<BoardDto> boardListPage(Pageable pageable, String subject, String search) ; 
     BoardDto boardDetail(Long boardId) throws IOException;
 
     // U

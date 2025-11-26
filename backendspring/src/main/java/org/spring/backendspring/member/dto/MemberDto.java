@@ -65,6 +65,8 @@ public class MemberDto {
 
     private int isProfileImg;
 
+    private String newFileName;
+
     private List<MemberProfileImageEntity> profileImagesList;
 
     private LocalDateTime createTime;
@@ -76,4 +78,5 @@ public class MemberDto {
     private List<CrewDto> crewDtoList;
 
     private List<CrewMemberEntity> crewMemberEntityList;
+    
 }

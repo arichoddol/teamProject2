@@ -1,20 +1,22 @@
 package org.spring.backendspring.admin.service.impl;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
+import java.util.Optional;
 
 import org.spring.backendspring.admin.repository.AdminItemRepository;
 import org.spring.backendspring.admin.service.AdminItemService;
+import org.spring.backendspring.board.dto.BoardImgDto;
+import org.spring.backendspring.board.entity.BoardImgEntity;
 import org.spring.backendspring.common.dto.PagedResponse;
+import org.spring.backendspring.config.s3.AwsS3Service;
 import org.spring.backendspring.item.dto.ItemDto;
+import org.spring.backendspring.item.dto.ItemImgDto;
 import org.spring.backendspring.item.entity.ItemEntity;
 import org.spring.backendspring.item.entity.ItemImgEntity;
 import org.spring.backendspring.item.repository.ItemImgRepository;
 import org.spring.backendspring.item.repository.ItemRepository;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,12 +38,8 @@ public class AdminItemServiceImpl implements AdminItemService {
     private final ItemImgRepository itemImgRepository;
     private final MemberRepository memberRepository;
 
-    // private final String uploadPath = "E:\\uploadImg\\";
-    // private static final String uploadPath = "C:/full/upload/";
-    private static final String uploadPath = "E:/full/upload/";
-    
-    
-
+  
+    private final AwsS3Service awsS3Service;
 
     // ===========================================================
     // FIND ONE
@@ -57,12 +55,16 @@ public class AdminItemServiceImpl implements AdminItemService {
     // INSERT
     // ===========================================================
     @Override
+    @Transactional
     public void insertItem(ItemDto itemDto, MultipartFile itemFile, Long memberId) {
+
+        String newFileName = null;
+        String fileUrl = null;
+        String originalName = null;
 
         MemberEntity member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new RuntimeException("멤버 없음"));
 
-        // 1) 빌더로 엔티티 생성
         ItemEntity item = ItemEntity.builder()
                 .itemTitle(itemDto.getItemTitle())
                 .itemDetail(itemDto.getItemDetail())
@@ -73,150 +75,76 @@ public class AdminItemServiceImpl implements AdminItemService {
                 .memberEntity(member)
                 .build();
 
-        String originalName = null;
-        String newName = null;
-
-        // 2) 파일 처리
-        if (itemFile != null && !itemFile.isEmpty()) {
-
-            File folder = new File(uploadPath);
-            if (!folder.exists())
-                folder.mkdirs();
+        if(itemFile != null && !itemFile.isEmpty()){
 
             originalName = itemFile.getOriginalFilename();
-            newName = UUID.randomUUID() + "_" + originalName;
 
             try {
-                itemFile.transferTo(new File(uploadPath + newName));
+                 newFileName = awsS3Service.uploadFile(itemFile, "item");
+                 fileUrl = awsS3Service.getFileUrl(newFileName);
+
             } catch (IOException e) {
-                throw new RuntimeException("파일 저장 실패", e);
+                // TODO: handle exception
+                throw new RuntimeException("S3 파일 업로드 및 URL 획득 실패", e);
             }
 
             item.setOldFileName(originalName);
-            item.setNewFileName(newName);
+            item.setNewFileName(newFileName); 
             item.setAttachFile(1);
         }
+        ItemEntity savedItem = itemRepository.save(item);
 
-        // 3) 최종 save 딱 한 번
-        itemRepository.save(item);
-
-        // 4) 이미지 테이블 저장
-        if (newName != null) {
+        // save Img table
+        if(newFileName != null) {
             itemImgRepository.save(
-                    ItemImgEntity.builder()
-                            .itemEntity(item)
-                            .oldName(originalName)
-                            .newName(newName)
-                            .build());
+            ItemImgEntity.builder()
+                .itemEntity(savedItem)
+                .oldName(originalName)
+                .newName(newFileName)    
+                .fileUrl(fileUrl)   
+                .build());
         }
     }
 
     // ===========================================================
     // UPDATE
     // ===========================================================
+   
+    @Transactional
     @Override
-    public ItemDto updateItem(Long id, ItemDto dto, MultipartFile itemFile, Long memberId) {
+    public void update(ItemDto itemDto) throws IOException {
 
-        ItemEntity old = itemRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 상품이 존재하지 않습니다"));
+        ItemEntity itemEntity = itemRepository.findById(itemDto.getId())
+             .orElseThrow(() -> new IllegalArgumentException("수정할 상품이 없습니다"));
 
-        MemberEntity member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new RuntimeException("멤버 없음"));
-
-        ItemImgEntity oldImg = itemImgRepository.findByItemEntity(old);
-
+        String newFileName = null;
+        String newFileUrl = null;
         String originalName = null;
-        String newName = null;
 
-        /*
-         * ===========================================
-         * CASE 1 : 이미지 삭제 요청 (attachFile = 0)
-         * ===========================================
-         */
-        if (dto.getAttachFile() == 0) {
+        // if there is NewFile..
+        if(itemDto.getItemFile() != null && !itemDto.getItemFile().isEmpty()){
 
-            // 기존 이미지 삭제
-            if (oldImg != null) {
-                new File(uploadPath + oldImg.getNewName()).delete();
-                itemImgRepository.delete(oldImg);
+            MultipartFile newFile = itemDto.getItemFile();
+            Optional<ItemImgEntity> existImgOptional = itemImgRepository.findByItemEntity(itemEntity);
+
+            if(existImgOptional.isPresent()){
+                ItemImgEntity existFileEntity = existImgOptional.get();
+                awsS3Service.deleteFile(existFileEntity.getNewName());
+                itemImgRepository.delete(existFileEntity);
             }
+            String originalFileName = newFile.getOriginalFilename();
+            newFileName =awsS3Service.uploadFile(newFile);
 
-            ItemEntity updated = ItemEntity.builder()
-                    .id(old.getId())
-                    .itemTitle(dto.getItemTitle())
-                    .itemDetail(dto.getItemDetail())
-                    .itemPrice(dto.getItemPrice())
-                    .itemSize(dto.getItemSize())
-                    .attachFile(0)
-                    .category(dto.getCategory())
-                    .oldFileName(null)
-                    .newFileName(null)
-                    .memberEntity(member)
-                    .build();
-
-            return ItemDto.toItemDto(itemRepository.save(updated));
+            itemEntity.setAttachFile(1);
+            ItemImgEntity newFileEntity = ItemImgEntity.toItemImgEntity(ItemImgDto.builder()
+                    .oldName(originalFileName)
+                    .newName(newFileName)
+                    .itemEntity(itemEntity)
+                    .build());
+            itemImgRepository.save(newFileEntity);
         }
-
-        /*
-         * ===========================================
-         * CASE 2 : 새 이미지 업로드
-         * ===========================================
-         */
-        if (itemFile != null && !itemFile.isEmpty()) {
-
-            // 기존 이미지 삭제
-            if (oldImg != null) {
-                new File(uploadPath + oldImg.getNewName()).delete();
-                itemImgRepository.delete(oldImg);
-            }
-
-            File folder = new File(uploadPath);
-            if (!folder.exists())
-                folder.mkdirs();
-
-            originalName = itemFile.getOriginalFilename();
-            newName = UUID.randomUUID() + "_" + originalName;
-
-            try {
-                itemFile.transferTo(new File(uploadPath + newName));
-            } catch (IOException e) {
-                throw new RuntimeException("파일 저장 실패", e);
-            }
-
-            // 새 이미지 저장
-            itemImgRepository.save(
-                    ItemImgEntity.builder()
-                            .itemEntity(old)
-                            .oldName(originalName)
-                            .newName(newName)
-                            .build());
-        }
-
-        /*
-         * ===========================================
-         * CASE 3 : 파일 유지 / 또는 CASE2 끝난 후 최종 조립
-         * ===========================================
-         */
-        ItemEntity updated = ItemEntity.builder()
-                .id(old.getId())
-                .itemTitle(dto.getItemTitle())
-                .itemDetail(dto.getItemDetail())
-                .itemPrice(dto.getItemPrice())
-                .itemSize(dto.getItemSize())
-                .attachFile(newName != null ? 1 : old.getAttachFile())
-                .category(dto.getCategory())
-                .oldFileName(newName != null ? originalName : old.getOldFileName())
-                .newFileName(newName != null ? newName : old.getNewFileName())
-                .memberEntity(member)
-                .build();
-
-        ItemEntity saved = itemRepository.save(updated);
-
-        // 🔥 연관 이미지가 포함된 엔티티로 다시 조회해야 DTO에 itemImgDtos가 들어감
-        ItemEntity loaded = itemRepository.findById(saved.getId())
-                .orElseThrow(() -> new RuntimeException("업데이트 후 재조회 실패"));
-
-        return ItemDto.toItemDto(loaded);
+        itemRepository.save(itemEntity);
+        
 
     }
 
@@ -224,30 +152,26 @@ public class AdminItemServiceImpl implements AdminItemService {
     // DELETE
     // ===========================================================
     @Override
-    public void deleteItem(Long id) {
+    @Transactional
+    public void deleteItem(Long itemId) {
 
-        ItemEntity item = itemRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 상품이 존재하지 않습니다"));
+        ItemEntity item = itemRepository.findById(itemId)
+        .orElseThrow(() -> new RuntimeException("해당 Item이 존재하지 않습니다."));
 
-        ItemImgEntity img = itemImgRepository.findByItemEntity(item);
+        Optional<ItemImgEntity> imgOptional = itemImgRepository.findByItemEntityId(itemId);
 
-        if (img != null) {
-            new File(uploadPath + img.getNewName()).delete();
-            itemImgRepository.delete(img);
+        if (imgOptional.isPresent()) {
+        ItemImgEntity itemImg = imgOptional.get();
+        String newFileName = itemImg.getNewName();
+
+        try{
+            awsS3Service.deleteFile(newFileName);
+        } catch (Exception e){
+            System.err.println("S3 파일 삭제 중 오류 발생 (Key: " + newFileName + "): " + e.getMessage());
         }
-
-        itemRepository.delete(item);
+        itemImgRepository.delete(itemImg);
     }
-
-    @Override
-    public void deleteImage(Long id) {
-        ItemEntity item = itemRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("상품 없음"));
-
-        item.setItemImage(null);
-        item.setAttachFile(0);
-
-        itemRepository.save(item);
+    itemRepository.delete(item);
 
     }
 
@@ -269,6 +193,17 @@ public class AdminItemServiceImpl implements AdminItemService {
         }
 
         return PagedResponse.of(itemPage);
+    }
+
+    @Override
+    public void deleteImage(Long id) {
+        ItemEntity item = itemRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("상품 없음"));
+
+        item.setItemImage(null);
+        item.setAttachFile(0);
+
+        itemRepository.save(item);
     }
 }
 
