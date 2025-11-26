@@ -44,7 +44,7 @@ public class CrewCreateRequestController {
     }
 
     @PostMapping("/approved")
-    public ResponseEntity<?> approveRequest(@RequestParam Long requestId) {
+    public ResponseEntity<?> approveRequest(@RequestParam("requestId") Long requestId) {
 
         createRequestService.approveRequest(requestId);
 
@@ -53,7 +53,7 @@ public class CrewCreateRequestController {
     }
 
     @PostMapping("/rejected")
-    public ResponseEntity<?> rejectRequest(@RequestParam Long requestId) {
+    public ResponseEntity<?> rejectRequest(@RequestParam("requestId") Long requestId) {
 
         createRequestService.rejectRequest(requestId);
 

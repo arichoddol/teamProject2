@@ -74,7 +74,7 @@ const CrewJoinRequestModal = ({onCrew, input, onClose, onSubmit, onChange }) => 
         <div className='crewJoinRequestModal-con'>
             <div className="modal-header">
                 <h2>{onCrew.name} 가입신청</h2>
-                <button type='button' onClick={onClose}>X</button>
+                <button type='button' onClick={onClose}>✖</button>
             </div>
             <div className="modal-body">
             <ul>

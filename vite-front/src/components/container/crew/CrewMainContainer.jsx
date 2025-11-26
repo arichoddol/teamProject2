@@ -48,7 +48,6 @@ const CrewMainContainer = () => {
       })
       const data = res.data.crewList
         setCrewList(data.content);
-        console.log(data);
         setTotalPages(data.totalPages || 0);
         setStartPage(data.startPage)
         setEndPage(data.endPage)
@@ -144,7 +143,7 @@ const CrewMainContainer = () => {
               />
               <button className='crewSearchBtn' type='submit'>검색</button>
             </form>
-          {crewList.length === 0 ? (
+          {crewList === null ? (
               <p>존재하는 크루가 없습니다.</p>
             ) : (
             <ul className="crewListUl">
@@ -154,7 +153,7 @@ const CrewMainContainer = () => {
                   <li className="crewListLi" key={crew.id}>
                     <Link to={`/crew/detail/${crew.id}`}>
                       <div className="crewListLeft">
-                        {images.length > 0 ? (
+                        {images && images.length > 0 ? (
                           <img
                             src={`http://localhost:8088/upload/${images[0]}`}
                             alt={`${crew.name} 이미지`}
@@ -166,11 +165,11 @@ const CrewMainContainer = () => {
                       </div>
                       <div className="crewListRight">
                         <h2>{crew.name}</h2>
-                        <p>{crew.description.length > 40 ?
+                        <p>{crew.description && crew.description.length > 40 ?
                           `${crew.description.slice(0, 40)}...` : crew.description}</p>
                         <div className="crewDistrictAndMember">
                           <p>{crew.district}</p>
-                          <p>멤버&nbsp;{crew.crewMemberEntities.length}</p>
+                          <p>멤버&nbsp;{crew.crewMemberEntities && crew.crewMemberEntities.length}</p>
                         </div>
                       </div>
                     </Link>
