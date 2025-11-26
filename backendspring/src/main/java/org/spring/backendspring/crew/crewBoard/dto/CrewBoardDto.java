@@ -59,6 +59,7 @@ public class CrewBoardDto {
         List<String> originalFileName = entity.getCrewBoardImageEntities().stream()
                     .map(CrewBoardImageEntity::getOldName)
                     .toList();
+
         int comments;
         if (entity.getCrewBoardCommentEntities() != null || entity.getCrewBoardCommentEntities().isEmpty()) {
             comments = entity.getCrewBoardCommentEntities().size();
