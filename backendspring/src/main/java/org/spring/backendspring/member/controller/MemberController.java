@@ -69,17 +69,21 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/detail")
-    public ResponseEntity<?> getMember(@AuthenticationPrincipal MyUserDetails myUserDetails) throws IOException {
-        MemberDto memberDetail = memberService.findById(myUserDetails.getMemberId());
+    @GetMapping("/detail/{id}")
+    @PreAuthorize("isAuthenticated() and #id.toString() == authentication.principal.memberEntity.id.toString()")
+    public ResponseEntity<?> getMember(@PathVariable("id") Long id,
+                                       @AuthenticationPrincipal MyUserDetails myUserDetails) throws IOException {
+        MemberDto memberDetail = memberService.findById(id);
         return ResponseEntity.ok(memberDetail);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<?> updateMember(@RequestPart("memberDto") MemberDto memberDto,
+    @PutMapping("/update/{id}")
+    @PreAuthorize("isAuthenticated() and #id.toString() == authentication.principal.memberEntity.id.toString()")
+    public ResponseEntity<?> updateMember(@PathVariable("id") Long id,
+                                          @RequestPart("memberDto") MemberDto memberDto,
                                           @RequestPart(value = "memberFile", required = false) MultipartFile memberFile,
                                           @AuthenticationPrincipal MyUserDetails myUserDetails) throws IOException {
-        MemberDto updated = memberService.updateMember(myUserDetails.getMemberId(), memberDto, memberFile);
+        MemberDto updated = memberService.updateMember(id, memberDto, memberFile);
         return ResponseEntity.ok(updated);
     }
 

@@ -5,11 +5,11 @@ import jwtAxios from "../util/jwtUtil";
 import { deleteAccessToken } from "../../slices/jwtSlice";
 
 // 회원조회
-export const authDetailFn = async () => {
+export const authDetailFn = async (memberId) => {
   const ACCESS_TOKEN_KEY = localStorage.getItem("accessToken");
   try {
     const res = await jwtAxios.get(
-      `${BACK_BASIC_URL}/api/member/detail`,
+      `${BACK_BASIC_URL}/api/member/detail/${memberId}`,
       {
         headers: { Authorization: `Bearer ${ACCESS_TOKEN_KEY}` },
         withCredentials: true,
@@ -23,7 +23,7 @@ export const authDetailFn = async () => {
 };
 
 // 회원수정
-export const authUpdateFn = async (memberDto, imgFile) => {
+export const authUpdateFn = async (memberId, memberDto, imgFile) => {
   const ACCESS_TOKEN_KEY = localStorage.getItem("accessToken");
   const formData = new FormData();
   formData.append(
@@ -34,7 +34,7 @@ export const authUpdateFn = async (memberDto, imgFile) => {
 
   try {
     const res = await jwtAxios.put(
-      `${BACK_BASIC_URL}/api/member/update`,
+      `${BACK_BASIC_URL}/api/member/update/${memberId}`,
       formData,
       {
         headers: {
@@ -79,10 +79,10 @@ export const authDeleteFn = async (memberId) => {
 };
 
 // app.jsx 새로고침 일어날때 재로그인 성공 후 memberDetail을 뽑아옵니다.
-export const indexUserDetailFn = async (token) => {
+export const indexUserDetailFn = async (token, id) => {
   try {
     const res = await jwtAxios.get(
-      `${BACK_BASIC_URL}/api/member/detail`,
+      `${BACK_BASIC_URL}/api/member/detail/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,

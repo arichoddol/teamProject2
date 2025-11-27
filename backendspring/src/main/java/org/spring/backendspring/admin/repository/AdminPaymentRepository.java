@@ -9,6 +9,7 @@ import org.spring.backendspring.payment.entity.PaymentItemEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface AdminPaymentRepository extends JpaRepository<PaymentEntity, Long> {
     // search 용도
@@ -16,6 +17,12 @@ public interface AdminPaymentRepository extends JpaRepository<PaymentEntity, Lon
             String paymentIdKeyword,
             Pageable pageable);
 
-    // paymentId로 결제 상품들 조회        
+    @Query("SELECT COUNT(p) FROM PaymentEntity p")
+    long countAll();
+
+    @Query("SELECT COUNT(p) FROM PaymentEntity p WHERE DATE(p.createTime) = CURRENT_DATE")
+    long countToday();
+
+    // paymentId로 결제 상품들 조회
     // List<PaymentItemEntity> findPaymentItemsByPaymentId(Long paymentId);
 }
