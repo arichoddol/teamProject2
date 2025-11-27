@@ -105,7 +105,7 @@
   transition: background-color 0.2s;
 }
 
-.status-주문완료 {
+.status-배송중 {
   color: #9c27b0;
   background-color: #f3e5f5;
 }
@@ -171,6 +171,11 @@
   padding: 5px 0;
   border-bottom: 1px dotted #eee;
   font-size: 0.9rem;
+}
+
+.payment_itemList .item-price-size {
+  display: flex;
+  gap: 70px;
 }
 
 .payment_itemList li:last-child {

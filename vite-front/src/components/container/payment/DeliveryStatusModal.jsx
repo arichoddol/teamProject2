@@ -1,4 +1,5 @@
 import React from "react";
+import { sliceDateOnly } from "../../../js/formatDate";
 
 const paymentStatus = {
   PENDING: "배송중",
@@ -9,8 +10,8 @@ const paymentStatus = {
 };
 
 const DELIVERY_STAGES = [
-  { status: paymentStatus.PENDING, label: "주문/결제 완료" },
-  { status: "출고 준비", label: "상품 출고 준비" },
+  { status: "결제 완료", label: "주문/결제 완료" },
+  { status: paymentStatus.PENDING, label: "상품 출고 준비" },
   { status: "운송 중", label: "상품 이동 및 운송" },
   { status: paymentStatus.COMPLETED, label: "도착 및 배송 완료" },
 ];
@@ -25,13 +26,21 @@ const DeliveryStatusModal = ({ payment, onClose }) => {
   const getMockDetails = (status) => {
     switch (status) {
       case paymentStatus.PENDING:
-        return "2025-11-25 10:00: 주문이 성공적으로 접수되었습니다.";
+        return `${sliceDateOnly(
+          payment.createTime
+        )} 10:00: 주문이 성공적으로 접수되었습니다.`;
       case "출고 준비":
-        return "2025-11-25 14:30: 물류센터에서 상품 포장 및 출고를 준비 중입니다.";
+        return `${sliceDateOnly(
+          payment.createTime
+        )} 14:30: 물류센터에서 상품 포장 및 출고를 준비 중입니다.`;
       case "운송 중":
-        return "2025-11-26 09:00: 상품이 택배사 허브 터미널에서 이동 중입니다.";
+        return `${sliceDateOnly(
+          payment.createTime
+        )} 09:00: 상품이 택배사 허브 터미널에서 이동 중입니다.`;
       case paymentStatus.COMPLETED:
-        return "2025-11-26 15:00: 고객님께 안전하게 배송이 완료되었습니다.";
+        return `${sliceDateOnly(
+          payment.createTime
+        )} 15:00: 고객님께 안전하게 배송이 완료되었습니다.`;
       default:
         return "상세 정보 없음";
     }

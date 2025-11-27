@@ -68,7 +68,7 @@ public class CrewDto extends BasicTime {
                 .description(crewEntity.getDescription())
                 .district(crewEntity.getDistrict())
                 .isCrewImg(crewEntity.getIsCrewImg())
-                .memberId(crewEntity.getMemberEntity().getId())
+                .memberId(crewEntity.getMemberEntity() != null ? crewEntity.getMemberEntity().getId() : null)
                 // .crewImageEntities(crewEntity.getCrewImageEntities())
                 .crewMemberEntities(crewEntity.getCrewMemberEntities())
 //                .crewJoinRequestEntities(crewEntity.getCrewJoinRequestEntities())
@@ -76,7 +76,7 @@ public class CrewDto extends BasicTime {
                 .upDateTime(crewEntity.getUpdateTime())
                 .oldFileName(originalFileName)
                 .newFileName(newFileName)
-                .memberNickName(crewEntity.getMemberEntity().getNickName())
+                .memberNickName(crewEntity.getMemberEntity() != null ? crewEntity.getMemberEntity().getNickName() : null)
                 .build();
     }
 }

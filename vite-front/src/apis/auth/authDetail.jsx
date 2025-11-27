@@ -3,18 +3,16 @@ import { BACK_BASIC_URL } from "../commonApis";
 import store from "../../store/store";
 import jwtAxios from "../util/jwtUtil";
 import { deleteAccessToken } from "../../slices/jwtSlice";
+import { logoutAction } from "../../slices/loginSlice";
 
 // 회원조회
 export const authDetailFn = async () => {
   const ACCESS_TOKEN_KEY = localStorage.getItem("accessToken");
   try {
-    const res = await jwtAxios.get(
-      `${BACK_BASIC_URL}/api/member/detail`,
-      {
-        headers: { Authorization: `Bearer ${ACCESS_TOKEN_KEY}` },
-        withCredentials: true,
-      }
-    );
+    const res = await jwtAxios.get(`${BACK_BASIC_URL}/api/member/detail`, {
+      headers: { Authorization: `Bearer ${ACCESS_TOKEN_KEY}` },
+      withCredentials: true,
+    });
 
     return res;
   } catch (err) {
@@ -50,28 +48,20 @@ export const authUpdateFn = async (memberDto, imgFile) => {
 };
 
 // 회원삭제
-export const authDeleteFn = async (memberId) => {
+export const authDeleteFn = async () => {
   const ACCESS_TOKEN_KEY = localStorage.getItem("accessToken");
   const rs = window.confirm("정말 탈퇴하시겠습니까?");
   if (rs) {
     try {
-      await jwtAxios.delete(`${BACK_BASIC_URL}/api/member/delete/${memberId}`, {
+      const res = await jwtAxios.delete(`${BACK_BASIC_URL}/api/member/delete`, {
         headers: { Authorization: `Bearer ${ACCESS_TOKEN_KEY}` },
+        withCredentials: true,
       });
 
-      await axios.post(
-        `${BACK_BASIC_URL}/api/member/logout`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${ACCESS_TOKEN_KEY}`,
-          },
-          withCredentials: true,
-        }
-      );
-
-      localStorage.removeItem(ACCESS_TOKEN_KEY);
+      localStorage.removeItem("accessToken");
       store.dispatch(deleteAccessToken());
+      store.dispatch(logoutAction());
+      return res;
     } catch (err) {
       console.log("탈퇴 실패 " + err);
     }
@@ -81,13 +71,10 @@ export const authDeleteFn = async (memberId) => {
 // app.jsx 새로고침 일어날때 재로그인 성공 후 memberDetail을 뽑아옵니다.
 export const indexUserDetailFn = async (token) => {
   try {
-    const res = await jwtAxios.get(
-      `${BACK_BASIC_URL}/api/member/detail`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true,
-      }
-    );
+    const res = await jwtAxios.get(`${BACK_BASIC_URL}/api/member/detail`, {
+      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
+    });
 
     return res;
   } catch (err) {

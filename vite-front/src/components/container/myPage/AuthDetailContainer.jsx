@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 
 const AuthDetailContainer = () => {
   const [memberDetail, setMemberDetail] = useState({});
+  const [crewMemberList, setCrewMemberList] = useState([]);
   const [gender, setGender] = useState("남성");
 
   const accessToken = useSelector((state) => state.jwtSlice.accessToken);
@@ -25,6 +26,7 @@ const AuthDetailContainer = () => {
 
       if (res.status === 200) {
         setMemberDetail({ ...authDetail });
+        setCrewMemberList(authDetail.crewMemberEntityList);
         if (authDetail.gender === "WOMAN") {
           setGender("여성");
         }
@@ -33,8 +35,26 @@ const AuthDetailContainer = () => {
     myPageDetailFn();
   }, []);
 
+  console.log(crewMemberList);
+
+  const crewRoleCheck = () => {
+    const boolRes = crewMemberList.some((el) =>
+      el.roleInCrew.includes("LEADER")
+    );
+    return boolRes;
+  };
+
   const myPageDeleteFn = async () => {
-    const res = await authDeleteFn(memberId);
+    const boolRes = crewRoleCheck();
+    console.log(boolRes);
+    if (boolRes) {
+      alert(
+        "운영 중인 크루가 존재합니다.계정 탈퇴 전 크루장 권한을 해제하거나 크루를 정리해 주세요."
+      );
+      return;
+    }
+
+    const res = await authDeleteFn();
     if (res.status === 200) {
       alert("탈퇴 완료되었습니다. 안녕히가세요.");
       navigate("/store/index");
