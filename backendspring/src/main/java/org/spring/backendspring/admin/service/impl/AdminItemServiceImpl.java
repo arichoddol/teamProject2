@@ -133,7 +133,7 @@ public class AdminItemServiceImpl implements AdminItemService {
                 itemImgRepository.delete(existFileEntity);
             }
             String originalFileName = newFile.getOriginalFilename();
-            newFileName =awsS3Service.uploadFile(newFile);
+            newFileName =awsS3Service.uploadFile(newFile,"");
 
             itemEntity.setAttachFile(1);
             ItemImgEntity newFileEntity = ItemImgEntity.toItemImgEntity(ItemImgDto.builder()

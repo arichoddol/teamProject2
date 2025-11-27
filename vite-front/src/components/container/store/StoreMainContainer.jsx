@@ -138,8 +138,8 @@ const ShopMainContainer = () => {
                   <div className="item-image-placeholder">
                     {list.itemImgDtos.map((imgDto, index) => (
                       <img
-                        key={index} // 리액트 반복문에서는 key가 필수입니다.
-                        src={imgDto.fileUrl} // 👈 배열의 각 요소(imgDto)에 접근
+                        key={index} 
+                        src={imgDto.fileUrl} 
                         alt={imgDto.oldName}
                         className="gallery-image"
                     />

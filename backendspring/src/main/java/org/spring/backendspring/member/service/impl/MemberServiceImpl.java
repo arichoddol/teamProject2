@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.spring.backendspring.config.s3.AwsS3Service;
 import org.spring.backendspring.crew.crewCreate.repository.CrewCreateRequestRepository;
 import org.spring.backendspring.crew.crewJoin.repository.CrewJoinRequestRepository;
 import org.spring.backendspring.member.MemberMapper;
@@ -79,15 +80,9 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDto findById(Long id) {
         return memberRepository.findById(id)
-
                 // NPE Error so ill fix this
                 .map(MemberMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("해당 회원이 존재하지 않습니다"));
-        if (memberDto.getIsProfileImg() == 1) {
-            String fileUrl = awsS3Service.getFileUrl(memberDto.getProfileImagesList().get(0).getNewName());
-            memberDto.setFileUrl(fileUrl);
-        }
-        return memberDto;
     }
 
     @Override
