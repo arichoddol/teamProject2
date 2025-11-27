@@ -253,7 +253,7 @@ const ShopDetailContainer = () => {
                             <img
                                 // bring File by NewName Field
                                 key={imgDto.id || imgDto.newName}
-                                src={`${IMAGE_BASE_URL}${imgDto.newName}`}
+                                src={imgDto.fileUrl}
                                 alt={imgDto.oldName}
                                 style={{ maxWidth: '100%', height: 'auto', display: 'block', margin: '10px 0' }}
                             />

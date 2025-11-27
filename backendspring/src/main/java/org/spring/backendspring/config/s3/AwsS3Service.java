@@ -39,6 +39,27 @@ public class AwsS3Service {
                             .build());
         return uniqueFileName;
     }
+    
+    public String uploadFile(MultipartFile multipartFile, String dirName) throws IOException {
+
+
+        String originalFileName = multipartFile.getOriginalFilename();
+
+        String uuid = UUID.randomUUID().toString();
+        // mkr dir
+        String filePrefix = dirName.isEmpty() ? "" : dirName + "/";
+        String uniqueFileName = filePrefix + uuid + "_" + originalFileName;
+
+        // upload S3 
+        InputStream inputStream = multipartFile.getInputStream();
+
+        s3Template.upload(bucketName, uniqueFileName, inputStream,
+             ObjectMetadata.builder()
+                        .contentType(multipartFile.getContentType())
+                            .build());
+        return uniqueFileName;
+    
+    }
 
     public void deleteFile(String fileName){
         s3Template.deleteObject(bucketName, fileName);

@@ -65,6 +65,7 @@ public class MemberDto {
 
     private int isProfileImg;
 
+    private String newFileName;
     private String fileUrl;
 
     private List<MemberProfileImageEntity> profileImagesList;
@@ -78,4 +79,5 @@ public class MemberDto {
     private List<CrewDto> crewDtoList;
 
     private List<CrewMemberEntity> crewMemberEntityList;
+    
 }

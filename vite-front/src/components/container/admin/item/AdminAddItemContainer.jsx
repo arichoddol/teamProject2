@@ -7,6 +7,8 @@ import jwtAxios from "../../../../apis/util/jwtUtil";
 
 const AdminAddItemContainer = () => {
   const accessToken = useSelector((state) => state.jwtSlice.accessToken);
+  const memberId = useSelector(state => state.loginSlice.id);
+  const nickName = useSelector(state => state.loginSlice.nickName);
 
   const [itemDto, setItemDto] = useState({
     itemTitle: "",
@@ -31,17 +33,15 @@ const AdminAddItemContainer = () => {
     formData.append("itemFile", file);
 
     try {
-      await jwtAxios.post("/api/admin/item/insert", formData, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "multipart/form-data",
-        },
-
-        withCredentials: true,
-      });
+      await jwtAxios.post("/api/admin/item/insert", formData, 
+     {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          withCredentials: true
+        });
       alert("상품 등록 완료!");
     } catch (error) {
       console.error(error);
+     
       alert("상품 등록 실패");
     }
   };
