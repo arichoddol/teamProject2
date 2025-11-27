@@ -269,6 +269,7 @@ const MyCrewRunContainer = () => {
         </div>
         <div className="myCrew-calendar">
           <FullCalendar
+            height={650}
             locale={"kr"}
             plugins={[dayGridPlugin, interactionPlugin]} //npm 으로 다운받은거
             initialView="dayGridMonth"  // 첫 화면: 월간 달력
