@@ -1,27 +1,21 @@
 package org.spring.backendspring.board.service.impl;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.spring.backendspring.board.dto.BoardDto;
 import org.spring.backendspring.board.dto.BoardImgDto;
-import org.spring.backendspring.board.dto.NoticeBoardDto;
 import org.spring.backendspring.board.entity.BoardEntity;
 import org.spring.backendspring.board.entity.BoardImgEntity;
 import org.spring.backendspring.board.repository.BoardImgRepository;
 import org.spring.backendspring.board.repository.BoardRepository;
 import org.spring.backendspring.board.service.BoardService;
-import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.config.s3.AwsS3Service;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,8 +26,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class BoardServiceImpl implements BoardService {
-
-
 
     private final BoardRepository boardRepository;
     private final BoardImgRepository boardImgRepository;
@@ -119,7 +111,24 @@ public class BoardServiceImpl implements BoardService {
                 boardEntities = boardRepository.findAll(pageable);
             }
         }
-        return boardEntities.map(BoardDto::toBoardDto);
+
+        // Change -> Dto ( also Setting URL )
+        Page<BoardDto> boardDto = boardEntities.map(boardEntity ->{
+            BoardDto dto = BoardDto.toBoardDto(boardEntity);
+
+            if (dto.getAttachFile() == 1 && dto.getNewFileName() != null) {
+                String fileUrl;
+                try {
+                    fileUrl = awsS3Service.getFileUrl(dto.getNewFileName());
+                    dto.setFileUrl(fileUrl);
+                } catch (IOException ex) {
+                     System.out.println("파일 처리 중 오류 발생: " + ex.getMessage());
+                }
+            }
+            return dto;
+        });
+
+        return boardDto;
     }
 
     @Override
