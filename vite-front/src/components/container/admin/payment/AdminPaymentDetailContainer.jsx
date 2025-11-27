@@ -66,7 +66,8 @@ const AdminPaymentDetailContainer = () => {
             <th>상품명</th>
             <th>가격</th>
             <th>수량</th>
-            <th>합계</th> </tr>
+            <th>합계</th>
+          </tr>
         </thead>
         <tbody> {payment.paymentItems?.map((item, index) => (<tr key={index}>
           <td>{item.title}</td>
@@ -83,4 +84,3 @@ const AdminPaymentDetailContainer = () => {
 };
 
 export default AdminPaymentDetailContainer;
-
