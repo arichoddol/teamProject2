@@ -3,17 +3,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang&family=Hahmlet:wght@100..900&display=swap');
 
 .itemDetail {
-    padding: 20px;
+    padding: 10vh;
     /* max-width: 1200px; */
     margin: 0 auto;
     font-family: Arial, sans-serif;
-    background-image: linear-gradient(to top, #28119c,#305e93bf);
-
-    
+    background-image: linear-gradient(to top, #ffffff,#ffffff,#ffffff,#d0e5ffbf);
 }
 
 .itemDetail-con {
-    padding: 40px;
+    padding: 50px;
     display: flex;
     flex-wrap: wrap;
     gap: 30px;

@@ -21,6 +21,18 @@ public interface CartItemRepository extends JpaRepository<CartItemEntity, Long> 
     Page<CartItemEntity> findByCartEntity_IdAndItemEntity_ItemTitleContainingIgnoreCase(
             Long cartId, String keyword, Pageable pageable);
 
+    @Query("SELECT ci FROM CartItemEntity ci " +
+        "JOIN FETCH ci.itemEntity i " +          // ItemEntity 즉시 로딩
+        "JOIN FETCH i.itemImgEntities " +        // ItemImgEntities 즉시 로딩
+        "WHERE ci.cartEntity.id = :cartId")
+    Page<CartItemEntity> findCartItemsWithImagesByCartId(@Param("cartId") Long cartId, Pageable pageable);
+
+    @Query("SELECT ci FROM CartItemEntity ci " +
+           "JOIN FETCH ci.itemEntity i " +
+           "JOIN FETCH i.itemImgEntities " +
+           "WHERE ci.cartEntity.id = :cartId AND i.itemTitle LIKE %:keyword%")
+    Page<CartItemEntity> searchCartItemsWithImages(@Param("cartId") Long cartId, @Param("keyword") String keyword, Pageable pageable);
+
     // ⭐️⭐️ [핵심 추가] 동일 상품 존재 여부 확인 메서드 ⭐️⭐️
     /**
      * 특정 장바구니 내에서 특정 상품 ID를 가진 CartItemEntity를 조회합니다.

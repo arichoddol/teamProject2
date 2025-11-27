@@ -35,4 +35,6 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long>
     Page<BoardEntity> findByCategory(PageRequest request, String category);
 
     Optional<BoardEntity> findByCategoryAndId(String category, Long noticeId);
+
+    Page<BoardEntity> findByMemberEntity_NickNameContaining(Pageable pageable, String search);
 }

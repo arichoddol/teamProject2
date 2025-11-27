@@ -9,8 +9,9 @@ import {
 } from "../../../apis/cart/cartApi";
 import "../../../css/cart/CartPage.css";
 
-const BASE_IMAGE_URL = "http://localhost:8088/upload/";
+const BASE_IMAGE_URL = "https://spring-project-test.s3.ap-northeast-2.amazonaws.com/";
 const NO_IMAGE_URL = "/images/noimage.jpg";
+
 
 export default function CartPage() {
   const navigate = useNavigate();
@@ -260,6 +261,7 @@ export default function CartPage() {
               </tr>
             </thead>
             <tbody>
+             
               {items.map((item) => {
                 const imageUrl = item.itemImage
                   ? `${BASE_IMAGE_URL}${item.itemImage}`
@@ -267,6 +269,7 @@ export default function CartPage() {
 
                 return (
                   <tr key={item.cartItemId}>
+                     {console.log(item)}
                     <td>
                       <input
                         type="checkbox"

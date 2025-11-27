@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router';
 
-import "../../../css/store/storeShoes.css"
+import "../../../css/store/storeAcce.css"
 
 const ShopShoesContainer = () => {
 

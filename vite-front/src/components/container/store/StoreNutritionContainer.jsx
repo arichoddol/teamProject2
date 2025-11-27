@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router';
 
-import "../../../css/store/storeFood.css"
+import "../../../css/store/storeAcce.css"
 
 const ShopNutritionContainer = () => {
 
@@ -86,26 +86,32 @@ const ShopNutritionContainer = () => {
         <br />
         <div className='item-grid-container'>
           {items.length === 0 && <p className="no-items-data">등록된 상품이 없습니다.</p>}
+          {console.log(items)}
 
           {items.map(list => (
             <Link to={`/store/detail/${list.id}`} key={list.id} className='item-card-link'>
               <div className="item-card">
 
                 {/* 상품 이미지 영역 */}
-                {list.attachFile ? (
+                {list.attachFile === 1 ? (
                   <div className="item-image-placeholder">
-                    <img
-                      src={`http://localhost:8088/api/files/${list.attachFile}`}
-                      alt={list.itemTitle}
-                      className="item-image" />
+                    {list.itemImgDtos.map((imgDto, index) => (
+                      <img
+                        key={index} 
+                        src={imgDto.fileUrl} 
+                        alt={imgDto.oldName}
+                        className="gallery-image"
+                    />
+                    ))}
                   </div>
                 ) : (
                   <img
                     src={NO_IMAGE_URL}
-                    alt="이미지 없음" width="250" height="250"
+                    alt="이미지 없음"
+                    width="250"
+                    height="250"
                     className="item-image"
                   />
-
                 )}
                 <span className="no-image-text"></span>
                 <div className="item-info">
