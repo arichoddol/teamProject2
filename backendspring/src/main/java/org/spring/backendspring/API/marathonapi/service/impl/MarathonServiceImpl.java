@@ -10,6 +10,8 @@ import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value; // ⭐️ 추가: @Value 어노테이션을 위해 import
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -29,6 +31,7 @@ public class MarathonServiceImpl implements MarathonService {
     private String API_KEY; 
 
     @PostConstruct
+    @Transactional
     public void loadData() {
         // ... (API 데이터 로드 로직 유지)
         try {

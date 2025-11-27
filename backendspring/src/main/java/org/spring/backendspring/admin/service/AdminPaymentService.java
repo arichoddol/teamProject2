@@ -14,4 +14,6 @@ public interface AdminPaymentService {
 
     public PaymentDto getPayment(Long paymentId);
 
+    void updateStatus(Long paymentId, String status);
+
 }

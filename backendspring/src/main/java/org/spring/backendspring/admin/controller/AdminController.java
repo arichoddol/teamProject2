@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.spring.backendspring.admin.dto.AdminMemberDto;
+import org.spring.backendspring.admin.repository.AdminMemberRepository;
 import org.spring.backendspring.admin.service.AdminMemberService;
 import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.member.dto.MemberDto;
@@ -29,6 +30,7 @@ public class AdminController {
 
     private final MemberService memberService;
     private final AdminMemberService adminMemberService;
+    private final AdminMemberRepository adminMemberRepository;
 
     @GetMapping({ "", "/", "/index" })
     // public ResponseEntity<?> adminIndex(@RequestBody MemberDto memberDto)
@@ -70,5 +72,15 @@ public class AdminController {
     public ResponseEntity<String> adminDeleteMember(@PathVariable("id") Long id) {
         adminMemberService.deleteMemberByAdmin(id);
         return ResponseEntity.ok("관리자에 의해 탈퇴되었습니다.");
+    }
+
+    @GetMapping("/total")
+    public long getTotalMembers() {
+        return adminMemberRepository.countAll();
+    }
+
+    @GetMapping("/today")
+    public long getTodayMembers() {
+        return adminMemberRepository.countToday();
     }
 }

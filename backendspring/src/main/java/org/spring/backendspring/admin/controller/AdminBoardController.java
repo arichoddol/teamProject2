@@ -1,5 +1,8 @@
 package org.spring.backendspring.admin.controller;
 
+import java.io.IOException;
+
+import org.spring.backendspring.admin.repository.AdminBoardRepository;
 import org.spring.backendspring.admin.service.AdminBoardService;
 import org.spring.backendspring.board.dto.BoardDto;
 import org.spring.backendspring.board.dto.NoticeBoardDto;
@@ -28,16 +31,25 @@ public class AdminBoardController {
 
     private final AdminBoardService adminBoardService;
     private final BoardService boardService;
+    private final AdminBoardRepository adminBoardRepository;
 
     // 공통 BasicPagingDto 클래스 만들어서 사용하는 방향으로
     @GetMapping("/boardList")
     public ResponseEntity<PagedResponse<BoardDto>> getAllBoards(
             @RequestParam(name = "keyword", required = false) String keyword,
+            @RequestParam(name = "search", required = false) String search,
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size) {
 
-        PagedResponse<BoardDto> boardList = adminBoardService.findAllBoards(keyword, page, size);
+        PagedResponse<BoardDto> boardList = adminBoardService.findAllBoards(keyword, search, page, size);
         return ResponseEntity.ok(boardList);
+    }
+
+    @GetMapping("/detail/{boardId}")
+    public ResponseEntity<BoardDto> getBoardDetail(@PathVariable("boardId") Long boardId) throws IOException {
+
+        BoardDto boardDto = boardService.boardDetail(boardId);
+        return ResponseEntity.ok(boardDto);
     }
 
     @DeleteMapping("/delete/{boardid}")
@@ -54,8 +66,8 @@ public class AdminBoardController {
 
     @GetMapping("/notice/list")
     public ResponseEntity<?> noticeList(@RequestParam(name = "keyword", required = false) String keyword,
-                                        @RequestParam(name = "page", defaultValue = "0") int page,
-                                        @RequestParam(name = "size", defaultValue = "10") int size) {
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
         PagedResponse<NoticeBoardDto> response = adminBoardService.noticeBoardList(keyword, page, size);
         return ResponseEntity.ok(response);
     }
@@ -82,5 +94,15 @@ public class AdminBoardController {
     public ResponseEntity<?> noticeDelete(@PathVariable("noticeId") Long noticeId) {
         adminBoardService.deleteNotice(noticeId);
         return ResponseEntity.ok("삭제가 완료되었습니다.");
+    }
+
+    @GetMapping("/total")
+    public long getTotalBoards() {
+        return adminBoardRepository.countAll();
+    }
+
+    @GetMapping("/today")
+    public long getTodayBoards() {
+        return adminBoardRepository.countToday();
     }
 }
