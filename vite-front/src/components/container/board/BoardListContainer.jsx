@@ -5,10 +5,21 @@ import { Link } from 'react-router-dom';
 import { login } from '../../../slices/loginSlice';
 
 
+
 import "../../../css/board/boardIndex.css"
+import jwtAxios from '../../../apis/util/jwtUtil';
+import { BACK_BASIC_URL } from '../../../apis/commonApis';
 
 
 const BoardListContainer = () => {
+
+  const API_BASE_URL = 'http://localhost:8088/api/board';
+
+     // JWT
+      const accessToken = useSelector(state => state.jwtSlice.accessToken);
+      const memberId = useSelector(state => state.loginSlice.id);
+      const nickName = useSelector(state => state.loginSlice.nickName);
+  
 
 
   const [boards, setBoards] = useState([]);
@@ -28,7 +39,12 @@ const BoardListContainer = () => {
     try {
 
       // REQUEST Page Query Parameter :: URL
-      const response = await axios.get(`http://localhost:8088/api/board?page=${page}`);
+      const response = await jwtAxios.get(`${API_BASE_URL}?page=${page}`,
+               {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                    withCredentials: true,
+              });
+
       const data = response.data;
 
       // data Update
@@ -92,6 +108,7 @@ const BoardListContainer = () => {
           <thead>
             <tr>
               <th scope='col'>ID</th>
+              <th scope='col'>Image</th>
               <th scope='col'>:: 글제목</th>
               <th scope='col'>:: 작성자</th>
               <th scope='col'>:: 조회수</th>
@@ -104,6 +121,8 @@ const BoardListContainer = () => {
             {boards.map(list => (
               <tr key={list.id}>
                 <td>{list.id}</td>
+                {/* <td>{list.fileUrl}</td> */}
+                <td><img src={list.fileUrl} alt={list.newFileName} style={{ width: '40px', height: '40px', objectFit: 'cover' }}/></td>
                 <td> <Link to={`/board/detail/${list.id}`} className='board-link'>
                   {list.title}
                 </Link>

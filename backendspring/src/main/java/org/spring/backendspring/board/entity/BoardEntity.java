@@ -49,6 +49,7 @@ public class BoardEntity extends BasicTime {
     private String category;
 
     private int attachFile;
+    private String attatchFileLink;
     private int hit;
 
     // N:1
@@ -83,6 +84,7 @@ public class BoardEntity extends BasicTime {
                         .hit(boardDto.getHit())
                         .memberEntity(boardDto.getMemberentity())
                         .attachFile(attachFileValue)
+                        .attatchFileLink(boardDto.getFileUrl())
                         .build();
     }
 
