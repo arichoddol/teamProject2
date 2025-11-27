@@ -1,0 +1,135 @@
+.boardCreate {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: 40px;          
+    padding-bottom: 60px;
+    background-color: #f3fbff;
+  }
+  
+  .boardCreate .boardCreate-con {
+    width: 90%;
+    max-width: 700px;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .boardCreate .boardCreate-con>form {
+    display: flex;
+    flex-direction: column;
+    gap: 28px; 
+  }
+  
+  /* 공통 라벨 스타일 */
+  .boardCreate label.crewBoardLabel,
+  .boardFile>span {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #141414;
+  }
+  
+  /* 제목 */
+  .boardCreate .boardCreate-con .boardTitle>input[type="text"] {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #3f4957;
+    padding: 8px 8px;
+    background: #fcfcfc;
+    outline: none;
+    font-size: 0.95rem;
+    transition: 0.2s;
+}
+
+.boardCreate .boardCreate-con .boardTitle>input[type="text"]::placeholder {
+  font-size: 0.8rem;
+}
+
+.boardCreate .boardCreate-con .boardTitle>input[type="text"]:focus {
+    border-color: #a4b6cc;
+    background: #fdfeff;
+  }
+  
+  /* 내용 */
+  .boardCreate .boardCreate-con .boardContent>textarea {
+    width: 100%;
+    min-height: 450px;
+    resize: none;
+    padding: 8px;
+    border-radius: 3px;
+    background: #fcfcfc;
+    border: 0.6px solid #3f4957;
+    outline: none;
+    font-size: 13px;
+    transition: 0.25s;
+  }
+  
+  .boardCreate .boardCreate-con .boardContent>textarea::placeholder {
+    font-size: 0.8rem;
+  }
+
+  .boardCreate .boardCreate-con .boardContent>textarea:focus {
+    border-color: #a4b6cc;
+    background: #fdfeff;
+  }
+  
+  /* 파일 */
+  .boardCreate .boardCreate-con .boardFile {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .boardCreate .boardCreate-con .boardFile>input[type="file"] {
+    padding: 6px 0;
+    font-size: 0.7rem;
+    cursor: pointer;
+  }
+  
+  /* 작성자 */
+  .boardCreate .boardCreate-con .boardCreater {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .boardCreate .boardCreate-con .boardCreater>input {
+    padding: 6px;
+    border-radius: 6px;
+    border: none;
+    background: #fcfcfc;
+    outline: none;
+    font-size: 13px;
+  }
+  
+  /* 작성 버튼 */
+  .crewBoardCreateBtn {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 0.8rem;
+  }
+
+  .boardCreate .boardCreate-con form .crewBoardCreateBtn>button.crewBoardCreate {
+    width: 15%;
+    padding: 8px;
+    background: #768cac;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: 0.2s, transform 0.15s;
+  }
+  
+  .boardCreate .boardCreate-con form .crewBoardCreateBtn>button.crewBoardCreate:hover {
+    background: #557197;
+    transform: translateY(-2px);
+  }
+  
+  .boardCreate .boardCreate-con form .crewBoardCreateBtn>button.crewBoardCreate:active {
+    background: #6b819b;
+    transform: translateY(0);
+  }
+  
