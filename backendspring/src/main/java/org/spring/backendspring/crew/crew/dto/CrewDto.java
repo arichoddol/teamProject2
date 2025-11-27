@@ -83,42 +83,7 @@ public class CrewDto extends BasicTime {
                 .memberNickName(crewEntity.getMemberEntity().getNickName())
                 .build();
     }
-
-    public static CrewDto toCrewDtoS3(CrewEntity crewEntity, AwsS3Service awsS3Service) {
-        List<String> newFileName = crewEntity.getCrewImageEntities().stream()
-                    .map(CrewImageEntity::getNewName)
-                    .toList();
-        List<String> originalFileName = crewEntity.getCrewImageEntities().stream()
-                    .map(CrewImageEntity::getOldName)
-                    .toList();
-        List<String> updatedFileUrl = new ArrayList<>();
-        for (CrewImageEntity img : crewEntity.getCrewImageEntities()) {
-            try {
-                String url = awsS3Service.getFileUrl(img.getNewName());
-                updatedFileUrl.add(url);
-            } catch (IOException e) {
-                throw new IllegalArgumentException("S3 URL 생성 실패", e);
-            }
-        }
-
-        return CrewDto.builder()
-                .id(crewEntity.getId())
-                .name(crewEntity.getName())
-                .description(crewEntity.getDescription())
-                .district(crewEntity.getDistrict())
-                .isCrewImg(crewEntity.getIsCrewImg())
-                .memberId(crewEntity.getMemberEntity().getId())
-                // .crewImageEntities(crewEntity.getCrewImageEntities())
-                .crewMemberEntities(crewEntity.getCrewMemberEntities())
-//                .crewJoinRequestEntities(crewEntity.getCrewJoinRequestEntities())
-                .createTime(crewEntity.getCreateTime())
-                .upDateTime(crewEntity.getUpdateTime())
-                .oldFileName(originalFileName)
-                .newFileName(newFileName)
-                .fileUrl(updatedFileUrl)
-                .memberNickName(crewEntity.getMemberEntity().getNickName())
-                .build();
-    }
+    
     public static CrewDto toCrewDto2(CrewEntity crewEntity, List<String> fileUrl) {
         List<String> newFileName = crewEntity.getCrewImageEntities().stream()
                     .map(CrewImageEntity::getNewName)

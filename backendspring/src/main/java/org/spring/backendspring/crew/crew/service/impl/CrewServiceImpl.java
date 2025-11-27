@@ -174,7 +174,24 @@ public class CrewServiceImpl implements CrewService {
             }
         }        
        
-        Page<CrewDto> crewList = crewEntities.map(crew -> CrewDto.toCrewDtoS3(crew, awsS3Service));
+        Page<CrewDto> crewList = crewEntities.map(crew -> {
+            CrewDto crewDto = CrewDto.toCrewDto(crew);
+
+            if (crewDto.getNewFileName() != null && !crewDto.getNewFileName().isEmpty()) {
+                List<String> fileUrls = new ArrayList<>();
+                for (String fileName : crewDto.getNewFileName()) {
+                    try {
+                        String url = awsS3Service.getFileUrl(fileName);
+                        fileUrls.add(url);
+                    } catch (IOException e) {
+                        throw new IllegalArgumentException(e);
+                    }
+
+                }
+                crewDto.setFileUrl(fileUrls);
+            }
+            return crewDto;
+        });
 
         return PagedResponse.of(crewList);
     }
@@ -184,8 +201,21 @@ public class CrewServiceImpl implements CrewService {
         CrewEntity crewEntity = crewRepository.findById(crewId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 크루"));
 
-        
-        return CrewDto.toCrewDtoS3(crewEntity, awsS3Service);
+        CrewDto dto = CrewDto.toCrewDto(crewEntity);
+        if (dto.getNewFileName() != null && !dto.getNewFileName().isEmpty()) {
+            List<String> urls = new ArrayList<>();
+
+            for (String fileName : dto.getNewFileName()) {
+                try {
+                    String url = awsS3Service.getFileUrl(fileName);
+                    urls.add(url);
+                } catch (IOException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
+            dto.setFileUrl(urls);
+        }
+        return dto;
     }
 
     // @Override
@@ -197,7 +227,7 @@ public class CrewServiceImpl implements CrewService {
 
     @Override
     public List<CrewDto> findAllCrew() {
-        return crewRepository.findAll().stream().map(crew -> CrewDto.toCrewDtoS3(crew, awsS3Service)).collect(Collectors.toList());
+        return crewRepository.findAll().stream().map(crew -> CrewDto.toCrewDto(crew)).collect(Collectors.toList());
     }
 
     @Override
@@ -216,7 +246,22 @@ public class CrewServiceImpl implements CrewService {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("이 크루의 멤버가 아닙니다."));
 
-        return CrewDto.toCrewDtoS3(crewEntity, awsS3Service);
+        CrewDto dto = CrewDto.toCrewDto(crewEntity);
+
+        if (dto.getNewFileName() != null && !dto.getNewFileName().isEmpty()) {
+            List<String> urls = new ArrayList<>();
+
+            for (String fileName : dto.getNewFileName()) {
+                try {
+                    String url = awsS3Service.getFileUrl(fileName);
+                    urls.add(url);
+                } catch (IOException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
+            dto.setFileUrl(urls);
+        }
+        return dto;
     }
 
     @Override
@@ -227,7 +272,7 @@ public class CrewServiceImpl implements CrewService {
         List<CrewEntity> mycrewList = member.getCrewEntityList();
 
         return mycrewList.stream()
-                    .map(crew -> CrewDto.toCrewDtoS3(crew, awsS3Service))
+                    .map(crew -> CrewDto.toCrewDto(crew))
                     .toList();
     }
 }
