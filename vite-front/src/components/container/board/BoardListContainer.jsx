@@ -1,8 +1,8 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { login } from '../../../slices/loginSlice';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+
 
 
 
@@ -10,16 +10,28 @@ import "../../../css/board/boardIndex.css"
 import jwtAxios from '../../../apis/util/jwtUtil';
 import { BACK_BASIC_URL } from '../../../apis/commonApis';
 
-
 const BoardListContainer = () => {
+
+  const navigate = useNavigate();
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
 
   const API_BASE_URL = 'http://localhost:8088/api/board';
 
      // JWT
-      const accessToken = useSelector(state => state.jwtSlice.accessToken);
-      const memberId = useSelector(state => state.loginSlice.id);
-      const nickName = useSelector(state => state.loginSlice.nickName);
-  
+    const accessToken = useSelector(state => state.jwtSlice.accessToken);
+    const memberId = useSelector(state => state.loginSlice.id);
+    const nickName = useSelector(state => state.loginSlice.nickName);
+
+  const initialSubject = searchParams.get('subject') || 'title';
+  const initialSearchTerm = searchParams.get('search') || '';
+  const initialPage = searchParams.get('page') || 0; 
+
+  const [subject, setSubject] = useState(initialSubject);
+  const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
+  const [searchResults, setSearchResults] = useState(null); 
+  const [loading, setLoading] = useState(false);
 
 
   const [boards, setBoards] = useState([]);
@@ -31,16 +43,26 @@ const BoardListContainer = () => {
   })
 
 
-  const fetchData = async (page) => {
+  const fetchData = async (page, subject=null, search=null) => {
+
+     console.log(`[LOG] 페이지 ${page + 1}의 데이터를 요청합니다. 검색 조건: ${subject} / ${search}`);
+
     // this code for BackEnd Controller
     // const response = await axios.get("http://localhost:8088/api/board");
+    // parameter init
+    let params = { 
+        page: page,
 
-    console.log(`[LOG] 페이지 ${page + 1}의 데이터를 요청합니다.`);
+        subject: subject, 
+        search: search ? search.trim() : null
+    };
     try {
-
       // REQUEST Page Query Parameter :: URL
-      const response = await jwtAxios.get(`${API_BASE_URL}?page=${page}`,
+      
+      // const response = await jwtAxios.get(`${API_BASE_URL}?page=${page}`, 
+      const response = await jwtAxios.get(API_BASE_URL , 
                {
+                    params: params,
                     headers: { Authorization: `Bearer ${accessToken}` },
                     withCredentials: true,
               });
@@ -76,8 +98,8 @@ const BoardListContainer = () => {
   };
 
   useEffect(() => {
-    fetchData(currentPage);
-  }, [currentPage]);
+    fetchData(currentPage, subject, searchTerm);
+ }, [currentPage, subject, searchTerm]);
 
 
   const pageNumbers = [];
@@ -89,6 +111,36 @@ const BoardListContainer = () => {
     console.log(pageNumbers);
     setCurrentPage(pageNumbers);
   }
+
+  useEffect(() => {
+        // if compoent loading DONE ... URL has searchWord -> do search
+        if (initialSearchTerm) {
+            fetchSearchResults(initialSubject, initialSearchTerm, initialPage);
+        }
+    }, []); // 최초 1회만 실행
+
+
+
+  // search Section /// 
+
+  
+  const handleSearch = (e) => {
+        e.preventDefault(); // 기본 폼 제출 동작 방지
+        
+        if (!searchTerm.trim()) {
+            alert("검색어를 입력해 주세요.");
+            fetchData(0, null, null);
+            return;
+        }
+        fetchData(0, subject, searchTerm);
+    };
+    const handleSubjectChange = useCallback((e) => {
+        setSubject(e.target.value);
+    }, []);
+    const handleSearchTermChange = useCallback((e) => {
+        setSearchTerm(e.target.value);
+    }, []);
+
 
   // return
 
@@ -104,6 +156,23 @@ const BoardListContainer = () => {
      
         <h2>:: 자유게시판 ::</h2>
         <br /><br />
+        <div className="searchBox">
+          <form onSubmit={handleSearch} className="board-search-form">
+            <select name="subject" className="subject-select"value={subject} 
+                onChange={handleSubjectChange} >
+                {/* option value must Math BackEndxcode.... */}
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+                <option value="nickName">닉네임</option>
+            </select>
+            <input type="text" name="search" value={searchTerm}
+                onChange={handleSearchTermChange} // 변경 시 상태 업데이트
+                placeholder="검색어를 입력하세요.." 
+                className="search-input"/>
+            <button type="submit" className="search-button">검색</button>
+        </form>
+        <br />
+        </div>
         <table className='board-table'>
           <thead>
             <tr>

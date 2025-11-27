@@ -8,7 +8,7 @@ public interface AdminBoardService {
 
     void deleteBoardByAdmin(Long id);
 
-    PagedResponse<BoardDto> findAllBoards(String keyword, int page, int size);
+    PagedResponse<BoardDto> findAllBoards(String keyword, String keyword2, int page, int size);
 
     NoticeBoardDto noticeWriteBoard(NoticeBoardDto noticeBoardDto);
 

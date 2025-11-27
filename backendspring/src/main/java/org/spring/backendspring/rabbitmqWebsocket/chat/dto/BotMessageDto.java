@@ -1,6 +1,5 @@
 package org.spring.backendspring.rabbitmqWebsocket.chat.dto;
 
-import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,11 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ChatMessageDto {
+public class BotMessageDto {
     
     private Long crewId;
-    private Long senderId;
-    private String senderName;
-    private String content;
-    private LocalDateTime sentAt;
+    private Long memberId;
+    private String memberNickName;
+    private String text;
 }

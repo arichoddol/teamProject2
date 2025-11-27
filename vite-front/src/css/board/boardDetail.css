@@ -1,15 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Archivo+Black&family=Hahmlet:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Gowun+Batang&display=swap");
+
+
 .upper-boardDetail {
   display: flex;
   justify-content: center;
   align-items: center;
-
-  background-color: rgb(212, 224, 230);
+  background-image: linear-gradient(to top, aliceblue,#dfe9ff);
+  padding-top: 7%;
+  padding-left: 15%;
+  padding-right: 15%;
+  padding-bottom: 20%;
   
 }
 /* 메인 카드 */
 .boardDetail {
   width: 80%;
-  background: rgba(212, 198, 222, 0.39);
+  background: rgba(250, 244, 255, 0.67);
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(10px) saturate(1.05);
@@ -22,7 +29,6 @@
   align-items: center;
   flex-direction: column;
   
-
 }
 
 /* 게시글 제목 */
@@ -39,15 +45,32 @@
 
 .boardDetail-con-info {
   
-  padding: 0 20vw;
+  padding-bottom: 7%;
+  border-bottom: 2px solid #000079;
+}
+.boardDetail-con-info h2{
+
+  font-family: "Gowun Batang", serif;
+  font-weight: bolder;
+  font-style: normal;
+  padding-bottom: 4%;
+ 
+
 }
 
 /* 본문 내용 */
 .boardDetail-content {
-  margin-bottom: 18px;
+  padding-top: 5%;
+
   line-height: 1.65;
-  font-size: 15px;
-  white-space: pre-wrap;
+  font-size: 16px;
+
+  font-family: "Gowun Batang", serif;
+  font-weight: normal;
+  font-style: normal;
+  padding-bottom: 10%;
+  border-bottom: 2px solid #2313a1;
+  
 }
 
 /* 이미지 섹션 */
@@ -77,6 +100,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+
 }
 
 .boardDetail-reply textarea {
@@ -90,6 +114,12 @@
   font-size: 14px;
   outline: none;
   transition: 0.18s;
+
+  
+  font-family: "Gowun Batang", serif;
+  font-weight: bolder;
+  font-style: normal;
+  padding-bottom: 4%;
 }
 
 .boardDetail-reply textarea:focus {
@@ -119,12 +149,32 @@ button:active {
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: rgb(13, 6, 132);
   box-shadow: 0 6px 20px rgba(2, 6, 23, 0.45);
+
+  
+  font-family: "Gowun Batang", serif;
+  font-weight: bolder;
+  font-style: normal;
+  padding: 2%;
+  border-radius: 15%;
+  background-color: #6eeeff;
 }
+.boardDetail-reply form button:hover{
+  background-color: #ff72a3;
+  transition: background-color 1s, border-color 0.5s;
+  transform: scale(1.1);
+
+}
+
 
 /* 댓글 목록 */
 .reply-list h5 {
   margin: 0 0 10px 0;
   font-size: 15px;
+
+  font-family: "Gowun Batang", serif;
+  font-weight: bolder;
+  font-style: normal;
+  padding-bottom: 4%;
 }
 
 /* 개별 댓글 카드 */
@@ -136,6 +186,12 @@ button:active {
   margin-bottom: 10px;
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 14px rgba(2, 6, 23, 0.35);
+
+  
+  font-family: "Gowun Batang", serif;
+  /* font-weight: ; */
+  font-style: normal;
+  padding-bottom: 4%;
 }
 
 .reply-key-sub {

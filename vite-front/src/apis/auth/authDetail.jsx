@@ -24,6 +24,7 @@ export const authDetailFn = async () => {
 export const authUpdateFn = async (memberDto, imgFile) => {
   const ACCESS_TOKEN_KEY = localStorage.getItem("accessToken");
   const formData = new FormData();
+
   formData.append(
     "memberDto",
     new Blob([JSON.stringify(memberDto)], { type: "application/json" })

@@ -12,8 +12,8 @@ const AdminItemListContainer = () => {
   const params = new URLSearchParams(location.search);
   const keyword = params.get("keyword") || "";
 
-  const [items, setItems] = useState([]);
   const navigate = useNavigate();
+  const [items, setItems] = useState([]);
 
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -78,58 +78,77 @@ const AdminItemListContainer = () => {
   };
 
   return (
-    <div className="admin-itemList-container">
-      <h2>상품 목록</h2>
-      <div className="item-search-box">
-        <input
-          type="text"
-          placeholder="상품명 검색"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-        />
-        <button onClick={handleSearch}>검색</button>
-      </div>
-      <table className="admin-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>상품명</th>
-            <th>가격</th>
-            <th>수정</th>
-            <th>삭제</th>
-          </tr>
-        </thead>
+    <div className="admin-itemList">
+      <div className="admin-itemList-con">
 
-        <tbody>
-          {items.length > 0 ? (
-            items.map((item) => (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.itemTitle}</td>
-                <td>{item.itemPrice}</td>
+        <div className="admin-itemList-header">
+          <h2>상품 목록</h2>
 
-                <td>
-                  <button onClick={() => handleUpdate(item.id)}>수정</button>
-                </td>
+          <div className="admin-itemList-search">
+            <input
+              type="text"
+              placeholder="상품명 검색"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
+            <button onClick={handleSearch}>검색</button>
+          </div>
+        </div>
 
-                <td>
-                  <button onClick={() => handleDelete(item.id)}>삭제</button>
-                </td>
+        <div className="admin-itemList-table-wrapper">
+          <table className="admin-itemList-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>상품명</th>
+                <th>가격</th>
+                <th>수정</th>
+                <th>삭제</th>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5">관리자만 열람할 수 있는 페이지 입니다.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-      <div className="pagination">
-        {[...Array(totalPages)].map((_, i) => (
-          <button key={i} onClick={() => setPage(i)}>
-            {i + 1}
-          </button>
-        ))}
+            </thead>
+
+            <tbody>
+              {items.length > 0 ? (
+                items.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.id}</td>
+                    <td>{item.itemTitle}</td>
+                    <td>{item.itemPrice}</td>
+
+                    <td>
+                      <button className="update-btn" onClick={() => handleUpdate(item.id)}>
+                        수정
+                      </button>
+                    </td>
+
+                    <td>
+                      <button className="delete-btn" onClick={() => handleDelete(item.id)}>
+                        삭제
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5">관리자만 열람할 수 있는 페이지 입니다.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="pagination">
+          {[...Array(totalPages)].map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setPage(i)}
+              className={i === page ? "active" : ""}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
+
       </div>
     </div>
   );

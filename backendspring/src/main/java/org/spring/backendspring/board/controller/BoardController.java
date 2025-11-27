@@ -46,25 +46,33 @@ public class BoardController {
     private final BoardRepository boardRepository;
 
     @GetMapping("")
-    public ResponseEntity<Page<BoardDto>> boardList(@PageableDefault(size = 10,
-                                                direction = Sort.Direction.DESC, sort = "createTime" ) 
-                                    Pageable pageable) {
+    // public ResponseEntity<Page<BoardDto>> boardList(@PageableDefault(size = 10,
+    //                                             direction = Sort.Direction.DESC, sort = "createTime" ) 
+    //                                 Pageable pageable) {
 
-        Page<BoardDto> boardList = boardService.boardListPage(pageable, null, null);
+    //     Page<BoardDto> boardList = boardService.boardListPage(pageable, null, null);
 
-        return ResponseEntity.ok(boardList);
-    }
+    //     return ResponseEntity.ok(boardList);
+    // }
+    public ResponseEntity<Page<BoardDto>> boardList(
+        @PageableDefault(size = 10, direction = Sort.Direction.DESC, sort = "createTime") 
+        Pageable pageable,
+        @RequestParam(required = false) String subject, // 검색 기준 필드 (title, content, nickName)
+        @RequestParam(required = false) String search){
+            Page<BoardDto> boardList = boardService.boardListPage(pageable, subject, search);
+            return ResponseEntity.ok(boardList);
+        }
 
     // search function
-    @GetMapping("/search")
-    public ResponseEntity<Page<BoardDto>> boardSearchList(
-            @PageableDefault(size = 10,  direction = Sort.Direction.DESC, sort = "createTime") Pageable pageable,
-            @RequestParam(required = false) String subject,
-            @RequestParam(required = false) String search) {
+    // @GetMapping("/search")
+    // public ResponseEntity<Page<BoardDto>> boardSearchList(
+    //         @PageableDefault(size = 10,  direction = Sort.Direction.DESC, sort = "createTime") Pageable pageable,
+    //         @RequestParam(required = false) String subject,
+    //         @RequestParam(required = false) String search) {
 
-        Page<BoardDto> boardList = boardService.boardListPage(pageable, subject, search);
-        return ResponseEntity.ok(boardList);
-    }
+    //     Page<BoardDto> boardList = boardService.boardListPage(pageable, subject, search);
+    //     return ResponseEntity.ok(boardList);
+    // }
 
     // POST can  after Login
     @GetMapping("/newPost")

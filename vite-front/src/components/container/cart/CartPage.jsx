@@ -9,12 +9,14 @@ import {
 } from "../../../apis/cart/cartApi";
 import "../../../css/cart/CartPage.css";
 
-const BASE_IMAGE_URL = "http://localhost:8088/upload/";
+const BASE_IMAGE_URL = "https://spring-project-test.s3.ap-northeast-2.amazonaws.com/";
 const NO_IMAGE_URL = "/images/noimage.jpg";
+
 
 export default function CartPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  // 상품 상세에서 장바구니에 추가하기 위해 넘겨받은 아이템 정보
   const itemToAdd = location.state?.itemToAdd;
 
   const [cart, setCart] = useState(null);
@@ -25,9 +27,12 @@ export default function CartPage() {
   const [keyword, setKeyword] = useState("");
   const pageSize = 5;
 
+  // 체크된 아이템 ID (cartItemId) 목록을 저장
   const [checkedItems, setCheckedItems] = useState(new Set());
+  // 체크된 아이템의 가격과 수량을 저장하여 총합계를 계산하는 데 사용
   const [selectedItemsData, setSelectedItemsData] = useState(new Map());
 
+  // 장바구니 정보(CartId)를 불러오는 함수
   const fetchCart = async () => {
     setLoading(true);
     try {
@@ -45,6 +50,7 @@ export default function CartPage() {
     }
   };
 
+  // 장바구니 아이템 목록을 페이지네이션하여 불러오는 함수
   const fetchItems = async () => {
     if (!cart) return;
     setLoading(true);
@@ -59,11 +65,32 @@ export default function CartPage() {
       const fetchedItems = data.content || [];
       setItems(fetchedItems);
 
+      console.log("Fetched Cart Items:", fetchedItems);
+
       setPageInfo({
         totalPages: data.totalPages,
         hasNext: data.hasNext,
         hasPrevious: data.hasPrevious,
       });
+
+      // 새로운 목록을 불러왔을 때, 이전 페이지에서 체크했던 아이템이 현재 페이지에 없다면
+      // checkedItems와 selectedItemsData에서 제거하여 동기화
+      const newCheckedItems = new Set();
+      const newSelectedItemsData = new Map();
+
+      fetchedItems.forEach((item) => {
+        if (checkedItems.has(item.cartItemId)) {
+          newCheckedItems.add(item.cartItemId);
+          // 아이템 정보도 현재 불러온 최신 정보로 갱신
+          newSelectedItemsData.set(item.cartItemId, {
+            price: item.itemPrice,
+            quantity: item.itemSize || 1,
+          });
+        }
+      });
+      setCheckedItems(newCheckedItems);
+      setSelectedItemsData(newSelectedItemsData);
+
     } catch (e) {
       console.error("장바구니 아이템 조회 실패:", e);
     } finally {
@@ -71,23 +98,28 @@ export default function CartPage() {
     }
   };
 
+  // 1. 컴포넌트 마운트 시 장바구니 정보를 불러옴
   useEffect(() => {
     fetchCart();
   }, []);
 
+  // 2. 장바구니 정보, 페이지, 검색어가 변경되면 아이템 목록을 다시 불러옴
   useEffect(() => {
     fetchItems();
   }, [cart, currentPage, keyword]);
 
+  // 3. 상품 상세 페이지에서 넘어온 itemToAdd가 있으면 장바구니에 추가
   useEffect(() => {
     if (!cart || !itemToAdd) return;
 
     const addItem = async () => {
       try {
-        const quantity = itemToAdd.quantity || 1;
+        // itemToAdd에 quantity가 없으면 기본값 1
+        const quantity = itemToAdd.quantity || 1; 
         await addItemToCart(cart.cartId, itemToAdd.id, quantity);
-        fetchItems();
-        navigate("/cart", { replace: true });
+        fetchItems(); // 추가 후 목록 갱신
+        // itemToAdd 정보를 제거하여, 페이지를 리로드해도 다시 추가되지 않도록 함
+        navigate("/cart", { replace: true }); 
       } catch (e) {
         console.error("상품 추가 실패:", e);
       }
@@ -95,13 +127,17 @@ export default function CartPage() {
     addItem();
   }, [cart, itemToAdd, navigate]);
 
+  // 장바구니 아이템 삭제 핸들러
   const handleRemoveItem = async (cartItemId) => {
     try {
       await removeCartItem(cartItemId);
 
-      const newCheckedItems = new Set(checkedItems);
-      newCheckedItems.delete(cartItemId);
-      setCheckedItems(newCheckedItems);
+      // 삭제된 아이템 ID를 체크 목록과 선택된 데이터 맵에서 제거
+      setCheckedItems((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(cartItemId);
+        return newSet;
+      });
 
       setSelectedItemsData((prev) => {
         const newMap = new Map(prev);
@@ -109,46 +145,57 @@ export default function CartPage() {
         return newMap;
       });
 
-      fetchItems();
+      fetchItems(); // 목록 갱신
     } catch (e) {
       console.error("삭제 실패:", e);
     }
   };
 
+  // 검색 버튼 클릭 핸들러: 페이지를 0으로 초기화하고 검색 수행 (useEffect가 keyword와 currentPage 변화를 감지하여 fetchItems 실행)
   const handleSearch = (e) => {
     e.preventDefault();
     setCurrentPage(0);
   };
 
+  // 페이지네이션 핸들러
   const handlePrev = () =>
     pageInfo.hasPrevious && setCurrentPage((prev) => prev - 1);
   const handleNext = () =>
     pageInfo.hasNext && setCurrentPage((prev) => prev + 1);
 
+  // 개별 아이템 체크박스 핸들러
   const handleCheckItem = (cartItemId, isChecked) => {
-    const newCheckedItems = new Set(checkedItems);
-    const newSelectedItemsData = new Map(selectedItemsData);
     const itemData = items.find((item) => item.cartItemId === cartItemId);
+    if (!itemData) return;
 
-    if (isChecked) {
-      newCheckedItems.add(cartItemId);
-      if (itemData) {
+    setCheckedItems((prevChecked) => {
+      const newCheckedItems = new Set(prevChecked);
+      if (isChecked) {
+        newCheckedItems.add(cartItemId);
+      } else {
+        newCheckedItems.delete(cartItemId);
+      }
+      return newCheckedItems;
+    });
+
+    setSelectedItemsData((prevSelected) => {
+      const newSelectedItemsData = new Map(prevSelected);
+      if (isChecked) {
         newSelectedItemsData.set(cartItemId, {
           price: itemData.itemPrice,
           quantity: itemData.itemSize || 1,
         });
+      } else {
+        newSelectedItemsData.delete(cartItemId);
       }
-    } else {
-      newCheckedItems.delete(cartItemId);
-      newSelectedItemsData.delete(cartItemId);
-    }
-    setCheckedItems(newCheckedItems);
-    setSelectedItemsData(newSelectedItemsData);
+      return newSelectedItemsData;
+    });
   };
 
+  // 전체 아이템 체크박스 핸들러
   const handleCheckAll = (isChecked) => {
-    const newSelectedItemsData = new Map(selectedItemsData);
-    const updatedCheckedItems = new Set(checkedItems);
+    const updatedCheckedItems = new Set();
+    const newSelectedItemsData = new Map();
 
     if (isChecked) {
       items.forEach((item) => {
@@ -158,60 +205,65 @@ export default function CartPage() {
           quantity: item.itemSize || 1,
         });
       });
-    } else {
-      items.forEach((item) => {
-        updatedCheckedItems.delete(item.cartItemId);
-        newSelectedItemsData.delete(item.cartItemId);
-      });
     }
+    // isChecked가 false이면, updatedCheckedItems와 newSelectedItemsData는 빈 상태로 남음
+
     setCheckedItems(updatedCheckedItems);
     setSelectedItemsData(newSelectedItemsData);
   };
 
+  // 수량 변경 핸들러
   const handleQuantityChange = async (cartItemId, newQuantity) => {
-    const quantity = Math.max(1, newQuantity);
+    const quantity = Math.max(1, newQuantity); // 수량은 최소 1
 
-    if (checkedItems.has(cartItemId)) {
-      setSelectedItemsData((prev) => {
+    // 1. selectedItemsData (총합계 계산용 상태) 업데이트
+    setSelectedItemsData((prev) => {
+      if (prev.has(cartItemId)) {
         const map = new Map(prev);
-        if (map.has(cartItemId)) {
-          map.set(cartItemId, {
-            ...map.get(cartItemId),
-            quantity,
-          });
-        }
+        map.set(cartItemId, {
+          ...map.get(cartItemId),
+          quantity,
+        });
         return map;
-      });
-    }
+      }
+      return prev; // 체크되지 않은 항목은 업데이트하지 않음
+    });
 
+    // 2. items (화면 렌더링용 상태) 업데이트
     setItems((prev) =>
       prev.map((item) =>
         item.cartItemId === cartItemId
-          ? { ...item, itemSize: quantity }
+          ? { ...item, itemSize: quantity } // itemSize는 수량 필드
           : item
       )
     );
 
+    // 3. 서버에 수량 업데이트 요청
     try {
       await updateCartItemQuantity(cartItemId, quantity);
     } catch (e) {
       console.error("수량 업데이트 실패:", e);
-      fetchItems();
+      // 서버 업데이트 실패 시, UI 상태를 롤백하거나 (fetchItems) 사용자에게 알림
+      fetchItems(); 
     }
   };
 
+  // 총 합계 및 전체 선택 상태 계산 (useMemo)
   const { isAllChecked, checkedItemsTotal } = useMemo(() => {
     const allItemIds = items.map((item) => item.cartItemId);
+    // 현재 페이지의 모든 아이템 ID가 checkedItems Set에 포함되어 있는지 확인
     const isAllChecked =
       items.length > 0 && allItemIds.every((id) => checkedItems.has(id));
 
     let total = 0;
+    // selectedItemsData Map에 저장된 정보로 총 합계 계산
     for (const data of selectedItemsData.values()) {
       total += data.price * data.quantity;
     }
     return { isAllChecked, checkedItemsTotal: total };
   }, [items, checkedItems, selectedItemsData]);
 
+  // 개별 아이템의 합계 계산 함수
   const getItemTotal = (item) => {
     const quantity = item.itemSize || 1;
     const price = item.itemPrice || 0;
@@ -234,7 +286,7 @@ export default function CartPage() {
         <button type="submit">검색</button>
       </form>
 
-      {/* ⭐ 장바구니가 비었을 때 */}
+      {/* 장바구니가 비었을 때 */}
       {items.length === 0 ? (
         <div className="cart-empty-container">
           <p className="cart-empty-message">장바구니에 상품이 없습니다.</p>
@@ -260,13 +312,16 @@ export default function CartPage() {
               </tr>
             </thead>
             <tbody>
+             
               {items.map((item) => {
+                // 이미지 경로 생성: 파일 이름과 기본 URL을 결합
                 const imageUrl = item.itemImage
-                  ? `${BASE_IMAGE_URL}${item.itemImage}`
+                  ? `${IMAGE_BASE_URL}${item.itemImage}`
                   : null;
 
                 return (
                   <tr key={item.cartItemId}>
+                     {console.log(item)}
                     <td>
                       <input
                         type="checkbox"
@@ -319,7 +374,7 @@ export default function CartPage() {
                           onChange={(e) =>
                             handleQuantityChange(
                               item.cartItemId,
-                              parseInt(e.target.value)
+                              parseInt(e.target.value) || 1
                             )
                           }
                         />
@@ -359,6 +414,7 @@ export default function CartPage() {
         </>
       )}
 
+      {/* 페이지네이션 */}
       <div className="pagination">
         <button onClick={handlePrev} disabled={!pageInfo.hasPrevious}>
           이전
@@ -371,6 +427,7 @@ export default function CartPage() {
         </button>
       </div>
 
+      {/* 하단 링크 및 결제 버튼 */}
       <div className="bottomLinks">
         <button onClick={() => navigate("/store")}>상품 리스트</button>
         <button

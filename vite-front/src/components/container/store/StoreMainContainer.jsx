@@ -119,7 +119,24 @@ const ShopMainContainer = () => {
               </div>
           </div>
         </div>
-        <h2> :: 상품목록 :: </h2>
+        <div className="category-sub">
+          <div className="sub1">
+            <Link to="/store/shoes">
+            <img src="/images/store/1.png" alt="이미지1"/>
+            </Link></div>
+          <div className="sub1">
+             <Link to="/store/cloth">
+                <img src="/images/store/2.jpg" alt="이미지1"/>
+            </Link></div>
+           <div className="sub1">
+             <Link to="/store/equipment">
+                <img src="/images/store/3.jpg" alt="이미지1"/>
+            </Link></div>
+           <div className="sub1">
+             <Link to="/store/accessory">
+                <img src="/images/store/4.jpg" alt="이미지1"/>
+            </Link></div>
+        </div>
         <br />
         <div className="item-grid-container">
           {items.length === 0 && (
@@ -160,8 +177,7 @@ const ShopMainContainer = () => {
                   <p className="item-price">
                     {list.itemPrice
                       ? list.itemPrice.toLocaleString()
-                      : "가격 미정"}{" "}
-                    원
+                      : "가격 미정"}{" "} 원
                   </p>
                 </div>
               </div>

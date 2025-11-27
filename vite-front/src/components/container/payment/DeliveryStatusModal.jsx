@@ -2,7 +2,8 @@ import React from "react";
 import { sliceDateOnly } from "../../../js/formatDate";
 
 const paymentStatus = {
-  PENDING: "배송중",
+  PENDING: "결제대기중",
+  DELIVERING: "배송중",
   COMPLETED: "배송완료",
   FAILED: "결제실패",
   CANCELED: "주문취소",
