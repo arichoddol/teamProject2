@@ -47,11 +47,13 @@ public class ItemDto {
 
     private MemberEntity memberEntity;
 
-    // private MultipartFile itemFile;
+    private MultipartFile itemFile;
     private String newFileName;
     private String oldFileName;
     private List<MultipartFile> itemFileList;
     private List<ItemImgDto> itemImgDtos;
+
+    private String fileUrl;
     
 
     private List<CartItemEntity> itemListEntities;

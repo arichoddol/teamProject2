@@ -23,22 +23,64 @@ public class AwsS3Service {
     private String bucketName;
 
     // return S3 SaveFile URL 
-    public String uploadFile(MultipartFile multipartFile, String path) throws IOException {
+    // public String uploadFile(MultipartFile multipartFile, String path) throws IOException {
 
-        String originalFileName = multipartFile.getOriginalFilename();
-        String uuid = UUID.randomUUID().toString();
-        String uniqueFileName = path + uuid + "_" + originalFileName;
+    //     String originalFileName = multipartFile.getOriginalFilename();
+    //     String uuid = UUID.randomUUID().toString();
+    //     String uniqueFileName = path + uuid + "_" + originalFileName;
 
-        // upload S3 
-        InputStream inputStream = multipartFile.getInputStream();
+    //     // upload S3 
+    //     InputStream inputStream = multipartFile.getInputStream();
 
-        // Use S3Template Upload -=> Using bucketName, FileName, Data 
-        s3Template.upload(bucketName, uniqueFileName, inputStream,
-             ObjectMetadata.builder()
-                        .contentType(multipartFile.getContentType())
-                            .build());
-        return uniqueFileName;
-    }
+    //     // Use S3Template Upload -=> Using bucketName, FileName, Data 
+    //     s3Template.upload(bucketName, uniqueFileName, inputStream,
+    //          ObjectMetadata.builder()
+    //                     .contentType(multipartFile.getContentType())
+    //                         .build());
+    //     return uniqueFileName;
+    // }
+    
+    // public String uploadFile(MultipartFile multipartFile, String dirName) throws IOException {
+
+
+    //     String originalFileName = multipartFile.getOriginalFilename();
+
+    //     String uuid = UUID.randomUUID().toString();
+    //     // mkr dir
+    //     String filePrefix = dirName.isEmpty() ? "" : dirName + "/";
+    //     String uniqueFileName = filePrefix + uuid + "_" + originalFileName;
+
+    //     // upload S3 
+    //     InputStream inputStream = multipartFile.getInputStream();
+
+    //     s3Template.upload(bucketName, uniqueFileName, inputStream,
+    //          ObjectMetadata.builder()
+    //                     .contentType(multipartFile.getContentType())
+    //                         .build());
+    //     return uniqueFileName;
+    
+    // }
+    
+    public String uploadFile(MultipartFile multipartFile, String dirName) throws IOException {
+
+    String originalFileName = multipartFile.getOriginalFilename();
+    String uuid = UUID.randomUUID().toString();
+
+
+    String filePrefix = dirName.isEmpty() ? "" : dirName + "/"; 
+    String uniqueFileName = filePrefix + uuid + "_" + originalFileName;
+
+    // upload S3 
+    InputStream inputStream = multipartFile.getInputStream();
+
+
+    s3Template.upload(bucketName, uniqueFileName, inputStream,
+        ObjectMetadata.builder()
+            .contentType(multipartFile.getContentType())
+            .build());
+            
+    return uniqueFileName;
+}
 
     public void deleteFile(String fileName){
         s3Template.deleteObject(bucketName, fileName);

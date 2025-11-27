@@ -50,7 +50,18 @@ public class MemberMapper {
                 .updateTime(entity.getUpdateTime());
 
         List<MemberProfileImageEntity> profileImagesList = entity.getProfileImagesList();
-
+        if (profileImagesList != null && !profileImagesList.isEmpty()) {
+            MemberProfileImageEntity profileImage = profileImagesList.get(0); 
+        
+        memberDtoBuilder
+                .isProfileImg(1)
+                .newFileName(profileImage.getNewName())
+                .profileImagesList(profileImagesList);
+        } else{
+            memberDtoBuilder
+                .isProfileImg(0);
+        }
+        
         if (profileImagesList != null && !profileImagesList.isEmpty()) {
             memberDtoBuilder.isProfileImg(1)
                     .profileImagesList(profileImagesList);

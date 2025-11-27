@@ -14,7 +14,7 @@ const ShopMainContainer = () => {
   
 
   const NO_IMAGE_URL = "/images/noimage.jpg";
-  const IMAGE_BASE_URL = 'http://localhost:8088/upload/';
+
 
   const sliderRef = useRef(null);
 
@@ -125,7 +125,7 @@ const ShopMainContainer = () => {
           {items.length === 0 && (
             <p className="no-items-data">등록된 상품이 없습니다.</p>
           )}
-
+          
           {items.map((list) => (
             <Link
               to={`/store/detail/${list.id}`}
@@ -134,13 +134,16 @@ const ShopMainContainer = () => {
               <div className="item-card">
                 {/* 상품 이미지 영역 */}
                 {console.log(items)}
-                {list.attachFile ? (
+                {list.attachFile === 1 ? (
                   <div className="item-image-placeholder">
-                    <img
-                      src={`${IMAGE_BASE_URL}${list.newName}`}
-                      alt={list.itemTitle}
-                      className="item-image"
+                    {list.itemImgDtos.map((imgDto, index) => (
+                      <img
+                        key={index} 
+                        src={imgDto.fileUrl} 
+                        alt={imgDto.oldName}
+                        className="gallery-image"
                     />
+                    ))}
                   </div>
                 ) : (
                   <img

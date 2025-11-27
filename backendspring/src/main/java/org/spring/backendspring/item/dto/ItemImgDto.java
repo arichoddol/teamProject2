@@ -32,7 +32,9 @@ public class ItemImgDto {
 
     private String oldName;
     private String newName;
-  
+    
+    private String fileUrl;
+
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
     
@@ -50,7 +52,7 @@ public class ItemImgDto {
                 .oldName(itemImgEntity.getOldName())
                 .createTime(itemImgEntity.getCreateTime())
                 .updateTime(itemImgEntity.getUpdateTime())
-
+                .fileUrl(itemImgEntity.getFileUrl())
                 .build();
 
     }

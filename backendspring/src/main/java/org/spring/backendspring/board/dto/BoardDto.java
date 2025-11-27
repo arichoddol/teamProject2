@@ -105,6 +105,7 @@ public class BoardDto {
                     .createTime(boardEntity.getCreateTime())
                     .updateTime(boardEntity.getUpdateTime())
                     .attachFile(boardEntity.getAttachFile()) // 0 또는 1
+                    .fileUrl(boardEntity.getAttatchFileLink())
             
                     .newFileName(newFileName) 
                     .oldFileName(oldFileName)
