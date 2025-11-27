@@ -13,6 +13,7 @@ import org.spring.backendspring.board.service.BoardService;
 import org.spring.backendspring.config.s3.AwsS3Service;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,9 @@ public class BoardServiceImpl implements BoardService {
     // private static final String FILE_PATH = "C:/full/upload/";
     // S3 bucket
     private final AwsS3Service awsS3Service;
+
+    @Value("${s3file.path.board}")
+    private String path;
 
 
     @Override
@@ -74,7 +78,7 @@ public class BoardServiceImpl implements BoardService {
             // Acutally FileSave..
             // boardFile.transferTo(new File(filePath)); // saveFile to Path ...
             // upload S3 and bring Get New FileName(include UUID)
-            String newFileName = awsS3Service.uploadFile(boardFile);
+            String newFileName = awsS3Service.uploadFile(boardFile, path);
             boardDto.setAttachFile(1);
 
             // Board Save After -> FileSave
@@ -177,7 +181,7 @@ public class BoardServiceImpl implements BoardService {
             }
             // and Replace NewFile 
             String originalFileName = newFile.getOriginalFilename();
-            String newFileName =awsS3Service.uploadFile(newFile);
+            String newFileName =awsS3Service.uploadFile(newFile, path);
  
             // And Change AttachFile Statue...
             boardEntity.setAttachFile(1);

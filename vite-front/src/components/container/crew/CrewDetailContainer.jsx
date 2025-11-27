@@ -59,7 +59,6 @@ const CrewDetailContainer = () => {
     } catch (error) {
       alert('크루 가입 요청 보내기 실패')
     }
-    alert('크루 가입 요청 보내기 성공')
   }  
 
   return (
@@ -74,7 +73,7 @@ const CrewDetailContainer = () => {
                 className='crewImage'
               />
             ) : (
-              <div>이미지 없음</div>
+              <div className='noDetailImg'>👟🤝👟</div>
             )}
           </div>
           <div className="introduction">

@@ -8,6 +8,7 @@ import org.spring.backendspring.API.marathonapi.service.MarathonService;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value; // ⭐️ 추가: @Value 어노테이션을 위해 import
 import jakarta.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -22,12 +23,16 @@ import org.springframework.data.domain.Pageable;
 public class MarathonServiceImpl implements MarathonService {
 
     private final MarathonRepository marathonRepository;
-    private final String API_KEY = "2399ece1ae2a664bdd55a849c06626fe9921df74d32f13eb72"; // API 키는 그대로 사용
+    
+    // 설정 파일(application.properties)에서 API 키를 주입받음
+    @Value("${marathon.api.key}")
+    private String API_KEY; 
 
     @PostConstruct
     public void loadData() {
-        // ... (이전과 동일한 API 데이터 로드 로직 유지)
+        // ... (API 데이터 로드 로직 유지)
         try {
+             // API_KEY를 필드에서 가져와 사용
              String apiUrl = "https://api.odcloud.kr/api/15138980/v1/uddi:eedc77c5-a56b-4e77-9c1d-9396fa9cc1d3?page=1&perPage=50&serviceKey=" + API_KEY;
 
              URL url = new URL(apiUrl);
@@ -47,12 +52,12 @@ public class MarathonServiceImpl implements MarathonService {
              for (int i = 0; i < data.length(); i++) {
                  JSONObject item = data.getJSONObject(i);
                  Marathon m = Marathon.builder()
-                         .name(item.optString("대회명"))
-                         .date(item.optString("대회일시"))
-                         .location(item.optString("대회장소"))
-                         .category(item.optString("종목"))
-                         .host(item.optString("주최"))
-                         .build();
+                          .name(item.optString("대회명"))
+                          .date(item.optString("대회일시"))
+                          .location(item.optString("대회장소"))
+                          .category(item.optString("종목"))
+                          .host(item.optString("주최"))
+                          .build();
                  marathonRepository.save(m);
              }
 
@@ -68,14 +73,13 @@ public class MarathonServiceImpl implements MarathonService {
         return marathonRepository.findAll();
     }
 
-    // ⭐️ [추가] 검색 및 페이징 로직 구현
+    // 검색 및 페이징 로직 구현
     @Override
     public Page<Marathon> findMarathons(String searchTerm, Pageable pageable) {
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-            String searchPattern = "%" + searchTerm.trim() + "%";
-            // MarathonRepository에 검색 조건(대회명, 장소 등)을 위한 메서드가 필요합니다.
-            // 여기서는 'name'과 'location' 기준으로 검색하는 메서드를 호출한다고 가정합니다.
-            return marathonRepository.findByNameContainingOrLocationContaining(searchPattern, searchPattern, pageable);
+            String trimmedSearchTerm = searchTerm.trim();
+            
+            return marathonRepository.findByNameContainingOrLocationContaining(trimmedSearchTerm, trimmedSearchTerm, pageable);
         }
         // 검색어가 없으면 전체 리스트 페이징
         return marathonRepository.findAll(pageable);

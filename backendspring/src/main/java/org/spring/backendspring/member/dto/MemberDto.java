@@ -66,6 +66,7 @@ public class MemberDto {
     private int isProfileImg;
 
     private String newFileName;
+    private String fileUrl;
 
     private List<MemberProfileImageEntity> profileImagesList;
 

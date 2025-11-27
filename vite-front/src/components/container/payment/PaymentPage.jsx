@@ -29,7 +29,7 @@ const PaymentPage = () => {
     // paymentType의 초기값은 소문자입니다. (select option value에 따라)
     const [paymentType, setPaymentType] = useState("kakao"); 
     
-    // 장바구니 조회 후 memberId를 얻습니다.
+    // 장바구니 조회 후 memberId를 얻습니다. 
     const [memberId, setMemberId] = useState(null); 
 
     // 로그인한 회원 정보로 채워질 상태
@@ -78,6 +78,8 @@ const PaymentPage = () => {
                 // MemberEntity의 필드명(userName, phone)에 직접 접근하여 상태 업데이트
                 setReceiverName(res.data.userName || ""); 
                 setReceiverPhone(res.data.phone || ""); 
+                setAddress(res.data.address || "");
+
 
             } catch (e) {
                 // 이 catch는 주로 getCartByToken 또는 authDetailFn의 네트워크 실패를 처리합니다.

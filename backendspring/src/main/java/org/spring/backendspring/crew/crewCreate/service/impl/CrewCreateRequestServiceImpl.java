@@ -54,7 +54,13 @@ public class CrewCreateRequestServiceImpl implements CrewCreateRequestService {
         CrewCreateRequestEntity requestEntity = crewCreateRequestRepository.findById(requestId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 요청"));
 
+        if (requestEntity.getStatus() != RequestStatus.PENDING) {
+            throw new IllegalArgumentException("이미 처리된 요청");
+        }
+        
         requestEntity.setStatus(RequestStatus.APPROVED);
+
+        crewCreateRequestRepository.save(requestEntity);
 
         CrewEntity crewEntity = CrewEntity.builder()
                         .name(requestEntity.getCrewName())
@@ -62,22 +68,23 @@ public class CrewCreateRequestServiceImpl implements CrewCreateRequestService {
                         .description(requestEntity.getMessage())
                         .district(requestEntity.getDistrict())
                         .build();
+        System.out.println(crewEntity.getMemberEntity());
+        crewRepository.save(crewEntity);
 
-        CrewMemberEntity crewMemberEntity = CrewMemberEntity.builder()
+        CrewMemberEntity leader = CrewMemberEntity.builder()
                         .crewEntity(crewEntity)
                         .memberEntity(requestEntity.getMemberEntity())
                         .roleInCrew(CrewRole.LEADER)
                         .build();
 
-        crewRepository.save(crewEntity);
-        crewMemberRepository.save(crewMemberEntity);
+        crewMemberRepository.save(leader);
 
         // RabbitMQ 큐 생성 - 바인딩
-        String queueName = "chat.queue.crew" + crewEntity.getId();
-        String routingKey = "chat.key.crew" + crewEntity.getId();
-        Queue queue = new Queue(queueName, true);
-        rabbitAdmin.declareQueue(queue);
-        rabbitAdmin.declareBinding(BindingBuilder.bind(queue).to(topicExchange).with(routingKey));
+        // String queueName = "chat.queue.crew" + crewEntity.getId();
+        // String routingKey = "chat.key.crew" + crewEntity.getId();
+        // Queue queue = new Queue(queueName, true);
+        // rabbitAdmin.declareQueue(queue);
+        // rabbitAdmin.declareBinding(BindingBuilder.bind(queue).to(topicExchange).with(routingKey));
 
         // 알림 if wanted
         // String message = crewEntity.getName() + "크루 신청이 승인되었습니다.";
@@ -89,10 +96,14 @@ public class CrewCreateRequestServiceImpl implements CrewCreateRequestService {
     public void rejectRequest(Long requestId) {
         CrewCreateRequestEntity entity = crewCreateRequestRepository.findById(requestId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 요청"));
+        
+        if (entity.getStatus() != RequestStatus.PENDING) {
+            throw new IllegalArgumentException("이미 처리된 요청");
+        }
 
         entity.setStatus(RequestStatus.REJECTED);
+        crewCreateRequestRepository.save(entity);
 
-        // crewCreateRequestRepository.delete(entity);
     }
 
     

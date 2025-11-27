@@ -10,6 +10,7 @@ import org.spring.backendspring.crew.crew.repository.CrewRepository;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
 import org.spring.backendspring.common.dto.PagedResponse;
+import org.spring.backendspring.config.s3.AwsS3Service;
 import org.spring.backendspring.crew.crew.entity.CrewEntity;
 import org.spring.backendspring.crew.crewBoard.dto.CrewBoardDto;
 import org.spring.backendspring.crew.crewBoard.entity.CrewBoardEntity;
@@ -17,6 +18,7 @@ import org.spring.backendspring.crew.crewBoard.entity.CrewBoardImageEntity;
 import org.spring.backendspring.crew.crewBoard.repository.CrewBoardImageRepository;
 import org.spring.backendspring.crew.crewBoard.repository.CrewBoardRepository;
 import org.spring.backendspring.crew.crewBoard.service.CrewBoardService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -34,7 +36,10 @@ public class CrewBoardServiceImpl implements CrewBoardService {
     private final CrewBoardRepository crewBoardRepository;
     private final CrewBoardImageRepository crewBoardImageRepository;
     private final MemberRepository memberRepository;
+    private final AwsS3Service awsS3Service;
 
+    @Value("${s3file.path.crew}")
+    private String path;
 
     @Override
     public PagedResponse<CrewBoardDto> boardListByCrew(Long crewId, String subject, String keyword, int page, int size) {
@@ -89,40 +94,40 @@ public class CrewBoardServiceImpl implements CrewBoardService {
         List<CrewBoardImageEntity> savedImages = new ArrayList<>();
 
         if  (crewBoardFile == null || crewBoardFile.isEmpty() || crewBoardFile.get(0).isEmpty()) {
-            // for (MultipartFile file : crewBoardDto.getCrewBoardFile()) {
-                //     if (file != null && !file.isEmpty()) {
-                    //         String originalFileName = file.getOriginalFilename();
-                    
-                    //         String newFileName = awsS3Service.uploadFile(file);
-                    
-                    //         CrewBoardImageEntity boardImageEntity = CrewBoardImageEntity.toCrewBoardImageEntity(crewBoardEntity2, originalFileName, newFileName);
-                    
-                    //         crewBoardImageRepository.save(boardImageEntity);
-                    //         crewBoardRepository.save(crewBoardEntity);
-                    //     }
-            // }
-            for (MultipartFile boardFile : crewBoardFile) {
-                if (boardFile != null && !boardFile.isEmpty()) {
-                    UUID uuid = UUID.randomUUID();
-                    String originalFileName = boardFile.getOriginalFilename();
-                    String newFileName = uuid + "_" + originalFileName;
-
-                    String filePath = "E:/full/upload/" + newFileName;
-                    File file = new File(filePath);
-
-                    boardFile.transferTo(file);
-                    
+            for (MultipartFile file : crewBoardDto.getCrewBoardFile()) {
+                if (file != null && !file.isEmpty()) {
+                    String originalFileName = file.getOriginalFilename();
+            
+                    String newFileName = awsS3Service.uploadFile(file, path);
+            
                     CrewBoardImageEntity boardImageEntity = CrewBoardImageEntity.toCrewBoardImageEntity(crewBoardEntity, originalFileName, newFileName);
+            
                     CrewBoardImageEntity savedImage = crewBoardImageRepository.save(boardImageEntity);
                     savedImages.add(savedImage);
-                }
+                    }
             }
+            // for (MultipartFile boardFile : crewBoardFile) {
+            //     if (boardFile != null && !boardFile.isEmpty()) {
+            //         UUID uuid = UUID.randomUUID();
+            //         String originalFileName = boardFile.getOriginalFilename();
+            //         String newFileName = uuid + "_" + originalFileName;
+
+            //         String filePath = "E:/full/upload/" + newFileName;
+            //         File file = new File(filePath);
+
+            //         boardFile.transferTo(file);
+                    
+            //         CrewBoardImageEntity boardImageEntity = CrewBoardImageEntity.toCrewBoardImageEntity(crewBoardEntity, originalFileName, newFileName);
+            //         CrewBoardImageEntity savedImage = crewBoardImageRepository.save(boardImageEntity);
+            //         savedImages.add(savedImage);
+            //     }
+            // }
             
         }
         crewBoardEntity.setCrewBoardImageEntities(savedImages);
         savedBoard = crewBoardRepository.save(crewBoardEntity);            
 
-        return CrewBoardDto.toDto(savedBoard);
+        return CrewBoardDto.toDto2(savedBoard);
     }
 
     @Override
@@ -168,8 +173,8 @@ public class CrewBoardServiceImpl implements CrewBoardService {
                 CrewBoardImageEntity imageEntity = crewBoardImageRepository.findByCrewBoardEntity_IdAndNewName(id, imageName)
                             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이미지"));
                             
-                // awsS3Service.deleteFile(imageEntity.getNewName());
                 crewBoardImageRepository.delete(imageEntity);
+                awsS3Service.deleteFile(imageEntity.getNewName());
             }
         }
 
@@ -180,24 +185,25 @@ public class CrewBoardServiceImpl implements CrewBoardService {
         if (newImages != null && !newImages.isEmpty()) {
             for (MultipartFile image : newImages) {
                 if (!image.isEmpty()) {
-                    // String originalImageName = image.getOriginalFilename();
-                    // String newImageName = awsS3Service.uploadFile(image);
+                    String originalImageName = image.getOriginalFilename();
+                    String newImageName = awsS3Service.uploadFile(image, path);
                     
-                    // CrewBoardImageEntity imageEntity = CrewBoardImageEntity.toCrewBoardImageEntity(crewBoardEntity, originalImageName, newImageName);
-                    // crewBoardImageRepository.save(imageEntity);
-
-                    UUID uuid = UUID.randomUUID();
-                    String originalFileName = image.getOriginalFilename();
-                    String newFileName = uuid + "_" + originalFileName;
-
-                    String filePath = "E:/full/upload/" + newFileName;
-                    File file = new File(filePath);
-
-                    image.transferTo(file);
-
-                    CrewBoardImageEntity boardImageEntity = CrewBoardImageEntity.toCrewBoardImageEntity(crewBoardEntity, originalFileName, newFileName);
+                    CrewBoardImageEntity boardImageEntity = CrewBoardImageEntity.toCrewBoardImageEntity(crewBoardEntity, originalImageName, newImageName);
                     CrewBoardImageEntity savedImage = crewBoardImageRepository.save(boardImageEntity);
                     updatedImages.add(savedImage);
+
+                    // UUID uuid = UUID.randomUUID();
+                    // String originalFileName = image.getOriginalFilename();
+                    // String newFileName = uuid + "_" + originalFileName;
+
+                    // String filePath = "E:/full/upload/" + newFileName;
+                    // File file = new File(filePath);
+
+                    // image.transferTo(file);
+
+                    // CrewBoardImageEntity boardImageEntity = CrewBoardImageEntity.toCrewBoardImageEntity(crewBoardEntity, originalFileName, newFileName);
+                    // CrewBoardImageEntity savedImage = crewBoardImageRepository.save(boardImageEntity);
+                    // updatedImages.add(savedImage);
                 }
             }
         }
@@ -221,7 +227,7 @@ public class CrewBoardServiceImpl implements CrewBoardService {
         List<CrewBoardImageEntity> crewBoardImages = crewBoardImageRepository.findByCrewBoardEntity_Id(id);
         if (crewBoardImages != null) {
             for (CrewBoardImageEntity images : crewBoardImages) {
-                // awsS3Service.deleteFile(images.getNewName());
+                awsS3Service.deleteFile(images.getNewName());
             }
         }
 

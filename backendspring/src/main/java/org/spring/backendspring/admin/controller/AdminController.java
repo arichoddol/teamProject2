@@ -1,5 +1,6 @@
 package org.spring.backendspring.admin.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.spring.backendspring.admin.dto.AdminMemberDto;
@@ -40,7 +41,7 @@ public class AdminController {
 
     @GetMapping("/member/detail/{id}")
     // 특정회원 정보 조회
-    public ResponseEntity<MemberDto> getMember(@PathVariable("id") Long id) {
+    public ResponseEntity<MemberDto> getMember(@PathVariable("id") Long id) throws IOException {
         MemberDto memberDetail = memberService.findById(id);
         return ResponseEntity.ok(memberDetail);
     }

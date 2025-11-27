@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.common.role.CrewRole;
 import org.spring.backendspring.common.role.MemberRole;
+import org.spring.backendspring.config.s3.AwsS3Service;
 import org.spring.backendspring.crew.CrewRoleCheck;
 import org.spring.backendspring.crew.crew.dto.CrewDto;
 import org.spring.backendspring.crew.crew.entity.CrewEntity;
@@ -17,6 +18,7 @@ import org.spring.backendspring.crew.crewMember.entity.CrewMemberEntity;
 import org.spring.backendspring.crew.crewMember.repository.CrewMemberRepository;
 import org.spring.backendspring.member.entity.MemberEntity;
 import org.spring.backendspring.member.repository.MemberRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -37,7 +39,10 @@ public class CrewServiceImpl implements CrewService {
     private final CrewMemberRepository crewMemberRepository;
     private final CrewImageRepository crewImageRepository;
     private final MemberRepository memberRepository;
+    private final AwsS3Service awsS3Service;
 
+    @Value("${s3file.path.crew}")
+    private String path;
 
     @Override
     public CrewDto updateCrew(Long loginUserId, Long crewId, CrewDto crewDto,
@@ -84,22 +89,23 @@ public class CrewServiceImpl implements CrewService {
         if (newImages != null && !newImages.isEmpty()) {
             for (MultipartFile image : newImages) {
                 if (!image.isEmpty()) {
-                    // String originalImageName = image.getOriginalFilename();
-                    // String newImageName = awsS3Service.uploadFile(image);
-                    // CrewImageEntity imageEntity = CrewImageEntity.toEntity(crew, originalImageName, newImageName);
-                    // crewImageRepository.save(imageEntity);
-
-                    UUID uuid = UUID.randomUUID();
                     String originalFileName = image.getOriginalFilename();
-                    String newFileName = uuid + "_" + originalFileName;
-
-                    String filePath = "E:/full/upload/" + newFileName;
-                    File file = new File(filePath);
-                    image.transferTo(file);
-                    
+                    String newFileName = awsS3Service.uploadFile(image, path);
                     CrewImageEntity imageEntity = CrewImageEntity.toEntity(crew, originalFileName, newFileName);
                     CrewImageEntity savedImage = crewImageRepository.save(imageEntity);
                     updatedImages.add(savedImage);
+                    
+                    // UUID uuid = UUID.randomUUID();
+                    // String originalFileName = image.getOriginalFilename();
+                    // String newFileName = uuid + "_" + originalFileName;
+
+                    // String filePath = "E:/full/upload/" + newFileName;
+                    // File file = new File(filePath);
+                    // image.transferTo(file);
+                    
+                    // CrewImageEntity imageEntity = CrewImageEntity.toEntity(crew, originalFileName, newFileName);
+                    // CrewImageEntity savedImage = crewImageRepository.save(imageEntity);
+                    // updatedImages.add(savedImage);
                 }
             }
         }

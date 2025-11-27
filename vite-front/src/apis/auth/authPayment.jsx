@@ -8,7 +8,7 @@ export const authMyPaymentFn = async (memberId, currentPage, search) => {
     const res = await axios(
       `${BACK_BASIC_URL}/api/payments/myPayment/${memberId}`,
       {
-        params: { page: currentPage - 1, size: 3, keyword: search },
+        params: { page: currentPage - 1, size: 4, keyword: search },
       }
     );
     return res;

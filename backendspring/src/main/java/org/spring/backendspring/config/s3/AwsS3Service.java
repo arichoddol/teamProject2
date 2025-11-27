@@ -23,12 +23,11 @@ public class AwsS3Service {
     private String bucketName;
 
     // return S3 SaveFile URL 
-    public String uploadFile(MultipartFile multipartFile) throws IOException {
+    public String uploadFile(MultipartFile multipartFile, String path) throws IOException {
 
         String originalFileName = multipartFile.getOriginalFilename();
-
         String uuid = UUID.randomUUID().toString();
-        String uniqueFileName = uuid + "_" + originalFileName;
+        String uniqueFileName = path + uuid + "_" + originalFileName;
 
         // upload S3 
         InputStream inputStream = multipartFile.getInputStream();

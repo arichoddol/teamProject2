@@ -21,6 +21,8 @@ const AuthDetailContainer = () => {
       const res = await authDetailFn(memberId);
       const authDetail = res.data;
 
+      console.log(res.data);
+
       if (res.status === 200) {
         setMemberDetail({ ...authDetail });
         if (authDetail.gender === "WOMAN") {
@@ -50,7 +52,7 @@ const AuthDetailContainer = () => {
           <div className="profile-image">
             <span className="profile-label">프로필 이미지</span>
             <img
-              src={`${BACK_BASIC_URL}/upload/${memberDetail.profileImagesList[0].newName}`}
+              src={memberDetail.fileUrl}
               alt="프로필 이미지"
               onError={(e) => {
                 e.target.src =
