@@ -1,5 +1,8 @@
 package org.spring.backendspring.item.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.spring.backendspring.board.dto.BoardDto;
 import org.spring.backendspring.board.entity.BoardEntity;
 import org.spring.backendspring.item.dto.ItemDto;
@@ -66,5 +69,16 @@ public class ItemServiceImpl implements ItemService {
         ItemEntity itemEntity = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("상품에 해당하는 아이디가 존재하지 않음"));
         return ItemDto.toItemDto(itemEntity);
+    }
+
+
+    // this method for Show recentlyItem.
+    @Override
+    public List<ItemDto> getRecentItem(){
+    List<ItemEntity> recentlyentities = itemRepository.findTop2ByOrderByCreateTimeDesc();
+
+    return recentlyentities.stream()
+                        .map(ItemDto::toItemDto)
+                        .collect(Collectors.toList());
     }
 }
