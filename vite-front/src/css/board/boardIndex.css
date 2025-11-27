@@ -2,7 +2,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Gowun+Batang&display=swap");
 
 .boardList{
-  background-image: linear-gradient(to top, #28119c,#47247ebf);
+  background-image: linear-gradient(to top, aliceblue,#ffffffbf,#ffffffbf);
   padding: 60px;
   gap: 10px;
 }
@@ -24,16 +24,18 @@
   border: 4px solid #cd77ffbe;
   
 }
-/* .boardList-banner img{
-  background-color: gray;
-  width: 90%;
-  height: 90%;
+.searchBox{
   display: flex;
   justify-content: center;
-  align-items: center;
-  object-fit: cover;
-  
-} */
+ padding-right: 10%;
+
+  width: 80%;
+  margin-left: 54%;
+
+}
+.board-search-form{
+
+}
 
 
 
@@ -45,20 +47,24 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: 5vh;
+  padding: 5.5vw;
   border-radius: 20px;
   border: 1px solid #ff0055a9;
+  
 }
 .boardList-con h2{
-   font-family: "Gowun Batang", serif;
+  font-family: "Gowun Batang", serif;
   font-weight: bold;
   font-style: normal;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #2313a1;
 }
 
 /* table section */
 
 .board-table {
-  width: 70vw;
+    table-layout:fixed;
+  width: 100%;
   margin: 5px;
   border-collapse: collapse;
   border-radius: 8px;
@@ -68,7 +74,8 @@
 
 .board-table th,
 .board-table td {
-  padding: 2.5vh;
+  width: 60%;
+  padding: 2vw;
   border-bottom: 2px solid #2313a1;
   font-size: 13px;
 

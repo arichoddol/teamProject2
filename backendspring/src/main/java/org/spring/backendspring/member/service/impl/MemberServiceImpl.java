@@ -78,11 +78,16 @@ public class MemberServiceImpl implements MemberService {
 
     // 개인(본인) 회원 조회
     @Override
-    public MemberDto findById(Long id) {
-        return memberRepository.findById(id)
-                // NPE Error so ill fix this
+    public MemberDto findById(Long id) throws IOException {
+        MemberDto memberDto = memberRepository.findById(id)
                 .map(MemberMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("해당 회원이 존재하지 않습니다"));
+        if (memberDto.getIsProfileImg() == 1) {
+            String fileUrl = awsS3Service.getFileUrl(memberDto.getProfileImagesList().get(0).getNewName());
+            memberDto.setFileUrl(fileUrl);
+        }
+        return memberDto;
+
     }
 
     @Override

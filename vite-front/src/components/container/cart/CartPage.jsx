@@ -9,9 +9,9 @@ import {
 } from "../../../apis/cart/cartApi";
 import "../../../css/cart/CartPage.css";
 
-// 상수명을 일관성 있게 IMAGE_BASE_URL로 변경했습니다.
-const IMAGE_BASE_URL = "http://localhost:8088/upload/";
+const BASE_IMAGE_URL = "https://spring-project-test.s3.ap-northeast-2.amazonaws.com/";
 const NO_IMAGE_URL = "/images/noimage.jpg";
+
 
 export default function CartPage() {
   const navigate = useNavigate();
@@ -312,6 +312,7 @@ export default function CartPage() {
               </tr>
             </thead>
             <tbody>
+             
               {items.map((item) => {
                 // 이미지 경로 생성: 파일 이름과 기본 URL을 결합
                 const imageUrl = item.itemImage
@@ -320,6 +321,7 @@ export default function CartPage() {
 
                 return (
                   <tr key={item.cartItemId}>
+                     {console.log(item)}
                     <td>
                       <input
                         type="checkbox"
