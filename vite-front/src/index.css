@@ -35,6 +35,7 @@
 @import url(css/mycrew/mycrew-member-modal.css);
 @import url(css/mycrew/mycrew-RunMember-modal.css);
 @import url(css/mycrew/mycrew-update.css);
+@import url(css/mycrew/mycrew-chat.css);
 
 /* 관리자 */
 @import url(css/admin/container/admin-member-list.css);

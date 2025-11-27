@@ -233,7 +233,29 @@ public class CrewServiceImpl implements CrewService {
     @Override
     public List<CrewMemberDto> findMyAllCrew(Long memberId) {
         List<CrewMemberEntity> crewMemberEntities = crewMemberRepository.findByMemberEntity_id(memberId);
-        return crewMemberEntities.stream().map(CrewMemberDto::toCrewMember).collect(Collectors.toList());
+
+        List<CrewMemberDto> dtoList = new ArrayList<>();
+
+        for (CrewMemberEntity entity : crewMemberEntities) {
+            CrewMemberDto dto = CrewMemberDto.toCrewMember(entity);
+
+            if (dto.getCrewImages() != null && !dto.getCrewImages().isEmpty()) {
+                List<String> urls = new ArrayList<>();
+
+                for (String fileName : dto.getCrewImages()) {
+                    try {
+                        String url = awsS3Service.getFileUrl(fileName);
+                        urls.add(url);
+                    } catch (IOException e) {
+                        throw new IllegalArgumentException(e);
+                    }
+                }
+                dto.setFileUrl(urls);
+            }
+            dtoList.add(dto);
+        }
+
+        return dtoList;
     }
 
     @Override

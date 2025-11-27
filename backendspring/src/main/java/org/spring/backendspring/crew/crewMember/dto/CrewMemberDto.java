@@ -36,7 +36,7 @@ public class CrewMemberDto extends BasicTime {
     private LocalDateTime updateTime;
     // mycrew 목록 위한 이미지
     private List<String> crewImages;
-
+    private List<String> fileUrl;
     private List<String> memberImages;
     private String memberNickName;
 

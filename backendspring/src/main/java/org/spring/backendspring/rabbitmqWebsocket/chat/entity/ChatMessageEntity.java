@@ -1,7 +1,11 @@
 package org.spring.backendspring.rabbitmqWebsocket.chat.entity;
 
-import org.spring.backendspring.common.BasicTime;
+import java.time.LocalDateTime;
 
+import org.spring.backendspring.common.BasicTime;
+import org.spring.backendspring.rabbitmqWebsocket.chat.dto.ChatMessageDto;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,16 +23,33 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "chat_tb")
-public class ChatMessageEntity extends BasicTime {
+@Table(name = "chat_message_tb")
+public class ChatMessageEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String sender;
+    @Column(name = "sender_id", nullable = false)
+    private Long senderId;
+    
+    @Column(name = "crew_id", nullable = false)
+    private Long crewId;
+
+    private String senderNickName;
 
     private String message;
 
-    private Long crewId;
+    private LocalDateTime createTime;
+
+    public static ChatMessageEntity toEntity(ChatMessageDto dto) {
+
+        return ChatMessageEntity.builder()
+                .senderId(dto.getSenderId())
+                .crewId(dto.getCrewId())
+                .senderNickName(dto.getSenderNickName())
+                .message(dto.getMessage())
+                .createTime(dto.getCreateTime())
+                .build();
+    }
 }

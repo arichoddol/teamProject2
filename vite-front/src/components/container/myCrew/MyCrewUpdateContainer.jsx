@@ -44,8 +44,9 @@ const MyCrewUpdateContainer = () => {
           console.log(res.data.crewDetail);
           if (res.data.crewDetail.newFileName && res.data.crewDetail.newFileName.length > 0) {
             setExFiles(
-                res.data.crewDetail.newFileName.map(name => ({
-                    newFileName: name
+                res.data.crewDetail.newFileName.map((name, idx) => ({
+                    fileUrl: res.data.crewDetail.fileUrl[idx],
+                    newFileName : name
                 }))
             );
           };
@@ -101,7 +102,7 @@ const MyCrewUpdateContainer = () => {
                     {exFiles.length > 0 ? (
                         exFiles.map((img, idx) => (
                             <li key={idx}>
-                                <img src={`http://localhost:8088/upload/${img.newFileName}`} alt={img.newFileName} />
+                                <img src={img.fileUrl} alt={idx} />
                                 <button type='button' onClick={() => deleteImage(img.newFileName)}>X</button>
                             </li>
                         ))
