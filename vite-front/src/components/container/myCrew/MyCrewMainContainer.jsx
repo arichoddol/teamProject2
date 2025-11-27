@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import jwtAxios from '../../../apis/util/jwtUtil';
 import { useSelector } from 'react-redux';
+import MyCrewBot from './MyCrewBot';
 
 const MyCrewMainContainer = () => {
   const accessToken = useSelector(state => state.jwtSlice.accessToken);
@@ -11,6 +12,7 @@ const MyCrewMainContainer = () => {
 
   const navigate = useNavigate()
   const loginMemberId = useSelector((state) => state.loginSlice.id)  
+  const loginNickName = useSelector((state) => state.loginSlice.nickName)  
 
   useEffect(()=> {
     const myCrewMain = async () => {
@@ -77,7 +79,7 @@ const MyCrewMainContainer = () => {
         <div className="myCrewMain-inner">
           <div className="myCrewMain-inner-left">
             <div className="chat-bot">
-
+              <MyCrewBot onCrewId={crewId} onMemberId={loginMemberId} onNickName={loginNickName}/>
             </div>
           </div>
           {/* 정보 리스트 */}
