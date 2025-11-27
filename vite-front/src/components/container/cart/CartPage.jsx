@@ -316,7 +316,7 @@ export default function CartPage() {
               {items.map((item) => {
                 // 이미지 경로 생성: 파일 이름과 기본 URL을 결합
                 const imageUrl = item.itemImage
-                  ? `${IMAGE_BASE_URL}${item.itemImage}`
+                  ? `${BASE_IMAGE_URL}${item.itemImage}`
                   : null;
 
                 return (
