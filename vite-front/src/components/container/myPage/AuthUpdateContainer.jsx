@@ -24,7 +24,7 @@ const AuthUpdateContainer = () => {
   const navigate = useNavigate();
 
   const myPageDetailFn = async () => {
-    const res = await authDetailFn(memberId);
+    const res = await authDetailFn();
     if (res.status === 200) {
       setMemberDto({ ...res.data });
       if (res.data.gender === "WOMAN") {
@@ -35,7 +35,7 @@ const AuthUpdateContainer = () => {
 
   const memberUpdateFn = async (e) => {
     e.preventDefault();
-    const res = await authUpdateFn(memberId, memberDto, imgFile);
+    const res = await authUpdateFn(memberDto, imgFile);
     console.log(res);
     if (res.status === 200) {
       alert("수정이 완료되었습니다.");
