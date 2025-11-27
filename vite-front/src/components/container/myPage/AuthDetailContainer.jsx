@@ -18,7 +18,7 @@ const AuthDetailContainer = () => {
       navigate("/auth/login");
     }
     const myPageDetailFn = async () => {
-      const res = await authDetailFn(memberId);
+      const res = await authDetailFn();
       const authDetail = res.data;
 
       console.log(res.data);
