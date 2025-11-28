@@ -70,6 +70,8 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            YML_CONFIG_DIR="/home/${{ secrets.EC2_USER }}/config"
+            mkdir -p $YML_CONFIG_DIR
 
             echo "${{ secrets.SPRING_APP_YML }}" > $YML_CONFIG_DIR/application.yml
             echo "${{ secrets.SPRING_OAUTH_YML }}" > $YML_CONFIG_DIR/application-oauth2.yml
