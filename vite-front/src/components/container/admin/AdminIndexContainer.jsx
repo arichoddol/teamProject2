@@ -4,6 +4,7 @@ import { adminFn } from '../../../apis/admin/adminIndex';
 import { useNavigate } from 'react-router-dom';
 
 import "../../../css/admin/container/AdminIndexContainer.css"
+import { formattedPrice } from '../../../js/formatDate';
 
 
 const AdminIndexContainer = () => {
@@ -17,7 +18,9 @@ const AdminIndexContainer = () => {
     todayCrews: 0,
     totalPayments: 0,
     todayPayments: 0,
-    totalBoards: 0,
+    totalSales:0,
+    todaySales:0,
+    totalBoards: 0
   });
 
   // 회원 관련
@@ -36,6 +39,8 @@ const AdminIndexContainer = () => {
   const [payment, setPayment] = useState({
     totalPayments: 0,
     todayPayments: 0,
+    totalSales: 0,
+    todaySales: 0
   });
 
   // 게시판 관련
@@ -70,7 +75,9 @@ const AdminIndexContainer = () => {
 
       setPayment({
         totalPayments: res.data.totalPayments,
-        todayPayments: res.data.todayPayments
+        todayPayments: res.data.todayPayments,
+        totalSales: res.data.totalSales,
+        todaySales: res.data.todaySales
       })
 
       setBoard({
@@ -109,10 +116,8 @@ const AdminIndexContainer = () => {
 
       {/* 데이터 출력 (예시) */}
       <div className="indexCon">
-
-        <h2>관리자 대시보드</h2>
         <div className="summaryCard">
-          <h3>요약</h3>
+          <h3>SIMPLE SUMMARY</h3>
           <ul>
             <li>총 회원수: {summary.totalMembers}</li>
             <li>오늘 가입자수: {summary.todayMembers}</li>
@@ -124,28 +129,30 @@ const AdminIndexContainer = () => {
           </ul>
         </div>
         <div className="memberCard">
-          <h3>회원</h3>
+          <h3>MEMBER</h3>
           <ul>
             <li>총 회원: {member.totalMembers}</li>
             <li>오늘 가입한 회원: {member.todayMembers}</li>
           </ul>
         </div>
         <div className="crewCard">
-          <h3>크루</h3>
+          <h3>CREW</h3>
           <ul>
             <li>총 크루: {crew.totalCrews}</li>
             <li>오늘 가입한 크루: {crew.todayCrews}</li>
           </ul>
         </div>
         <div className="paymentCard">
-          <h3>결제</h3>
+          <h3>PAYMENT</h3>
           <ul>
             <li>총 결제건: {payment.totalPayments}</li>
             <li>오늘 결제건: {payment.todayPayments}</li>
+            <li>총 매출액: {formattedPrice(payment.totalSales)} 원 </li>
+            <li>일간 매출액: {formattedPrice(payment.todaySales)} 원</li>
           </ul>
         </div>
         <div className="boardCard">
-          <h3>게시글</h3>
+          <h3>BOARD</h3>
           <ul>
             <li>총 게시물: {board.totalBoards}</li>
             <li>오늘 게시물: {board.todayBoards}</li>

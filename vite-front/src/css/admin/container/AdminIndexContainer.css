@@ -3,7 +3,7 @@
   display: grid;
   width: 800px;
   margin: 0 auto;
-  padding: 30px 20px;
+  padding: 20px 20px;
 
   grid-template-columns: repeat(2, 1fr);
   grid-template-areas:
