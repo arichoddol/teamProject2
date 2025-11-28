@@ -10,6 +10,7 @@ import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.config.security.util.JWTUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,9 +46,9 @@ public class CartController {
 
     // 장바구니 아이템 삭제
     @DeleteMapping("/item/{cartItemId}")
-    public String removeItem(@PathVariable("cartItemId") Long cartItemId) {
+    @ResponseStatus(HttpStatus.NO_CONTENT) // ✨ 수정: RESTful 응답 (204 No Content) 적용
+    public void removeItem(@PathVariable("cartItemId") Long cartItemId) {
         cartService.removeItem(cartItemId);
-        return "삭제 완료";
     }
 
     // 장바구니 아이템 수량 변경
@@ -61,13 +62,13 @@ public class CartController {
         return cartService.updateItemQuantity(cartItemId, quantity).toDto();
     }
 
-    // 장바구니 아이템 페이징 조회
+    // 장바구니 아이템 페이징 조회 (안정화)
     @GetMapping("/{cartId}/items")
     public PagedResponse<CartItemDto> getCartItems(
             @PathVariable("cartId") Long cartId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "") String keyword
+            @RequestParam(name = "page", defaultValue = "0") Integer page,
+            @RequestParam(name = "size", defaultValue = "10") Integer size,
+            @RequestParam(name = "keyword", defaultValue = "") String keyword
     ) {
         Page<CartItemEntity> pageResult;
 

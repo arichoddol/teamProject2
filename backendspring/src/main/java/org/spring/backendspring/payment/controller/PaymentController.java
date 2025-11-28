@@ -1,10 +1,8 @@
 package org.spring.backendspring.payment.controller;
 
 import lombok.RequiredArgsConstructor;
-
 import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.payment.dto.PaymentDto;
-import org.spring.backendspring.payment.dto.PaymentItemDto;
 import org.spring.backendspring.payment.dto.PaymentResultDto;
 import org.spring.backendspring.payment.entity.PaymentEntity;
 import org.spring.backendspring.payment.service.PaymentService;
@@ -38,7 +36,7 @@ public class PaymentController {
     }
 
     @GetMapping("/{paymentId}")
-    public PaymentDto get(@PathVariable Long paymentId) {
+    public PaymentDto get(@PathVariable("paymentId") Long paymentId) {
         return PaymentDto.fromEntity(paymentService.getPayment(paymentId));
     }
 
@@ -51,13 +49,13 @@ public class PaymentController {
     }
 
     @PutMapping("/{paymentId}")
-    public PaymentDto update(@PathVariable Long paymentId,
-            @RequestBody PaymentDto paymentDto) {
+    public PaymentDto update(@PathVariable("paymentId") Long paymentId,
+             @RequestBody PaymentDto paymentDto) {
         return PaymentDto.fromEntity(paymentService.updatePayment(paymentId, paymentDto.toEntity()));
     }
 
     @DeleteMapping("/{paymentId}")
-    public String delete(@PathVariable Long paymentId) {
+    public String delete(@PathVariable("paymentId") Long paymentId) {
         paymentService.deletePayment(paymentId);
         return "삭제 완료";
     }
@@ -68,9 +66,10 @@ public class PaymentController {
 
     @GetMapping("/approval/{paymentId}/{productPrice}/{memberId}")
     public ResponseEntity<Void> approval(
-            @PathVariable Long paymentId,
-            @PathVariable Long productPrice,
-            @PathVariable Long memberId,
+            // ⭐️ 수정: @PathVariable 이름 명시
+            @PathVariable("paymentId") Long paymentId, 
+            @PathVariable("productPrice") Long productPrice,
+            @PathVariable("memberId") Long memberId,
             @RequestParam("pg_token") String pgToken,
             @RequestParam("productName") String productName) {
         try {
@@ -95,18 +94,15 @@ public class PaymentController {
         }
     }
 
-    @PostMapping("/pg/{pg}") // GET 대신 POST로 변경하는 것이 RESTful 설계에 더 적합합니다.
+    @PostMapping("/pg/{pg}")
     public Map<String, Object> pgRequest(
-            @PathVariable String pg,
-            @RequestBody PaymentDto paymentDto) { // PaymentDto 전체를 받음
+            @PathVariable("pg") String pg,
+            @RequestBody PaymentDto paymentDto) {
 
-        // 1. Service 호출: PaymentDto 전체를 넘기도록 수정
-        // Service 내부에서 필요한 정보(items, memberId 등)를 추출하여 사용합니다.
         Map<String, Object> map = new HashMap<>();
-        
-        // ⭐️ [수정된 부분] Service 시그니처에 맞게 PaymentDto 전체를 전달
+
         String approvalUrl = paymentService.pgRequest(pg, paymentDto); 
-        
+
         map.put("approvalUrl", approvalUrl);
         return map;
     }
@@ -114,7 +110,7 @@ public class PaymentController {
     @PostMapping("/fail")
     public Map<String, Object> fail(
             @RequestBody PaymentDto paymentDto,
-            @RequestParam("memberId") String memberId) {
+            @RequestParam(value = "memberId") String memberId) { 
         Map<String, Object> map = new HashMap<>();
         map.put("status", "fail 처리 완료");
         return map;
@@ -146,30 +142,23 @@ public class PaymentController {
 
     @GetMapping("/page")
     public PagedResponse<PaymentDto> getPayments(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String keyword) {
+            // ⭐️ 수정: @RequestParam 이름 명시
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "keyword", required = false) String keyword) {
 
-        // 1. Page<PaymentEntity> 가져오기
         Page<PaymentEntity> pageResult = paymentService.getPayments(page, size, keyword);
-
-        // 2. Entity -> DTO 변환
         Page<PaymentDto> dtoPage = pageResult.map(PaymentDto::fromEntity);
-
-        // 3. PagedResponse로 변환 후 반환
         return PagedResponse.of(dtoPage);
     }
 
-
-//     회원의 결제 목록을 가져옵니다.
+    // 회원의 결제 목록을 가져옵니다.
     @GetMapping("/myPayment/{memberId}")
     public ResponseEntity<?> getMemberPaymentList(@PathVariable("memberId") Long memberId,
-                                                  @RequestParam(name = "keyword", required = false) String keyword,
-                                                  @RequestParam(name = "page", defaultValue = "0") int page,
-                                                  @RequestParam(name = "size", defaultValue = "4") int size) {
+                                                 @RequestParam(name = "keyword", required = false) String keyword,
+                                                 @RequestParam(name = "page", defaultValue = "0") int page,
+                                                 @RequestParam(name = "size", defaultValue = "4") int size) {
         PagedResponse<PaymentDto> myPaymentList = paymentService.findMyPaymentList(keyword, memberId, page, size);
         return ResponseEntity.ok(myPaymentList);
     }
-
 }
-
