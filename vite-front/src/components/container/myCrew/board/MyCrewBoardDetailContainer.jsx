@@ -169,10 +169,10 @@ const MyCrewBoardDetailContainer = () => {
           <div className="crewBoardImage">
             {board.newFileName && board.newFileName.length > 0 && (
               <div className="crewBoardImages">
-                {board.newFileName.map((fileName, index) => (
+                {board.fileUrl.map((fileUrl, index) => (
                   <img
                     key={index} 
-                    src={fileName} 
+                    src={fileUrl} 
                     alt={`${board.title} 이미지 ${index + 1}`}
                     className='crewBoardImg'
                   />

@@ -127,7 +127,7 @@ public class CrewBoardServiceImpl implements CrewBoardService {
         crewBoardEntity.setCrewBoardImageEntities(savedImages);
         savedBoard = crewBoardRepository.save(crewBoardEntity);            
 
-        return CrewBoardDto.toDto2(savedBoard);
+        return CrewBoardDto.toDtoS3(savedBoard, awsS3Service);
     }
 
     @Override
@@ -136,7 +136,7 @@ public class CrewBoardServiceImpl implements CrewBoardService {
         CrewBoardEntity crewBoardEntity = crewBoardRepository.findByCrewEntity_IdAndId(crewId, id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글"));
 
-        return CrewBoardDto.toDto(crewBoardEntity);
+        return CrewBoardDto.toDtoS3(crewBoardEntity, awsS3Service);
     }
 
     @Override
@@ -210,7 +210,7 @@ public class CrewBoardServiceImpl implements CrewBoardService {
         crewBoardEntity.setCrewBoardImageEntities(updatedImages);
         CrewBoardEntity updatedBoardEntity = crewBoardRepository.save(crewBoardEntity);
 
-        return CrewBoardDto.toDto(updatedBoardEntity);
+        return CrewBoardDto.toDtoS3(updatedBoardEntity, awsS3Service);
     }
 
     @Override

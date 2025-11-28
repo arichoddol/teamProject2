@@ -88,7 +88,7 @@ const MyCrewBoardCreateContainer = () => {
                         <ul>
                             {files.map((file, idx) => (
                                 <li key={idx}>
-                                    {file.name}
+                                    <img src={files.fileUrl} alt="" />
                                     <button type='button' onClick={() => removeFile(idx)}>x</button>
                                 </li>
                             ))}
