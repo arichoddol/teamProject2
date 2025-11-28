@@ -14,7 +14,7 @@ COPY build.gradle settings.gradle ./
 RUN ./gradlew dependencies
 
 # 소스 코드 복사
-COPY src src
+COPY src ./src
 
 # 프로젝트 빌드
 # JAR 파일은 /app/build/libs/ 에 생성됩니다.
@@ -37,3 +37,6 @@ EXPOSE 8090
 
 # 컨테이너 실행 명령어
 CMD ["java", "-jar", "/app/app.jar", "--spring.profiles.active=prod"]
+
+#TEST CICD
+#TE
