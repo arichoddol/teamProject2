@@ -14,7 +14,10 @@ const DELIVERY_STAGES = [
   { status: paymentStatus.PENDING, label: "주문/결제 대기중" },
   { status: "결제 완료", label: "주문/결제 완료" },
   { status: "출고 준비", label: "상품 출고 준비" },
-  { status: paymentStatus.DELIVERING, label: "상품 이동 및 운송" },
+  {
+    status: paymentStatus.DELIVERING,
+    label: "상품 이동 및 운송",
+  },
   { status: paymentStatus.COMPLETED, label: "도착 및 배송 완료" },
 ];
 
