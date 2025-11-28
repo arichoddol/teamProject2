@@ -39,4 +39,4 @@ EXPOSE 8090
 CMD ["java", "-jar", "/app/app.jar", "--spring.profiles.active=prod"]
 
 #TEST CICD
-#TE
+#TESTTT
