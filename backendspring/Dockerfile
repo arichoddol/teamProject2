@@ -6,9 +6,13 @@ FROM eclipse-temurin:17-jdk AS builder
 WORKDIR /app
 
 # Gradle Wrapper 및 설정 파일을 복사하고 권한 부여
-COPY gradlew .
-COPY gradle gradle
-COPY build.gradle settings.gradle ./
+# COPY gradlew .
+# COPY gradle gradle
+# COPY build.gradle settings.gradle ./
+COPY ./gradlew ./
+COPY ./gradle ./gradle
+COPY ./build.gradle ./
+COPY ./settings.gradle ./ 
 
 # 필요한 종속성 미리 다운로드 (캐싱 활용)
 RUN ./gradlew dependencies
