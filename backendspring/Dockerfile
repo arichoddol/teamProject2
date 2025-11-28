@@ -9,10 +9,17 @@ WORKDIR /app
 # COPY gradlew .
 # COPY gradle gradle
 # COPY build.gradle settings.gradle ./
-COPY ./gradlew ./
-COPY ./gradle ./gradle
-COPY ./build.gradle ./
-COPY ./settings.gradle ./ 
+# COPY ./gradlew ./
+# COPY ./gradle ./gradle
+# COPY ./build.gradle ./
+# COPY ./settings.gradle ./ 
+
+COPY backendspring/gradlew ./
+COPY backendspring/build.gradle ./
+COPY backendspring/settings.gradle ./
+
+COPY backendspring/gradle ./gradle
+
 
 # 필요한 종속성 미리 다운로드 (캐싱 활용)
 RUN ./gradlew dependencies
