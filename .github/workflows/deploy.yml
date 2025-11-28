@@ -49,7 +49,7 @@ jobs:
           docker push ther3fore/backendspring-backend:latest
           
           # 프론트엔드 이미지 푸시
-          docker build -t ther3fore/vite-front-frontend:latest -f frontend/Dockerfile . 
+          docker build -t ther3fore/vite-front-frontend:latest -f vite-front/Dockerfile . 
           docker push ther3fore/vite-front-frontend:latest
 
       # 4. Deploy to EC2 (Secret YML 파일 주입 및 실행)
