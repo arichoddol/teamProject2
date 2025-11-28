@@ -8,10 +8,11 @@ import DeliveryStatusModal from "../payment/DeliveryStatusModal";
 
 const AuthPaymentContainer = () => {
   const paymentStatus = {
-    PENDING: "배송중",
+    PENDING: "결제대기",
+    DELIVERING: "배송중",
     COMPLETED: "배송완료",
     FAILED: "결제실패",
-    CANCELED: "주문취소",
+    CANCELED: "결제취소",
     REFUNDED: "환불완료",
   };
 

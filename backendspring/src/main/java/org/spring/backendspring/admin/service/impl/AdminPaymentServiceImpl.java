@@ -1,8 +1,12 @@
 package org.spring.backendspring.admin.service.impl;
 
+import java.util.Optional;
+import org.spring.backendspring.admin.dto.AdminPaymentDetailDto;
 import org.spring.backendspring.admin.repository.AdminPaymentRepository;
 import org.spring.backendspring.admin.service.AdminPaymentService;
 import org.spring.backendspring.common.dto.PagedResponse;
+import org.spring.backendspring.member.entity.MemberEntity;
+import org.spring.backendspring.member.repository.MemberRepository;
 import org.spring.backendspring.payment.PaymentStatus;
 import org.spring.backendspring.payment.dto.PaymentDto;
 import org.spring.backendspring.payment.dto.PaymentItemDto;
@@ -26,6 +30,7 @@ public class AdminPaymentServiceImpl implements AdminPaymentService {
 
     private final AdminPaymentRepository adminPaymentRepository;
     private final PaymentItemRepository paymentItemRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public PagedResponse<PaymentDto> getAllPayments(String keyword, int page, int size) {
@@ -53,13 +58,19 @@ public class AdminPaymentServiceImpl implements AdminPaymentService {
     }
 
     @Override
-    public PaymentDto getPayment(Long paymentId) {
-        return adminPaymentRepository.findById(paymentId)
-                .map(PaymentDto::fromEntity)
+    public AdminPaymentDetailDto getPayment(Long paymentId) {
+        AdminPaymentDetailDto detailDto = adminPaymentRepository.findById(paymentId)
+                .map(AdminPaymentDetailDto::toDto)
                 .orElseThrow(() -> new RuntimeException("결제 정보 없음"));
+
+        Optional<MemberEntity> memberEntity = memberRepository.findById(detailDto.getMemberId());
+        if (memberEntity.isEmpty()) {
+            detailDto.setMemberStatus("탈퇴회원");
+        }
+        return detailDto;
     }
 
-     @Override
+    @Override
     public void updateStatus(Long paymentId, String status) {
 
         PaymentEntity payment = adminPaymentRepository.findById(paymentId)
