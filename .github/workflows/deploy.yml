@@ -44,8 +44,11 @@ jobs:
       - name: 5. Setup Swap Space for npm install
         if: runner.os == 'Linux'
         run: |
-          echo "Allocating 4G swap file..."
-          sudo fallocate -l 4G /swapfile
+          echo "Allocating 4G swap file using dd..."
+          
+          
+          sudo dd if=/dev/zero of=/swapfile bs=1M count=4096 
+          
           sudo chmod 600 /swapfile
           sudo mkswap /swapfile
           sudo swapon /swapfile
