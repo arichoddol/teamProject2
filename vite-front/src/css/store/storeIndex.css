@@ -17,10 +17,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    
     
 }
 .itemList-con h2 {
+
     
+    justify-content: center;
     text-align: center;
     margin-top: 2vh;
 
@@ -28,19 +32,25 @@
     font-optical-sizing: auto;
     font-style: normal;
     font-weight: bold;
+
+    padding-bottom: 10%;
+    border-bottom: 2px solid blue;
+
     
 
 }
 .itemList-banner{
 
     border-radius: 20px;
-    padding-top: 10vh;
-    padding-bottom: 10vh;
+    padding-top: 3vh;
+    padding-bottom: 1vh;
+
+      width: 100vw;
+  border-radius: 3px solid red;
+   
 }
 .itemList-banner .main{
-    border-radius: 20px;
-    
-   
+
 }
 .slider__wrap{
     border-radius: 20px;
@@ -55,7 +65,7 @@
     /* gap: 0.5vw; */
     width: 100%;
     justify-content: center;
-    padding-bottom: 15vh;
+    padding-bottom: 5vh;
     
 }
 .category-sub div{
@@ -99,6 +109,97 @@
 .item-card-link{
     padding-bottom: 10vh;
 }
+.slider__img{
+    width: 200vw;
+}
+
+/* new item section */
+.new-item {
+    display: flex;
+    flex-direction: row; 
+    flex-wrap: wrap; 
+    justify-content: space-between; 
+    align-items: center;
+    gap: 1px; 
+    width: 60%; 
+}
+.item-card-link-new {
+   
+    width: calc(50% - 10px); 
+    
+    
+    text-decoration: none; 
+    color: inherit;
+     padding-bottom: 15%;
+}
+
+.item-card-new {
+    width: 100%; 
+    border: 1px solid #ddd; 
+    border-radius: 8px;
+    overflow: hidden; 
+
+  
+}
+.item-image-placeholder-new {
+    width: 100%;
+    padding-top: 100%; 
+    position: relative;
+    overflow: hidden;
+}
+.item-image-placeholder-new .gallery-image {
+    position: absolute; /* 부모 컨테이너 기준 절대 위치 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+}
+.new-item .item-image {
+    width: 100%;
+   
+    height: 300px;
+    object-fit: cover;
+}
+
+.badge-new {
+    display: inline-block;
+    background-color: #d90429;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75em;
+    font-weight: bold;
+    margin-top: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.new-item-h2 {
+    width: 100%; 
+    margin-top: 30px; 
+    /* margin-bottom: 20px;  */
+    padding-bottom: 10%;
+}
+.new-item-h2 h2 {
+    text-align: center; 
+    padding-bottom: 4%;
+    
+}
+.item-card-new:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transform: translateY(-10px);
+}
+
+
+
+
+
+
+
+
 
 .item-card {
 
