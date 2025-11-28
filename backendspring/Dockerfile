@@ -1,6 +1,6 @@
 # ========== Stage 1: 빌더 (Build Stage) ==========
 # Gradle을 사용해 빌드하기 위한 JDK 이미지
-FROM openjdk:17-jdk AS builder
+FROM eclipse-temurin:17-jdk AS builder
 
 # 작업 디렉토리 설정
 WORKDIR /app
