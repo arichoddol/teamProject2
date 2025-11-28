@@ -14,10 +14,12 @@
     /* 부드럽게 나타나도록 애니메이션 추가 */
 
     position: absolute;
-    top: 2100%;
+    top: 100%;
 
-    transform: translateX(-50%) translateY(-100%);
+    left: 50%;
+    transform: translateX(-50%);
 
+    margin-top: 1px;
 
     background-image: linear-gradient(to bottom, aliceblue, #ffffff);
     /* background-color: aliceblue; */
@@ -27,7 +29,7 @@
     font-size: 14px;
 
 
-    z-index: 10;
+    z-index: 20;
 
     white-space: nowrap;
 }

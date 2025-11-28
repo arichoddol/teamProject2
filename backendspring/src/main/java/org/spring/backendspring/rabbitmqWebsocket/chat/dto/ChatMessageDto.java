@@ -23,6 +23,7 @@ public class ChatMessageDto {
     private Long senderId;
     private String senderNickName;
     private String message;
+    private String type;
     private LocalDateTime createTime;
 
     public static ChatMessageDto toDto(ChatMessageEntity entity) {
@@ -34,6 +35,7 @@ public class ChatMessageDto {
                 .senderNickName(entity.getSenderNickName())
                 .message(entity.getMessage())
                 .createTime(entity.getCreateTime())
+                .type(entity.getType())
                 .build();
     }
 }

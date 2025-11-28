@@ -94,7 +94,7 @@ const MyCrewRunDetailModal = ({input, onClose, loginId, onChange, onSubmit, onDe
                     readOnly
                   />
                 </li>
-                <li>
+                <li className='detail-btn-list'>
                   <button type='button' onClick={onSubmit}>✏️ 수정</button>
                   <button type='button' onClick={() => onMember(input.id, nowPage)}>👥 참가 크루원</button>
       

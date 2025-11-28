@@ -1,6 +1,10 @@
 package org.spring.backendspring.rabbitmqWebsocket.config;
 
+
 import org.spring.backendspring.rabbitmqWebsocket.chat.rabbitmq.Receiver;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
@@ -26,12 +30,28 @@ public class RabbitConfig {
 
     private final ConnectionFactory connectionFactory;
 
-    @Value("${rabbitmq.exchange.name}")
-    private String exchangeName;
+    @Value("${spring.rabbitmq.crew.exchange}")
+    private String crewExchangeYml;
+
+    @Value("${spring.rabbitmq.crew.queue}")
+    private String crewQueueYml;
+
+    @Bean
+    public Queue crewQueue() {
+        return new Queue(crewQueueYml, true);
+    }
 
     @Bean
     public TopicExchange topicExchange() {
-        return new TopicExchange(exchangeName);
+        return new TopicExchange(crewExchangeYml);
+    }
+
+     @Bean
+    public Binding crewBinding() {
+        // crew.# 로 다 받을거면 이렇게도 가능
+        return BindingBuilder.bind(crewQueue())
+                .to(topicExchange())
+                .with("crew.#");
     }
 
     @Bean
@@ -41,8 +61,12 @@ public class RabbitConfig {
 
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-        return new RabbitTemplate(connectionFactory);
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setMessageConverter(messageConverter());
+        return rabbitTemplate;
     }
+
+
 
     @Bean
     public SimpleRabbitListenerContainerFactory
@@ -61,8 +85,9 @@ public class RabbitConfig {
 
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
 
-        container.setConnectionFactory(connectionFactory);
-        container.setMessageListener(listenerAdapter);
+        container.setConnectionFactory(connectionFactory); //rabbitmq연결
+        container.setQueueNames(crewQueueYml); //어떤큐?
+        container.setMessageListener(listenerAdapter); //메시지를 어떻게 처리할지
 
         return container;
     }

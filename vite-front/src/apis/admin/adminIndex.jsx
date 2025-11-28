@@ -2,17 +2,61 @@ import store from "../../store/store";
 import { BACK_BASIC_URL } from "../commonApis";
 import jwtAxios from "../util/jwtUtil";
 
-const accessToken = store.getState().jwtSlice.accessToken;
+const accessToken = () => store.getState().jwtSlice.accessToken;
 
-export const adminFn = async () => {
-  try {
-    const res = await jwtAxios.get(`${BACK_BASIC_URL}/api/admin/`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-      withCredentials: true,
+export const adminFn = {
+
+  getSummary: async() => {
+    return jwtAxios.get(`${BACK_BASIC_URL}/api/admin/summary`, {
+      headers: { Authorization: `Bearer ${accessToken()}` }
     });
+  },
 
-    return res;
-  } catch (err) {
-    console.log("어드민 접근 실패했습니다.");
+  getTotalMembers: async() => {
+    return jwtAxios.get(`${BACK_BASIC_URL}/api/admin/member/total`, {
+      headers: { Authorization: `Bearer ${accessToken()}` }
+    });
+  },
+
+  getTodayMembers: async() => {
+    return jwtAxios.get(`${BACK_BASIC_URL}/api/admin/member/today`, {
+      headers: { Authorization: `Bearer ${accessToken()}` }
+    });
+  },
+
+  getTotalCrews: async() => {
+    return jwtAxios.get(`${BACK_BASIC_URL}/api/admin/crew/total`, {
+      headers: { Authorization: `Bearer ${accessToken()}` }
+    });
+  },
+
+  getTodayCrews: async() => {
+    return jwtAxios.get(`${BACK_BASIC_URL}/api/admin/crew/today`, {
+      headers: { Authorization: `Bearer ${accessToken()}` }
+    });
+  },
+
+  getTotalPayments: async() => {
+    return jwtAxios.get(`${BACK_BASIC_URL}/api/admin/payment/total`, {
+      headers: { Authorization: `Bearer ${accessToken()}` }
+    });
+  },
+
+  getTodayPayments: async() => {
+    return jwtAxios.get(`${BACK_BASIC_URL}/api/admin/payment/today`, {
+      headers: { Authorization: `Bearer ${accessToken()}` }
+    });
+  },
+
+  getTotalBoards: async() => {
+    return jwtAxios.get(`${BACK_BASIC_URL}/api/admin/board/total`, {
+      headers: { Authorization: `Bearer ${accessToken()}` }
+    });
+  },
+
+  getTodayBoards: async() => {
+    return jwtAxios.get(`${BACK_BASIC_URL}/api/admin/board/today`, {
+      headers: { Authorization: `Bearer ${accessToken()}` }
+    });
   }
-};
+}

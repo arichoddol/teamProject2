@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.util.Streamable;
 
 public interface AdminMemberRepository extends JpaRepository<MemberEntity, Long> {
@@ -20,4 +21,11 @@ public interface AdminMemberRepository extends JpaRepository<MemberEntity, Long>
     Page<MemberEntity> findByUserNameContaining(Pageable pageable, String search);
 
     Page<MemberEntity> findByNickNameContaining(Pageable pageable, String search);
+
+    @Query("SELECT COUNT(m) FROM MemberEntity m")
+    long countAll();
+
+    @Query("SELECT COUNT(m) FROM MemberEntity m WHERE DATE(m.createTime) = CURRENT_DATE")
+    long countToday();
+
 }

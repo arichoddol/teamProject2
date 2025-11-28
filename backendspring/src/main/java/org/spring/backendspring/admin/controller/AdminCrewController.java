@@ -1,5 +1,6 @@
 package org.spring.backendspring.admin.controller;
 
+import org.spring.backendspring.admin.repository.AdminCrewRepository;
 import org.spring.backendspring.admin.service.AdminCrewService;
 import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.crew.crew.dto.CrewDto;
@@ -26,6 +27,7 @@ public class AdminCrewController {
 
     private final CrewService crewService;
     private final AdminCrewService adminCrewService;
+    private final AdminCrewRepository adminCrewRepository;
 
     @GetMapping("/crewList")
     public ResponseEntity<PagedResponse<CrewDto>> getAllCrews(
@@ -62,5 +64,15 @@ public class AdminCrewController {
     public ResponseEntity<String> deleteCrew(@PathVariable("crewId") Long id) {
         adminCrewService.deleteCrewByAdmin(id);
         return ResponseEntity.ok("관리자에 의해 크루가 삭제 되었습니다");
+    }
+
+    @GetMapping("/total")
+    public long getTotalCrews() {
+        return adminCrewRepository.countAll();
+    }
+
+    @GetMapping("/today")
+    public long getTodayCrews() {
+        return adminCrewRepository.countToday();
     }
 }

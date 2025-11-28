@@ -24,7 +24,7 @@ function App() {
 
     const userData = async () => {
       try {
-        const res = await indexUserDetailFn(token, payload.id);
+        const res = await indexUserDetailFn(token);
         const memberData = res.data;
 
         dispatch(

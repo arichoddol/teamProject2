@@ -107,13 +107,14 @@ public class BoardServiceImpl implements BoardService {
                 boardEntities = boardRepository.findByTitleContaining(pageable, search);
             } else if (subject.equals("content")) {
                 boardEntities = boardRepository.findByContentContaining(pageable, search);
+            } else if  (subject.equals("nickName")){
+                boardEntities = boardRepository.findByMemberEntity_NickNameContaining(pageable, search);
             } else {
                 boardEntities = boardRepository.findAll(pageable);
             }
         }
-
         // Change -> Dto ( also Setting URL )
-        Page<BoardDto> boardDto = boardEntities.map(boardEntity ->{
+        return boardEntities.map(boardEntity ->{
             BoardDto dto = BoardDto.toBoardDto(boardEntity);
 
             if (dto.getAttachFile() == 1 && dto.getNewFileName() != null) {
@@ -128,7 +129,6 @@ public class BoardServiceImpl implements BoardService {
             return dto;
         });
 
-        return boardDto;
     }
 
     @Override

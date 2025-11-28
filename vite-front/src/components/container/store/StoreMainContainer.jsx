@@ -20,6 +20,7 @@ const ShopMainContainer = () => {
 
   const [items, setItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
+  const [recentItems, setRecentItems] = useState([]);
   const [pageInfo, setPageInfo] = useState({
     totalPages: 0,
     startPage: 0,
@@ -64,10 +65,21 @@ const ShopMainContainer = () => {
     }
   };
 
+  // this one for recently bring 2items 
+  const fetchRecentData =async() =>{
+    try{
+       const response = await axios.get("http://localhost:8088/api/shop/recent")
+       setRecentItems(response.data || []); 
+    } catch (error){
+      console.error("최근상품로드실패",+error);
+    }
+  }
+
 
   useEffect(() => {
 
     fetchData(currentPage);
+    fetchRecentData();
   }, [currentPage]);
 
   const pageNumbers = [];
@@ -119,9 +131,65 @@ const ShopMainContainer = () => {
               </div>
           </div>
         </div>
-        <h2> :: 상품목록 :: </h2>
-        <br />
+        <div className="category-sub">
+          <div className="sub1">
+            <Link to="/store/shoes">
+            <img src="/images/store/1.png" alt="이미지1"/>
+            </Link></div>
+          <div className="sub1">
+             <Link to="/store/cloth">
+                <img src="/images/store/2.jpg" alt="이미지1"/>
+            </Link></div>
+           <div className="sub1">
+             <Link to="/store/equipment">
+                <img src="/images/store/3.jpg" alt="이미지1"/>
+            </Link></div>
+           <div className="sub1">
+             <Link to="/store/accessory">
+                <img src="/images/store/4.jpg" alt="이미지1"/>
+            </Link></div>
+        </div>
+
+{/* --- EOF CATEGORY HEADER ITEM SECTION --- */}
+      
+        <div className="new-item">
+          <div className="new-item-h2">
+            <h2>NEW COLLECTION</h2>
+          </div>
+        
+        {recentItems.map((list) => (
+          <Link to={`/store/detail/${list.id}`} key={list.id} className="item-card-link-new">
+            <div className="item-card-new">
+              {list.attachFile === 1 ? (
+                <div className="item-image-placeholder-new">
+                  <img 
+                    src={list.itemImgDtos[0].fileUrl} 
+                    alt={list.itemTitle} 
+                    className="gallery-image" 
+                  />
+                </div>
+           ) : (
+             <img src="/images/noimage.jpg" alt="없음" className="item-image" />
+           )}
+           
+           <div className="item-info">
+             <h4 className="item-title">{list.itemTitle}</h4>
+             <p className="item-price">{list.itemPrice.toLocaleString()} 원</p>
+             {/* 필요하다면 NEW 뱃지 같은거 추가 */}
+             <span className="badge-new">NEW</span>
+           </div>
+        </div>
+      </Link>
+      ))}
+    </div>
+    
+{/* --- EOF NEW ITEM SECTION --- */}
+
+        <div className="itemgridh2">
+           <h2>BEST ITEM</h2><br />
+            </div>
         <div className="item-grid-container">
+       
           {items.length === 0 && (
             <p className="no-items-data">등록된 상품이 없습니다.</p>
           )}
@@ -160,8 +228,7 @@ const ShopMainContainer = () => {
                   <p className="item-price">
                     {list.itemPrice
                       ? list.itemPrice.toLocaleString()
-                      : "가격 미정"}{" "}
-                    원
+                      : "가격 미정"}{" "} 원
                   </p>
                 </div>
               </div>

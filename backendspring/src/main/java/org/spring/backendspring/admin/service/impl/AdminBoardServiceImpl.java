@@ -26,16 +26,41 @@ public class AdminBoardServiceImpl implements AdminBoardService {
 
     // List 는 공통 BasicPagingDto 클래스 만들어서 사용하는 방향으로 ()
     @Override
-    public PagedResponse<BoardDto> findAllBoards(String keyword, int page, int size) {
+    public PagedResponse<BoardDto> findAllBoards(String keyword, String search, int page, int size) {
+
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
         Page<BoardDto> boardPage;
 
+        // 검색어 없으면 전체 조회
         if (keyword == null || keyword.trim().isEmpty()) {
             boardPage = boardRepository.findAll(pageable)
                     .map(BoardDto::toBoardDto);
-        } else {
+        }
+
+        // 제목 + 내용 검색
+        else if ("all".equals(search)) {
             boardPage = adminBoardRepository
                     .findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(keyword, keyword, pageable)
+                    .map(BoardDto::toBoardDto);
+        }
+
+        // 제목 검색
+        else if ("title".equals(search)) {
+            boardPage = adminBoardRepository
+                    .findByTitleContainingIgnoreCase(keyword, pageable)
+                    .map(BoardDto::toBoardDto);
+        }
+
+        // 내용 검색
+        else if ("content".equals(search)) {
+            boardPage = adminBoardRepository
+                    .findByContentContainingIgnoreCase(keyword, pageable)
+                    .map(BoardDto::toBoardDto);
+        }
+
+        // 그 외 → 전체 목록
+        else {
+            boardPage = boardRepository.findAll(pageable)
                     .map(BoardDto::toBoardDto);
         }
 

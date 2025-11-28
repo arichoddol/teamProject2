@@ -3,8 +3,10 @@ package org.spring.backendspring.admin.service.impl;
 import org.spring.backendspring.admin.repository.AdminPaymentRepository;
 import org.spring.backendspring.admin.service.AdminPaymentService;
 import org.spring.backendspring.common.dto.PagedResponse;
+import org.spring.backendspring.payment.PaymentStatus;
 import org.spring.backendspring.payment.dto.PaymentDto;
 import org.spring.backendspring.payment.dto.PaymentItemDto;
+import org.spring.backendspring.payment.entity.PaymentEntity;
 import org.spring.backendspring.payment.entity.PaymentItemEntity;
 import org.spring.backendspring.payment.repository.PaymentItemRepository;
 import org.spring.backendspring.payment.repository.PaymentRepository;
@@ -57,7 +59,19 @@ public class AdminPaymentServiceImpl implements AdminPaymentService {
                 .orElseThrow(() -> new RuntimeException("결제 정보 없음"));
     }
 
+     @Override
+    public void updateStatus(Long paymentId, String status) {
 
+        PaymentEntity payment = adminPaymentRepository.findById(paymentId)
+                .orElseThrow(() -> new IllegalArgumentException("결제 정보 찾을 수 없음"));
+
+        // String → Enum 변환
+        PaymentStatus newStatus = PaymentStatus.valueOf(status);
+
+        payment.setPaymentStatus(newStatus);
+
+        adminPaymentRepository.save(payment);
+    }
 
 }
 
