@@ -7,7 +7,7 @@ WORKDIR /app
 
 # 패키지 파일만 복사하여 종속성 설치 (캐싱 활용)
 # COPY [소스] [목적지/]
-COPY package*.json ./
+COPY vite-front/package*.json ./
 RUN npm install
 
 # 모든 소스 파일을 복사
