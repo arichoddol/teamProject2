@@ -22,7 +22,7 @@ RUN ./gradlew bootJar
 
 # ========== Stage 2: 런타임 (Runtime Stage) ==========
 # 실행만을 위한 경량 JRE 이미지 사용 (최적화)
-FROM openjdk:17-jre-slim
+FROM openjdk:17-jre
 
 # 컨테이너의 작업 디렉토리를 /app으로 설정
 WORKDIR /app
