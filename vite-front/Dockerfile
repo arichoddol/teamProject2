@@ -27,7 +27,7 @@ COPY --from=build /app/build /usr/share/nginx/html
 
 # 2. 사용자 정의 Nginx 설정 파일 복사
 # 프로젝트 루트(./vite-front) 기준: nginx/nginx.conf 경로
-COPY nginx/nginx.conf /etc/nginx/nginx.conf
+COPY vite-front/nginx/nginx.conf /etc/nginx/nginx.conf
 
 # 웹 기본 포트 노출
 EXPOSE 80
