@@ -45,12 +45,12 @@ jobs:
       # 3. Docker 이미지 빌드 및 푸시 (YML 파일을 Secret으로 주입할 것이므로, 여기서는 임시 파일로 빌드)
       - name: Build and push Backend Docker image
         run: |
-            cd resumeboost
+            cd backendspring
             docker build -t ther3fore/backendspring-backend:latest .
             docker push ther3fore/backendspring-backend:latest
       - name: Build and push Frontend Docker image
         run: |
-            cd frontend
+            cd vite-front
             docker build -t ther3fore/vite-front-frontend:latest .
             docker push ther3fore/vite-front-frontend:latest
       
