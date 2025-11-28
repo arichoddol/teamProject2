@@ -196,7 +196,7 @@ const MyCrewBoardDetailContainer = () => {
                 required
                 placeholder='타인을 배려하는 마음으로 댓글을 달아주세요.' 
               />
-              <button type="button" onClick={submitComment}>등록</button>
+              <button type="button" onClick={submitComment}>✏️등록</button>
             </div>
           </div>
           <div className="commentList">
@@ -236,14 +236,14 @@ const MyCrewBoardDetailContainer = () => {
       </div>
       <div className="crewBoardBtn">
         <div className="crewBoardListBtn">
-          <button className='crewBoardBtnBtn' onClick={() => navigate(`/mycrew/${crewId}/board/list`)}>글목록</button>
+          <button className='crewBoardBtnBtn' onClick={() => navigate(`/mycrew/${crewId}/board/list`)}>📄글목록</button>
         </div>
         <div className="crewBoardWrite">
-          <button className='crewBoardBtnBtn' onClick={() => navigate(`/mycrew/${crewId}/board/create`)}>글작성</button>
+          <button className='crewBoardBtnBtn' onClick={() => navigate(`/mycrew/${crewId}/board/create`)}>📝글작성</button>
           {board.memberId === loginMemberId && (
             <>
-              <button className='crewBoardBtnBtn' onClick={() => navigate(`/mycrew/${crewId}/board/update/${boardId}`)}>수정</button>
-              <button className='crewBoardBtnBtn' onClick={deleteBoard}>삭제</button>
+              <button className='crewBoardBtnBtn' onClick={() => navigate(`/mycrew/${crewId}/board/update/${boardId}`)}>✏️수정</button>
+              <button className='crewBoardBtnBtn' onClick={deleteBoard}>✖️삭제</button>
             </>
           )}
         </div>

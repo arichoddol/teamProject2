@@ -1,6 +1,5 @@
 package org.spring.backendspring.rabbitmqWebsocket.chat.dto;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.spring.backendspring.rabbitmqWebsocket.chat.entity.ChatMessageEntity;

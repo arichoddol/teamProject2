@@ -124,6 +124,12 @@ public class CrewChatServiceImpl implements CrewChatService {
 
         return saveMessage(message);
 
+    }
+
+    @Override
+    public int getActiveCount(Long crewId) {
+        
+        return null;
     } 
     
 }
