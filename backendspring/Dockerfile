@@ -14,7 +14,7 @@ COPY build.gradle settings.gradle ./
 RUN ./gradlew dependencies
 
 # 소스 코드 복사
-COPY src ./src
+COPY backendspring/src  ./src
 
 # 프로젝트 빌드
 # JAR 파일은 /app/build/libs/ 에 생성됩니다.
