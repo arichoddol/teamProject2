@@ -41,18 +41,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: 5. Setup Swap Space for npm install
-        if: runner.os == 'Linux'
-        run: |
-          echo "Allocating 4G swap file using dd..."
-          
-          
-          sudo dd if=/dev/zero of=/swapfile bs=1M count=4096 
-          
-          sudo chmod 600 /swapfile
-          sudo mkswap /swapfile
-          sudo swapon /swapfile
-          sudo swapon --show
           
       # 3. Docker 이미지 빌드 및 푸시 (YML 파일을 Secret으로 주입할 것이므로, 여기서는 임시 파일로 빌드)
       - name: 6. Build and Push Placeholder Images
