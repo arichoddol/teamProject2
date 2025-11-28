@@ -43,7 +43,7 @@ public class AdminPaymentController {
     }
 
     @GetMapping("/{paymentId}")
-    public ResponseEntity<PaymentDto> getPaymentDetail(@PathVariable Long paymentId) {
+    public ResponseEntity<?> getPaymentDetail(@PathVariable Long paymentId) {
         return ResponseEntity.ok(
                 adminPaymentService.getPayment(paymentId));
     }

@@ -18,6 +18,9 @@ public class MyUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         MemberEntity memberEntity = memberRepository.findByUserEmail(username)
                 .orElseThrow(() -> new IllegalArgumentException("없는 이메일입니다."));
+        if (memberEntity.isDeleted()) {
+            throw new IllegalArgumentException("탈퇴한 회원입니다.");
+        }
         return new MyUserDetails(memberEntity);
     }
 }

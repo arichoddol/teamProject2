@@ -130,6 +130,7 @@
 /* 버튼 줄 */
 .myCrewMemberModal .myCrewMemberModal-body li.buttons-row {
   justify-content: flex-end;
+  
 }
 
 /* 기본 버튼 스타일 */

@@ -18,7 +18,7 @@ const MyCrewLayout = () => {
         <div className="right">
           <Header/> 
           <Outlet/>
-          <Footer/>
+          
         </div>
 
       </div>

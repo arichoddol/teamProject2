@@ -1,0 +1,17 @@
+.myCrewBot {}
+.myCrewBot .myCrewBot-con{}
+.myCrewBot .myCrewBot-con .myCrewBot-display{
+    display: flex;
+    flex-direction: column;
+}
+.myCrewBot .myCrewBot-con .myCrewBot-display ul{}
+.myCrewBot .myCrewBot-con .myCrewBot-display ul li{}
+.myCrewBot .myCrewBot-con .myCrewBot-display ul li.Bot{
+    display: flex;
+    justify-content: flex-start;
+}
+.myCrewBot .myCrewBot-con .myCrewBot-display ul li.User{
+    display: flex;
+    justify-content: flex-end;
+    
+}

@@ -6,20 +6,14 @@ import SilderInner from "./SilderInner";
 import "../../../css/store/storeIndex.css";
 import "../../../css/store/storeIndexSlide.css";
 
-
-
-
 const ShopMainContainer = () => {
-
-  
-
   const NO_IMAGE_URL = "/images/noimage.jpg";
-
 
   const sliderRef = useRef(null);
 
   const [items, setItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
+  const [recentItems, setRecentItems] = useState([]);
   const [pageInfo, setPageInfo] = useState({
     totalPages: 0,
     startPage: 0,
@@ -28,7 +22,6 @@ const ShopMainContainer = () => {
   });
 
   const displayPageNum = 5; // 화면에 표시할 페이지 버튼 개수
-  
 
   const fetchData = async (page) => {
     const response = await axios.get(
@@ -64,10 +57,19 @@ const ShopMainContainer = () => {
     }
   };
 
+  // this one for recently bring 2items
+  const fetchRecentData = async () => {
+    try {
+      const response = await axios.get("http://localhost:8088/api/shop/recent");
+      setRecentItems(response.data || []);
+    } catch (error) {
+      console.error("최근상품로드실패", +error);
+    }
+  };
 
   useEffect(() => {
-
     fetchData(currentPage);
+    fetchRecentData();
   }, [currentPage]);
 
   const pageNumbers = [];
@@ -81,18 +83,18 @@ const ShopMainContainer = () => {
   };
 
   const handleSliderPrev = (e) => {
-        e.preventDefault();
-        if (sliderRef.current && sliderRef.current.prev) {
-            sliderRef.current.prev();
-        }
-    };
+    e.preventDefault();
+    if (sliderRef.current && sliderRef.current.prev) {
+      sliderRef.current.prev();
+    }
+  };
 
-    const handleSliderNext = (e) => {
-        e.preventDefault();
-        if (sliderRef.current && sliderRef.current.next) {
-            sliderRef.current.next();
-        }
-    };
+  const handleSliderNext = (e) => {
+    e.preventDefault();
+    if (sliderRef.current && sliderRef.current.next) {
+      sliderRef.current.next();
+    }
+  };
 
   return (
     <div className="itemList">
@@ -101,36 +103,131 @@ const ShopMainContainer = () => {
         <div className="itemList-banner">
           {/* image Header slice here.....*/}
           <div className="main">
-              <div className="slider__wrap">
-                  <div className="slider__img">
-                     <div className="slider__thumb"></div>  
-                      <div className="slider__btn">
-                        <a href="#" className="prev" title="이전이미지" onClick={handleSliderPrev}>«</a>
-                        <a href="#" className="next" title="다음이미지" onClick={handleSliderNext}>»</a>
-                      </div>
-                          <SilderInner ref={sliderRef} silderInterval={2000}>
-                            <div className="slider s1"><img src="/images/store/swiper/header1.jpg" alt="이미지1"/></div>
-                            <div className="slider s2"><img src="/images/store/swiper/header2.jpg" alt="이미지2"/></div>
-                            <div className="slider s3"><img src="/images/store/swiper/header3.jpg" alt="이미지3"/></div>
-                            <div className="slider s4"><img src="/images/store/swiper/header4.jpg" alt="이미지4"/></div>
-                            <div className="slider s5"><img src="/images/store/swiper/header5.jpg" alt="이미지5"/></div>
-                          </SilderInner>
+            <div className="slider__wrap">
+              <div className="slider__img">
+                <div className="slider__thumb"></div>
+                <div className="slider__btn">
+                  <a
+                    href="#"
+                    className="prev"
+                    title="이전이미지"
+                    onClick={handleSliderPrev}
+                  >
+                    «
+                  </a>
+                  <a
+                    href="#"
+                    className="next"
+                    title="다음이미지"
+                    onClick={handleSliderNext}
+                  >
+                    »
+                  </a>
+                </div>
+                <SilderInner ref={sliderRef} silderInterval={2000}>
+                  <div className="slider s1">
+                    <img src="/images/store/swiper/header1.jpg" alt="이미지1" />
                   </div>
+                  <div className="slider s2">
+                    <img src="/images/store/swiper/header2.jpg" alt="이미지2" />
+                  </div>
+                  <div className="slider s3">
+                    <img src="/images/store/swiper/header3.jpg" alt="이미지3" />
+                  </div>
+                  <div className="slider s4">
+                    <img src="/images/store/swiper/header4.jpg" alt="이미지4" />
+                  </div>
+                  <div className="slider s5">
+                    <img src="/images/store/swiper/header5.jpg" alt="이미지5" />
+                  </div>
+                </SilderInner>
               </div>
+            </div>
           </div>
         </div>
-        <h2> :: 상품목록 :: </h2>
-        <br />
+        <div className="category-sub">
+          <div className="sub1">
+            <Link to="/store/shoes">
+              <img src="/images/store/1.png" alt="이미지1" />
+            </Link>
+          </div>
+          <div className="sub1">
+            <Link to="/store/cloth">
+              <img src="/images/store/2.jpg" alt="이미지1" />
+            </Link>
+          </div>
+          <div className="sub1">
+            <Link to="/store/equipment">
+              <img src="/images/store/3.jpg" alt="이미지1" />
+            </Link>
+          </div>
+          <div className="sub1">
+            <Link to="/store/accessory">
+              <img src="/images/store/4.jpg" alt="이미지1" />
+            </Link>
+          </div>
+        </div>
+
+        {/* --- EOF CATEGORY HEADER ITEM SECTION --- */}
+
+        <div className="new-item">
+          <div className="new-item-h2">
+            <h2>NEW COLLECTION</h2>
+          </div>
+
+          {recentItems.map((list) => (
+            <Link
+              to={`/store/detail/${list.id}`}
+              key={list.id}
+              className="item-card-link-new"
+            >
+              <div className="item-card-new">
+                {list.attachFile === 1 ? (
+                  <div className="item-image-placeholder-new">
+                    <img
+                      src={list.fileUrl}
+                      alt={list.itemTitle}
+                      className="gallery-image"
+                    />
+                  </div>
+                ) : (
+                  <img
+                    src="/images/noimage.jpg"
+                    alt="없음"
+                    className="item-image"
+                  />
+                )}
+
+                <div className="item-info">
+                  <h4 className="item-title">{list.itemTitle}</h4>
+                  <p className="item-price">
+                    {list.itemPrice.toLocaleString()} 원
+                  </p>
+                  {/* 필요하다면 NEW 뱃지 같은거 추가 */}
+                  <span className="badge-new">NEW</span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* --- EOF NEW ITEM SECTION --- */}
+
+        <div className="itemgridh2">
+          <h2>BEST ITEM</h2>
+          <br />
+        </div>
         <div className="item-grid-container">
           {items.length === 0 && (
             <p className="no-items-data">등록된 상품이 없습니다.</p>
           )}
-          
+
           {items.map((list) => (
             <Link
               to={`/store/detail/${list.id}`}
               key={list.id}
-              className="item-card-link">
+              className="item-card-link"
+            >
               <div className="item-card">
                 {/* 상품 이미지 영역 */}
                 {console.log(items)}
@@ -138,11 +235,11 @@ const ShopMainContainer = () => {
                   <div className="item-image-placeholder">
                     {list.itemImgDtos.map((imgDto, index) => (
                       <img
-                        key={index} 
-                        src={imgDto.fileUrl} 
+                        key={index}
+                        src={list.fileUrl}
                         alt={imgDto.oldName}
                         className="gallery-image"
-                    />
+                      />
                     ))}
                   </div>
                 ) : (

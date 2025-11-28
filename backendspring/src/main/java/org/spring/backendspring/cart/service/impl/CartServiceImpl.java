@@ -25,6 +25,9 @@ public class CartServiceImpl implements CartService {
     private final CartItemRepository cartItemRepository;
     private final ItemRepository itemRepository;
 
+   
+
+
     @Override
     @Transactional
     public CartEntity getCartByMemberId(Long memberId) {
@@ -87,6 +90,8 @@ public class CartServiceImpl implements CartService {
     @Override
     public List<CartItemEntity> getCartItems(Long cartId) {
         return cartItemRepository.findByCartEntity_Id(cartId);
+   
+
     }
 
     @Override
@@ -96,13 +101,17 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Page<CartItemEntity> getCartItems(Long cartId, Pageable pageable) {
-        return cartItemRepository.findByCartEntity_Id(cartId, pageable);
+        // return cartItemRepository.findByCartEntity_Id(cartId, pageable);
+        return cartItemRepository.findCartItemsWithImagesByCartId(cartId, pageable);
     }
 
     @Override
     public Page<CartItemEntity> searchCartItems(Long cartId, String keyword, Pageable pageable) {
-        return cartItemRepository.findByCartEntity_IdAndItemEntity_ItemTitleContainingIgnoreCase(
-                cartId, keyword, pageable);
+
+        return cartItemRepository.searchCartItemsWithImages(cartId, keyword, pageable);
+
+        // return cartItemRepository.findByCartEntity_IdAndItemEntity_ItemTitleContainingIgnoreCase(
+                // cartId, keyword, pageable);
     }
 
     // 수량 변경 구현

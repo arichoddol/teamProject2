@@ -65,7 +65,7 @@ const PaymentPage = () => {
 
 
                 // 2. 회원 상세 정보 조회 및 필드 채우기 (변경된 authDetailFn에 memberId 전달)
-                const res = await authDetailFn(fetchedMemberId); 
+                const res = await authDetailFn(); 
                 
                 // [핵심 로직]
                 if (!res || !res.data || !res.data.userName) {
