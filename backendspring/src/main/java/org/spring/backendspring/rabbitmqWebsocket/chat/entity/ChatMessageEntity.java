@@ -4,9 +4,12 @@ import java.time.LocalDateTime;
 
 import org.spring.backendspring.common.BasicTime;
 import org.spring.backendspring.rabbitmqWebsocket.chat.dto.ChatMessageDto;
+import org.spring.backendspring.rabbitmqWebsocket.chat.dto.ChatMessageType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,9 +39,14 @@ public class ChatMessageEntity {
     @Column(name = "crew_id", nullable = false)
     private Long crewId;
 
-    private String senderNickName;
+    // private String senderNickName;
+
+    // private String senderProfileUrl;
 
     private String message;
+
+    @Enumerated(EnumType.STRING)
+    private ChatMessageType type;
 
     private LocalDateTime createTime;
 
@@ -47,8 +55,10 @@ public class ChatMessageEntity {
         return ChatMessageEntity.builder()
                 .senderId(dto.getSenderId())
                 .crewId(dto.getCrewId())
-                .senderNickName(dto.getSenderNickName())
+                // .senderNickName(dto.getSenderNickName())
+                // .senderProfileUrl(dto.getSenderProfileUrl())
                 .message(dto.getMessage())
+                .type(dto.getType())
                 .createTime(dto.getCreateTime())
                 .build();
     }

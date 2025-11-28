@@ -97,7 +97,7 @@
   
 .crewBoardImage .crewBoardImages>img.crewBoardImg {
     width: 100%;
-    max-width: 500px;
+    max-width: 450px;
     border-radius: 3px;
     object-fit: cover;
   }

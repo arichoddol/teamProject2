@@ -81,6 +81,45 @@
     flex-direction: column;
     gap: 8px;
   }
+
+  .boardFile>ul.exFile {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
+  /* 파일 수정 이미지 */
+  li.exFileItem {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    display: inline-block;
+  }
+  
+  li.exFileItem>img.exFiles {
+    max-width: 150px; /* 원하는 mid-width */
+    height: auto; /* 비율 유지 */
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  li.exFileItem>button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(255, 0, 0, 0.8);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    font-weight: bold;
+    line-height: 18px;
+  }
+  
+  li.exFileItem>button:hover {
+    background-color: #a09f9f; /* 살짝 어두워지는 효과 */
+  }
   
   .boardCreate .boardCreate-con .boardFile>input[type="file"] {
     padding: 6px 0;

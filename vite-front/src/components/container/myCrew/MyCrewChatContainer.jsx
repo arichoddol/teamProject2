@@ -11,28 +11,68 @@ const MyCrewChatContainer = () => {
   const senderNickName = useSelector((state) => state.loginSlice.nickName)
   const {crewId} = useParams()
 
+  const [isEntered, setIsEntered] = useState(false)
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState("")
   const stompRef = useRef(null)
+  const subscriptionRef = useRef(null)
   const messagesEndRef = useRef(null)
 
-  useEffect(() => {
+  // 채팅 입장
+  const enterChat = async () => {
+    if (!stompRef.current?.connected) return;
     // 최근 대화 300개 불러오기
-    const fetchRecentMessages = async () => {
-      try {
-        const res = await jwtAxios.get(`/api/mycrew/${crewId}/chat/recent?limit=300`,
-          {
-            headers: { Authorization: `Bearer ${accessToken}`},
-            withCredentials: true
-          }
-        )
-        setMessages(res.data.reverse())
-      } catch(err) {
-          console.log("대화 로드 실패", err)
-      }
+    try {
+      const res = await jwtAxios.get(`/api/mycrew/${crewId}/chat/recent?limit=300`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}`},
+          withCredentials: true
+        }
+      )
+      setMessages(res.data.reverse())
+    } catch(err) {
+        console.log("대화 로드 실패", err)
     }
-    fetchRecentMessages()
-  }, [crewId, accessToken])
+
+    // 입장 메시지 딴
+    stompRef.current.publish({
+      destination: `/app/chat/crew/${crewId}/enter`,
+      body: JSON.stringify({
+        crewId,
+        senderId: senderId,
+      })
+    })
+
+    // 구독 따단
+    subscriptionRef.current = stompRef.current.subscribe(
+      `/topic/chat/crew/${crewId}`, (payload) => {
+        const msg = JSON.parse(payload.body)
+        setMessages(prev => {
+          // 중복 방지
+          if (prev.some(m => m.id && m.id === msg.id)) return prev
+          return [...prev, msg]
+        })
+      }
+    )
+    setIsEntered(true)
+  }
+
+  // 채팅 퇴장
+  const leaveChat = () => {
+    if (!stompRef.current?.connected || !isEntered) return;
+    stompRef.current.publish({
+      destination: `/app/chat/crew/${crewId}/leave`,
+      body: JSON.stringify({
+        crewId,
+        senderId: senderId,
+      })
+    })
+    // 구독 끝
+    subscriptionRef.current?.unsubscribe()
+    subscriptionRef.current = null
+    setIsEntered(false)
+    setMessages([])
+  }
 
   useEffect(() => {
     // stomp 연결
@@ -42,15 +82,6 @@ const MyCrewChatContainer = () => {
       debug: (str) => {console.log(str)},
       onConnect: () => {
         console.log("연결됨")
-        // 크루끼리
-        stomp.subscribe(`/topic/chat/crew/${crewId}`, (payload) => {
-          const msg = JSON.parse(payload.body)
-          setMessages(prev => {
-            // 중복 방지
-            if (prev.some(m => m.id && m.id === msg.id)) return prev
-            return [...prev, msg]
-          })
-        })
       },
       onStompError: (err) => {
         console.error("stomp 에러", err)
@@ -61,16 +92,14 @@ const MyCrewChatContainer = () => {
     stomp.activate()
 
     return () => {
-      if (stompRef.current) {
-        stompRef.current.deactivate()
-        stompRef.current = null;
-      }
+      stompRef.current.deactivate()
+      stompRef.current = null
     }
   }, [crewId])
 
   const sendMessage = () => {
     if (!input.trim()) return;
-    if (!stompRef.current?.connected) {
+    if (!stompRef.current?.connected || !isEntered) {
       console.log("연결 대기")
       return
     }
@@ -78,7 +107,8 @@ const MyCrewChatContainer = () => {
       crewId,
       senderId,
       senderNickName,
-      message: input.trim()
+      message: input.trim(),
+      type: "CHAT"
     }
     // 전송
     stompRef.current?.publish({
@@ -86,24 +116,71 @@ const MyCrewChatContainer = () => {
       body: JSON.stringify(payload)
     })
     setInput("")
+    console.log(messages)
   }
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({behavior: "smooth"})
   }, [messages])
 
+  const messageType = (msg, index) => {
+    const prev = messages[index - 1]
+    // 메시지 합체
+    const isSameSender = 
+      prev &&
+      prev.type === "CHAT" &&
+      prev.senderId === msg.senderId
+    
+    if (msg.type === "CHAT") {
+      return (
+        <div className={`crewMessage ${msg.senderId === senderId ? "me" : "other"}`} 
+              key={msg.id}>
+          <div className={`profileArea ${isSameSender ? "hidden" : ""}`}>
+            {!isSameSender && (
+              msg.senderProfileUrl 
+                ? <img src={msg.senderProfileUrl} alt={`${msg.senderId}프로필`} />
+                : <div className="replaceProfile emoji">🏃‍♂️</div>                 
+            )}
+          </div>
+          <div className="chatWrapper">
+            {!isSameSender && (
+                <strong className='nickName'>{msg.senderNickName}</strong>
+            )}
+            <div className='amessage'>{msg.message}</div>
+          </div>
+            <span className='time'>{new Date(msg.createTime).toLocaleString()}</span>
+        </div>
+      );
+    }
+    if (msg.type === "ENTER") {
+      return (
+        <div className="systemMessage" key={`enter.${msg.senderId}.${msg.createTime}`}>
+          {msg.message}
+        </div>
+      )
+    }
+    if (msg.type === "LEAVE") {
+      return (
+        <div className="systemMessage" key={`leave.${msg.senderId}.${msg.createTime}`}>
+          {msg.message}
+        </div>        
+      )
+    }
+  }
   return (
     <div className="crewChat">
       <div className="crewChat-con">
+        <div className="crewChat-header">
+          <h3>크루그룹채팅</h3>
+          <div className="chatButton">
+            {!isEntered
+              ? <button onClick={enterChat}>참여하기</button>
+              : <button onClick={leaveChat}>나가기</button>
+            }
+          </div>
+        </div>
         <div className="recentMessages">
-          {messages.map((m) => (
-            <div className={`crewMessage ${m.senderId === senderId ? "me" : "other"}`} 
-                 key={m.id}>
-              <strong>{m.senderNickName}</strong>
-              <div className='amessage'>{m.message}</div>
-              <span className='time'>{new Date(m.createTime).toLocaleString()}</span>
-            </div>
-          ))}
+          {messages.map((m, i) => messageType(m, i))}
           <div ref={messagesEndRef}></div>
         </div>
         <div className='writeMessage'>

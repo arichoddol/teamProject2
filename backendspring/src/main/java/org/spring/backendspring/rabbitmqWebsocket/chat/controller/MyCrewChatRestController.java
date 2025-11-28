@@ -1,16 +1,19 @@
 package org.spring.backendspring.rabbitmqWebsocket.chat.controller;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.spring.backendspring.config.security.MyUserDetails;
 import org.spring.backendspring.rabbitmqWebsocket.chat.dto.ChatMessageDto;
-import org.spring.backendspring.rabbitmqWebsocket.chat.service.CrewChatService;
+import org.spring.backendspring.rabbitmqWebsocket.chat.dto.ChatMessageType;
+import org.spring.backendspring.rabbitmqWebsocket.chat.webSocketService.CrewChatService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,9 +25,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("/api/mycrew/{crewId}/chat")
 @RequiredArgsConstructor
-public class CrewChatRestController {
+public class MyCrewChatRestController {
     
     private final CrewChatService crewChatService;
+    private final SimpMessagingTemplate messagingTemplate;
+
 
     @GetMapping("/recent")
     public List<ChatMessageDto> recentMessages(@PathVariable("crewId") Long crewId,
@@ -35,16 +40,15 @@ public class CrewChatRestController {
     @PostMapping("/send")
     public ChatMessageDto sendmessage(@RequestBody ChatMessageDto dto,
                                       @PathVariable Long crewId,
-                                      @AuthenticationPrincipal MyUserDetails userDetails) {
-        LocalDateTime now = LocalDateTime.now();
+                                      @AuthenticationPrincipal MyUserDetails userDetails) throws IOException {
         dto.setCrewId(crewId);
         dto.setSenderId(userDetails.getMemberId());
         dto.setSenderNickName(userDetails.getNickName());
-        dto.setCreateTime(now);
+        dto.setType(ChatMessageType.CHAT);
+        dto.setCreateTime(LocalDateTime.now());
         
         return crewChatService.saveMessage(dto);
-    }
-    
+    } 
                                             
     
 }

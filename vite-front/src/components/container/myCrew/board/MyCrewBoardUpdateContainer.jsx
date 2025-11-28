@@ -109,10 +109,10 @@ const MyCrewBoardUpdateContainer = () => {
                     <ul className='exFile'>
                         {exFiles.length > 0 ? (
                             exFiles.map((img, idx) => (
-                            <li key={idx}>
+                            <li key={idx} className='exFileItem'>
                                 {/* <img src={`http://localhost:8088/upload/${img.newFileName}`} alt={img.newFileName} /> */}
-                                <img src={img.fileUrl} alt={img.originalFileName} />
-                                <button type='button' onClick={() => deleteImage(img.newFileName)}>X</button>
+                                <img src={img.fileUrl} alt={img.originalFileName} className='exFiles'  style={{ width: '200px', height: 'auto' }} />
+                                <button type='button' onClick={() => deleteImage(img.newFileName)}>✖</button>
                             </li>
                         ))
                     ) : (

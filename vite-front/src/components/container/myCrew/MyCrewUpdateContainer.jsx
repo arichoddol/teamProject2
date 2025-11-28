@@ -103,7 +103,7 @@ const MyCrewUpdateContainer = () => {
                         exFiles.map((img, idx) => (
                             <li key={idx}>
                                 <img src={img.fileUrl} alt={idx} />
-                                <button type='button' onClick={() => deleteImage(img.newFileName)}>X</button>
+                                <button type='button' onClick={() => deleteImage(img.newFileName)}>✖</button>
                             </li>
                         ))
                     ) : (
