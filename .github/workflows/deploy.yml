@@ -24,6 +24,15 @@ jobs:
           cd backendspring
           ./gradlew clean bootJar
         shell: bash
+
+      - name: 3.5. Transfer docker-compose.yml to EC2
+        uses: appleboy/scp-action@v0.1.7 # 파일을 전송하는 액션 사용
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "docker-compose.yml" # Git Repository 루트에 있는 파일
+          target: "/home/${{ secrets.EC2_USER }}" # EC2의 /home/ec2-user 디렉토리
           
       # 2. Docker Hub 로그인 (이미지 푸시/풀에 필요)
       - name: 4. Log in to Docker Hub
@@ -51,6 +60,11 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+
+            echo "${{ secrets.SPRING_APP_YML }}" > $YML_CONFIG_DIR/application.yml
+            echo "${{ secrets.SPRING_OAUTH_YML }}" > $YML_CONFIG_DIR/application-oauth2.yml
+            echo "Sensitive YML files created."
+
          
             cd /home/ec2-user   # /home/ec2-user에 docker-compose.yml 파일이 있어야 함
             docker-compose pull  # 최신 이미지 다운로드
