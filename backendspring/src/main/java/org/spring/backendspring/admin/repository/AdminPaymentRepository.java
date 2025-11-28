@@ -23,6 +23,11 @@ public interface AdminPaymentRepository extends JpaRepository<PaymentEntity, Lon
     @Query("SELECT COUNT(p) FROM PaymentEntity p WHERE DATE(p.createTime) = CURRENT_DATE")
     long countToday();
 
+    @Query("SELECT COALESCE(SUM(p.productPrice), 0) FROM PaymentEntity p")
+    Long totalSales();
+    
+    @Query("SELECT COALESCE(SUM(p.productPrice), 0) FROM PaymentEntity p WHERE DATE(p.createTime) = CURRENT_DATE")
+    Long todaySales();
     // paymentId로 결제 상품들 조회
     // List<PaymentItemEntity> findPaymentItemsByPaymentId(Long paymentId);
 }

@@ -57,4 +57,14 @@ public class AdminPaymentController {
     public long getTodayPayments() {
         return adminPaymentRepository.countToday();
     }
+
+    @GetMapping("/totalSales")
+    public long getTotalSales() {
+        return adminPaymentRepository.totalSales();
+    }
+
+    @GetMapping("/todaySales")
+    public long getTodaySales() {
+        return adminPaymentRepository.todaySales();
+    }
 }

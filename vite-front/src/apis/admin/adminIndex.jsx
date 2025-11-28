@@ -48,6 +48,18 @@ export const adminFn = {
     });
   },
 
+  getTotalSales: async() => {
+    return jwtAxios.get(`${BACK_BASIC_URL}/api/admin/payment/totalSales`, {
+      headers: { Authorization: `Bearer ${accessToken()}`}
+    })
+  },
+
+  getTodaySales: async() => {
+    return jwtAxios.get(`${BACK_BASIC_URL}/api/admin/payment/todaySales`, {
+      headers: { Authorization: `Bearer ${accessToken()}`}
+    })
+  },
+
   getTotalBoards: async() => {
     return jwtAxios.get(`${BACK_BASIC_URL}/api/admin/board/total`, {
       headers: { Authorization: `Bearer ${accessToken()}` }
