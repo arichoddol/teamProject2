@@ -4,14 +4,20 @@ FROM eclipse-temurin:17-jdk AS builder
 # 작업 디렉토리 설정
 WORKDIR /app
 
-COPY /build/libs/*.jar app.jar
+COPY gradlew build.gradle settings.gradle ./
+RUN chmod +x gradlew
+COPY backendspring/gradle ./gradle
+RUN ./gradlew dependencies
+COPY backendspring/src ./src
+RUN ./gradlew bootJar
+
+
 
 FROM eclipse-temurin:17-jre
+WORKDIR /app
+COPY --from=builder /app/build/libs/*.jar app.jar
 
-
-# 필요한 종속성 미리 다운로드 (캐싱 활용)
-RUN ./gradlew dependencies
 
 EXPOSE 8090
 
-CMD ["java", "-jar", "/app/app.jar"]
+CMD ["java", "-jar", "/app/app.jar", "--spring.profiles.active=prod"]
