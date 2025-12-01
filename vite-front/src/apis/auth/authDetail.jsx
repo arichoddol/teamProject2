@@ -65,6 +65,7 @@ export const authDeleteFn = async () => {
       return res;
     } catch (err) {
       console.log("탈퇴 실패 " + err);
+      alert("회원 탈퇴 처리 중 오류가 발생했습니다. 관리자에게 문의해주세요.");
     }
   }
 };

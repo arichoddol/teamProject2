@@ -35,15 +35,15 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 
         if (subject == null || search == null || search.trim().isEmpty()) {
             // 검색어 없을 때 → 전체조회
-            memberEntities = memberRepository.findAll(pageable);
+            memberEntities = adminMemberRepository.findByIsDeletedFalse(pageable);
         } else if (subject.equals("userEmail")) {
-            memberEntities = adminMemberRepository.findByUserEmailContaining(pageable, search);
+            memberEntities = adminMemberRepository.findByUserEmailContainingAndIsDeletedFalse(pageable, search);
         } else if (subject.equals("userName")) {
-            memberEntities = adminMemberRepository.findByUserNameContaining(pageable, search);
+            memberEntities = adminMemberRepository.findByUserNameContainingAndIsDeletedFalse(pageable, search);
         } else if (subject.equals("nickName")) {
-            memberEntities = adminMemberRepository.findByNickNameContaining(pageable, search);
+            memberEntities = adminMemberRepository.findByNickNameContainingAndIsDeletedFalse(pageable, search);
         } else {
-            memberEntities = memberRepository.findAll(pageable);
+            memberEntities = adminMemberRepository.findByIsDeletedFalse(pageable);
         }
         return PagedResponse.of(memberEntities.map(MemberMapper::toDtoList));
     }

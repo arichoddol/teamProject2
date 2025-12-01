@@ -26,7 +26,6 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "member_tb")
-@SQLRestriction("is_deleted = FALSE")
 public class MemberEntity extends BasicTime {
 
     @Id
