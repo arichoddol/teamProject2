@@ -10,9 +10,9 @@ import org.spring.backendspring.config.s3.AwsS3Service;
 import org.spring.backendspring.crew.crewMember.dto.CrewMemberDto;
 import org.spring.backendspring.crew.crewMember.entity.CrewMemberEntity;
 import org.spring.backendspring.crew.crewMember.repository.CrewMemberRepository;
-import org.spring.backendspring.rabbitmqWebsocket.chat.dto.ChatMessageDto;
+import org.spring.backendspring.rabbitmqWebsocket.chat.dto.MyCrewChatMessageDto;
 import org.spring.backendspring.rabbitmqWebsocket.chat.dto.ChatMessageType;
-import org.spring.backendspring.rabbitmqWebsocket.chat.entity.ChatMessageEntity;
+import org.spring.backendspring.rabbitmqWebsocket.chat.entity.MyCrewChatMessageEntity;
 import org.spring.backendspring.rabbitmqWebsocket.chat.repository.ChatMessageRepository;
 import org.spring.backendspring.rabbitmqWebsocket.chat.webSocketService.CrewChatService;
 import org.springframework.data.domain.PageRequest;
@@ -25,14 +25,14 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class CrewChatServiceImpl implements CrewChatService {
+public class MyCrewChatServiceImpl implements CrewChatService {
     
     private final ChatMessageRepository chatMessageRepository;
     private final CrewMemberRepository crewMemberRepository;
     private final AwsS3Service awsS3Service;
 
     @Override
-    public ChatMessageDto saveMessage(ChatMessageDto message) throws IOException {
+    public MyCrewChatMessageDto saveMessage(MyCrewChatMessageDto message) throws IOException {
         crewMemberRepository.findByCrewEntityIdAndMemberEntityId(message.getCrewId(), message.getSenderId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 크루의 멤버가 아닙니다."));
 
@@ -42,25 +42,25 @@ public class CrewChatServiceImpl implements CrewChatService {
         //                             ? null
         //                             : chatMember.getFileUrl().get(0));
 
-        ChatMessageEntity entity = ChatMessageEntity.toEntity(message);
-        ChatMessageEntity saved = chatMessageRepository.save(entity);
+        MyCrewChatMessageEntity entity = MyCrewChatMessageEntity.toEntity(message);
+        MyCrewChatMessageEntity saved = chatMessageRepository.save(entity);
 
         long count = chatMessageRepository.countByCrewId(message.getCrewId());
         if (count > 300) {
             long toDelete = count - 300;
-            List<ChatMessageEntity> oldest = chatMessageRepository.findByCrewId(
+            List<MyCrewChatMessageEntity> oldest = chatMessageRepository.findByCrewId(
                 message.getCrewId(),
                 PageRequest.of(0, (int) toDelete, Sort.by("createTime").ascending())
             );
             chatMessageRepository.deleteAll(oldest);
         }
         
-        return ChatMessageDto.toDto(saved);
+        return MyCrewChatMessageDto.toDto(saved);
     }
 
     @Override
-    public List<ChatMessageDto> recentMessages(Long crewId, int limit) {
-        List<ChatMessageEntity> list = chatMessageRepository.findByCrewId(
+    public List<MyCrewChatMessageDto> recentMessages(Long crewId, int limit) {
+        List<MyCrewChatMessageEntity> list = chatMessageRepository.findByCrewId(
             crewId,
             PageRequest.of(0, limit, Sort.by("createTime").descending())
         );
@@ -70,14 +70,14 @@ public class CrewChatServiceImpl implements CrewChatService {
             .map(mem -> CrewMemberDto.toCrewChatMember(mem, awsS3Service))
             .collect(Collectors.toMap(CrewMemberDto::getMemberId, m -> m));
 
-        List<ChatMessageDto> dtoList = list.stream()
+        List<MyCrewChatMessageDto> dtoList = list.stream()
                 .map(msg -> {
                     CrewMemberDto member = memberMap.get(msg.getSenderId());
                     String nickName = member != null ? member.getMemberNickName() : "알 수 없음";
                     String profileUrl = (member != null && member.getFileUrl() != null && !member.getFileUrl().isEmpty()) 
                                         ? member.getFileUrl().get(0) : null;
                                          
-                    return ChatMessageDto.toDto2(msg, nickName, profileUrl);
+                    return MyCrewChatMessageDto.toDto2(msg, nickName, profileUrl);
                 })
                 .toList();               
         
@@ -85,13 +85,13 @@ public class CrewChatServiceImpl implements CrewChatService {
     }
 
     @Override
-    public ChatMessageDto enterChat(Long crewId, Long memberId) throws IOException {
+    public MyCrewChatMessageDto enterChat(Long crewId, Long memberId) throws IOException {
         CrewMemberEntity crewMember = crewMemberRepository.findByCrewEntityIdAndMemberEntityId(crewId, memberId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 크루의 멤버가 아닙니다."));
         
         CrewMemberDto member = CrewMemberDto.toCrewChatMember(crewMember, awsS3Service);
 
-        ChatMessageDto message = ChatMessageDto.builder()
+        MyCrewChatMessageDto message = MyCrewChatMessageDto.builder()
                 .crewId(crewId)
                 .senderId(memberId)
                 .senderNickName(member.getMemberNickName())
@@ -106,13 +106,13 @@ public class CrewChatServiceImpl implements CrewChatService {
     } 
 
     @Override
-    public ChatMessageDto leaveChat(Long crewId, Long memberId) throws IOException {
+    public MyCrewChatMessageDto leaveChat(Long crewId, Long memberId) throws IOException {
         CrewMemberEntity crewMember = crewMemberRepository.findByCrewEntityIdAndMemberEntityId(crewId, memberId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 크루의 멤버가 아닙니다."));
         
         CrewMemberDto member = CrewMemberDto.toCrewChatMember(crewMember, awsS3Service);
 
-        ChatMessageDto message = ChatMessageDto.builder()
+        MyCrewChatMessageDto message = MyCrewChatMessageDto.builder()
                 .crewId(crewId)
                 .senderId(memberId)
                 .senderNickName(member.getMemberNickName())
@@ -129,7 +129,7 @@ public class CrewChatServiceImpl implements CrewChatService {
     @Override
     public int getActiveCount(Long crewId) {
         
-        return null;
+        return 10;
     } 
     
 }
