@@ -7,6 +7,7 @@ build/
 **/*.yml
 **/*.yaml
 node_modules/
+**/commonApis.jsx
 
 
 ### STS ###
@@ -39,8 +40,5 @@ out/
 
 ### VS Code ###
 .vscode/
-<<<<<<< HEAD
 .yml
 
-=======
->>>>>>> origin/dev
