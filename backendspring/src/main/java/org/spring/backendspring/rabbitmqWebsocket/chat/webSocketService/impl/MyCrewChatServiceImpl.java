@@ -121,7 +121,7 @@ public class MyCrewChatServiceImpl implements MyCrewChatService {
                 .createTime(LocalDateTime.now())
                 .type(ChatMessageType.LEAVE)
                 .build();
-
+        
         return saveMessage(message);
 
     }

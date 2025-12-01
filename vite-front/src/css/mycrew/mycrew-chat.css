@@ -42,7 +42,7 @@
   font-weight: bold;
   color: #333;
   transition: 0.1s all;
-  box-shadow: 2px 2px 0 #333;
+  /* box-shadow: 2px 2px 0 #333; */
 }
 
 .crewChat .crewChat-con .crewChat-header .chatButton>button:hover {
@@ -97,7 +97,8 @@
   visibility: hidden;  /* 공간은 유지해서 라인 정렬 유지됨 */
 }
 
-.crewChat .crewChat-con .recentMessages .crewMessage .crewChat .crewChat-con .recentMessages .crewMessage .profileImage, .replaceProfile {
+.crewChat .crewChat-con .recentMessages .crewMessage .profileArea>img.profileImage,
+.crewChat .crewChat-con .recentMessages .crewMessage .profileArea .replaceProfileEmoji {
   width: 36px;
   height: 36px;
   border-radius: 8px;
@@ -117,10 +118,15 @@
   gap: 4px;
 }
 
-.recentMessages .crewMessage .chatWrapper>.nickName {
+.recentMessages .crewMessage.me .chatWrapper>.nickName {
   font-size: 11px;
   color: #444;
   text-align: end;
+}
+.recentMessages .crewMessage.other .chatWrapper>.nickName {
+  font-size: 11px;
+  color: #444;
+  text-align: start;
 }
 
 /* 말풍선 */
@@ -130,7 +136,7 @@
   background: #fff;
   border: 2px solid #000;
   border-radius: 10px;
-  box-shadow: 2px 2px 0 #000;
+  /* box-shadow: 2px 2px 0 #000; */
   line-height: 1.35;
 }
 
@@ -140,8 +146,8 @@
 
 /* 시간 */
 .recentMessages .crewMessage .time {
-  font-size: 0.55rem;
-  color: #777676;
+  font-size: 0.5rem;
+  color: #77767673;
   align-self: flex-end;
   padding-bottom: 1px;
 }

@@ -12,6 +12,7 @@ const MyCrewChatContainer = () => {
   const {crewId} = useParams()
 
   const [isEntered, setIsEntered] = useState(false)
+  const [isLeaved, setIsLeaved] = useState(false)
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState("")
   const stompRef = useRef(null)
@@ -34,15 +35,6 @@ const MyCrewChatContainer = () => {
         console.log("대화 로드 실패", err)
     }
 
-    // 입장 메시지 딴
-    stompRef.current.publish({
-      destination: `/app/chat/crew/${crewId}/enter`,
-      body: JSON.stringify({
-        crewId,
-        senderId: senderId,
-      })
-    })
-
     // 구독 따단
     subscriptionRef.current = stompRef.current.subscribe(
       `/topic/chat/crew/${crewId}`, (payload) => {
@@ -54,7 +46,17 @@ const MyCrewChatContainer = () => {
         })
       }
     )
+    // 입장 메시지 딴
+    stompRef.current.publish({
+      destination: `/app/chat/crew/${crewId}/enter`,
+      body: JSON.stringify({
+        crewId,
+        senderId: senderId,
+      })
+    })
+
     setIsEntered(true)
+    setIsLeaved(false)
   }
 
   // 채팅 퇴장
@@ -70,6 +72,7 @@ const MyCrewChatContainer = () => {
     // 구독 끝
     subscriptionRef.current?.unsubscribe()
     subscriptionRef.current = null
+    setIsLeaved(true)
     setIsEntered(false)
     setMessages([])
   }
@@ -91,8 +94,16 @@ const MyCrewChatContainer = () => {
     stompRef.current = stomp
     stomp.activate()
 
+
     return () => {
-      stompRef.current.deactivate()
+      // 페이지 이동, 언마운트, 새로고침
+      if (stompRef.current?.connected || isLeaved) {
+        stompRef.current.publish({
+          destination: `/app/chat/crew/${crewId}/leave`,
+          body: JSON.stringify({ crewId, senderId })
+        })
+      }
+      stompRef.current?.deactivate()
       stompRef.current = null
     }
   }, [crewId])
@@ -138,7 +149,7 @@ const MyCrewChatContainer = () => {
           <div className={`profileArea ${isSameSender ? "hidden" : ""}`}>
             {!isSameSender && (
               msg.senderProfileUrl 
-                ? <img src={msg.senderProfileUrl} alt={`${msg.senderId}프로필`} />
+                ? <img className='profileImage' src={msg.senderProfileUrl} alt={`${msg.senderId}프로필`} />
                 : <div className="replaceProfile emoji">🏃‍♂️</div>                 
             )}
           </div>
