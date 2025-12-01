@@ -2,8 +2,8 @@ package org.spring.backendspring.rabbitmqWebsocket.chat.controller;
 
 import java.time.LocalDateTime;
 
-import org.spring.backendspring.rabbitmqWebsocket.chat.dto.ChatMessageDto;
-import org.spring.backendspring.rabbitmqWebsocket.chat.webSocketService.CrewChatService;
+import org.spring.backendspring.rabbitmqWebsocket.chat.dto.MyCrewChatMessageDto;
+import org.spring.backendspring.rabbitmqWebsocket.chat.webSocketService.MyCrewChatService;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -15,12 +15,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MyCrewChatController {
     
-    private final CrewChatService crewChatService;
+    private final MyCrewChatService crewChatService;
     private final SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/chat/crew/{crewId}")
     public void sendCrewMessage(@DestinationVariable("crewId") Long crewId,
-                                ChatMessageDto message) throws Exception {
+                                MyCrewChatMessageDto message) throws Exception {
         
                                     
         message.setCrewId(crewId);
@@ -33,19 +33,19 @@ public class MyCrewChatController {
 
     @MessageMapping("/chat/crew/{crewId}/enter")
     public void enter(@DestinationVariable("crewId") Long crewId,
-                      ChatMessageDto message) throws Exception {
+                      MyCrewChatMessageDto message) throws Exception {
                                             
-        ChatMessageDto saved = crewChatService.enterChat(crewId, message.getSenderId());
+        MyCrewChatMessageDto saved = crewChatService.enterChat(crewId, message.getSenderId());
     
         messagingTemplate.convertAndSend("/topic/chat/crew/" + crewId, saved);
         
     }
     @MessageMapping("/chat/crew/{crewId}/leave")
     public void leave(@DestinationVariable("crewId") Long crewId,
-                                ChatMessageDto message) throws Exception {
+                                MyCrewChatMessageDto message) throws Exception {
         
                                     
-        ChatMessageDto saved = crewChatService.leaveChat(crewId, message.getSenderId());
+        MyCrewChatMessageDto saved = crewChatService.leaveChat(crewId, message.getSenderId());
     
         messagingTemplate.convertAndSend("/topic/chat/crew/" + crewId, saved);
         

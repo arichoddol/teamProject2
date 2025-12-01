@@ -3,16 +3,18 @@ package org.spring.backendspring.rabbitmqWebsocket.chat.webSocketService;
 import java.io.IOException;
 import java.util.List;
 
-import org.spring.backendspring.rabbitmqWebsocket.chat.dto.ChatMessageDto;
+import org.spring.backendspring.rabbitmqWebsocket.chat.dto.MyCrewChatMessageDto;
 
-public interface CrewChatService {
+public interface MyCrewChatService {
 
-    ChatMessageDto saveMessage(ChatMessageDto message) throws IOException;
+    MyCrewChatMessageDto saveMessage(MyCrewChatMessageDto message) throws IOException;
 
-    List<ChatMessageDto> recentMessages(Long crewId, int limit);
+    List<MyCrewChatMessageDto> recentMessages(Long crewId, int limit);
 
-    ChatMessageDto enterChat(Long crewId, Long memberId) throws IOException;
+    MyCrewChatMessageDto enterChat(Long crewId, Long memberId) throws IOException;
 
-    ChatMessageDto leaveChat(Long crewId, Long memberId) throws IOException;
+    MyCrewChatMessageDto leaveChat(Long crewId, Long memberId) throws IOException;
+
+    int getActiveCount(Long crewId);
     
 }

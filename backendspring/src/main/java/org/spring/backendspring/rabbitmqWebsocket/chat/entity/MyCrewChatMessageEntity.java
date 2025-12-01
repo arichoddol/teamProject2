@@ -3,7 +3,7 @@ package org.spring.backendspring.rabbitmqWebsocket.chat.entity;
 import java.time.LocalDateTime;
 
 import org.spring.backendspring.common.BasicTime;
-import org.spring.backendspring.rabbitmqWebsocket.chat.dto.ChatMessageDto;
+import org.spring.backendspring.rabbitmqWebsocket.chat.dto.MyCrewChatMessageDto;
 import org.spring.backendspring.rabbitmqWebsocket.chat.dto.ChatMessageType;
 
 import jakarta.persistence.Column;
@@ -27,7 +27,7 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "chat_message_tb")
-public class ChatMessageEntity {
+public class MyCrewChatMessageEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,9 +50,9 @@ public class ChatMessageEntity {
 
     private LocalDateTime createTime;
 
-    public static ChatMessageEntity toEntity(ChatMessageDto dto) {
+    public static MyCrewChatMessageEntity toEntity(MyCrewChatMessageDto dto) {
 
-        return ChatMessageEntity.builder()
+        return MyCrewChatMessageEntity.builder()
                 .senderId(dto.getSenderId())
                 .crewId(dto.getCrewId())
                 // .senderNickName(dto.getSenderNickName())

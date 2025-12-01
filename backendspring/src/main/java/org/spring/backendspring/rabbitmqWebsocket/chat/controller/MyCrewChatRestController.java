@@ -5,9 +5,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.spring.backendspring.config.security.MyUserDetails;
-import org.spring.backendspring.rabbitmqWebsocket.chat.dto.ChatMessageDto;
+import org.spring.backendspring.rabbitmqWebsocket.chat.dto.MyCrewChatMessageDto;
 import org.spring.backendspring.rabbitmqWebsocket.chat.dto.ChatMessageType;
-import org.spring.backendspring.rabbitmqWebsocket.chat.webSocketService.CrewChatService;
+import org.spring.backendspring.rabbitmqWebsocket.chat.dto.CrewChatParticipantsDto;
+import org.spring.backendspring.rabbitmqWebsocket.chat.webSocketService.MyCrewChatService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,18 +28,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 public class MyCrewChatRestController {
     
-    private final CrewChatService crewChatService;
+    private final MyCrewChatService crewChatService;
     private final SimpMessagingTemplate messagingTemplate;
 
 
     @GetMapping("/recent")
-    public List<ChatMessageDto> recentMessages(@PathVariable("crewId") Long crewId,
+    public List<MyCrewChatMessageDto> recentMessages(@PathVariable("crewId") Long crewId,
                                                @RequestParam(name = "limit", defaultValue = "300") int limit) {
         return crewChatService.recentMessages(crewId, limit);
     }
 
     @PostMapping("/send")
-    public ChatMessageDto sendmessage(@RequestBody ChatMessageDto dto,
+    public MyCrewChatMessageDto sendmessage(@RequestBody MyCrewChatMessageDto dto,
                                       @PathVariable Long crewId,
                                       @AuthenticationPrincipal MyUserDetails userDetails) throws IOException {
         dto.setCrewId(crewId);
@@ -50,5 +51,9 @@ public class MyCrewChatRestController {
         return crewChatService.saveMessage(dto);
     } 
                                             
-    
+    @GetMapping("/participants")
+    public CrewChatParticipantsDto getCount(@PathVariable Long crewId) {
+        int count = crewChatService.getActiveCount(crewId);
+        return new CrewChatParticipantsDto(count);
+    }
 }

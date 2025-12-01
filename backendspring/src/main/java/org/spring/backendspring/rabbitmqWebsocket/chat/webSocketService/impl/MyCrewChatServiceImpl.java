@@ -14,7 +14,7 @@ import org.spring.backendspring.rabbitmqWebsocket.chat.dto.MyCrewChatMessageDto;
 import org.spring.backendspring.rabbitmqWebsocket.chat.dto.ChatMessageType;
 import org.spring.backendspring.rabbitmqWebsocket.chat.entity.MyCrewChatMessageEntity;
 import org.spring.backendspring.rabbitmqWebsocket.chat.repository.ChatMessageRepository;
-import org.spring.backendspring.rabbitmqWebsocket.chat.webSocketService.CrewChatService;
+import org.spring.backendspring.rabbitmqWebsocket.chat.webSocketService.MyCrewChatService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class MyCrewChatServiceImpl implements CrewChatService {
+public class MyCrewChatServiceImpl implements MyCrewChatService {
     
     private final ChatMessageRepository chatMessageRepository;
     private final CrewMemberRepository crewMemberRepository;

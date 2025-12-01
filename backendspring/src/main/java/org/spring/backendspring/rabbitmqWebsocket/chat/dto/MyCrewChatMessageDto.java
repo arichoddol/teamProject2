@@ -2,7 +2,7 @@ package org.spring.backendspring.rabbitmqWebsocket.chat.dto;
 
 import java.time.LocalDateTime;
 
-import org.spring.backendspring.rabbitmqWebsocket.chat.entity.ChatMessageEntity;
+import org.spring.backendspring.rabbitmqWebsocket.chat.entity.MyCrewChatMessageEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +15,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ChatMessageDto {
+public class MyCrewChatMessageDto {
     
     private Long id;
     private Long crewId;
@@ -26,9 +26,9 @@ public class ChatMessageDto {
     private ChatMessageType type;
     private LocalDateTime createTime;
 
-    public static ChatMessageDto toDto(ChatMessageEntity entity) {
+    public static MyCrewChatMessageDto toDto(MyCrewChatMessageEntity entity) {
         
-        return ChatMessageDto.builder()
+        return MyCrewChatMessageDto.builder()
                 .id(entity.getId())
                 .crewId(entity.getCrewId())
                 .senderId(entity.getSenderId())
@@ -39,9 +39,9 @@ public class ChatMessageDto {
                 .type(entity.getType())
                 .build();
     }
-    public static ChatMessageDto toDto2(ChatMessageEntity entity, String nickName, String profileUrl) {
+    public static MyCrewChatMessageDto toDto2(MyCrewChatMessageEntity entity, String nickName, String profileUrl) {
         
-        return ChatMessageDto.builder()
+        return MyCrewChatMessageDto.builder()
                 .id(entity.getId())
                 .crewId(entity.getCrewId())
                 .senderId(entity.getSenderId())
