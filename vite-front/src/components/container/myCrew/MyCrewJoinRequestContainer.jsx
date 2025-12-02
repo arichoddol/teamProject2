@@ -34,8 +34,12 @@ const MyCrewJoinRequestContainer = () => {
       setEndPage(res.data.endPage);
       setTotalPages(res.data.totalPages);
     } catch (error) {
-      console.log("내 크루 가입요청 get 실패");
-      alert("내 크루 가입요청 get 실패");
+      if (error.response) {
+        console.log("백엔드 응답:", error.response.data)
+        const data = error.response.data    
+        const msg = data?.message || "알 수 없는 오류가 발생했습니다."
+        alert(msg)
+      }
     }
   };
 
@@ -49,32 +53,33 @@ const MyCrewJoinRequestContainer = () => {
   }, []);
 
   //크루가입승인
-  const onJoinApproved = async (joinReq) => {
-    console.log(joinReq);
-    try {
-      const res = await axios.post(
-        `/api/mycrew/${crewId}/joinRequest/approved`,
-        {
-          crewRequestId: crewId,
-          memberRequestId: joinReq.memberRequestId,
-          message: joinReq.message,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
+  const onJoinApproved = async (joinReq) =>{
+    console.log(joinReq)
+      try {
+        const res = await axios.post(`/api/mycrew/${crewId}/joinRequest/approved`,
+          { crewRequestId: crewId,
+            memberRequestId: joinReq.memberRequestId,
+            message: joinReq.message },
+          { headers: { 
+              "Authorization": `Bearer ${accessToken}`,
+              "Content-Type": "application/json" 
+            } 
+          }
+
+        )
+        console.log(res.data)
+        alert("내 크루 가입승인 성공")
+        
+      } catch (error) {
+        if (error.response) {
+          console.log("백엔드 응답:", error.response.data)
+          const data = error.response.data    
+          const msg = data?.message || "알 수 없는 오류가 발생했습니다."
+          alert(msg)
         }
-      );
-      console.log(res.data);
-    } catch (error) {
-      console.log(error);
-      console.log("내 크루 가입승인 실패");
-      alert("내 크루 가입승인 실패");
-    }
-    alert("내 크루 가입승인 성공");
-    MyCrewjoinRequest(0);
-  };
+      }
+      MyCrewjoinRequest(0);
+  }
   //크루가입거절
   const onJoinRejected = async (joinReq) => {
     try {
@@ -101,6 +106,38 @@ const MyCrewJoinRequestContainer = () => {
     MyCrewjoinRequest(0);
   };
 
+      try {
+        const res = await axios.post(`/api/mycrew/${crewId}/joinRequest/rejected`,
+          { crewRequestId: crewId,
+            memberRequestId: joinReq.memberRequestId,
+            message: joinReq.message},
+          { headers: { 
+              "Authorization": `Bearer ${accessToken}`,
+              "Content-Type": "application/json" 
+            } 
+          }
+
+        )
+        console.log(res.data)
+        alert("내 크루 가입거절 성공")
+        
+      } catch (error) {
+        
+        if (error.response) {
+          console.log("백엔드 응답:", error.response.data)
+      
+          
+          const data = error.response.data
+      
+          
+          const msg = data?.message || "알 수 없는 오류가 발생했습니다."
+      
+          alert(msg)
+        }
+      }
+      MyCrewjoinRequest(0)     
+  }
+  
   return (
     <div className="myCrew">
       <div className="myCrew-con">

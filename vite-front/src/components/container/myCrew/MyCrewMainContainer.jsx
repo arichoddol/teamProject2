@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import jwtAxios from '../../../apis/util/jwtUtil';
 import { useSelector } from 'react-redux';
 import MyCrewBot from './MyCrewBot';
+import { IMAGES_S3_URL } from '../../../apis/commonApis';
 
 const MyCrewMainContainer = () => {
   const accessToken = useSelector(state => state.jwtSlice.accessToken);
@@ -28,8 +29,17 @@ const MyCrewMainContainer = () => {
         setMyCrew(res.data.crew)
 
       } catch (error) {
-        console.log("내 크루 get 실패");
-        // alert("내 크루 get 실패")
+        if (error.response) {
+          console.log("백엔드 응답:", error.response.data)
+      
+          
+          const data = error.response.data
+      
+          
+          const msg = data?.message || "알 수 없는 오류가 발생했습니다."
+      
+          alert(msg)
+        } 
       }
     }
     myCrewMain();
@@ -89,7 +99,8 @@ const MyCrewMainContainer = () => {
               {myCrew.newFileName && myCrew.newFileName.length > 0 && (
                 <div className="myCrewMainImage">
                   <img
-                    src={`http://localhost:8088/upload/${myCrew.newFileName[0]}`}
+                    // src={`http://localhost:8088/upload/${myCrew.newFileName[0]}`}
+                    src={`${IMAGES_S3_URL}${myCrew.newFileName[0]}`}
                     alt={`${myCrew.name} 이미지`}
                     className="crewImage"
                   />

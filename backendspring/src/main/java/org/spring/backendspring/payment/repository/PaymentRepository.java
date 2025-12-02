@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.repository.query.Param; // ⭐️ import가 되어 있음
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +23,13 @@ public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
     @Modifying
     @Transactional
     @Query("UPDATE PaymentEntity p SET p.pgToken = :pgToken WHERE p.paymentId = :paymentId")
-    void updatePgToken(Long paymentId, String pgToken);
+    void updatePgToken(@Param("paymentId") Long paymentId, @Param("pgToken") String pgToken); // ⭐️ @Param 추가
 
     // 결제 성공 여부 업데이트 (isSucceeded 같은 컬럼)
     @Modifying
     @Transactional
     @Query("UPDATE PaymentEntity p SET p.isSucceeded = :status WHERE p.paymentId = :paymentId")
-    void updateIsSucced(Long paymentId, int status);
+    void updateIsSucced(@Param("paymentId") Long paymentId, @Param("status") int status); // ⭐️ @Param 추가
 
     // ⭐️ [추가] Payment 목록 조회 시 PaymentItemEntity를 EAGER 로딩 (N+1 해결)
     @Query(value = "SELECT p FROM PaymentEntity p JOIN FETCH p.paymentItemEntities", countQuery = "SELECT COUNT(p) FROM PaymentEntity p")
@@ -45,10 +45,5 @@ public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
             "WHERE p.memberId = :memberId AND item.title LIKE %:keyword%",
             countQuery = "SELECT COUNT(DISTINCT p) FROM PaymentEntity p JOIN p.paymentItemEntities item " +
                     "WHERE p.memberId = :memberId AND item.title LIKE %:keyword%")
-    Page<PaymentEntity> findByMemberIdAndTitleContaining(Pageable pageable, String keyword, Long memberId);
-
-    // 기존 메서드는 삭제하거나 주석 처리하고, 위 메서드를 사용하도록 서비스 레이어에서 변경됩니다.
-    // Page<PaymentEntity>
-    // findByPaymentTypeContainingIgnoreCaseOrPaymentPostContainingIgnoreCase(
-    //     String paymentType, String paymentPost, Pageable pageable);
+    Page<PaymentEntity> findByMemberIdAndTitleContaining(Pageable pageable, @Param("keyword") String keyword, @Param("memberId") Long memberId); // ⭐️ 이 메서드도 @Param 추가 권장
 }

@@ -222,6 +222,10 @@ const MarathonApiPage = () => {
 
     return (
         <div className="marathon-main-page">
+
+    <h1 style={{ textAlign: 'center', marginBottom: '20px', color: '#1a73e8' }}>
+                Today's Information 📌
+            </h1>
             
             <div className="marathon-content-wrapper">
                 
