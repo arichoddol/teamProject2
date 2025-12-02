@@ -25,12 +25,12 @@ const MyCrewMainContainer = () => {
           }
         );
 
-        console.log(res.data.crew)
+        // console.log(res.data.crew)
         setMyCrew(res.data.crew)
 
       } catch (error) {
         if (error.response) {
-          console.log("백엔드 응답:", error.response.data)
+          // console.log("백엔드 응답:", error.response.data)
       
           
           const data = error.response.data
@@ -54,7 +54,7 @@ const MyCrewMainContainer = () => {
   ? myCrew.crewMemberEntities.length
   : "";
 
-  console.log(myCrew.memberId)
+  // console.log(myCrew.memberId)
   return (
     <div className="myCrewMain">
       <div className="myCrewMain-con">
