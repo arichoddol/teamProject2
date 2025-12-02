@@ -69,7 +69,7 @@
   .boardCreate .boardCreate-con .boardContent>textarea::placeholder {
     font-size: 0.8rem;
   }
-
+  
   .boardCreate .boardCreate-con .boardContent>textarea:focus {
     border-color: #a4b6cc;
     background: #fdfeff;
@@ -81,6 +81,11 @@
     flex-direction: column;
     gap: 8px;
   }
+  img.crewBoardFileImg {
+    max-width: 150px;
+    height: auto; /* 비율 유지 */
+    border-radius: 8px; 
+}
 
   .boardFile>ul.exFile {
     display: flex;

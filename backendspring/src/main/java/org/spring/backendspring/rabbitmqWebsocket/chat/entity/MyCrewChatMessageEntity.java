@@ -39,6 +39,8 @@ public class MyCrewChatMessageEntity {
     @Column(name = "crew_id", nullable = false)
     private Long crewId;
 
+    private String crewName;
+
     // private String senderNickName;
 
     // private String senderProfileUrl;
@@ -55,6 +57,7 @@ public class MyCrewChatMessageEntity {
         return MyCrewChatMessageEntity.builder()
                 .senderId(dto.getSenderId())
                 .crewId(dto.getCrewId())
+                .crewName(dto.getCrewName())
                 // .senderNickName(dto.getSenderNickName())
                 // .senderProfileUrl(dto.getSenderProfileUrl())
                 .message(dto.getMessage())

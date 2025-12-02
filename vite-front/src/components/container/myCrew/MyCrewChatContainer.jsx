@@ -10,6 +10,7 @@ const MyCrewChatContainer = () => {
   const senderId = useSelector((state) => state.loginSlice.id)
   const senderNickName = useSelector((state) => state.loginSlice.nickName)
   const {crewId} = useParams()
+  const [crewName, setCrewName] = useState("")
 
   const [isEntered, setIsEntered] = useState(false)
   const [isLeaved, setIsLeaved] = useState(false)
@@ -18,6 +19,18 @@ const MyCrewChatContainer = () => {
   const stompRef = useRef(null)
   const subscriptionRef = useRef(null)
   const messagesEndRef = useRef(null)
+
+  useEffect(() => {
+    const crewInfo = async () => {
+      try {
+        const res = await jwtAxios.get(`/api/crew/detail/${crewId}`)
+        setCrewName(res.data.crewDetail.name)
+      } catch (err) {
+        console.error("크루 정보 불러오기 실패", err)
+      }
+    }
+    crewInfo()
+  }, [crewId])
 
   // 채팅 입장
   const enterChat = async () => {
@@ -56,7 +69,6 @@ const MyCrewChatContainer = () => {
     })
 
     setIsEntered(true)
-    setIsLeaved(false)
   }
 
   // 채팅 퇴장
@@ -105,6 +117,7 @@ const MyCrewChatContainer = () => {
       }
       stompRef.current?.deactivate()
       stompRef.current = null
+      setIsLeaved(true)
     }
   }, [crewId])
 
@@ -150,7 +163,7 @@ const MyCrewChatContainer = () => {
             {!isSameSender && (
               msg.senderProfileUrl 
                 ? <img className='profileImage' src={msg.senderProfileUrl} alt={`${msg.senderId}프로필`} />
-                : <div className="replaceProfile emoji">🏃‍♂️</div>                 
+                : <div className="replaceProfileEmoji">🏃‍♂️</div>                 
             )}
           </div>
           <div className="chatWrapper">
@@ -182,7 +195,7 @@ const MyCrewChatContainer = () => {
     <div className="crewChat">
       <div className="crewChat-con">
         <div className="crewChat-header">
-          <h3>크루그룹채팅</h3>
+          <h3>{crewName} 🏃‍♂️ 채팅</h3>
           <div className="chatButton">
             {!isEntered
               ? <button onClick={enterChat}>참여하기</button>

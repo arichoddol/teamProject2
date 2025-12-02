@@ -33,14 +33,14 @@ public class MyCrewChatServiceImpl implements MyCrewChatService {
 
     @Override
     public MyCrewChatMessageDto saveMessage(MyCrewChatMessageDto message) throws IOException {
-        crewMemberRepository.findByCrewEntityIdAndMemberEntityId(message.getCrewId(), message.getSenderId())
+        CrewMemberEntity crewMember = crewMemberRepository.findByCrewEntityIdAndMemberEntityId(message.getCrewId(), message.getSenderId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 크루의 멤버가 아닙니다."));
 
-        // CrewMemberDto chatMember = CrewMemberDto.toCrewChatMember(crewMember, awsS3Service);
-        // message.setSenderNickName(chatMember.getMemberNickName());
-        // message.setSenderProfileUrl(chatMember.getFileUrl().isEmpty()
-        //                             ? null
-        //                             : chatMember.getFileUrl().get(0));
+        CrewMemberDto chatMember = CrewMemberDto.toCrewChatMember(crewMember, awsS3Service);
+        message.setSenderNickName(chatMember.getMemberNickName());
+        message.setSenderProfileUrl(chatMember.getFileUrl().isEmpty()
+                                    ? null
+                                    : chatMember.getFileUrl().get(0));
 
         MyCrewChatMessageEntity entity = MyCrewChatMessageEntity.toEntity(message);
         MyCrewChatMessageEntity saved = chatMessageRepository.save(entity);

@@ -19,6 +19,7 @@ public class MyCrewChatMessageDto {
     
     private Long id;
     private Long crewId;
+    private String crewName;
     private Long senderId;
     private String senderNickName;
     private String senderProfileUrl;
@@ -31,6 +32,7 @@ public class MyCrewChatMessageDto {
         return MyCrewChatMessageDto.builder()
                 .id(entity.getId())
                 .crewId(entity.getCrewId())
+                .crewName(entity.getCrewName())
                 .senderId(entity.getSenderId())
                 // .senderNickName(entity.getSenderNickName())
                 // .senderProfileUrl(entity.getSenderProfileUrl())
@@ -44,6 +46,7 @@ public class MyCrewChatMessageDto {
         return MyCrewChatMessageDto.builder()
                 .id(entity.getId())
                 .crewId(entity.getCrewId())
+                .crewName(entity.getCrewName())
                 .senderId(entity.getSenderId())
                 .senderNickName(nickName)
                 .senderProfileUrl(profileUrl)

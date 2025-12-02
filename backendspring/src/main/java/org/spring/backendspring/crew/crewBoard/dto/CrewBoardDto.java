@@ -113,7 +113,7 @@ public class CrewBoardDto {
                 .build();
     }
     public static CrewBoardDto toDtoS3(CrewBoardEntity entity, AwsS3Service awsS3Service) {
-        CrewBoardDto dto = toDto(entity);
+        CrewBoardDto dto = toDto2(entity);
         List<String> newFileName = entity.getCrewBoardImageEntities().stream()
                 .map(CrewBoardImageEntity::getNewName)
                 .toList();
