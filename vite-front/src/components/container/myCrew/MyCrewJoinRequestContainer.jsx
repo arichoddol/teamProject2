@@ -1,55 +1,47 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
-import jwtAxios from '../../../apis/util/jwtUtil'
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 const MyCrewJoinRequestContainer = () => {
-  const { accessToken } = useSelector((state) => state.jwtSlice)
+  const { accessToken } = useSelector((state) => state.jwtSlice);
 
-  const { crewId } = useParams()
-  const [myCrewJoinRequestList, setMyCrewJoinRequestList] = useState([])
+  const { crewId } = useParams();
+  const [myCrewJoinRequestList, setMyCrewJoinRequestList] = useState([]);
   //검색 카테고리?
-  const [subject, setSubject] = useState('')
+  const [subject, setSubject] = useState("");
   //검색어
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState("");
 
-  const [nowPage, setNowPage] = useState()
-  const [startPage, setStartPage] = useState()
-  const [endPage, setEndPage] = useState()
-  const [totalPages, setTotalPages] = useState()
+  const [nowPage, setNowPage] = useState();
+  const [startPage, setStartPage] = useState();
+  const [endPage, setEndPage] = useState();
+  const [totalPages, setTotalPages] = useState();
   // 크루가입요청 리스트
   const MyCrewjoinRequest = async (pageParam) => {
     try {
-      const res = await jwtAxios.get(`/api/mycrew/${crewId}/joinRequest`,
-      {
+      const res = await axios.get(`/api/mycrew/${crewId}/joinRequest`, {
         params: {
-          page: pageParam, 
+          page: pageParam,
           subject: subject || undefined,
-          search: search || undefined
-        }
-      },
-      { headers: { 
-        "Authorization": `Bearer ${accessToken}`,
-        "Content-Type": "application/json" 
-      } 
-    })
-      // console.log(res.data)
-      setMyCrewJoinRequestList(res.data.myCrewJoinList.content)
-      setNowPage(res.data.nowPage)
-      setStartPage(res.data.startPage)
-      setEndPage(res.data.endPage)
-      setTotalPages(res.data.totalPages)
-
+          search: search || undefined,
+        },
+      });
+      console.log(res.data);
+      setMyCrewJoinRequestList(res.data.myCrewJoinList.content);
+      setNowPage(res.data.nowPage);
+      setStartPage(res.data.startPage);
+      setEndPage(res.data.endPage);
+      setTotalPages(res.data.totalPages);
     } catch (error) {
       if (error.response) {
-        // console.log("백엔드 응답:", error.response.data)
-        const data = error.response.data    
-        const msg = data?.message || "알 수 없는 오류가 발생했습니다."
-        alert(msg)
+        console.log("백엔드 응답:", error.response.data);
+        const data = error.response.data;
+        const msg = data?.message || "알 수 없는 오류가 발생했습니다.";
+        alert(msg);
       }
     }
-  }
+  };
 
   const onSearchClick = () => {
     // 항상 0페이지부터 다시 검색
@@ -58,71 +50,70 @@ const MyCrewJoinRequestContainer = () => {
 
   useEffect(() => {
     MyCrewjoinRequest();
-  }, [])
-
+  }, []);
 
   //크루가입승인
-  const onJoinApproved = async (joinReq) =>{
-    // console.log(joinReq)
-      try {
-        const res = await jwtAxios.post(`/api/mycrew/${crewId}/joinRequest/approved`,
-          { crewRequestId: crewId,
-            memberRequestId: joinReq.memberRequestId,
-            message: joinReq.message },
-          { headers: { 
-              "Authorization": `Bearer ${accessToken}`,
-              "Content-Type": "application/json" 
-            } 
-          }
-
-        )
-        // console.log(res.data)
-        alert("내 크루 가입승인 성공")
-        
-      } catch (error) {
-        if (error.response) {
-          // console.log("백엔드 응답:", error.response.data)
-          const data = error.response.data    
-          const msg = data?.message || "알 수 없는 오류가 발생했습니다."
-          alert(msg)
+  const onJoinApproved = async (joinReq) => {
+    console.log(joinReq);
+    try {
+      const res = await axios.post(
+        `/api/mycrew/${crewId}/joinRequest/approved`,
+        {
+          crewRequestId: crewId,
+          memberRequestId: joinReq.memberRequestId,
+          message: joinReq.message,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
         }
+      );
+      console.log(res.data);
+      alert("내 크루 가입승인 성공");
+    } catch (error) {
+      if (error.response) {
+        console.log("백엔드 응답:", error.response.data);
+        const data = error.response.data;
+        const msg = data?.message || "알 수 없는 오류가 발생했습니다.";
+        alert(msg);
       }
-      MyCrewjoinRequest(0);
-  }
+    }
+    MyCrewjoinRequest(0);
+  };
   //크루가입거절
   const onJoinRejected = async (joinReq) => {
-
-      try {
-        const res = await jwtAxios.post(`/api/mycrew/${crewId}/joinRequest/rejected`,
-          { crewRequestId: crewId,
-            memberRequestId: joinReq.memberRequestId,
-            message: joinReq.message},
-          { headers: { 
-              "Authorization": `Bearer ${accessToken}`,
-              "Content-Type": "application/json" 
-            } 
-          }
-
-        )
-        // console.log(res.data)
-        alert("내 크루 가입거절 성공")
-        
-      } catch (error) {
-        
-        if (error.response) {
-          // console.log("백엔드 응답:", error.response.data)
-      
-          
-          const data = error.response.data
-      
-          
-          const msg = data?.message || "알 수 없는 오류가 발생했습니다."
-      
-          alert(msg)
+    try {
+      const res = await axios.post(
+        `/api/mycrew/${crewId}/joinRequest/rejected`,
+        {
+          crewRequestId: crewId,
+          memberRequestId: joinReq.memberRequestId,
+          message: joinReq.message,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
         }
+      );
+      console.log(res.data);
+      alert("내 크루 가입거절 성공");
+    } catch (error) {
+      if (error.response) {
+        console.log("백엔드 응답:", error.response.data);
+
+        const data = error.response.data;
+
+        const msg = data?.message || "알 수 없는 오류가 발생했습니다.";
+
+        alert(msg);
       }
-      MyCrewjoinRequest(0)     
-  }
+    }
+    MyCrewjoinRequest(0);
+  };
 
   return (
     <div className="myCrew">
@@ -206,18 +197,12 @@ const MyCrewJoinRequestContainer = () => {
                 <span>{joinReq.message}</span>
                 <span>{joinReq.status}</span>
                 <span>
-                  <button
-                    type="button"
-                    onClick={() => onJoinApproved(joinReq)}
-                  >
+                  <button type="button" onClick={() => onJoinApproved(joinReq)}>
                     ✅ 가입승인
                   </button>
                 </span>
                 <span>
-                  <button
-                    type="button"
-                    onClick={() => onJoinRejected(joinReq)}
-                  >
+                  <button type="button" onClick={() => onJoinRejected(joinReq)}>
                     ❌ 가입거절
                   </button>
                 </span>
@@ -266,6 +251,6 @@ const MyCrewJoinRequestContainer = () => {
       </div>
     </div>
   );
+};
 
-
-}
+export default MyCrewJoinRequestContainer;

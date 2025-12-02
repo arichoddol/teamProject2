@@ -8,7 +8,7 @@ export default defineConfig({
     // { babel: { plugins: [['babel-plugin-react-compiler']] } }
   ],
   define: {
-    global: 'window',  
+    global: "window",
   },
   server: {
     port: 3000,
@@ -18,7 +18,7 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
-      "/ws":{
+      "/ws": {
         target: "http://localhost:8088", // 백엔드 주소
         changeOrigin: true,
         secure: false,

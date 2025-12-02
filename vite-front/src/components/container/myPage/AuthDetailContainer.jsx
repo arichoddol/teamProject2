@@ -3,14 +3,15 @@ import { authDeleteFn, authDetailFn } from "../../../apis/auth/authDetail";
 import { useSelector } from "react-redux";
 import { BACK_BASIC_URL } from "../../../apis/commonApis";
 import { useNavigate } from "react-router";
+import AuthDeleteModal from "./AuthDeleteModal";
 
 const AuthDetailContainer = () => {
   const [memberDetail, setMemberDetail] = useState({});
   const [crewMemberList, setCrewMemberList] = useState([]);
   const [gender, setGender] = useState("남성");
+  const [isModal, setIsModal] = useState(false);
 
   const accessToken = useSelector((state) => state.jwtSlice.accessToken);
-  const memberId = useSelector((state) => state.loginSlice.id);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,30 +36,8 @@ const AuthDetailContainer = () => {
     myPageDetailFn();
   }, []);
 
-  console.log(crewMemberList);
-
-  const crewRoleCheck = () => {
-    const boolRes = crewMemberList.some((el) =>
-      el.roleInCrew.includes("LEADER")
-    );
-    return boolRes;
-  };
-
-  const myPageDeleteFn = async () => {
-    const boolRes = crewRoleCheck();
-    console.log(boolRes);
-    if (boolRes) {
-      alert(
-        "운영 중인 크루가 존재합니다.계정 탈퇴 전 크루장 권한을 해제하거나 크루를 정리해 주세요."
-      );
-      return;
-    }
-
-    const res = await authDeleteFn();
-    if (res.status === 200) {
-      alert("탈퇴 완료되었습니다. 안녕히가세요.");
-      navigate("/store/index");
-    }
+  const modalHandler = () => {
+    setIsModal(true);
   };
 
   const updatePage = () => {
@@ -134,9 +113,15 @@ const AuthDetailContainer = () => {
         <button className="btn-edit" onClick={updatePage}>
           수정
         </button>
-        <button className="btn-delete" onClick={myPageDeleteFn}>
+        <button className="btn-delete" onClick={modalHandler}>
           탈퇴
         </button>
+        {isModal ? (
+          <AuthDeleteModal
+            setIsModal={setIsModal}
+            crewMemberList={crewMemberList}
+          />
+        ) : null}
       </div>
     </main>
   );

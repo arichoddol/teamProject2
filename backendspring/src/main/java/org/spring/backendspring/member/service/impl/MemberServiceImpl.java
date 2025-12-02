@@ -40,7 +40,15 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public int userEmailCheck(String userEmail) {
         Optional<MemberEntity> byUserEmail = memberRepository.findByUserEmail(userEmail);
-        return byUserEmail.isPresent() ? 0 : 1;
+        if (byUserEmail.isEmpty()) {
+            return 0;
+        }
+
+        if (byUserEmail.get().isDeleted()) {
+            return 2;
+        } else {
+            return 1;
+        }
     }
 
     @Override
