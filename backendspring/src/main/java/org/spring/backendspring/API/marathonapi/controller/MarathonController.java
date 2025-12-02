@@ -18,12 +18,12 @@ public class MarathonController {
 
     private final MarathonService marathonService;
 
+    // 수정된 MarathonController.java
     @GetMapping({ "/marathons" })
     public Page<Marathon> marathonList(
-            @RequestParam(required = false) String searchTerm, // 검색어 (선택 사항)
-            @PageableDefault(size = 10) Pageable pageable // 페이징 정보 (기본 10개)
-    ) {
-        // 검색어가 있으면 검색 로직을, 없으면 전체 리스트 페이징을 호출
+            // 파라미터 이름 ("searchTerm")을 명시하여 리플렉션 오류를 회피
+            @RequestParam(name = "searchTerm", required = false) String searchTerm,
+            @PageableDefault(size = 10) Pageable pageable) {
         return marathonService.findMarathons(searchTerm, pageable);
     }
 }
