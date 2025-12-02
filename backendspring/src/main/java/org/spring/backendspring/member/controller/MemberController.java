@@ -45,8 +45,10 @@ public class MemberController {
         }
 
         int num = memberService.userEmailCheck(userEmail);
-        if (num != 1) {
+        if (num == 1) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 존재하는 이메일입니다.");
+        } else if (num == 2) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("탈퇴한 이메일은 재가입할 수 없습니다.");
         }
         return ResponseEntity.status(HttpStatus.OK).body("사용 가능한 이메일입니다.");
     }

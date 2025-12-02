@@ -86,7 +86,7 @@ public class MemberMapper {
                 .phone(memberDto.getPhone())
                 .socialLogin(memberEntity.getSocialLogin())
                 .role(memberEntity.getRole())
-                .isProfileImg(memberDto.getIsProfileImg())
+                .isProfileImg(memberEntity.getIsProfileImg())
                 .build();
     }
 
@@ -125,7 +125,6 @@ public class MemberMapper {
     // 회원 탈퇴 처리
     public static MemberEntity toDeleteSet(MemberEntity memberEntity) {
         memberEntity.setDeleted(true);
-        memberEntity.setUserEmail(null);
         memberEntity.setUserName("탈퇴회원");
         memberEntity.setNickName("탈퇴회원");
         memberEntity.setAddress("탈퇴회원");
