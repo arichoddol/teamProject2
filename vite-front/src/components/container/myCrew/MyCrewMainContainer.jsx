@@ -25,7 +25,7 @@ const MyCrewMainContainer = () => {
           }
         );
 
-        // console.log(res.data.crew)
+        console.log(res.data.crew)
         setMyCrew(res.data.crew)
 
       } catch (error) {
