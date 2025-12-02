@@ -1,6 +1,7 @@
 package org.spring.backendspring.admin.service;
 
 import org.spring.backendspring.admin.dto.AdminPaymentDetailDto;
+import org.spring.backendspring.admin.dto.WeeklySalesDto;
 import org.spring.backendspring.common.dto.PagedResponse;
 import org.spring.backendspring.payment.dto.PaymentDto;
 import org.spring.backendspring.payment.dto.PaymentItemDto;
@@ -17,4 +18,5 @@ public interface AdminPaymentService {
 
     void updateStatus(Long paymentId, String status);
 
+    public WeeklySalesDto getWeeklySales();
 }

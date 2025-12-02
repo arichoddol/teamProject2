@@ -2,6 +2,7 @@ package org.spring.backendspring.admin.service.impl;
 
 import java.util.Optional;
 import org.spring.backendspring.admin.dto.AdminPaymentDetailDto;
+import org.spring.backendspring.admin.dto.WeeklySalesDto;
 import org.spring.backendspring.admin.repository.AdminPaymentRepository;
 import org.spring.backendspring.admin.service.AdminPaymentService;
 import org.spring.backendspring.common.dto.PagedResponse;
@@ -22,7 +23,12 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -84,5 +90,41 @@ public class AdminPaymentServiceImpl implements AdminPaymentService {
         adminPaymentRepository.save(payment);
     }
 
+    @Override
+public WeeklySalesDto getWeeklySales() {
+
+    LocalDate today = LocalDate.now();
+
+    LocalDate thisWeekStart = today.with(DayOfWeek.MONDAY);
+    LocalDate lastWeekStart = thisWeekStart.minusWeeks(1);
+
+    long[] thisWeek = new long[7];
+    long[] lastWeek = new long[7];
+
+    // 이번주
+    for (int i = 0; i < 7; i++) {
+        LocalDate day = thisWeekStart.plusDays(i);
+        LocalDateTime start = day.atStartOfDay();
+        LocalDateTime end = day.plusDays(1).atStartOfDay();
+
+        Long sum = adminPaymentRepository.sumSalesByDate(start, end);
+        thisWeek[i] = (sum != null) ? sum : 0L;
+    }
+
+    // 지난주
+    for (int i = 0; i < 7; i++) {
+        LocalDate day = lastWeekStart.plusDays(i);
+        LocalDateTime start = day.atStartOfDay();
+        LocalDateTime end = day.plusDays(1).atStartOfDay();
+
+        Long sum = adminPaymentRepository.sumSalesByDate(start, end);
+        lastWeek[i] = (sum != null) ? sum : 0L;
+    }
+
+    return WeeklySalesDto.builder()
+            .thisWeek(thisWeek)
+            .lastWeek(lastWeek)
+            .build();
 }
 
+}
