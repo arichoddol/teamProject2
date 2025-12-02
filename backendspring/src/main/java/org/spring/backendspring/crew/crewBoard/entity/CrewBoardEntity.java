@@ -62,4 +62,18 @@ public class CrewBoardEntity extends BasicTime {
                 .crewBoardImageEntities(dto.getCrewBoardImageEntities())
                 .build();
     }
+    public static CrewBoardEntity toCrewBoardEntity2(CrewBoardDto dto) {
+        return CrewBoardEntity.builder()
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .crewEntity(CrewEntity.builder()
+                        .id(dto.getCrewId())
+                        .build())
+                .memberEntity(MemberEntity.builder()
+                        .id(dto.getMemberId())
+                        .build())
+                // .crewBoardCommentEntities(dto.getCrewBoardCommentEntities())
+                .crewBoardImageEntities(dto.getCrewBoardImageEntities())
+                .build();
+    }
 }

@@ -100,7 +100,8 @@ const MyCrewMainContainer = () => {
                 <div className="myCrewMainImage">
                   <img
                     // src={`http://localhost:8088/upload/${myCrew.newFileName[0]}`}
-                    src={`${IMAGES_S3_URL}${myCrew.newFileName[0]}`}
+                    src={myCrew.fileUrl[0]}
+                    // src={`${IMAGES_S3_URL}${myCrew.newFileName[0]}`}
                     alt={`${myCrew.name} 이미지`}
                     className="crewImage"
                   />

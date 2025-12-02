@@ -96,14 +96,16 @@ const CrewMainContainer = () => {
               <h1 className="crewListH1">내 크루 목록</h1>
               <ul className="crewListUl">
                 {myCrewList.map((crew) => {
-                  const images = crew.crewImages || [];
+                  // const images = crew.crewImages || [];
+                  const images = crew.fileUrl || [];
+                  console.log(images)
                   return (
                     <li className="crewListLi" key={crew.id}>
                       <Link to={`/mycrew/${crew.crewId}`}>
                         <div className="crewListLeft">
                           {images.length > 0 ? (
                             <img
-                              src={`http://localhost:8088/upload/${images[0]}`}
+                              src={images[0]}
                               alt={`${crew.crewName} 이미지`}
                               className="crewImage"
                             />
@@ -155,46 +157,39 @@ const CrewMainContainer = () => {
             {crewList === null ? (
               <p>존재하는 크루가 없습니다.</p>
             ) : (
-              <ul className="crewListUl">
-                {crewList.map((crew) => {
-                  const images = crew.newFileName || [];
-                  return (
-                    <li className="crewListLi" key={crew.id}>
-                      <Link to={`/crew/detail/${crew.id}`}>
-                        <div className="crewListLeft">
-                          {images && images.length > 0 ? (
-                            <img
-                              src={`http://localhost:8088/upload/${images[0]}`}
-                              alt={`${crew.name} 이미지`}
-                              className="crewImage"
-                            />
-                          ) : (
-                            <div className="noCrewImage">
-                              👟💨 {crew.name} 💨🧑‍🤝‍🧑
-                            </div>
-                          )}
+            <ul className="crewListUl">
+              {crewList.map((crew) => {
+                // const images = crew.newFileName || [];
+                const images = crew.fileUrl || [];
+                console.log(images)
+                return (
+                  <li className="crewListLi" key={crew.id}>
+                    <Link to={`/crew/detail/${crew.id}`}>
+                      <div className="crewListLeft">
+                        {images && images.length > 0 ? (
+                          <img
+                            src={images[0]}
+                            alt={`${crew.name} 이미지`}
+                            className="crewImage"
+                          />
+                        ) : (
+                          <div className="noCrewImage">👟💨 {crew.name} 💨🧑‍🤝‍🧑</div>
+                        )}
+                      </div>
+                      <div className="crewListRight">
+                        <h2>{crew.name}</h2>
+                        <p>{crew.description && crew.description.length > 40 ?
+                          `${crew.description.slice(0, 40)}...` : crew.description}</p>
+                        <div className="crewDistrictAndMember">
+                          <p>{crew.district}</p>
+                          <p>멤버&nbsp;{crew.crewMemberEntities && crew.crewMemberEntities.length}</p>
                         </div>
-                        <div className="crewListRight">
-                          <h2>{crew.name}</h2>
-                          <p>
-                            {crew.description && crew.description.length > 40
-                              ? `${crew.description.slice(0, 40)}...`
-                              : crew.description}
-                          </p>
-                          <div className="crewDistrictAndMember">
-                            <p>{crew.district}</p>
-                            <p>
-                              멤버&nbsp;
-                              {crew.crewMemberEntities &&
-                                crew.crewMemberEntities.length}
-                            </p>
-                          </div>
-                        </div>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
+                      </div>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
             )}
           </div>
           <div className="crewBoardPagination">
