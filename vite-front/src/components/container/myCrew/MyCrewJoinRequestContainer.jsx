@@ -5,14 +5,14 @@ import { useParams } from 'react-router-dom'
 import jwtAxios from '../../../apis/util/jwtUtil'
 
 const MyCrewJoinRequestContainer = () => {
-  const {accessToken} = useSelector((state) => state.jwtSlice)
+  const { accessToken } = useSelector((state) => state.jwtSlice)
 
-  const {crewId} = useParams()
-  const [myCrewJoinRequestList , setMyCrewJoinRequestList] = useState([])
+  const { crewId } = useParams()
+  const [myCrewJoinRequestList, setMyCrewJoinRequestList] = useState([])
   //검색 카테고리?
   const [subject, setSubject] = useState('')
   //검색어
-  const [search, setSearch] = useState('') 
+  const [search, setSearch] = useState('')
 
   const [nowPage, setNowPage] = useState()
   const [startPage, setStartPage] = useState()
@@ -40,7 +40,7 @@ const MyCrewJoinRequestContainer = () => {
       setStartPage(res.data.startPage)
       setEndPage(res.data.endPage)
       setTotalPages(res.data.totalPages)
-      
+
     } catch (error) {
       if (error.response) {
         // console.log("백엔드 응답:", error.response.data)
@@ -55,8 +55,8 @@ const MyCrewJoinRequestContainer = () => {
     // 항상 0페이지부터 다시 검색
     MyCrewjoinRequest(0);
   };
-  
-  useEffect(()=> {
+
+  useEffect(() => {
     MyCrewjoinRequest();
   }, [])
 
@@ -90,7 +90,7 @@ const MyCrewJoinRequestContainer = () => {
       MyCrewjoinRequest(0);
   }
   //크루가입거절
-  const onJoinRejected =async (joinReq) =>{
+  const onJoinRejected = async (joinReq) => {
 
       try {
         const res = await jwtAxios.post(`/api/mycrew/${crewId}/joinRequest/rejected`,
@@ -123,7 +123,7 @@ const MyCrewJoinRequestContainer = () => {
       }
       MyCrewjoinRequest(0)     
   }
-  
+
   return (
     <div className="myCrew">
       <div className="myCrew-con">
@@ -167,7 +167,7 @@ const MyCrewJoinRequestContainer = () => {
                 </select>
               </li>
             )}
-  
+
             <li>
               <input
                 type="text"
@@ -183,7 +183,7 @@ const MyCrewJoinRequestContainer = () => {
             </li>
           </ul>
         </div>
-  
+
         <div className="myCrew-content">
           <ul>
             <li>
@@ -195,7 +195,7 @@ const MyCrewJoinRequestContainer = () => {
               <span>❌ 가입거절</span>
             </li>
           </ul>
-  
+
           {/* 리스트 */}
           <ul>
             {/* 넣고 싶은 정보 더 넣으면 됨 dto에 안한거임 */}
@@ -237,7 +237,7 @@ const MyCrewJoinRequestContainer = () => {
                   ⬅ 이전
                 </button>
               </li>
-  
+
               <li>
                 {Array.from(
                   { length: endPage - startPage + 1 },
@@ -266,8 +266,6 @@ const MyCrewJoinRequestContainer = () => {
       </div>
     </div>
   );
-  
-    
-}
 
-export default MyCrewJoinRequestContainer
+
+}
