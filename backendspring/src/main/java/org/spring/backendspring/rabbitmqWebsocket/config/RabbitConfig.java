@@ -79,31 +79,31 @@ public class RabbitConfig {
         return factory;
     }
 
-    @Bean
-    public SimpleMessageListenerContainer
-            messageContainer(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
+    // @Bean
+    // public SimpleMessageListenerContainer
+    //         messageContainer(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
 
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+    //     SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
 
-        container.setConnectionFactory(connectionFactory); //rabbitmq연결
-        container.setQueueNames(crewQueueYml); //어떤큐?
-        container.setMessageListener(listenerAdapter); //메시지를 어떻게 처리할지
+    //     container.setConnectionFactory(connectionFactory); //rabbitmq연결
+    //     container.setQueueNames(crewQueueYml); //어떤큐?
+    //     container.setMessageListener(listenerAdapter); //메시지를 어떻게 처리할지
 
-        return container;
-    }
+    //     return container;
+    // }
 
     @Bean
     MessageConverter messageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 
-    @Bean
-    public MessageListenerAdapter listenerAdapter(Receiver receiver) {
+    // @Bean
+    // public MessageListenerAdapter listenerAdapter(Receiver receiver) {
         
-        MessageListenerAdapter adapter = new MessageListenerAdapter(receiver, "receiveMessage");
+    //     MessageListenerAdapter adapter = new MessageListenerAdapter(receiver, "receiveMessage");
 
-        adapter.setMessageConverter(messageConverter());
+    //     adapter.setMessageConverter(messageConverter());
 
-        return adapter;
-    }
+    //     return adapter;
+    // }
 }
