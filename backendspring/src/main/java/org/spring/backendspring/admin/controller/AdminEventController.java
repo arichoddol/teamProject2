@@ -13,13 +13,13 @@ public class AdminEventController {
 
     private final AdminEventService adminEventService;
 
-    // C - 이벤트 등록
+    
     @PostMapping
     public EventDto create(@RequestBody EventDto dto) {
         return adminEventService.createEvent(dto);
     }
 
-    // R - 이벤트 목록(검색 + 페이징)
+    
     @GetMapping
     public PagedResponse<EventDto> list(
             @RequestParam(required = false) String keyword,
@@ -29,19 +29,19 @@ public class AdminEventController {
         return adminEventService.getEventList(keyword, page, size);
     }
 
-    // R - 이벤트 상세
+    
     @GetMapping("/{id}")
     public EventDto detail(@PathVariable Long id) {
         return adminEventService.getEventDetail(id);
     }
 
-    // U - 이벤트 수정
+    
     @PutMapping("/{id}")
     public EventDto update(@PathVariable Long id, @RequestBody EventDto dto) {
         return adminEventService.updateEvent(id, dto);
     }
 
-    // D - 이벤트 삭제
+    
     @DeleteMapping("/{id}")
     public String delete(@PathVariable Long id, @RequestParam String role) {
         adminEventService.deleteEvent(id, role);

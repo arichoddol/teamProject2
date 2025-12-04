@@ -28,7 +28,7 @@
     /* 디자인 */
     background-image: linear-gradient(to bottom, aliceblue, #ffffff);
     color: #333; /* 배경이 밝아졌으므로 텍스트는 어둡게 */
-    padding: 8px 0; /* 내부 ul이 패딩을 갖도록 0으로 설정 */
+    padding: 4px 0; /* 내부 ul이 패딩을 갖도록 0으로 설정 */
     border-radius: 8px;
     font-size: 14px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 

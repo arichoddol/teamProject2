@@ -33,7 +33,6 @@ public class AdminBoardController {
     private final BoardService boardService;
     private final AdminBoardRepository adminBoardRepository;
 
-    // 공통 BasicPagingDto 클래스 만들어서 사용하는 방향으로
     @GetMapping("/boardList")
     public ResponseEntity<PagedResponse<BoardDto>> getAllBoards(
             @RequestParam(name = "keyword", required = false) String keyword,

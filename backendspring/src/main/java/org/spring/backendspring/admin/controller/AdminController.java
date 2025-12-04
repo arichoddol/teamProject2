@@ -33,22 +33,22 @@ public class AdminController {
     private final AdminMemberRepository adminMemberRepository;
 
     @GetMapping({ "", "/", "/index" })
-    // public ResponseEntity<?> adminIndex(@RequestBody MemberDto memberDto)
+    
     public ResponseEntity<?> adminIndex() {
-        // if (memberDto.getRole() == null || !memberDto.getRole().equals("ADMIN")) {
-        // return ResponseEntity.status(403).body("접근 거부: 관리자 권한이 필요합니다.");
-        // }
+        
+        
+        
         return ResponseEntity.ok("관리자 페이지에 접근했습니다.");
     }
 
     @GetMapping("/member/detail/{id}")
-    // 특정회원 정보 조회
+    
     public ResponseEntity<MemberDto> getMember(@PathVariable("id") Long id) throws IOException {
         MemberDto memberDetail = memberService.findById(id);
         return ResponseEntity.ok(memberDetail);
     }
 
-    // 공통 BasicPagingDto 클래스 만들어서 사용하는 방향으로
+    
     @GetMapping("/member/memberList")
     public ResponseEntity<PagedResponse<MemberDto>> getAllMembers(
             @RequestParam(name = "search", required = false) String search,
@@ -60,7 +60,7 @@ public class AdminController {
         return ResponseEntity.ok(memberList);
     }
 
-    // 권한수정, 닉네임수정 정도만
+    
     @PutMapping(value = "/member/update/{id}")
     public ResponseEntity<?> updateMember(@PathVariable("id") Long id, @RequestBody AdminMemberDto updatedDto) {
         adminMemberService.updateMemberByAdmin(id, updatedDto);
@@ -68,7 +68,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/member/delete/{id}")
-    // 문제회원 강제탈퇴 등등..
+    
     public ResponseEntity<String> adminDeleteMember(@PathVariable("id") Long id) {
         adminMemberService.deleteMemberByAdmin(id);
         return ResponseEntity.ok("관리자에 의해 탈퇴되었습니다.");

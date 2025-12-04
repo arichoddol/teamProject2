@@ -15,7 +15,7 @@ const CrewList = ({children}) => {
      // JWT
     const accessToken = useSelector(state => state.jwtSlice.accessToken);
     const memberId = useSelector(state => state.loginSlice.id);
-    const nickName = useSelector(state => state.loginSlice.nickName);
+
 
     const fetchData = async () => {
         const response = await jwtAxios.get(`${API_BASE_URL}/mycrewList/${memberId}`,

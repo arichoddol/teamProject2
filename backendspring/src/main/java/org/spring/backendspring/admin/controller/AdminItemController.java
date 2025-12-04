@@ -44,13 +44,13 @@ public class AdminItemController {
     private final AdminItemService adminItemService;
     private final ItemService itemService;
 
-    // 수정전 데이터 가져오기 위해서 detail 필요
+    
     @GetMapping("/detail/{id}")
     public ResponseEntity<ItemDto> getItemDetail(@PathVariable("id") Long id) {
         return ResponseEntity.ok(adminItemService.findById(id));
     }
 
-    // itemService의 findAllItems 사용 X -> 공통 BasicPagingDto 클래스 만들어서 사용하는 방향으로
+    
     @GetMapping("/itemList")
     public ResponseEntity<PagedResponse<ItemDto>> getAllItems(
             @RequestParam(name = "keyword", required = false) String keyword,
@@ -82,7 +82,7 @@ public class AdminItemController {
         return ResponseEntity.status(HttpStatus.CREATED).body("아이템 등록 성공");
 
     } catch (RuntimeException e) {
-        // -> from ServiceLayer 
+        
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body("아이템 등록 실패: " + e.getMessage());
     }
@@ -107,36 +107,36 @@ public class AdminItemController {
 
     }                              
                                         
-//     @PutMapping("/update/{id}")
-//     public ResponseEntity<?> updateItem(
-//                             @PathVariable("id") Long id, 
-//                             @ModelAttribute ItemDto itemDto, 
-//                             @AuthenticationPrincipal MyUserDetails myUserDetails) {
 
-//     try {
-//         Long currentMemberId = myUserDetails.getMemberId();
+
+
+
+
+
+
+
         
-//         if (itemDto.getMemberId() == null || !currentMemberId.equals(itemDto.getMemberId())) {
-//              // 소유자 ID가 없거나, 로그인된 사용자 ID와 불일치할 경우
-//              return ResponseEntity.status(HttpStatus.FORBIDDEN).body("수정 권한이 없습니다.");
-//         }
+
+
+
+
     
-//         ItemDto resultDto = adminItemService.updateItem(id, itemDto, itemDto.getFileUrl());
 
-//         // 3. 성공 응답
-//         return ResponseEntity.ok(resultDto);
 
-//     } catch (RuntimeException e) {
-//         // Item을 찾을 수 없거나 S3 처리 중 오류가 발생한 경우
-//         System.err.println("아이템 수정 중 오류 발생: " + e.getMessage());
+
+
+
+
+
+
         
-//         if (e.getMessage() != null && e.getMessage().contains("Item이 존재하지 않습니다")) {
-//             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("수정할 아이템을 찾을 수 없습니다.");
-//         }
+
+
+
         
-//         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("아이템 수정 실패.");
-//     }
-// }
+
+
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteItem(@PathVariable("id") Long id) {
@@ -144,9 +144,9 @@ public class AdminItemController {
         return ResponseEntity.ok("관리자 상품 삭제 완료");
     }
 
-    // @DeleteMapping("/delete/{itemId}/image")
-    // public ResponseEntity<String> deleteImage(@PathVariable("itemId") Long id) {
-    // adminItemService.deleteImage(id);
-    // return ResponseEntity.ok("이미지 삭제 완료");
-    // }
+    
+    
+    
+    
+    
 }

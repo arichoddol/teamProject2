@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import HeaderStore from "../common/HeaderModal/HeaderStore";
 import HeaderCrewList from "../common/crewModal/CrewList";
 import { Link } from "react-router-dom";
@@ -11,11 +11,10 @@ import BoardModal from "./HeaderModal/BoardModal";
 
 // slice 테스트 확인용으로 작성했습니다.
 const Header = () => {
-  const dispatch = useDispatch();
+
   const isLogin = useSelector((state) => state.loginSlice.isLogin);
   const role = useSelector((state) => state.loginSlice.role);
-  const memberId = useSelector((state) => state.loginSlice.id); // 추가
-
+ 
   return (
     <div className="header">
       <div className="nav">
