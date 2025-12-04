@@ -72,6 +72,9 @@ public class SecurityConfigClass {
                     .requestMatchers("/api/member/**").permitAll()
                     .requestMatchers("/login", "/logout", "/api/**", "/index").permitAll()
                     .requestMatchers("/marathons").permitAll()
+                      // swagger 
+                    .requestMatchers("/swagger-ui/**").permitAll()
+                    .requestMatchers("/v3/api-docs/**").permitAll()
 
                     .requestMatchers("/**").permitAll(); // css, js 파일 허용
         });
