@@ -14,10 +14,10 @@
 
 <table>
   <tr>
-    <th>박한나[팀장]</th>
+    <th>박한나(팀장)</th>
     <th>정기호</th>
     <th>이승준</th>
-    <th style="background:#eaf6ff; border-radius:8px;"><strong>유연준[본인]</strong></th>
+    <th><strong>유연준(본인)</strong></th>
     <th>허린</th>
     <th>천승우</th>
   </tr>
