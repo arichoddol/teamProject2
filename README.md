@@ -16,32 +16,32 @@
 
 ## 📁 기술 스택
 
-### Backend
+#### Backend
 - Java 17 / Spring Boot 3.xx
 - WebSocket(STOMP), AWS S3
 - JPA, MySQL
 - Spring Security, JWT
 
-### Frontend
+#### Frontend
 - React, Redux Toolkit
 - Vite, Axios, STOMP
 
-### DevOps
+#### DevOps
 - AWS EC2, RDS, S3
 - GitHub Actions + EC2 + Docker + Nginx (CI/CD)
 
 ---
 
-## 🧩 시스템 구조
+### 🧩 시스템 구조
 - React -> Spring Boot(API / WebSocket) -> MySQL(RDS)
 - 이미지 : AWS S3 저장
 - WebSocket(STOMP) 실시간 통신
   
 ---
 
-## 🚀 배포
+### 🚀 배포
 
-### CI/CD & Server 구조
+#### CI/CD & Server 구조
 
 - GitHub Actions로 자동 빌드/배포  
 - Docker로 컨테이너 구성  
