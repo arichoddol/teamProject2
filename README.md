@@ -134,37 +134,52 @@
 
 ---
 
-# 🧑‍💻 담당한 기능
+## 🧑‍💻 담당한 기능
 
 ### 🏃‍♂️ 1. 크루 CRUD
--<details>
+<details>
 <summary>크루 생성 / 수정 / 삭제</summary>
 <img width="297" height="433" alt="image" src="https://github.com/user-attachments/assets/dd19b151-1e27-4265-aa21-5190d3f21e59" />
 <img width="866" height="771" alt="image" src="https://github.com/user-attachments/assets/b106b489-c9af-4069-8703-491e3c8f9540" />
 
 
 </details>
--<details>
+<details>
 <summary>크루 목록 조회</summary>
 <img width="232" height="406" alt="image" src="https://github.com/user-attachments/assets/5aafba4f-9812-46d2-811c-35179796014a" />
 <img width="354.5" height="420.5" alt="image" src="https://github.com/user-attachments/assets/2fc03f8e-ae17-4eaf-8f3e-a9e5fbe270f6" />
 
   
 </details>
-- 크루 상세 조회
-<img width="478.5" height="282.5" alt="image" src="https://github.com/user-attachments/assets/31d920c0-5653-4eae-b9d8-1573ccb67646" />
+
+<details>
+  
+<summary>크루 상세 조회</summary>
+<img width="478.5" height="282.5" alt="image" src="https://github.com/user-attachments/assets/31d920c0-5653-4eae-b9d8-1573ccb67646" />  
+</details>
 
 
 ---
 
 ### 📰 2. 크루 게시판 CRUD
-- 게시글 작성 / 수정 / 삭제 / 조회
+<details>
+  <summary>게시글 작성 / 수정 / 삭제 / 조회
+<img width="509.5" height="313.5" alt="image" src="https://github.com/user-attachments/assets/074e5511-f38e-41fd-a629-c4080931341d" />
+<img width="445" height="241.5" alt="image" src="https://github.com/user-attachments/assets/cd6fd4fb-5116-4c6e-a983-2cf27f5b0545" />
+<img width="278.5" height="428" alt="image" src="https://github.com/user-attachments/assets/cf8a400d-5f66-4a37-b096-b049ab4e6030" />
+<img width="278.5" height="428" alt="image" src="https://github.com/user-attachments/assets/8908682c-3d07-4ea8-bfd4-74240ee99bff" />  
+</details>
+<details>
+  <summary>게시글 목록</summary>
+  <img width="578.5" height="285" alt="image" src="https://github.com/user-attachments/assets/a89c234a-b604-4b58-9497-92e52d14652a" />
+</details>
 - 이미지 업로드(S3) 처리
 - 페이징 + 검색 기능
 
 ### 💬 3. 실시간 크루 채팅
-- SockJS + STOMP 클라이언트 연결
 - WebSocket 서버 엔드포인트 구성
+- SockJS + STOMP 클라이언트 연결
+
 - 채팅 메시지 브로드캐스팅
 - 입장 / 퇴장 이벤트 처리
 - 프로필 변경 시 채팅창 반영
