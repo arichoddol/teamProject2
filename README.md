@@ -86,8 +86,8 @@
 - JWT 기반 인증
 - Spring Security 기반 권한 관리
 - 멤버 (회원 정보 수정, 프로필) (CRUD)
-  <br>
 </details>
+  <br>
 
 <details>
 <summary>🛒 2. 쇼핑몰 기능</summary>
@@ -96,8 +96,8 @@
 - 상품 목록 및 상세 조회
 - 쇼핑몰 게시판
 - 장바구니/결제 기능  
-  <br>
 </details>
+  <br>
 
 <details>  
 <summary>🏃‍♂️ 3. 크루(Crew) 기능</summary>
@@ -109,8 +109,8 @@
 - 크루 전용 게시판
 - 크루 전용 실시간 채팅(WebSocket + STOMP + SockJS)
 - 크루 러닝 스케쥴 (일정 등록/조회)
-  <br>
 </details>
+  <br>
 
 <details>
 <summary>🛠 4. 관리자(Admin)</summary>
@@ -120,8 +120,8 @@
 - 쇼핑몰 상품 관리
 - 게시판 / 공지사항 관리
 - 관리자 대시보드  
-  <br>
 </details>
+  <br>
 
 
 <details>
@@ -129,8 +129,8 @@
   <br>
 - 공공 데이터 기반 마라톤 대회 일정 API
 - 날씨 API
-  <br>
 </details>
+  <br>
 
 
 <details>
@@ -141,8 +141,8 @@
 - 이미지 업로드(S3)
 - 페이징 / 검색
 - CI/CD 자동 배포(GitHub Actions + Docker + EC2 + Nginx)  
-  <br>
 </details>
+  <br>
 
 ---
 
