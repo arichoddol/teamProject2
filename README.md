@@ -1,16 +1,18 @@
-# 같이달리조
-러닝 용품 판매 및 크루 활동 플랫폼
+# 🏃‍♂️ 같이달리조
+러닝 커뮤니티 & 쇼핑몰 플랫폼
 
-## 🏃‍♂️ 프로젝트 소개 - 러닝 커뮤니티 & 쇼핑몰 플랫폼
-본 프로젝트는 러닝 커뮤니티(크루)와 러닝 용품 쇼핑몰 기능을 하나의 서비스로 제공하는 풀스택 기반 팀 프로젝트입니다.
+## 🏃‍♂️ 프로젝트 소개
+본 프로젝트는 러닝 크루 활동과 러닝 용품 쇼핑몰을 하나의 서비스에 결합하여 제공하는 통합 플랫폼의 풀스택 기반 팀 프로젝트입니다.
 
-사용자는 크루 생성·크루 게시판 활동·실시간 채팅·챗봇·러닝 스케줄 관리 등을 이용할 수 있으며,
-동시에 상품 구매·장바구니·결제·게시판 등 쇼핑몰 기능도 함께 사용할 수 있습니다.
+사용자는 크루 생성·게시판·실시간 채팅·일정 관리·챗봇 등의 커뮤니티 기능과
+상품·장바구니·결제 등 쇼핑몰 기능을 한 곳에서 이용할 수 있습니다.
 
-#### 프로젝트 기간
-2025.05 - 2025.12
+**📅프로젝트 기간** : 2025.05 - 2025.12
+**👥 팀 인원** : 6명 
 
-#### 팀원 및 역할
+---
+
+## 팀 구성 및 역할
 
 <table>
   <tr>
@@ -30,8 +32,6 @@
     <td>장바구니<br>결제<br>Open API</td>
   </tr>
 </table>
-
-
 
 ---
 
@@ -126,20 +126,36 @@
 <summary>🔹 6. 공통 기능</summary>
   
 - JWT 기반 인증 시스템
-- Spring Security 권환 관리
+- Spring Security 권한 관리
 - 이미지 업로드(S3)
-- 페이징 처리
-- 검색 기능
+- 페이징 / 검색
 - CI/CD 자동 배포(GitHub Actions + Docker + EC2 + Nginx)  
 </details>
 
 ---
 
 # 🧑‍💻 담당한 기능
+
 ### 🏃‍♂️ 1. 크루 CRUD
-- 크루 생성 / 수정 / 삭제
-- 크루 리스트 조회
+-<details>
+<summary>크루 생성 / 수정 / 삭제</summary>
+<img width="297" height="433" alt="image" src="https://github.com/user-attachments/assets/dd19b151-1e27-4265-aa21-5190d3f21e59" />
+<img width="866" height="771" alt="image" src="https://github.com/user-attachments/assets/b106b489-c9af-4069-8703-491e3c8f9540" />
+
+
+</details>
+-<details>
+<summary>크루 목록 조회</summary>
+<img width="232" height="406" alt="image" src="https://github.com/user-attachments/assets/5aafba4f-9812-46d2-811c-35179796014a" />
+<img width="354.5" height="420.5" alt="image" src="https://github.com/user-attachments/assets/2fc03f8e-ae17-4eaf-8f3e-a9e5fbe270f6" />
+
+  
+</details>
 - 크루 상세 조회
+<img width="478.5" height="282.5" alt="image" src="https://github.com/user-attachments/assets/31d920c0-5653-4eae-b9d8-1573ccb67646" />
+
+
+---
 
 ### 📰 2. 크루 게시판 CRUD
 - 게시글 작성 / 수정 / 삭제 / 조회
