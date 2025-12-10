@@ -140,10 +140,10 @@
 <details>
 <summary>크루 생성 / 수정 / 삭제</summary>
 <img width="297" height="433" alt="image" src="https://github.com/user-attachments/assets/dd19b151-1e27-4265-aa21-5190d3f21e59" />
-<img width="866" height="771" alt="image" src="https://github.com/user-attachments/assets/b106b489-c9af-4069-8703-491e3c8f9540" />
-
+<img width="433" height="385.5" alt="image" src="https://github.com/user-attachments/assets/6c7cea0c-de9a-4ed5-baa8-012c0a18bac9" />
 
 </details>
+
 <details>
 <summary>크루 목록 조회</summary>
 <img width="232" height="406" alt="image" src="https://github.com/user-attachments/assets/5aafba4f-9812-46d2-811c-35179796014a" />
@@ -152,8 +152,7 @@
   
 </details>
 
-<details>
-  
+<details>  
 <summary>크루 상세 조회</summary>
 <img width="478.5" height="282.5" alt="image" src="https://github.com/user-attachments/assets/31d920c0-5653-4eae-b9d8-1573ccb67646" />  
 </details>
@@ -163,12 +162,13 @@
 
 ### 📰 2. 크루 게시판 CRUD
 <details>
-  <summary>게시글 작성 / 수정 / 삭제 / 조회
+  <summary>게시글 작성 / 수정 / 삭제 / 조회</summary>
 <img width="509.5" height="313.5" alt="image" src="https://github.com/user-attachments/assets/074e5511-f38e-41fd-a629-c4080931341d" />
 <img width="445" height="241.5" alt="image" src="https://github.com/user-attachments/assets/cd6fd4fb-5116-4c6e-a983-2cf27f5b0545" />
 <img width="278.5" height="428" alt="image" src="https://github.com/user-attachments/assets/cf8a400d-5f66-4a37-b096-b049ab4e6030" />
 <img width="278.5" height="428" alt="image" src="https://github.com/user-attachments/assets/8908682c-3d07-4ea8-bfd4-74240ee99bff" />  
 </details>
+    
 <details>
   <summary>게시글 목록</summary>
   <img width="578.5" height="285" alt="image" src="https://github.com/user-attachments/assets/a89c234a-b604-4b58-9497-92e52d14652a" />
