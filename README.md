@@ -10,12 +10,34 @@
 #### 프로젝트 기간
 2025.05 - 2025.12
 
-#### 팀원 소개
+#### 팀원 및 역할
 
-|박한나|정기호|이승준|유연준|허린|천승우
-|-----|-----|-----|-----|-----|-----|
-|팀장|팀원|팀원|팀원|팀원|팀원|
-|JWT<br>Spring Security<br>Member<br>OAuth2|게시판CRUD<br>상품CRUD<br>CICD<br>라우터 설계<br>Git관리<br>Header|관리자CRUD<br>관리자 대시보드<br>권한 기반 기능 제한|크루CRUD<br>크루 게시판<br>크루 채팅|DB 설계<br>크루 가입<br>크루 메인<br>크루 챗봇<br>크루 회원<br>크루 일정|장바구니<br>결제<br>Open API|
+<table>
+  <tr>
+    <th>박한나</th>
+    <th>정기호</th>
+    <th>이승준</th>
+    <th style="background:#eaf6ff; border-radius:8px;">🚀 <strong>유연준 (본인)</strong></th>
+    <th>허린</th>
+    <th>천승우</th>
+  </tr>
+  <tr>
+    <td>팀장</td>
+    <td>팀원</td>
+    <td>팀원</td>
+    <td style="background:#eaf6ff;"><strong>팀원</strong></td>
+    <td>팀원</td>
+    <td>팀원</td>
+  </tr>
+  <tr>
+    <td>JWT<br>Spring Security<br>Member<br>OAuth2</td>
+    <td>게시판 CRUD<br>상품 CRUD<br>CI/CD<br>라우터 설계<br>Git 관리<br>Header</td>
+    <td>관리자 CRUD<br>관리자 대시보드<br>권한 기반 기능 제한</td>
+    <td style="background:#eaf6ff;"><strong>크루 CRUD</strong><br>크루 게시판<br>크루 채팅</td>
+    <td>DB 설계<br>크루 가입<br>크루 메인<br>크루 챗봇<br>크루 회원<br>크루 일정</td>
+    <td>장바구니<br>결제<br>Open API</td>
+  </tr>
+</table>
 
 
 
