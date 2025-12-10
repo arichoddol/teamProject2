@@ -37,7 +37,6 @@
     <td>장바구니<br>결제<br>Open API</td>
   </tr>
 </table>
-<br>
 
 ---
 
