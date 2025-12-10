@@ -165,11 +165,11 @@
   <summary>게시글 작성 / 수정 / 삭제 / 조회</summary>
 <img width="278.5" height="428" alt="image" src="https://github.com/user-attachments/assets/cf8a400d-5f66-4a37-b096-b049ab4e6030" />
 <img width="278.5" height="428" alt="image" src="https://github.com/user-attachments/assets/8908682c-3d07-4ea8-bfd4-74240ee99bff" />
-  #### 게시글 작성 / 수정 시 여러 이미지와 함께 fromdata로 보내면 서버에서 multipart-file로 받아 이미지는 S3에 저장 후 이미지 이름과 나머지 정보를 DB에 저장 <br>
+  <br> 게시글 작성 / 수정 시 여러 이미지와 함께 fromdata로 보내면 서버에서 multipart-file로 받아 이미지는 S3에 저장 후 이미지 이름과 나머지 정보를 DB에 저장 <br>
   
 <img width="509.5" height="313.5" alt="image" src="https://github.com/user-attachments/assets/074e5511-f38e-41fd-a629-c4080931341d" />
 <img width="445" height="241.5" alt="image" src="https://github.com/user-attachments/assets/cd6fd4fb-5116-4c6e-a983-2cf27f5b0545" />
-  #### 게시글과 댓글은 작성자와 사용자가 같을 경우만 삭제/수정 버튼을 보이게 하고 서버에서도 작성자 본인 여부를 판별 후 삭제와 수정이 가능하게 함
+ <br> 게시글과 댓글은 작성자와 사용자가 같을 경우만 삭제/수정 버튼을 보이게 하고 서버에서도 작성자 본인 여부를 판별 후 삭제와 수정이 가능하게 함<br>
 </details>
     
 <details>
