@@ -157,6 +157,7 @@
 <br>로그인한 사용자만 신규 크루 신청 가능 -> 관리자 페이지 - 관리자가 크루 생성 승인 여부 결정
 <br>크루 내 역할이 리더인 경우만 크루 수정 가능
 </details>
+<br>
 
 <details>
 <summary>크루 목록 조회</summary>
@@ -168,6 +169,7 @@
 <br>크루 이름, 설명, 지역에 따른 검색과 페이징 기능을 넣어 사용자의 경험 향상
   
 </details>
+<br>
 
 <details>  
 <summary>크루 상세 조회</summary>
@@ -175,6 +177,7 @@
 <img width="478.5" height="282.5" alt="image" src="https://github.com/user-attachments/assets/31d920c0-5653-4eae-b9d8-1573ccb67646" /> 
 <br>크루 이름, 설명, 지역, 멤버 수 등의 정보를 보고 가입 신청을 할 수 있음
 </details>
+<br>
 
 ---
 
@@ -190,16 +193,31 @@
 <img width="445" height="241.5" alt="image" src="https://github.com/user-attachments/assets/cd6fd4fb-5116-4c6e-a983-2cf27f5b0545" />
  <br> 게시글과 댓글은 작성자와 사용자가 같을 경우만 삭제/수정 버튼을 보이게 하고 서버에서도 작성자 본인 여부를 판별 후 삭제와 수정이 가능하게 함<br>
 </details>
+<br>
     
 <details>
   <summary>게시글 목록</summary>
   <img width="578.5" height="285" alt="image" src="https://github.com/user-attachments/assets/a89c234a-b604-4b58-9497-92e52d14652a" />
 </details>
-- 이미지 업로드(S3) 처리
-- 페이징 + 검색 기능
+<br>
+
+<details>
+  <summary>이미지 업로드(S3) 처리</summary>
+</details>
+<br>
+
+<details>
+<summary>페이징 + 검색 기능</summary>
+  
+</details>
+<br>
 
 ### 💬 3. 실시간 크루 채팅
-- WebSocket 서버 엔드포인트 구성
+<details>
+<summary>WebSocket 서버 엔드포인트 구성</summary>
+</details>
+<br>
+
 <details>
 <summary>SockJS + STOMP 클라이언트 연결</summary>
 <img width="261" height="396.5" alt="image" src="https://github.com/user-attachments/assets/d8d358ed-3e92-4920-8d06-24aebaead2b4" />
@@ -210,14 +228,19 @@
 <summary>채팅 메시지 브로드캐스팅</summary>
 <img width="486.5" height="361.5" alt="image" src="https://github.com/user-attachments/assets/9d271401-169c-4d6a-89d8-85024852cb73" />  
 </details>
+<br>
 
 <details>
 <summary>입장 / 퇴장 이벤트 처리</summary>
   <img width="371" height="147" alt="image" src="https://github.com/user-attachments/assets/886ad4e8-19f7-43a8-b49e-50ffbd0b5a47" />
   <img width="366.5" height="30.5" alt="image" src="https://github.com/user-attachments/assets/43bf6d35-8489-46ce-a646-dbd9c3dcd608" />
 </details>
+<br>
 
-- 프로필 변경 시 채팅창 반영
+<details>
+<summary>프로필 변경 시 채팅창 반영</summary>
+</details>
+<br>
 
 ### ⚙️ 기타
 - 프론트/백엔드 연동
