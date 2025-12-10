@@ -12,6 +12,14 @@
 
 #### 팀원 소개
 
+|박한나|정기호|이승준|유연준|허린|천승우
+|-----|-----|-----|-----|-----|-----|
+|JWT|게시판CRUD|관리자CRUD|크루CRUD|DB 설계|장바구니|
+|Spring Security|
+|Member|
+|OAuth2|
+
+
 ---
 
 ## 📁 기술 스택
@@ -61,8 +69,6 @@
 - 멤버 (회원 정보 수정, 프로필) (CRUD)
 </details>
 
----
-
 <details>
 <summary>🛒 2. 쇼핑몰 기능</summary>
   
@@ -71,8 +77,6 @@
 - 쇼핑몰 게시판
 - 장바구니/결제 기능  
 </details>
-
----
 
 <details>  
 <summary>🏃‍♂️ 3. 크루(Crew) 기능</summary>
@@ -86,8 +90,6 @@
 - 크루 러닝 스케쥴 (일정 등록/조회)
 </details>
 
----
-
 <details>
 <summary>🛠 4. 관리자(Admin)</summary>
   
@@ -98,7 +100,6 @@
 - 관리자 대시보드  
 </details>
 
----
 
 <details>
 <summary>🌐 5. Open API</summary>
@@ -107,7 +108,6 @@
 - 날씨 API
 </details>
 
----
 
 <details>
 <summary>🔹 6. 공통 기능</summary>
