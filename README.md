@@ -18,6 +18,7 @@
 
 ## 팀 구성 및 역할
 
+<br>
 <table>
   <tr>
     <th>박한나(팀장)</th>
@@ -36,6 +37,7 @@
     <td>장바구니<br>결제<br>Open API</td>
   </tr>
 </table>
+<br>
 
 ---
 
@@ -79,7 +81,7 @@
 
 <details>
 <summary>👥 1. 회원/인증</summary>
-  
+  <br>
 - 회원가입 / 로그인 / 로그아웃
 - JWT 기반 인증
 - Spring Security 기반 권한 관리
@@ -88,7 +90,7 @@
 
 <details>
 <summary>🛒 2. 쇼핑몰 기능</summary>
-  
+  <br>
 - 러닝 용품 상품 등록 / 수정 / 삭제 (CRUD)
 - 상품 목록 및 상세 조회
 - 쇼핑몰 게시판
@@ -97,7 +99,7 @@
 
 <details>  
 <summary>🏃‍♂️ 3. 크루(Crew) 기능</summary>
-  
+  <br>
 - 크루 생성 / 조회 / 수정 / 삭제 (CRUD)
 - 크루 목록 및 상세 조회
 - 크루 멤버 관리(가입 요청 / 승인 / 거절)
@@ -109,7 +111,7 @@
 
 <details>
 <summary>🛠 4. 관리자(Admin)</summary>
-  
+  <br>
 - 전체 사용자 관리
 - 크루 생성 승인
 - 쇼핑몰 상품 관리
@@ -120,7 +122,7 @@
 
 <details>
 <summary>🌐 5. Open API</summary>
-  
+  <br>
 - 공공 데이터 기반 마라톤 대회 일정 API
 - 날씨 API
 </details>
@@ -128,7 +130,7 @@
 
 <details>
 <summary>🔹 6. 공통 기능</summary>
-  
+  <br>
 - JWT 기반 인증 시스템
 - Spring Security 권한 관리
 - 이미지 업로드(S3)
@@ -143,6 +145,7 @@
 ### 🏃‍♂️ 1. 크루 CRUD
 <details>
 <summary>크루 생성 / 수정 / 삭제</summary>
+<br>
 <img width="297" height="433" alt="image" src="https://github.com/user-attachments/assets/dd19b151-1e27-4265-aa21-5190d3f21e59" />
 <img width="346.4" height="308.4" alt="image" src="https://github.com/user-attachments/assets/6c7cea0c-de9a-4ed5-baa8-012c0a18bac9" />
 <br>로그인한 사용자만 신규 크루 신청 가능 -> 관리자 페이지 - 관리자가 크루 생성 승인 여부 결정
@@ -151,6 +154,7 @@
 
 <details>
 <summary>크루 목록 조회</summary>
+  <br>
 <img width="232" height="406" alt="image" src="https://github.com/user-attachments/assets/5aafba4f-9812-46d2-811c-35179796014a" />
 <img width="354.5" height="420.5" alt="image" src="https://github.com/user-attachments/assets/2fc03f8e-ae17-4eaf-8f3e-a9e5fbe270f6" />
 <br>로그인한 사용자가 가입한 크루가 있을 경우 <strong>내 크루 목록</strong>이 따로 있어 내가 가입한 크루를 한 눈에 볼 수 있음
@@ -161,6 +165,7 @@
 
 <details>  
 <summary>크루 상세 조회</summary>
+  <br>
 <img width="478.5" height="282.5" alt="image" src="https://github.com/user-attachments/assets/31d920c0-5653-4eae-b9d8-1573ccb67646" /> 
 <br>크루 이름, 설명, 지역, 멤버 수 등의 정보를 보고 가입 신청을 할 수 있음
 </details>
@@ -170,6 +175,7 @@
 ### 📰 2. 크루 게시판 CRUD
 <details>
   <summary>게시글 작성 / 수정 / 삭제 / 조회</summary>
+  <br>
 <img width="278.5" height="428" alt="image" src="https://github.com/user-attachments/assets/cf8a400d-5f66-4a37-b096-b049ab4e6030" />
 <img width="278.5" height="428" alt="image" src="https://github.com/user-attachments/assets/8908682c-3d07-4ea8-bfd4-74240ee99bff" />
   <br> 게시글 작성 / 수정 시 여러 이미지와 함께 fromdata로 보내면 서버에서 multipart-file로 받아 이미지는 S3에 저장 후 이미지 이름과 나머지 정보를 DB에 저장 <br>
