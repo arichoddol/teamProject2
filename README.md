@@ -14,10 +14,8 @@
 
 |박한나|정기호|이승준|유연준|허린|천승우
 |-----|-----|-----|-----|-----|-----|
-|JWT|게시판CRUD|관리자CRUD|크루CRUD|DB 설계|장바구니|
-|Spring Security|
-|Member|
-|OAuth2|
+|JWT<br>Spring Security<br>Member<br>OAuth2|게시판CRUD|관리자CRUD|크루CRUD|DB 설계|장바구니|
+
 
 
 ---
