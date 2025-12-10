@@ -141,22 +141,25 @@
 <summary>크루 생성 / 수정 / 삭제</summary>
 <img width="297" height="433" alt="image" src="https://github.com/user-attachments/assets/dd19b151-1e27-4265-aa21-5190d3f21e59" />
 <img width="346.4" height="308.4" alt="image" src="https://github.com/user-attachments/assets/6c7cea0c-de9a-4ed5-baa8-012c0a18bac9" />
-
+<br>로그인한 사용자만 신규 크루 신청 가능 -> 관리자 페이지 - 관리자가 크루 생성 승인 여부 결정
+<br>크루 내 역할이 리더인 경우만 크루 수정 가능
 </details>
 
 <details>
 <summary>크루 목록 조회</summary>
 <img width="232" height="406" alt="image" src="https://github.com/user-attachments/assets/5aafba4f-9812-46d2-811c-35179796014a" />
 <img width="354.5" height="420.5" alt="image" src="https://github.com/user-attachments/assets/2fc03f8e-ae17-4eaf-8f3e-a9e5fbe270f6" />
-
+<br>로그인한 사용자가 가입한 크루가 있을 경우 <strong>내 크루 목록</strong>이 따로 있어 내가 가입한 크루를 한 눈에 볼 수 있음
+<br>로그인하지 않았을 경우 전체 크루 목록만 볼 수 있음
+<br>크루 이름, 설명, 지역에 따른 검색과 페이징 기능을 넣어 사용자의 경험 향상
   
 </details>
 
 <details>  
 <summary>크루 상세 조회</summary>
-<img width="478.5" height="282.5" alt="image" src="https://github.com/user-attachments/assets/31d920c0-5653-4eae-b9d8-1573ccb67646" />  
+<img width="478.5" height="282.5" alt="image" src="https://github.com/user-attachments/assets/31d920c0-5653-4eae-b9d8-1573ccb67646" /> 
+<br>크루 이름, 설명, 지역, 멤버 수 등의 정보를 보고 가입 신청을 할 수 있음
 </details>
-
 
 ---
 
