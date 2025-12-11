@@ -154,8 +154,12 @@
 <br>
 <img width="297" height="433" alt="image" src="https://github.com/user-attachments/assets/dd19b151-1e27-4265-aa21-5190d3f21e59" />
 <img width="346.4" height="308.4" alt="image" src="https://github.com/user-attachments/assets/6c7cea0c-de9a-4ed5-baa8-012c0a18bac9" />
-<br>로그인한 사용자만 신규 크루 신청 가능 -> 관리자 페이지 - 관리자가 크루 생성 승인 여부 결정
-<br>크루 내 역할이 리더인 경우만 크루 수정 가능
+<br>
+  
+  - 로그인한 사용자만 신규 크루 신청 가능 -> 관리자 페이지 - 관리자가 크루 생성 승인 여부 결정
+<br><br>
+  - 크루 내 역할이 리더인 경우만 크루 수정 가능
+  <br>
 </details>
 <br>
 
@@ -164,9 +168,13 @@
   <br>
 <img width="232" height="406" alt="image" src="https://github.com/user-attachments/assets/5aafba4f-9812-46d2-811c-35179796014a" />
 <img width="354.5" height="420.5" alt="image" src="https://github.com/user-attachments/assets/2fc03f8e-ae17-4eaf-8f3e-a9e5fbe270f6" />
-<br>로그인한 사용자가 가입한 크루가 있을 경우 <strong>내 크루 목록</strong>이 따로 있어 내가 가입한 크루를 한 눈에 볼 수 있음
-<br>로그인하지 않았을 경우 전체 크루 목록만 볼 수 있음
-<br>크루 이름, 설명, 지역에 따른 검색과 페이징 기능을 넣어 사용자의 경험 향상
+<br>
+  
+  - 로그인한 사용자가 가입한 크루가 있을 경우 <strong>내 크루 목록</strong>을 구별해 내가 가입한 크루를 한 눈에 볼 수 있음
+<br><br>
+  - 로그인하지 않았을 경우 전체 크루 목록만 볼 수 있음
+<br><br>
+  - 크루 이름, 설명, 지역에 따른 검색과 페이징 기능을 넣어 사용자의 경험 향상
   
 </details>
 <br>
@@ -175,11 +183,12 @@
 <summary>크루 상세 조회</summary>
   <br>
 <img width="478.5" height="282.5" alt="image" src="https://github.com/user-attachments/assets/31d920c0-5653-4eae-b9d8-1573ccb67646" /> 
-<br>크루 이름, 설명, 지역, 멤버 수 등의 정보를 보고 가입 신청을 할 수 있음
+<br>
+  
+  - 크루 이름, 설명, 지역, 멤버 수 등의 정보를 보고 가입 신청<br>
 </details>
 <br>
 
----
 
 ### 📰 2. 크루 게시판 CRUD
 <details>
@@ -187,17 +196,29 @@
   <br>
 <img width="278.5" height="428" alt="image" src="https://github.com/user-attachments/assets/cf8a400d-5f66-4a37-b096-b049ab4e6030" />
 <img width="278.5" height="428" alt="image" src="https://github.com/user-attachments/assets/8908682c-3d07-4ea8-bfd4-74240ee99bff" />
-  <br> 게시글 작성 / 수정 시 여러 이미지와 함께 fromdata로 보내면 서버에서 multipart-file로 받아 이미지는 S3에 저장 후 이미지 이름과 나머지 정보를 DB에 저장 <br>
+  <br> 
+  
+  - 게시글 작성 / 수정 시 여러 이미지와 함께 fromdata로 서버에 PUT 요청<br>
+  - 서버에서 multipart-file로 받아 이미지는 S3에 저장 후 이미지 새이름과 나머지 정보를 DB에 저장 <br>
   
 <img width="509.5" height="313.5" alt="image" src="https://github.com/user-attachments/assets/074e5511-f38e-41fd-a629-c4080931341d" />
 <img width="445" height="241.5" alt="image" src="https://github.com/user-attachments/assets/cd6fd4fb-5116-4c6e-a983-2cf27f5b0545" />
- <br> 게시글과 댓글은 작성자와 사용자가 같을 경우만 삭제/수정 버튼을 보이게 하고 서버에서도 작성자 본인 여부를 판별 후 삭제와 수정이 가능하게 함<br>
+ <br> 
+ 
+ - 게시글과 댓글은 작성자와 사용자가 같을 경우만 삭제/수정 버튼을 보이게 하고 서버에서 작성자 본인 여부를 판별 후 삭제와 수정이 가능하게 함
+   <br>
 </details>
 <br>
     
 <details>
   <summary>게시글 목록</summary>
   <img width="578.5" height="285" alt="image" src="https://github.com/user-attachments/assets/a89c234a-b604-4b58-9497-92e52d14652a" />
+  <br>
+
+ - 검색, 페이징 기능
+  <br><br>
+ - 이미지 유무에 따른 구분과 댓글 수 표시
+  <br>
 </details>
 <br>
 
@@ -206,15 +227,11 @@
 </details>
 <br>
 
-<details>
-<summary>페이징 + 검색 기능</summary>
-  
-</details>
-<br>
-
 ### 💬 3. 실시간 크루 채팅
 <details>
 <summary>WebSocket 서버 엔드포인트 구성</summary>
+  <img width="296.5" height="214" alt="z" src="https://github.com/user-attachments/assets/98cef736-f5eb-4003-b3ba-261b900560a8" />
+
 </details>
 <br>
 
@@ -222,11 +239,26 @@
 <summary>SockJS + STOMP 클라이언트 연결</summary>
 <img width="261" height="396.5" alt="image" src="https://github.com/user-attachments/assets/d8d358ed-3e92-4920-8d06-24aebaead2b4" />
 <img width="259.7" height="102.9" alt="image" src="https://github.com/user-attachments/assets/39592300-0eea-4bd6-ae05-b918eb41d1df" />  
+<br>
+  
+- STOMP 클라이언트 생성 WebSocket 연결
+  <br><br>
+- 참여하기 -> STOMP 구독 시작
+  <br>
 </details>
+<br>
 
 <details>
 <summary>채팅 메시지 브로드캐스팅</summary>
 <img width="486.5" height="361.5" alt="image" src="https://github.com/user-attachments/assets/9d271401-169c-4d6a-89d8-85024852cb73" />  
+  <br>
+  
+  - 최근 300개의 메시지 로드
+  <br><br>
+  - 메시지 전송시 실시간으로 화면에 보여줌
+  <br><br>
+  - 사용자의 회원 프로필 사진, 닉네임, 전송 시간을 보여주고 한 사람이 여려개의 메시지를 보낼 경우 그룹핑을 하여 프로필이 한번만 뜨게 구현 
+  <br>
 </details>
 <br>
 
@@ -234,14 +266,18 @@
 <summary>입장 / 퇴장 이벤트 처리</summary>
   <img width="371" height="147" alt="image" src="https://github.com/user-attachments/assets/886ad4e8-19f7-43a8-b49e-50ffbd0b5a47" />
   <img width="366.5" height="30.5" alt="image" src="https://github.com/user-attachments/assets/43bf6d35-8489-46ce-a646-dbd9c3dcd608" />
+  <br>
+  
+  - 입장메시지 전송
+  <br><br>
+  - STOMP 구독 여부를 판별 후 구독을 했을 경우 나가기 버튼을 누르는 경우뿐 아니라 페이지 이동 시에도 퇴장 버튼 전송
+  <br><br>
+  - 입/퇴장과 대화 메시지를 enum으로 구분하여 다른 형태로 화면에 보이게 구현
 </details>
 <br>
 
-<details>
-<summary>프로필 변경 시 채팅창 반영</summary>
-</details>
-<br>
 
 ### ⚙️ 기타
+
 - 프론트/백엔드 연동
 - Axios JWT 인증 포함 처리
