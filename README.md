@@ -82,44 +82,44 @@
 <details>
 <summary>👥 1. 회원/인증</summary>
   <br>
-- 회원가입 / 로그인 / 로그아웃
-- JWT 기반 인증
-- Spring Security 기반 권한 관리
-- 멤버 (회원 정보 수정, 프로필) (CRUD)
+- 회원가입 / 로그인 / 로그아웃<br>
+- JWT 기반 인증<br>
+- Spring Security 기반 권한 관리<br>
+- 멤버 (회원 정보 수정, 프로필) (CRUD)<br>
 </details>
   <br>
 
 <details>
 <summary>🛒 2. 쇼핑몰 기능</summary>
   <br>
-- 러닝 용품 상품 등록 / 수정 / 삭제 (CRUD)
-- 상품 목록 및 상세 조회
-- 쇼핑몰 게시판
-- 장바구니/결제 기능  
+- 러닝 용품 상품 등록 / 수정 / 삭제 (CRUD)<br>
+- 상품 목록 및 상세 조회<br>
+- 쇼핑몰 게시판<br>
+- 장바구니/결제 기능  <br>
 </details>
   <br>
 
 <details>  
 <summary>🏃‍♂️ 3. 크루(Crew) 기능</summary>
   <br>
-- 크루 생성 / 조회 / 수정 / 삭제 (CRUD)
-- 크루 목록 및 상세 조회
-- 크루 멤버 관리(가입 요청 / 승인 / 거절)
-- 크루 챗봇 (일정 FAQ)
-- 크루 전용 게시판
-- 크루 전용 실시간 채팅(WebSocket + STOMP + SockJS)
-- 크루 러닝 스케쥴 (일정 등록/조회)
+- 크루 생성 / 조회 / 수정 / 삭제 (CRUD)<br>
+- 크루 목록 및 상세 조회<br>
+- 크루 멤버 관리(가입 요청 / 승인 / 거절)<br>
+- 크루 챗봇 (일정 FAQ)<br>
+- 크루 전용 게시판<br>
+- 크루 전용 실시간 채팅(WebSocket + STOMP + SockJS)<br>
+- 크루 러닝 스케쥴 (일정 등록/조회)<br>
 </details>
   <br>
 
 <details>
 <summary>🛠 4. 관리자(Admin)</summary>
   <br>
-- 전체 사용자 관리
-- 크루 생성 승인
-- 쇼핑몰 상품 관리
-- 게시판 / 공지사항 관리
-- 관리자 대시보드  
+- 전체 사용자 관리<br>
+- 크루 생성 승인<br>
+- 쇼핑몰 상품 관리<br>
+- 게시판 / 공지사항 관리<br>
+- 관리자 대시보드  <br>
 </details>
   <br>
 
@@ -127,8 +127,8 @@
 <details>
 <summary>🌐 5. Open API</summary>
   <br>
-- 공공 데이터 기반 마라톤 대회 일정 API
-- 날씨 API
+- 공공 데이터 기반 마라톤 대회 일정 API<br>
+- 날씨 API<br>
 </details>
   <br>
 
@@ -136,11 +136,11 @@
 <details>
 <summary>🔹 6. 공통 기능</summary>
   <br>
-- JWT 기반 인증 시스템
-- Spring Security 권한 관리
-- 이미지 업로드(S3)
-- 페이징 / 검색
-- CI/CD 자동 배포(GitHub Actions + Docker + EC2 + Nginx)  
+- JWT 기반 인증 시스템<br>
+- Spring Security 권한 관리<br>
+- 이미지 업로드(S3)<br>
+- 페이징 / 검색<br>
+- CI/CD 자동 배포(GitHub Actions + Docker + EC2 + Nginx)  <br>
 </details>
   <br>
 
